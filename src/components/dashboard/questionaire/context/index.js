@@ -3,33 +3,83 @@ import { v4 as uuidv4 } from 'uuid'
 
 export const FormContext = createContext();
 
-const compsData = [	
+const compsData = [
 	{
-		id: '1213',
-		title: 'Section 1',
-		description: 'Section Description 1',
+		id: uuidv4(),
+		label: 'Personal Information',
 		type: 'section',
+		description: 'Personal Information Description',
+        tooltip: '',
 		components: [
 			{
-                id: '12345',
-				title: 'Text Field'
+                id: uuidv4(),
+                type: 'text',
+                defaultValue: null,
+				label: 'Label (Text Field)',
+                description: '',
+                tooltip: ''
 			},
 			{
-                id: '123456',
-				title: 'TextArea Field'
-			}
+                id: uuidv4(),
+                type: 'text-area',
+                defaultValue: null,
+				label: 'Label (Text Area)',
+                description: '',
+                tooltip: ''
+			},
+			{
+                id: uuidv4(),
+                type: 'number',
+                defaultValue: null,
+				label: 'Label (Number Field)',
+                description: '',
+                tooltip: ''
+			},
+            {
+                id: uuidv4(),
+                label: 'Sub Section 1',
+                type: 'sub-section',
+                description: 'Section Description 1',
+                components: [
+                    {
+                        id: uuidv4(),
+                        type: 'text',
+                        defaultValue: null,
+                        label: 'Label (Text Field)',
+                        description: '',
+                        tooltip: ''
+                    },
+                    {
+                        id: uuidv4(),
+                        type: 'text',
+                        defaultValue: null,
+                        label: 'Label (Text Field)',
+                        description: '',
+                        tooltip: ''
+                    },
+                ]
+            }
 		],
-	}
+	},
+	{
+		id: uuidv4(),
+		label: 'Farm Information',
+		type: 'section',
+		description: 'Farm Information Description',
+        tooltip: '',
+		components: []
+    }
 ]
 
 const FormProvider = (props) => {
 
     const [sectionCreated, setSectionCreated] = useState(false)
     const [formData, setFormData] = useState({
-        type: 'form',
         formId: uuidv4(),
         userId: uuidv4(),
-        components: []
+        formName: '',
+        type: 'form',
+        components: compsData
     })
 
     const [componentsData, setComponentsData] = useState(compsData)

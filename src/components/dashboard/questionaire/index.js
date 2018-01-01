@@ -57,6 +57,7 @@ import PhoneField from './dialogs/PhoneField'
 
 import { FormContext } from './context'
 import DragNDrop from './dragNdrop'
+import FormRenderer from './FormRenderer'
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -199,7 +200,7 @@ const Questionaire = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3.5}>
                 <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
                     <Stack direction="row" spacing={2} style={{ width: "100%" }}>
                         <Button startIcon={<CheckBoxOutlineBlankIcon />} draggable="true" onDragEnd={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
@@ -283,12 +284,10 @@ const Questionaire = () => {
                     </AccordionDetails>
                 </Accordion>
             </Grid>
-            <Grid item xs={6} md={8}>
-                <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
-                    <DragNDrop componentsData={componentsData} />
-                    <Box style={{ background: '#448AFF', color: 'white', padding: '10px', width: '100%', textAlign: 'center', marginTop: '50px' }}>
-                        Drag and Drop a form component
-                    </Box>
+            <Grid item xs={6} md={8.5}>
+                <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
+                    {/* <DragNDrop componentsData={componentsData} /> */}
+                    <FormRenderer formData={FormRenderer}/>
                 </Grid>
             </Grid>
             <Grid item xs={6} md={12}>

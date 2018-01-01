@@ -52,7 +52,7 @@ const Section = (props) => {
 
     const sectionData = {
         id: uuidv4(),
-        title: sectionLabel,
+        label: sectionLabel,
         type: 'section',
         description: sectionDescription,
         tooltip: tooltip,
