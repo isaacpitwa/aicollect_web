@@ -147,7 +147,7 @@ const SelectField = (props) => {
         let labelStatus = optionsLabelStatus()
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

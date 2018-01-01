@@ -43,7 +43,7 @@ const TextField_ = (props) => {
 
     const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [id] = useState(fieldData ? fieldData.id : '')
     const [type] = useState(fieldData ? fieldData.type : 'text')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
@@ -123,7 +123,7 @@ const TextField_ = (props) => {
     const addTextField = () => {
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

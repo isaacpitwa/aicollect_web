@@ -120,7 +120,7 @@ const EmailField = (props) => {
     const addEmailField = () => {
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

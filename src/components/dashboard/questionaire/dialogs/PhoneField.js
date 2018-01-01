@@ -127,7 +127,7 @@ const PhoneField = (props) => {
     const addTextField = () => {
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

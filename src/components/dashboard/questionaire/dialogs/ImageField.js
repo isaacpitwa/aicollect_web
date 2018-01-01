@@ -123,7 +123,7 @@ const ImageField = (props) => {
     const addImageField = () => {
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

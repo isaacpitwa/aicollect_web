@@ -125,7 +125,7 @@ const TextAreaField = (props) => {
     const addTextAreaField = () => {
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

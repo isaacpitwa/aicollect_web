@@ -87,7 +87,7 @@ const Section = (props) => {
     const addSection = () => {
 
         const sectionData = {
-            id: id?id:uuidv4(),
+            id: uuidv4(),
             type: 'section',
             display: 'visible',
             label: fieldLabel,
