@@ -16,7 +16,7 @@ export default function FarmerPuchases() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="right">Date</TableCell>
+            <TableCell>Date</TableCell>
             <TableCell>Name</TableCell>
             <TableCell align="right">Unit Price</TableCell>
             <TableCell align="right">Order Count</TableCell>
