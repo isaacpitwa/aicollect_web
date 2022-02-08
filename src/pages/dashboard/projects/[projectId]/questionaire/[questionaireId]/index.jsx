@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import NextLink from 'next/link';
 import {
   Box,
   Button,
@@ -296,6 +297,8 @@ const QuestionaireDetails = () => {
                 />
               </Box>
               <Button
+              role="link"
+              href="/dashboard/projects/43/questionaire/6/map"
                 startIcon={<CloudDownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"

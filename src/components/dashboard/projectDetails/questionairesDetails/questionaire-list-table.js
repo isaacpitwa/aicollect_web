@@ -64,7 +64,7 @@ const columns = [
 
       return (
         <div style={{ display: 'flex', flexDirection: 'row', border: 0, margin: 0 }}>
-          <IconButton role="link" href="/dashboard/projects/43/questionaire/6/mukisa"><RemoveRedEyeIcon fontSize="small" /></IconButton>
+          <IconButton role="link" href="/dashboard/projects/43/questionaire/6/response/4"><RemoveRedEyeIcon fontSize="small" /></IconButton>
           <IconButton onClick={onClick}><LocalPrintshopIcon fontSize="small" /></IconButton>
         </div>
       );
