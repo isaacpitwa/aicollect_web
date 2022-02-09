@@ -8,6 +8,7 @@ import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/ma
 // import { Cash as CashIcon } from '../../icons/cash';
 import { ChartBar as ChartBarIcon } from '../../icons/chart-bar';
 import { ChartPie as ChartPieIcon } from '../../icons/chart-pie';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 // import { ChatAlt2 as ChatAlt2Icon } from '../../icons/chat-alt2';
 // import { ClipboardList as ClipboardListIcon } from '../../icons/clipboard-list';
 // import { CreditCard as CreditCardIcon } from '../../icons/credit-card';
@@ -83,9 +84,14 @@ const getSections = (t) => [
         title: t('Projects'),
         path: '/dashboard/projects',
         icon: <UsersIcon fontSize="small" />,
-      },
-      
-      
+        children: [         
+          {
+            title: t('Questionaires'),
+            path: '/dashboard/questionaires',
+            icon: <AssignmentIcon fontSize="small" />
+          }
+        ]
+      }     
     ]
   },
   {
