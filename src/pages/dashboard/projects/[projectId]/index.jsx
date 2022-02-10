@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import NextLink from 'next/link';
 import Head from "next/head";
 import {
   Box,
@@ -189,13 +190,13 @@ const ProjectList = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Project: XYZ</Typography>
+                <Typography variant="h4">Project: Rukingiri Farms</Typography>
               </Grid>
               <Grid item>
                 <Button
                   startIcon={<TrashIcon fontSize="small" />}
                   variant="contained"
-                  
+
                 >
                   Delete Project
                 </Button>
@@ -209,35 +210,38 @@ const ProjectList = () => {
 
           <Stack direction="row" mb={4}>
             <Grid container spacing={3}>
-              <Grid item md={3} sm={6} xs={12}>
-                <Card elevation={8}>
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "start",
-                      px: 3,
-                      py: 2
-                    }}
-                  >
-                    <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }}>
-                      <GroupAddRounded />
-                    </IconButton>
-                    <div>
-                      <Typography variant="body2">10</Typography>
-                      <Typography
-                        sx={{ mt: 1 }}
-                        color="textSecondary"
-                        variant="h8"
-                      >
-                        Registration
-                      </Typography>
-                    </div>
-                    {/* <LineChart /> */}
-                  </Box>
-                </Card>
+              <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
+                <NextLink href="/dashboard/projects/43/questionaire" passHref>
+                  <Card elevation={8}>
+                    <Box
+                      sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        justifyContent: "start",
+                        px: 3,
+                        py: 2
+                      }}
+                    >
+                      <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }}>
+                        <GroupAddRounded />
+                      </IconButton>
+                      <div>
+                        <Typography variant="body2">10</Typography>
+                        <Typography
+                          sx={{ mt: 1 }}
+                          color="textSecondary"
+                          variant="h8"
+                        >
+                          Registration
+                        </Typography>
+                      </div>
+                      {/* <LineChart /> */}
+                    </Box>
+                  </Card>
+                </NextLink>
               </Grid>
-              <Grid item md={3} sm={6} xs={12}>
+              <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
+              <NextLink href="/dashboard/projects/43/questionaire" passHref>
                 <Card elevation={8}>
                   <Box
                     sx={{
@@ -249,7 +253,7 @@ const ProjectList = () => {
                     }}
                   >
                     <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
-                      <FactCheck  />
+                      <FactCheck />
                     </IconButton>
                     <div>
                       <Typography variant="body2">10</Typography>
@@ -264,6 +268,7 @@ const ProjectList = () => {
                     {/* <LineChart /> */}
                   </Box>
                 </Card>
+                </NextLink>
               </Grid>
             </Grid>
           </Stack>

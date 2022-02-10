@@ -1,9 +1,13 @@
-import { useRouter } from 'next/router';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Alert, Box, Button, FormHelperText, TextField } from '@mui/material';
-import { useAuth } from '../../hooks/use-auth';
-import { useMounted } from '../../hooks/use-mounted';
+import { useRouter } from "next/router";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { Alert, Box, Button, FormHelperText, TextField } from "@mui/material";
+import { useAuth } from "../../hooks/use-auth";
+import { useMounted } from "../../hooks/use-mounted";
+
+// Demo Account
+// email: 'demo@devias.io',
+// password: 'Password123!',
 
 export const JWTLogin = (props) => {
   const isMounted = useMounted();
@@ -11,27 +15,23 @@ export const JWTLogin = (props) => {
   const { login } = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
-      submit: null
+      email: "admin@aicollect.com",
+      password: "Password123!",
+      submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
+      email: Yup.string()
+        .email("Must be a valid email")
         .max(255)
-        .required('Email is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required('Password is required')
+        .required("Email is required"),
+      password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         await login(values.email, values.password);
 
         if (isMounted()) {
-          const returnUrl = router.query.returnUrl || '/dashboard';
+          const returnUrl = router.query.returnUrl || "/dashboard";
           router.push(returnUrl);
         }
       } catch (err) {
@@ -43,12 +43,11 @@ export const JWTLogin = (props) => {
           helpers.setSubmitting(false);
         }
       }
-    }
+    },
   });
 
   return (
-    <form
-      noValidate
+    <form noValidate
       onSubmit={formik.handleSubmit}
       {...props}>
       <TextField
@@ -78,9 +77,7 @@ export const JWTLogin = (props) => {
       />
       {formik.errors.submit && (
         <Box sx={{ mt: 3 }}>
-          <FormHelperText error>
-            {formik.errors.submit}
-          </FormHelperText>
+          <FormHelperText error>{formik.errors.submit}</FormHelperText>
         </Box>
       )}
       <Box sx={{ mt: 2 }}>
@@ -94,18 +91,11 @@ export const JWTLogin = (props) => {
           Log In
         </Button>
       </Box>
-      <Box sx={{ mt: 2 }}>
-        <Alert severity="info">
-          <div>
-            Use
-            {' '}
-            <b>demo@devias.io</b>
-            {' '}
-            and password
-            {' '}
-            <b>Password123!</b>
-          </div>
-        </Alert>
+      <Box 
+        sx={{ mt: 2 }}
+        display="flex" 
+        justifyContent="center">
+        <Alert severity="warning">develop mode</Alert>
       </Box>
     </form>
   );

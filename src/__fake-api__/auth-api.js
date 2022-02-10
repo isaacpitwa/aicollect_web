@@ -6,14 +6,21 @@ const users = [
   {
     id: '5e86809283e28b96d2d38537',
     avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-    email: 'demo@devias.io',
-    name: 'Anika Visser',
+    email: 'admin@aicollect.com',
+    name: 'Stuart Dambi',
     password: 'Password123!',
     plan: 'Premium'
   }
 ];
 
 class AuthApi {
+
+  /**
+   * Authenticates a user (login)
+   * @param {string} email 
+   * @param {string} password 
+   * @returns User token
+   */
   async login({ email, password }) {
       // const response = await fetch('https://testapi.aicollectapp.com/authenticationservice/clientLogin', {
       //   method: 'POST',
@@ -27,28 +34,29 @@ class AuthApi {
       //   throw new Error("Please check your email or password");
       // }
       // return data.token;
-    
-    await wait(500);
+      await wait(500);
 
-    return new Promise((resolve, reject) => {
-      try {
-        // Find the user
-        const user = users.find((_user) => _user.email === email);
-
-        if (!user || (user.password !== password)) {
-          reject(new Error('Please check your email and password'));
-          return;
+      return new Promise((resolve, reject) => {
+        try {
+          // Find the user
+          const user = users.find((_user) => _user.email === email);
+  
+          if (!user || (user.password !== password)) {
+            reject(new Error('Please check your email and password'));
+            return;
+          }
+  
+          // Create the access token
+          const accessToken = sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  
+          resolve(accessToken);
+        } catch (err) {
+          console.error('[Auth Api]: ', err);
+          reject(new Error('Internal server error'));
         }
-
-        // Create the access token
-        const accessToken = sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-
-        resolve(accessToken);
-      } catch (err) {
-        console.error('[Auth Api]: ', err);
-        reject(new Error('Internal server error'));
-      }
-    });
+      });
+  
+  
   }
 
   async register({ email, name, password }) {
