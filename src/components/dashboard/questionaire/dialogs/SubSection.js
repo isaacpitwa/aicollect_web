@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid'
 import {
     Box,
@@ -20,31 +20,32 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import SectionPreview from '../previews/SectionPreview'
-
 // This is the field for type=TextField
-const Section = (props) => {
+const SubSection = (props) => {
 
-    const { open, createSection, handleClose } = props
+    const { open, handleClose } = props
 
-    const [sectionLabel, setsectionLabel] = useState('')
+    const [sectionLabel, setSectionLabel] = useState('')
     const [sectionDescription, setSectionDescription] = useState('')
 
     const handleLabel = (e) => {
-        setsectionLabel(e.target.value)
+        setSectionLabel(e.target.value)
     }
 
     const handleDescription = (e) => {
         setSectionDescription(e.target.value)
     }
 
-    const sectionData = {
+    const fieldData = {
         fieldId: uuidv4(),
-        type: 'section',
+        type: 'sub-section',
         title: sectionLabel,
         description: sectionDescription,
 
-        components: []
+    }
+
+    const createSubSection = () => {
+        handleClose()
     }
 
     return (
@@ -61,7 +62,7 @@ const Section = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Section Component
+                Sub-Section Component
                 <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
             </DialogTitle>
             <DialogContent>
@@ -79,8 +80,8 @@ const Section = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button>Conditional</Button>
+                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -92,14 +93,14 @@ const Section = (props) => {
                                 autoFocus
                                 margin="dense"
                                 id="label"
-                                label="Section Label"
+                                label="Sub-Section Label"
                                 type="text"
                                 size="small"
                                 fullWidth
                                 variant="outlined"
                                 value={sectionLabel}
                                 onChange={handleLabel}
-                                // error={sectionLabel==''?true:false}
+                                // error={sectionTitle==''?true:false}
                                 // helperText={'Missing field'}
                             />
                             <TextField
@@ -116,17 +117,51 @@ const Section = (props) => {
                             />
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={sectionLabel} sectionDescription={sectionDescription}/>
+                    <Grid item xs={12} md={5} style={{ padding: '30px 20px' }}>
+                        <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'left',
+                            '& > *': {
+                            m: 0,
+                            },
+                        }}
+                        >
+                        <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
+                            <Button variant="contained" style={{ borderRadius: '8px 8px 0px 0px' }}>Preview</Button>
+                        </ButtonGroup>
+                        </Box>
+                        <Box
+                            component="form"
+                            style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
+                        >
+                            {sectionLabel!=''?
+                                <Typography style={{ fontSize: '18px', borderBottom: '1px #5048E5 solid', color: '#5048E5' }}>
+                                    {sectionLabel}
+                                </Typography>
+                            :
+                                ''
+                            }
+                            {sectionDescription!=''?
+                                <Typography style={{ fontSize: '14px', color: '#5048e598' }}>
+                                    <i>{sectionDescription}</i>
+                                </Typography>
+                            :
+                                ''
+                            }
+                        </Box>
+                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createSection} variant="outlined" size='small' color="primary">Add Section</Button>
+                    <Button onClick={createSubSection} variant="outlined" size='small' color="primary">Add Sub Section</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default Section
+export default SubSection

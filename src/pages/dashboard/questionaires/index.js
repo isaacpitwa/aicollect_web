@@ -16,7 +16,7 @@ const Questionaires = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer List | Material Kit Pro
+          Dashboard: Questionaires
         </title>
       </Head>
       <Box

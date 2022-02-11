@@ -42,6 +42,7 @@ import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import GradeIcon from '@mui/icons-material/Grade';
 
 import Section from './dialogs/Section'
+import SubSection from './dialogs/SubSection'
 import TextField_ from './dialogs/TextField'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -57,17 +58,17 @@ const Questionaire = () => {
     const [formData, setFormData] = useState([])
     const [sectionCreated, setSectionCreated] = useState(false)
     const [sectionDialog, setSectionDialog] = useState(false)
+    const [subSectionDialog, setSubSectionDialog] = useState(false)
     const [textFieldDialog, setTextFieldDialog] = useState(false)
     const [open, setOpen] = useState(false)
     const [data, setData] = useState({})
 
-    const handleSection = () => {  
-        setData(
-            {
-                dialogTitle: 'Section Component'
-            }
-        )
+    const handleSection = () => { 
         setSectionDialog(true)
+    }
+
+    const handleSubSection = () => { 
+        setSubSectionDialog(true)
     }
   
     const handleTextField = () => {
@@ -77,6 +78,10 @@ const Questionaire = () => {
             }
         )
         setTextFieldDialog(true)
+    }
+
+    const handleNumberField = () => {
+
     }
 
     const createSection = () => {
@@ -91,13 +96,15 @@ const Questionaire = () => {
     const handleClose = () => {
         setOpen(false)
         setSectionDialog(false)
+        setSubSectionDialog(false)
         setTextFieldDialog(false)
     }
     
     return (
         <Grid container spacing={2}>
-            <Section open={sectionDialog} data={data} createSection={createSection} handleClose={handleClose}/>
-            <TextField_ open={textFieldDialog} data={data} createTextField={createTextField} handleClose={handleClose}/>
+            <Section open={sectionDialog} createSection={createSection} handleClose={handleClose}/>
+            <SubSection open={subSectionDialog} handleClose={handleClose}/>
+            <TextField_ open={textFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
             <Grid item xs={6} md={12}>
                 <Typography variant="h5" gutterBottom  color="primary" component="div" style={{ fontWeight: '300' }}>
                     Create New Questionaire
@@ -117,8 +124,8 @@ const Questionaire = () => {
             <Grid item xs={6} md={4}>
                 <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
                     <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-                        <Button startIcon={<CheckBoxOutlineBlankIcon />} onClick={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
-                        <Button startIcon={<SelectAllIcon />} variant="contained" style={{ width: '150%', visibility: sectionCreated?'visible':'hidden' }}>Sub Section</Button>
+                        <Button startIcon={<CheckBoxOutlineBlankIcon />} draggable="true" onClick={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
+                        <Button startIcon={<SelectAllIcon />} draggable='true' onClick={handleSubSection} variant="contained" style={{ width: '150%', visibility: sectionCreated?'visible':'hidden' }}>Sub Section</Button>
                     </Stack>
                 </Grid>
                 <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated?'visible':'hidden' }}>
@@ -133,12 +140,8 @@ const Questionaire = () => {
                     <AccordionDetails>
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
-                                {/* <Draggable
-                                    cancel={'[class*="MuiDialogContent-root"]'}
-                                > */}
-                                    <Button startIcon={<TextFieldsIcon />} onClick={handleTextField} variant="contained" size="small" style={{ width: '100%' }}>Text Field</Button>
-                                {/* </Draggable> */}
-                                <Button startIcon={<TagIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Number Field</Button>
+                                <Button startIcon={<TextFieldsIcon />} onClick={handleTextField} variant="contained" size="small" style={{ width: '100%' }}>Text Field</Button>
+                                <Button startIcon={<TagIcon />} onClick={handleNumberField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Number Field</Button>
                                 <Button startIcon={<ListIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select</Button>
                                 <Button startIcon={<AlternateEmailIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Email Address</Button>
                                 <Button startIcon={<BusinessIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Physical Address</Button>
@@ -204,10 +207,12 @@ const Questionaire = () => {
                 </Accordion>
             </Grid>
             <Grid item xs={6} md={8}>
-                <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px", cursor: 'move' }}>
-                    <Box style={{ background: '#448AFF', color: 'white', padding: '10px', width: '100%', textAlign: 'center' }}>
-                        Drag and Drop a form component
-                    </Box>
+                <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
+                    <Grid item Id="dropTarget" xs={12} sm={12} md={12} lg={12} xl={12} style={{ border: '3px #ddd dotted', cursor: 'move', borderRadius: "5px" }}>
+                        <Box style={{ background: '#448AFF', color: 'white', padding: '10px', width: '100%', textAlign: 'center', marginTop: '50px' }}>
+                            Drag and Drop a form component
+                        </Box>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={6} md={12}>

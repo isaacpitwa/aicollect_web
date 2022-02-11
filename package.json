@@ -56,7 +56,7 @@
     "i18next": "^19.8.7",
     "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^2.7.0",
-    "next": "12.0.3-canary.7",
+    "next": "^12.0.10",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "prop-types": "^15.7.2",
@@ -82,6 +82,7 @@
     "stylis": "^4.0.10",
     "stylis-plugin-rtl": "^2.1.1",
     "typescript": "4.4.4",
+    "uuid": "^8.3.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {

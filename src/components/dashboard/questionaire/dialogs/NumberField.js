@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import React, { useState } from 'react';
 import {
     Box,
     Paper,
@@ -16,36 +15,23 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    TextField
+    TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import SectionPreview from '../previews/SectionPreview'
-
 // This is the field for type=TextField
-const Section = (props) => {
+const NumberField = (props) => {
 
-    const { open, createSection, handleClose } = props
+    const { open, createTextField, handleClose } = props
+    const [position, setPosition] = useState('Top')
 
-    const [sectionLabel, setsectionLabel] = useState('')
-    const [sectionDescription, setSectionDescription] = useState('')
-
-    const handleLabel = (e) => {
-        setsectionLabel(e.target.value)
-    }
-
-    const handleDescription = (e) => {
-        setSectionDescription(e.target.value)
-    }
-
-    const sectionData = {
-        fieldId: uuidv4(),
-        type: 'section',
-        title: sectionLabel,
-        description: sectionDescription,
-
-        components: []
-    }
+    const handlePosition = (event) => {
+        setPosition(event.target.value);
+    };
 
     return (
         <Dialog
@@ -61,7 +47,7 @@ const Section = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Section Component
+                Text Field Component
                 <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
             </DialogTitle>
             <DialogContent>
@@ -79,8 +65,10 @@ const Section = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button>Data</Button>
+                            <Button>Validation</Button>
+                            <Button>Conditional</Button>
+                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -92,15 +80,49 @@ const Section = (props) => {
                                 autoFocus
                                 margin="dense"
                                 id="label"
-                                label="Section Label"
+                                label="Label"
+                                type="number"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                            />
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Position</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Position"
+                                    type="text"
+                                    size="small"
+                                    fullWidth
+                                    value={position}
+                                    onChange={handlePosition}
+                                    >
+                                        <MenuItem value={'Top'}>Top</MenuItem>
+                                        <MenuItem value={'Bottom'}>Bottom</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="placeholder"
+                                label="Placeholder (Optional)"
                                 type="text"
                                 size="small"
                                 fullWidth
                                 variant="outlined"
-                                value={sectionLabel}
-                                onChange={handleLabel}
-                                // error={sectionLabel==''?true:false}
-                                // helperText={'Missing field'}
+                            />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="tooltip"
+                                label="Tooltip (Optional)"
+                                type="text"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
                             />
                             <TextField
                                 margin="dense"
@@ -111,22 +133,22 @@ const Section = (props) => {
                                 rows={4}
                                 variant="outlined"
                                 fullWidth
-                                value={sectionDescription}
-                                onChange={handleDescription}
                             />
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={sectionLabel} sectionDescription={sectionDescription}/>
+                    <Grid item xs={12} md={5}>
+
+                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createSection} variant="outlined" size='small' color="primary">Add Section</Button>
+                    <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default Section
+export default NumberField

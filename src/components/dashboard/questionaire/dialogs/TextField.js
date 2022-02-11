@@ -15,13 +15,36 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    TextField
+    TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import TextfieldPreview from '../previews/TextfieldPreview'
+
 // This is the field for type=TextField
 const TextField_ = (props) => {
-    const { open, data, createTextField, handleClose } = props
+
+    const { open, createTextField, handleClose } = props
+    
+    const [fieldLabel, setFieldLabel] = useState('')
+    const [fieldPosition, setFieldPosition] = useState('Top')
+    const [fieldDescription, setFieldDescription] = useState('')
+
+    const handleLabel = () => {
+        setFieldLabel(event.target.value);
+    }
+
+    const handlePosition = (event) => {
+        setPosition(event.target.value);
+    };
+
+    const handleDescription = (event) => {
+        setFieldDescription(event.target.value);
+    };
 
     return (
         <Dialog
@@ -37,7 +60,7 @@ const TextField_ = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                {data.dialogTitle}
+                Text Field Component
                 <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
             </DialogTitle>
             <DialogContent>
@@ -66,6 +89,7 @@ const TextField_ = (props) => {
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
                             <TextField
+                                required
                                 autoFocus
                                 margin="dense"
                                 id="label"
@@ -74,32 +98,14 @@ const TextField_ = (props) => {
                                 size="small"
                                 fullWidth
                                 variant="outlined"
-                            />
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="position"
-                                label="Position"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                            />
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="placeholder"
-                                label="Placeholder"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
+                                value={fieldLabel}
+                                onChange={handleLabel}
                             />
                             <TextField
                                 autoFocus
                                 margin="dense"
                                 id="tooltip"
-                                label="Tooltip"
+                                label="Tooltip (Optional)"
                                 type="text"
                                 size="small"
                                 fullWidth
@@ -108,24 +114,24 @@ const TextField_ = (props) => {
                             <TextField
                                 margin="dense"
                                 id="outlined-multiline-static"
-                                label="Multiline"
+                                label="Description (Optional)"
                                 size="small"
                                 multiline
                                 rows={4}
                                 variant="outlined"
                                 fullWidth
+                                value={fieldDescription}
+                                onChange={handleDescription}
                             />
                         </Box>
                     </Grid>
-                    <Grid item xs={12} md={5}>
-
-                    </Grid>
+                    <TextfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createTextField} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
