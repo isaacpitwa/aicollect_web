@@ -31,10 +31,9 @@ const TextField_ = (props) => {
     const { open, createTextField, handleClose } = props
     
     const [fieldLabel, setFieldLabel] = useState('')
-    const [fieldPosition, setFieldPosition] = useState('Top')
     const [fieldDescription, setFieldDescription] = useState('')
 
-    const handleLabel = () => {
+    const handleLabel = (event) => {
         setFieldLabel(event.target.value);
     }
 
@@ -65,7 +64,7 @@ const TextField_ = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={7} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
                         <Box
                         sx={{
                             display: 'flex',
@@ -78,10 +77,10 @@ const TextField_ = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button>Data</Button>
-                            <Button>Validation</Button>
-                            <Button>Conditional</Button>
-                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button disabled>Data</Button>
+                            <Button disabled>Validation</Button>
+                            <Button disabled>Conditional</Button>
+                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box

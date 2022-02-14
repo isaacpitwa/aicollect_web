@@ -6,7 +6,7 @@ import {
     TextField
 } from '@mui/material'
 
-const TextfieldPreview = (props) => {
+const EmailfieldPreview = (props) => {
 
     const { fieldLabel, fieldDescription } = props
 
@@ -43,5 +43,5 @@ const TextfieldPreview = (props) => {
     )
 }
 
-export default TextfieldPreview
+export default EmailfieldPreview
                     

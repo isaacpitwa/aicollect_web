@@ -24,6 +24,7 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
+import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import ImageIcon from '@mui/icons-material/Image';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
@@ -44,6 +45,14 @@ import GradeIcon from '@mui/icons-material/Grade';
 import Section from './dialogs/Section'
 import SubSection from './dialogs/SubSection'
 import TextField_ from './dialogs/TextField'
+import TextAreaField from './dialogs/TextAreaField'
+import NumberField from './dialogs/NumberField'
+import SelectBoxField from './dialogs/SelectBoxField'
+import SelectField from './dialogs/SelectField'
+import SelectRadioField from './dialogs/SelectRadioField'
+import EmailField from './dialogs/EmailField'
+import PhysicalAddress from './dialogs/PhysicalAddress'
+import PhoneField from './dialogs/PhoneField'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -60,6 +69,14 @@ const Questionaire = () => {
     const [sectionDialog, setSectionDialog] = useState(false)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
     const [textFieldDialog, setTextFieldDialog] = useState(false)
+    const [textAreaFieldDialog, setTextAreaFieldDialog] = useState(false)
+    const [numberFieldDialog, setNumberFieldDialog] = useState(false)
+    const [selectBoxDialog, setSelectBoxDialog] = useState(false)
+    const [selectDialog, setSelectDialog] = useState(false)
+    const [selectRadioDialog, setSelectRadioDialog] = useState(false)
+    const [emailFieldDialog, setEmailFieldDialog] = useState(false)
+    const [physicalAddressDialog, setPhysicalAddressDialog] = useState(false)
+    const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
     const [open, setOpen] = useState(false)
     const [data, setData] = useState({})
 
@@ -72,16 +89,39 @@ const Questionaire = () => {
     }
   
     const handleTextField = () => {
-        setData(
-            {
-                dialogTitle: 'Text Field Component'
-            }
-        )
         setTextFieldDialog(true)
+    }
+  
+    const handleTextAreaField = () => {
+        setTextAreaFieldDialog(true)
     }
 
     const handleNumberField = () => {
-
+        setNumberFieldDialog(true)
+    }
+  
+    const handleSelectBoxField = () => {
+        setSelectBoxDialog(true)
+    }
+  
+    const handleSelectField = () => {
+        setSelectDialog(true)
+    }
+  
+    const handleSelectRadioField = () => {
+        setSelectRadioDialog(true)
+    }
+  
+    const handleEmailField = () => {
+        setEmailFieldDialog(true)
+    }
+  
+    const handlePhysicalAddress = () => {
+        setPhysicalAddressDialog(true)
+    }
+  
+    const handlePhoneField = () => {
+        setPhoneFieldDialog(true)
     }
 
     const createSection = () => {
@@ -94,10 +134,19 @@ const Questionaire = () => {
     }
 
     const handleClose = () => {
+        // Dialog box closing method
         setOpen(false)
         setSectionDialog(false)
         setSubSectionDialog(false)
         setTextFieldDialog(false)
+        setTextAreaFieldDialog(false)
+        setNumberFieldDialog(false)
+        setSelectBoxDialog(false)
+        setSelectDialog(false)
+        setSelectRadioDialog(false)
+        setEmailFieldDialog(false)
+        setPhysicalAddressDialog(false)
+        setPhoneFieldDialog(false)
     }
     
     return (
@@ -105,6 +154,14 @@ const Questionaire = () => {
             <Section open={sectionDialog} createSection={createSection} handleClose={handleClose}/>
             <SubSection open={subSectionDialog} handleClose={handleClose}/>
             <TextField_ open={textFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <TextAreaField open={textAreaFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <NumberField open={numberFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <SelectBoxField open={selectBoxDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <SelectField open={selectDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <SelectRadioField open={selectRadioDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <EmailField open={emailFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <PhysicalAddress open={physicalAddressDialog} createTextField={createTextField} handleClose={handleClose}/>
+            <PhoneField open={phoneFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
             <Grid item xs={6} md={12}>
                 <Typography variant="h5" gutterBottom  color="primary" component="div" style={{ fontWeight: '300' }}>
                     Create New Questionaire
@@ -142,16 +199,15 @@ const Questionaire = () => {
                             <Grid item xs={12} md={6}>
                                 <Button startIcon={<TextFieldsIcon />} onClick={handleTextField} variant="contained" size="small" style={{ width: '100%' }}>Text Field</Button>
                                 <Button startIcon={<TagIcon />} onClick={handleNumberField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Number Field</Button>
-                                <Button startIcon={<ListIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select</Button>
-                                <Button startIcon={<AlternateEmailIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Email Address</Button>
-                                <Button startIcon={<BusinessIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Physical Address</Button>
+                                <Button startIcon={<ListIcon />} onClick={handleSelectField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select</Button>
+                                <Button startIcon={<AlternateEmailIcon />} onClick={handleEmailField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Email Address</Button>
+                                <Button startIcon={<BusinessIcon />} onClick={handlePhysicalAddress} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Physical Address</Button>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <Button startIcon={<TextSnippetIcon />} variant="contained" size="small" style={{ width: '100%' }}>Text Area</Button>
-                                <Button startIcon={<CheckBoxIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select Box</Button>
-                                <Button startIcon={<RadioButtonCheckedIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Radio</Button>
-                                <Button startIcon={<PhoneInTalkIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Phone Number</Button>
-                                <Button startIcon={<CalculateIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Calculated Field</Button>
+                                <Button startIcon={<TextSnippetIcon />} onClick={handleTextAreaField} variant="contained" size="small" style={{ width: '100%' }}>Text Area</Button>
+                                <Button startIcon={<CheckBoxIcon />} onClick={handleSelectBoxField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select Boxes</Button>
+                                <Button startIcon={<RadioButtonCheckedIcon />} onClick={handleSelectRadioField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Radio</Button>
+                                <Button startIcon={<PhoneInTalkIcon />} onClick={handlePhoneField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Phone Number</Button>
                             </Grid>
                         </Grid>
                     </AccordionDetails>
@@ -182,6 +238,7 @@ const Questionaire = () => {
                                 <Button startIcon={<BlurLinearIcon/>} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Bar Code</Button>
                                 <Button startIcon={<QrCode2Icon/>} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>QR Code</Button>
                                 <Button startIcon={<VerticalSplitIcon/>} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Columns</Button>
+                                <Button startIcon={<CalculateIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Calculated Field</Button>
                             </Grid>
                         </Grid>
                     </AccordionDetails>

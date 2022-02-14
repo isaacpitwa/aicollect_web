@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'
 import {
     Box,
     Paper,
@@ -16,39 +15,35 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    TextField
+    TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import SectionPreview from '../previews/SectionPreview'
+import TextareafieldPreview from '../previews/TextareafieldPreview'
 
 // This is the field for type=TextField
-const SubSection = (props) => {
+const TextAreaField = (props) => {
 
-    const { open, handleClose } = props
+    const { open, createTextField, handleClose } = props
+    
+    const [fieldLabel, setFieldLabel] = useState('')
+    const [fieldDescription, setFieldDescription] = useState('')
 
-    const [sectionLabel, setSectionLabel] = useState('')
-    const [sectionDescription, setSectionDescription] = useState('')
-
-    const handleLabel = (e) => {
-        setSectionLabel(e.target.value)
+    const handleLabel = (event) => {
+        setFieldLabel(event.target.value);
     }
 
-    const handleDescription = (e) => {
-        setSectionDescription(e.target.value)
-    }
+    const handlePosition = (event) => {
+        setPosition(event.target.value);
+    };
 
-    const fieldData = {
-        fieldId: uuidv4(),
-        type: 'sub-section',
-        title: sectionLabel,
-        description: sectionDescription,
-
-    }
-
-    const createSubSection = () => {
-        handleClose()
-    }
+    const handleDescription = (event) => {
+        setFieldDescription(event.target.value);
+    };
 
     return (
         <Dialog
@@ -64,7 +59,7 @@ const SubSection = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Sub-Section Component
+                Text Field Component
                 <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
             </DialogTitle>
             <DialogContent>
@@ -81,7 +76,9 @@ const SubSection = (props) => {
                         }}
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                            <Button disabled variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
+                            <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
+                            <Button disabled>Data</Button>
+                            <Button disabled>Validation</Button>
                             <Button disabled>Conditional</Button>
                             <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
@@ -95,15 +92,23 @@ const SubSection = (props) => {
                                 autoFocus
                                 margin="dense"
                                 id="label"
-                                label="Sub-Section Label"
+                                label="Label"
                                 type="text"
                                 size="small"
                                 fullWidth
                                 variant="outlined"
-                                value={sectionLabel}
+                                value={fieldLabel}
                                 onChange={handleLabel}
-                                // error={sectionTitle==''?true:false}
-                                // helperText={'Missing field'}
+                            />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="tooltip"
+                                label="Tooltip (Optional)"
+                                type="text"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
                             />
                             <TextField
                                 margin="dense"
@@ -114,22 +119,22 @@ const SubSection = (props) => {
                                 rows={4}
                                 variant="outlined"
                                 fullWidth
-                                value={sectionDescription}
+                                value={fieldDescription}
                                 onChange={handleDescription}
                             />
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={sectionLabel} sectionDescription={sectionDescription}/>
+                    <TextareafieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createSubSection} variant="outlined" size='small' color="primary">Add Sub Section</Button>
+                    <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default SubSection
+export default TextAreaField

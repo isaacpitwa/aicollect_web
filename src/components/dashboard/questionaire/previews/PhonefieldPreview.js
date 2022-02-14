@@ -6,7 +6,7 @@ import {
     TextField
 } from '@mui/material'
 
-const TextfieldPreview = (props) => {
+const PhoneFieldPreview = (props) => {
 
     const { fieldLabel, fieldDescription } = props
 
@@ -19,13 +19,12 @@ const TextfieldPreview = (props) => {
                 component="form"
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
-            <TextField
-                required
+            <TextField                
                 autoFocus
                 margin="dense"
                 id="label"
                 label={fieldLabel?fieldLabel:'Label'}
-                type="text"
+                type="number"
                 size="small"
                 fullWidth
                 variant="outlined"
@@ -43,5 +42,5 @@ const TextfieldPreview = (props) => {
     )
 }
 
-export default TextfieldPreview
+export default PhoneFieldPreview
                     

@@ -66,7 +66,7 @@ const Section = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={7} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
                         <Box
                         sx={{
                             display: 'flex',

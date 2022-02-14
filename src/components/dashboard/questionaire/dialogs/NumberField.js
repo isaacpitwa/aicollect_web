@@ -23,14 +23,22 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import NumberfieldPreview from '../previews/NumberfieldPreview'
+
 // This is the field for type=TextField
 const NumberField = (props) => {
 
     const { open, createTextField, handleClose } = props
-    const [position, setPosition] = useState('Top')
+    
+    const [fieldLabel, setFieldLabel] = useState('')
+    const [fieldDescription, setFieldDescription] = useState('')
 
-    const handlePosition = (event) => {
-        setPosition(event.target.value);
+    const handleLabel = (event) => {
+        setFieldLabel(event.target.value);
+    }
+
+    const handleDescription = (event) => {
+        setFieldDescription(event.target.value);
     };
 
     return (
@@ -47,12 +55,12 @@ const NumberField = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Text Field Component
+                Number Field Component
                 <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={7} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
                         <Box
                         sx={{
                             display: 'flex',
@@ -65,10 +73,10 @@ const NumberField = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button>Data</Button>
-                            <Button>Validation</Button>
-                            <Button>Conditional</Button>
-                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button disabled>Data</Button>
+                            <Button disabled>Validation</Button>
+                            <Button disabled>Conditional</Button>
+                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -81,38 +89,12 @@ const NumberField = (props) => {
                                 margin="dense"
                                 id="label"
                                 label="Label"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                            />
-                            <Box sx={{ minWidth: 120 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Position</InputLabel>
-                                    <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    label="Position"
-                                    type="text"
-                                    size="small"
-                                    fullWidth
-                                    value={position}
-                                    onChange={handlePosition}
-                                    >
-                                        <MenuItem value={'Top'}>Top</MenuItem>
-                                        <MenuItem value={'Bottom'}>Bottom</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="placeholder"
-                                label="Placeholder (Optional)"
                                 type="text"
                                 size="small"
                                 fullWidth
                                 variant="outlined"
+                                value={fieldLabel}
+                                onChange={handleLabel}
                             />
                             <TextField
                                 autoFocus
@@ -133,12 +115,12 @@ const NumberField = (props) => {
                                 rows={4}
                                 variant="outlined"
                                 fullWidth
+                                value={fieldDescription}
+                                onChange={handleDescription}
                             />
                         </Box>
                     </Grid>
-                    <Grid item xs={12} md={5}>
-
-                    </Grid>
+                    <NumberfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription}/>
                 </Grid>
             </DialogContent>
             <DialogActions>

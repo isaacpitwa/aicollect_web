@@ -6,7 +6,7 @@ import {
     TextField
 } from '@mui/material'
 
-const TextfieldPreview = (props) => {
+const TextareafieldPreview = (props) => {
 
     const { fieldLabel, fieldDescription } = props
 
@@ -28,6 +28,8 @@ const TextfieldPreview = (props) => {
                 type="text"
                 size="small"
                 fullWidth
+                multiline
+                rows={4}
                 variant="outlined"
             />
                 {fieldDescription!=''?
@@ -43,5 +45,5 @@ const TextfieldPreview = (props) => {
     )
 }
 
-export default TextfieldPreview
+export default TextareafieldPreview
                     
