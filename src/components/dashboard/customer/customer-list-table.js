@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import numeral from 'numeral';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -15,6 +15,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
@@ -83,12 +84,12 @@ export const CustomerListTable = (props) => {
         >
           Delete
         </Button>
-        <Button
+        {/* <Button
           size="small"
           sx={{ ml: 2 }}
         >
-          Edit
-        </Button>
+          Deactivate
+        </Button> */}
       </Box>
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
@@ -161,18 +162,18 @@ export const CustomerListTable = (props) => {
                           width: 42
                         }}
                       >
-                        {getInitials(customer.name)}
+                        {getInitials(`${customer.firsname} ${customer.lastname}`)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/customers/1"
+                          href={`/dashboard/customers/${customer.id}`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {customer.name}
+                            {`${customer.firstname} ${customer.lastname}`}
                           </Link>
                         </NextLink>
                         <Typography
@@ -185,30 +186,44 @@ export const CustomerListTable = (props) => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${customer.city}, ${customer.state}, ${customer.country}`}
+                    {customer.email}
                   </TableCell>
                   <TableCell>
-                    {customer.totalOrders}
+                    {customer.phone}
+                  </TableCell>
+                  <TableCell>
+                    {customer.isActive ? "Active" : "Not Active"}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {numeral(customer.totalAmountSpent).format(`${customer.currency}0,0.00`)}
+                      {customer.isVerified ? "Verified" : "Not Verified"}
                     </Typography>
                   </TableCell>
+                  <TableCell>
+                    {customer.addedBy}
+                  </TableCell>
+                  <TableCell>
+                    {moment(customer.createdAt).format('DD/MM/YYYY')}
+                  </TableCell>
+                  <TableCell>
+                    {moment(customer.updatedAt).format('DD/MM/YYYY')}
+                  </TableCell>
                   <TableCell align="right">
+                    <Tooltip title="View">
+                      <NextLink
+                        href={`/dashboard/customers/${customer.id}/edit`}
+                        passHref
+                      >
+                        <IconButton component="a">
+                          <PencilAltIcon fontSize="small" />
+                        </IconButton>
+                      </NextLink>
+                    </Tooltip>
                     <NextLink
-                      href="/dashboard/customers/1/edit"
-                      passHref
-                    >
-                      <IconButton component="a">
-                        <PencilAltIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
-                    <NextLink
-                      href="/dashboard/customers/1"
+                      href={`/dashboard/customers/${customer.id}`}
                       passHref
                     >
                       <IconButton component="a">
