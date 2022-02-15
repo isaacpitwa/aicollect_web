@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import SectionPreview from '../previews/SectionPreview'
+import SubSectionPreview from '../previews/SubSectionPreview'
 
 // This is the field for type=TextField
 const SubSection = (props) => {
@@ -29,6 +29,7 @@ const SubSection = (props) => {
 
     const [sectionLabel, setSectionLabel] = useState('')
     const [sectionDescription, setSectionDescription] = useState('')
+    const [tooltip, setTooltip] = useState('')
 
     const handleLabel = (e) => {
         setSectionLabel(e.target.value)
@@ -36,6 +37,10 @@ const SubSection = (props) => {
 
     const handleDescription = (e) => {
         setSectionDescription(e.target.value)
+    }
+    
+    const handleTooltip = (e) => {
+        setTooltip(e.target.value)
     }
 
     const fieldData = {
@@ -47,6 +52,13 @@ const SubSection = (props) => {
     }
 
     const createSubSection = () => {
+        handleClose()
+    }
+
+    const cancel = () => {
+        setSectionLabel('')
+        setSectionDescription('')
+        setTooltip('')
         handleClose()
     }
 
@@ -117,14 +129,26 @@ const SubSection = (props) => {
                                 value={sectionDescription}
                                 onChange={handleDescription}
                             />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="tooltip"
+                                label="Tooltip (Optional)"
+                                type="text"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                                value={tooltip}
+                                onChange={handleTooltip}
+                            />
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={sectionLabel} sectionDescription={sectionDescription}/>
+                    <SubSectionPreview sectionLabel={sectionLabel} sectionDescription={sectionDescription} tooltip={tooltip}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
+                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
                     <Button onClick={createSubSection} variant="outlined" size='small' color="primary">Add Sub Section</Button>
                 </Grid>
             </DialogActions>

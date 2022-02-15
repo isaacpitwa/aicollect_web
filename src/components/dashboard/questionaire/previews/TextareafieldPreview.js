@@ -5,10 +5,11 @@ import {
     Typography,
     TextField
 } from '@mui/material'
+import GeneralTooltip from '../previews/GeneralTooltip'
 
 const TextareafieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription } = props
+    const { fieldLabel, fieldDescription, tooltip } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -31,7 +32,10 @@ const TextareafieldPreview = (props) => {
                 multiline
                 rows={4}
                 variant="outlined"
-            />
+                InputProps={{
+                    endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                  }}
+              />
                 {fieldDescription!=''?
                     <Typography style={{ fontSize: '14px', color: '#5048e598' }}>
                         <i>{fieldDescription}</i>

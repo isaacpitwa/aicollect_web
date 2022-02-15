@@ -10,418 +10,418 @@
         "type": "panel",
         "key": "page1",
             "components": [
-            {
-            "legend": "Consent",
-            "key": "fieldSet",
-            "type": "fieldset",
-            "label": "Field Set",
-            "input": false,
-            "tableView": false,
-                "components": [
                 {
-                "label": "Do you consent to be registered on this project?",
-                "optionsLabelPosition": "right",
-                "inline": true,
-                "tableView": false,
-                "values": [
-                {
-                "label": "Yes",
-                "value": "yes",
-                "shortcut": ""
+                    "legend": "Consent",
+                    "key": "fieldSet",
+                    "type": "fieldset",
+                    "label": "Field Set",
+                    "input": false,
+                    "tableView": false,
+                    "components": [
+                        {
+                            "label": "Do you consent to be registered on this project?",
+                            "optionsLabelPosition": "right",
+                            "inline": true,
+                            "tableView": false,
+                            "values": [
+                                {
+                                "label": "Yes",
+                                "value": "yes",
+                                "shortcut": ""
+                                },
+                                {
+                                "label": "No",
+                                "value": "no",
+                                "shortcut": ""
+                                }
+                            ],
+                            "key": "doYouConsentToBeRegisteredOnThisProject",
+                            "type": "radio",
+                            "input": true
+                        }
+                    ]
                 },
                 {
-                "label": "No",
-                "value": "no",
-                "shortcut": ""
-                }
-                ],
-                "key": "doYouConsentToBeRegisteredOnThisProject",
-                "type": "radio",
-                "input": true
-                }
-            ]
-            },
-            {
-            "legend": "Basic Information",
-            "key": "fieldSet1",
-            "conditional": {
-            "show": true,
-            "when": "doYouConsentToBeRegisteredOnThisProject",
-            "eq": "yes"
-            },
-            "type": "fieldset",
-            "label": "Basic Information",
-            "input": false,
-            "tableView": false,
-            "components": [
-            {
-            "label": "Registration Date",
-            "hideInputLabels": false,
-            "inputsLabelPosition": "top",
-            "useLocaleSettings": false,
-            "tableView": false,
-            "fields": {
-            "day": {
-            "type": "select",
-            "hide": false
-            },
-            "month": {
-            "hide": false
-            },
-            "year": {
-            "type": "select",
-            "hide": false,
-            "minYear": 1950,
-            "maxYear": 2026
-            }
-            },
-            "dayFirst": true,
-            "defaultValue": "00/00/0000",
-            "key": "registrationDate",
-            "type": "day",
-            "input": true,
-            "minYear": 1950,
-            "maxYear": 2026
-            },
-            {
-            "label": "Name",
-            "tableView": true,
-            "key": "name",
-            "type": "textfield",
-            "input": true
-            },
-            {
-            "label": "District",
-            "tableView": true,
-            "data": {
-            "values": [
-            {
-            "label": "Kampala",
-            "value": "kampala"
-            },
-            {
-            "label": "Mbale",
-            "value": "mbale"
-            },
-            {
-            "label": "Kayunga",
-            "value": "kayunga"
-            },
-            {
-            "label": "Sironko",
-            "value": "sironko"
-            }
-            ]
-            },
-            "key": "district",
-            "type": "select",
-            "input": true,
-            "searchThreshold": 0.3
-            },
-            {
-            "label": "Identification Type?",
-            "optionsLabelPosition": "right",
-            "inline": false,
-            "tableView": false,
-            "values": [
-            {
-            "label": "Driving permit",
-            "value": "drivingPermit",
-            "shortcut": ""
-            },
-            {
-            "label": "Village ID",
-            "value": "villageId",
-            "shortcut": ""
-            },
-            {
-            "label": "National ID",
-            "value": "nationalId",
-            "shortcut": ""
-            },
-            {
-            "label": "None",
-            "value": "none",
-            "shortcut": ""
-            }
-            ],
-            "key": "identificationType",
-            "type": "radio",
-            "input": true
-            },
-            {
-            "label": "Enter ID No.",
-            "placeholder": "Enter National ID Number",
-            "tableView": true,
-            "key": "enterIdNo",
-            "conditional": {
-            "show": true,
-            "when": "identificationType",
-            "eq": "nationalId"
-            },
-            "type": "textfield",
-            "input": true
-            },
-            {
-            "label": "Gender",
-            "optionsLabelPosition": "right",
-            "inline": true,
-            "tableView": false,
-            "values": [
-            {
-            "label": "Female",
-            "value": "female",
-            "shortcut": ""
-            },
-            {
-            "label": "Male",
-            "value": "male",
-            "shortcut": ""
-            }
-            ],
-            "key": "gender",
-            "type": "radio",
-            "input": true
-            },
-            {
-            "label": "Educational Level",
-            "optionsLabelPosition": "right",
-            "inline": true,
-            "tableView": false,
-            "values": [
-            {
-            "label": "Degree",
-            "value": "degree",
-            "shortcut": ""
-            },
-            {
-            "label": "Diploma/certification",
-            "value": "diplomaCertification",
-            "shortcut": ""
-            },
-            {
-            "label": "PHD",
-            "value": "phd",
-            "shortcut": ""
-            },
-            {
-            "label": "Secondary",
-            "value": "secondary",
-            "shortcut": ""
-            },
-            {
-            "label": "Primary",
-            "value": "primary",
-            "shortcut": ""
-            },
-            {
-            "label": "None",
-            "value": "none",
-            "shortcut": ""
-            }
-            ],
-            "key": "educationalLevel",
-            "type": "radio",
-            "input": true
-            },
-            {
-            "label": "Do you have a Bank Account?",
-            "optionsLabelPosition": "right",
-            "inline": true,
-            "tableView": false,
-            "values": [
-            {
-            "label": "Yes",
-            "value": "yes",
-            "shortcut": ""
-            },
-            {
-            "label": "No",
-            "value": "no",
-            "shortcut": ""
-            }
-            ],
-            "key": "doYouHaveABankAccount",
-            "type": "radio",
-            "input": true
-            },
-            {
-            "label": "Enter Reasons",
-            "optionsLabelPosition": "right",
-            "tableView": false,
-            "defaultValue": {
-            "noSavings": false,
-            "tooFar": false,
-            "noInterest": false,
-            "noLegalRequirements": false,
-            "other": false
-            },
-            "values": [
-            {
-            "label": "No Savings",
-            "value": "noSavings",
-            "shortcut": ""
-            },
-            {
-            "label": "Too Far",
-            "value": "tooFar",
-            "shortcut": ""
-            },
-            {
-            "label": "No Interest",
-            "value": "noInterest",
-            "shortcut": ""
-            },
-            {
-            "label": "No legal requirements",
-            "value": "noLegalRequirements",
-            "shortcut": ""
-            },
-            {
-            "label": "Other",
-            "value": "other",
-            "shortcut": ""
-            }
-            ],
-            "key": "enterReasons",
-            "conditional": {
-            "show": true,
-            "when": "doYouHaveABankAccount",
-            "eq": "no"
-            },
-            "type": "selectboxes",
-            "input": true,
-            "inputType": "checkbox"
-            },
-            {
-            "label": "Please specify",
-            "tableView": true,
-            "key": "pleaseSpecify",
-            "conditional": {
-            "show": true,
-            "when": "enterReasons",
-            "eq": "other"
-            },
-            "type": "textfield",
-            "input": true
-            },
-            {
-            "title": "Bank Account Information",
-            "collapsible": false,
-            "key": "bankAccountInformation",
-            "conditional": {
-            "show": true,
-            "when": "doYouHaveABankAccount",
-            "eq": "yes"
-            },
-            "type": "panel",
-            "label": "Bank Account Information",
-            "input": false,
-            "tableView": false,
-            "components": [
-            {
-            "label": "Select Bank",
-            "tableView": true,
-            "data": {
-            "values": [
-            {
-            "label": "Bank of Africa",
-            "value": "bankOfAfrica"
-            },
-            {
-            "label": "Bank Of Baroda",
-            "value": "bankOfBaroda"
-            },
-            {
-            "label": "DTB Bank",
-            "value": "dtbBank"
-            },
-            {
-            "label": "Centenary Bank",
-            "value": "centenaryBank"
-            },
-            {
-            "label": "Equity Bank",
-            "value": "equityBank"
-            },
-            {
-            "label": "ABSA Bank",
-            "value": "absaBank"
-            },
-            {
-            "label": "Opportunity Bank",
-            "value": "opportunityBank"
-            }
-            ]
-            },
-            "key": "selectBank",
-            "type": "select",
-            "input": true,
-            "searchThreshold": 0.3
-            },
-            {
-            "label": "Account Name",
-            "tableView": true,
-            "key": "accountName",
-            "type": "textfield",
-            "input": true
-            },
-            {
-            "label": "Enter Account No.",
-            "mask": false,
-            "tableView": false,
-            "delimiter": false,
-            "requireDecimal": false,
-            "inputFormat": "plain",
-            "key": "enterAccountNo",
-            "type": "number",
-            "input": true
-            }
-            ]
-            },
-            {
-            "label": "Marital Status?",
-            "optionsLabelPosition": "right",
-            "inline": true,
-            "tableView": false,
-            "values": [
-            {
-            "label": "Widowed",
-            "value": "widowed",
-            "shortcut": ""
-            },
-            {
-            "label": "Divorced",
-            "value": "divorced",
-            "shortcut": ""
-            },
-            {
-            "label": "Single",
-            "value": "single",
-            "shortcut": ""
-            },
-            {
-            "label": "Separated",
-            "value": "separated",
-            "shortcut": ""
-            },
-            {
-            "label": "Married",
-            "value": "married",
-            "shortcut": ""
-            },
-            {
-            "label": "Never Married",
-            "value": "neverMarried",
-            "shortcut": ""
-            }
-            ],
-            "key": "maritalStatus",
-            "type": "radio",
-            "input": true
-            }
-            ]
-            },
+                    "legend": "Basic Information",
+                    "key": "fieldSet1",
+                    "conditional": {
+                        "show": true,
+                        "when": "doYouConsentToBeRegisteredOnThisProject",
+                        "eq": "yes"
+                    },
+                    "type": "fieldset",
+                    "label": "Basic Information",
+                    "input": false,
+                    "tableView": false,
+                    "components": [
+                    {
+                        "label": "Registration Date",
+                        "hideInputLabels": false,
+                        "inputsLabelPosition": "top",
+                        "useLocaleSettings": false,
+                        "tableView": false,
+                        "fields": {
+                            "day": {
+                                "type": "select",
+                                "hide": false
+                            },
+                            "month": {
+                                "hide": false
+                            },
+                            "year": {
+                                "type": "select",
+                                "hide": false,
+                                "minYear": 1950,
+                                "maxYear": 2026
+                            }
+                        },
+                        "dayFirst": true,
+                        "defaultValue": "00/00/0000",
+                        "key": "registrationDate",
+                        "type": "day",
+                        "input": true,
+                        "minYear": 1950,
+                        "maxYear": 2026
+                    },
+                    {
+                    "label": "Name",
+                    "tableView": true,
+                    "key": "name",
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "label": "District",
+                    "tableView": true,
+                    "data": {
+                    "values": [
+                    {
+                    "label": "Kampala",
+                    "value": "kampala"
+                    },
+                    {
+                    "label": "Mbale",
+                    "value": "mbale"
+                    },
+                    {
+                    "label": "Kayunga",
+                    "value": "kayunga"
+                    },
+                    {
+                    "label": "Sironko",
+                    "value": "sironko"
+                    }
+                    ]
+                    },
+                    "key": "district",
+                    "type": "select",
+                    "input": true,
+                    "searchThreshold": 0.3
+                    },
+                    {
+                    "label": "Identification Type?",
+                    "optionsLabelPosition": "right",
+                    "inline": false,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Driving permit",
+                    "value": "drivingPermit",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Village ID",
+                    "value": "villageId",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "National ID",
+                    "value": "nationalId",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "None",
+                    "value": "none",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "identificationType",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Enter ID No.",
+                    "placeholder": "Enter National ID Number",
+                    "tableView": true,
+                    "key": "enterIdNo",
+                    "conditional": {
+                    "show": true,
+                    "when": "identificationType",
+                    "eq": "nationalId"
+                    },
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "label": "Gender",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Female",
+                    "value": "female",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Male",
+                    "value": "male",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "gender",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Educational Level",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Degree",
+                    "value": "degree",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Diploma/certification",
+                    "value": "diplomaCertification",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "PHD",
+                    "value": "phd",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Secondary",
+                    "value": "secondary",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Primary",
+                    "value": "primary",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "None",
+                    "value": "none",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "educationalLevel",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Do you have a Bank Account?",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Yes",
+                    "value": "yes",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "No",
+                    "value": "no",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "doYouHaveABankAccount",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Enter Reasons",
+                    "optionsLabelPosition": "right",
+                    "tableView": false,
+                    "defaultValue": {
+                    "noSavings": false,
+                    "tooFar": false,
+                    "noInterest": false,
+                    "noLegalRequirements": false,
+                    "other": false
+                    },
+                    "values": [
+                    {
+                    "label": "No Savings",
+                    "value": "noSavings",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Too Far",
+                    "value": "tooFar",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "No Interest",
+                    "value": "noInterest",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "No legal requirements",
+                    "value": "noLegalRequirements",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Other",
+                    "value": "other",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "enterReasons",
+                    "conditional": {
+                    "show": true,
+                    "when": "doYouHaveABankAccount",
+                    "eq": "no"
+                    },
+                    "type": "selectboxes",
+                    "input": true,
+                    "inputType": "checkbox"
+                    },
+                    {
+                    "label": "Please specify",
+                    "tableView": true,
+                    "key": "pleaseSpecify",
+                    "conditional": {
+                    "show": true,
+                    "when": "enterReasons",
+                    "eq": "other"
+                    },
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "title": "Bank Account Information",
+                    "collapsible": false,
+                    "key": "bankAccountInformation",
+                    "conditional": {
+                    "show": true,
+                    "when": "doYouHaveABankAccount",
+                    "eq": "yes"
+                    },
+                    "type": "panel",
+                    "label": "Bank Account Information",
+                    "input": false,
+                    "tableView": false,
+                    "components": [
+                    {
+                    "label": "Select Bank",
+                    "tableView": true,
+                    "data": {
+                    "values": [
+                    {
+                    "label": "Bank of Africa",
+                    "value": "bankOfAfrica"
+                    },
+                    {
+                    "label": "Bank Of Baroda",
+                    "value": "bankOfBaroda"
+                    },
+                    {
+                    "label": "DTB Bank",
+                    "value": "dtbBank"
+                    },
+                    {
+                    "label": "Centenary Bank",
+                    "value": "centenaryBank"
+                    },
+                    {
+                    "label": "Equity Bank",
+                    "value": "equityBank"
+                    },
+                    {
+                    "label": "ABSA Bank",
+                    "value": "absaBank"
+                    },
+                    {
+                    "label": "Opportunity Bank",
+                    "value": "opportunityBank"
+                    }
+                    ]
+                    },
+                    "key": "selectBank",
+                    "type": "select",
+                    "input": true,
+                    "searchThreshold": 0.3
+                    },
+                    {
+                    "label": "Account Name",
+                    "tableView": true,
+                    "key": "accountName",
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "label": "Enter Account No.",
+                    "mask": false,
+                    "tableView": false,
+                    "delimiter": false,
+                    "requireDecimal": false,
+                    "inputFormat": "plain",
+                    "key": "enterAccountNo",
+                    "type": "number",
+                    "input": true
+                    }
+                    ]
+                    },
+                    {
+                    "label": "Marital Status?",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Widowed",
+                    "value": "widowed",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Divorced",
+                    "value": "divorced",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Single",
+                    "value": "single",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Separated",
+                    "value": "separated",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Married",
+                    "value": "married",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Never Married",
+                    "value": "neverMarried",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "maritalStatus",
+                    "type": "radio",
+                    "input": true
+                    }
+                    ]
+                },
             {
             "legend": "Individual Member Details",
             "key": "fieldSet3",

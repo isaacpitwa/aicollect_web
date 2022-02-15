@@ -1,14 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react';
 import {
     Box,
     Grid,
     Typography,
     TextField
 } from '@mui/material'
+import MuiPhoneNumber from 'material-ui-phone-number'
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import GeneralTooltip from '../previews/GeneralTooltip'
 
 const PhoneFieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription } = props
+    const { defaultCountry, fieldDescription, tooltip } = props
+
+    const [value, setValue] = useState('')
+
+    const handleOnChange = () => {
+        setValue()
+    }
+
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -19,16 +30,18 @@ const PhoneFieldPreview = (props) => {
                 component="form"
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
-            <TextField                
-                autoFocus
-                margin="dense"
-                id="label"
-                label={fieldLabel?fieldLabel:'Label'}
-                type="number"
-                size="small"
-                fullWidth
-                variant="outlined"
-            />
+                <MuiPhoneNumber
+                    fullWidth
+                    size={'small'}
+                    label={'Phone Number'}
+                    margin="dense"
+                    variant='outlined'
+                    defaultCountry={'ug'}
+                    onChange={setValue}
+                    InputProps={{
+                        endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                      }}
+                    />
                 {fieldDescription!=''?
                     <Typography style={{ fontSize: '14px', color: '#5048e598' }}>
                         <i>{fieldDescription}</i>

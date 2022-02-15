@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import {
     Box,
@@ -51,8 +51,10 @@ import SelectBoxField from './dialogs/SelectBoxField'
 import SelectField from './dialogs/SelectField'
 import SelectRadioField from './dialogs/SelectRadioField'
 import EmailField from './dialogs/EmailField'
-import PhysicalAddress from './dialogs/PhysicalAddress'
 import PhoneField from './dialogs/PhoneField'
+
+import { FormContext } from './context'
+
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -64,7 +66,13 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Questionaire = () => {
 
-    const [formData, setFormData] = useState([])
+    const {
+        formData,
+        addComponent,
+        componentsData,
+        createForm
+    } = useContext(FormContext)
+
     const [sectionCreated, setSectionCreated] = useState(false)
     const [sectionDialog, setSectionDialog] = useState(false)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
@@ -75,10 +83,16 @@ const Questionaire = () => {
     const [selectDialog, setSelectDialog] = useState(false)
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
     const [emailFieldDialog, setEmailFieldDialog] = useState(false)
-    const [physicalAddressDialog, setPhysicalAddressDialog] = useState(false)
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
     const [open, setOpen] = useState(false)
     const [data, setData] = useState({})
+
+    useEffect(() => {
+        if(componentsData.length == 1){
+            setSectionCreated(true)
+        }
+    }, [sectionDialog])
+
 
     const handleSection = () => { 
         setSectionDialog(true)
@@ -115,18 +129,13 @@ const Questionaire = () => {
     const handleEmailField = () => {
         setEmailFieldDialog(true)
     }
-  
-    const handlePhysicalAddress = () => {
-        setPhysicalAddressDialog(true)
-    }
-  
+    
     const handlePhoneField = () => {
         setPhoneFieldDialog(true)
     }
 
-    const createSection = () => {
-        setSectionDialog(false)
-        setSectionCreated(true)
+    const createQuestionaire = () => {
+        createForm()
     }
 
     const createTextField = () => {
@@ -145,13 +154,12 @@ const Questionaire = () => {
         setSelectDialog(false)
         setSelectRadioDialog(false)
         setEmailFieldDialog(false)
-        setPhysicalAddressDialog(false)
         setPhoneFieldDialog(false)
     }
     
     return (
         <Grid container spacing={2}>
-            <Section open={sectionDialog} createSection={createSection} handleClose={handleClose}/>
+            <Section open={sectionDialog} handleClose={handleClose}/>
             <SubSection open={subSectionDialog} handleClose={handleClose}/>
             <TextField_ open={textFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
             <TextAreaField open={textAreaFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
@@ -160,7 +168,6 @@ const Questionaire = () => {
             <SelectField open={selectDialog} createTextField={createTextField} handleClose={handleClose}/>
             <SelectRadioField open={selectRadioDialog} createTextField={createTextField} handleClose={handleClose}/>
             <EmailField open={emailFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
-            <PhysicalAddress open={physicalAddressDialog} createTextField={createTextField} handleClose={handleClose}/>
             <PhoneField open={phoneFieldDialog} createTextField={createTextField} handleClose={handleClose}/>
             <Grid item xs={6} md={12}>
                 <Typography variant="h5" gutterBottom  color="primary" component="div" style={{ fontWeight: '300' }}>
@@ -201,7 +208,6 @@ const Questionaire = () => {
                                 <Button startIcon={<TagIcon />} onClick={handleNumberField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Number Field</Button>
                                 <Button startIcon={<ListIcon />} onClick={handleSelectField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select</Button>
                                 <Button startIcon={<AlternateEmailIcon />} onClick={handleEmailField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Email Address</Button>
-                                <Button startIcon={<BusinessIcon />} onClick={handlePhysicalAddress} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Physical Address</Button>
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <Button startIcon={<TextSnippetIcon />} onClick={handleTextAreaField} variant="contained" size="small" style={{ width: '100%' }}>Text Area</Button>
@@ -275,11 +281,11 @@ const Questionaire = () => {
             <Grid item xs={6} md={12}>
                 <Stack direction="row" spacing={2} justifyContent={'right'}>
                     <Button variant="outlined" size='small' color="error">Cancel</Button>
-                    <Button variant="contained" size='small' color="primary">Create Questionaire</Button>
+                    <Button onClick={createQuestionaire} variant="contained" size='small' color="primary">Create Questionaire</Button>
                 </Stack>
             </Grid>
         </Grid>
-    );
+    )
 }
 
 export default Questionaire

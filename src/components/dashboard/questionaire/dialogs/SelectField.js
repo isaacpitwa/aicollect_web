@@ -39,18 +39,19 @@ const SelectField = (props) => {
     
     const [fieldLabel, setFieldLabel] = useState('')
     const [fieldDescription, setFieldDescription] = useState('')
+    const [tooltip, setTooltip] = useState('')
     const [options, setOptions] = useState([
         {
-            'boxId': uuidv4(),
-            'boxLabel': '',
+            'optionId': uuidv4(),
+            'optionLabel': '',
         }
     ])
 
     const addCheckBox = () => {
-        let boxId = uuidv4()
+        let optionId = uuidv4()
         let data = {
-            'boxId': boxId,
-            'boxLabel': '',
+            'optionId': optionId,
+            'optionLabel': '',
         }
         setOptions(options => [...options, data])
     }
@@ -61,7 +62,24 @@ const SelectField = (props) => {
     
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
-    };
+    }
+    
+    const handleTooltip = (e) => {
+        setTooltip(e.target.value)
+    }
+
+    const cancel = () => {
+        setFieldLabel('')
+        setFieldDescription('')
+        setTooltip('')
+        setOptions([
+            {
+                'optionId': uuidv4(),
+                'optionLabel': '',
+            }
+        ])
+        handleClose()
+    }
 
     return (
         <Dialog
@@ -141,9 +159,9 @@ const SelectField = (props) => {
                                                         size="small"
                                                         variant="outlined"
                                                         fullWidth
-                                                        value={row.boxLabel}
+                                                        value={row.optionLabel}
                                                         onChange={(e) => {
-                                                            row.boxLabel = e.target.value;
+                                                            row.optionLabel = e.target.value;
                                                             setOptions([...options]);
                                                         }}
                                                     />
@@ -156,7 +174,7 @@ const SelectField = (props) => {
                                                         size="small"
                                                         variant="outlined"
                                                         fullWidth
-                                                        value={row.boxLabel}
+                                                        value={row.optionLabel}
                                                     />
                                                 </TableCell>
                                                 <TableCell>
@@ -165,11 +183,11 @@ const SelectField = (props) => {
                                                         variant='contained'
                                                         size='small'
                                                         color='error'
-                                                        value={row.boxId}
+                                                        value={row.optionId}
                                                         onClick={(e) => {
-                                                            setBoxes([...options]);
+                                                            setOptions([...options]);
                                                             if(options.length !== 1){
-                                                                setBoxes(options.filter(item => item.boxId !== e.target.value));
+                                                                setOptions(options.filter(item => item.optionId !== e.target.value));
                                                             }
                                                         }}
                                                     >
@@ -196,14 +214,26 @@ const SelectField = (props) => {
                                 value={fieldDescription}
                                 onChange={handleDescription}
                             />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="tooltip"
+                                label="Tooltip (Optional)"
+                                type="text"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                                value={tooltip}
+                                onChange={handleTooltip}
+                            />
                         </Box>
                     </Grid>
-                    <SelectPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} options={options}/>
+                    <SelectPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} options={options}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
+                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
                     <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
                 </Grid>
             </DialogActions>

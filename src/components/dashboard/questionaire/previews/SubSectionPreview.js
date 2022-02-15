@@ -4,10 +4,11 @@ import {
     Grid,
     Typography,
 } from '@mui/material'
+import GeneralTooltip from '../previews/GeneralTooltip'
 
-const SectionPreview = (props) => {
+const SubSectionPreview = (props) => {
 
-    const { sectionTitle, sectionDescription } = props
+    const { sectionLabel, sectionDescription, tooltip } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -18,9 +19,9 @@ const SectionPreview = (props) => {
                 component="form"
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
-                {sectionTitle!=''?
+                {sectionLabel!=''?
                     <Typography style={{ fontSize: '18px', borderBottom: '1px #5048E5 solid', color: '#5048E5' }}>
-                        {sectionTitle}
+                        {sectionLabel}<GeneralTooltip tipData={tooltip}/>
                     </Typography>
                 :
                     ''
@@ -38,5 +39,5 @@ const SectionPreview = (props) => {
     )
 }
 
-export default SectionPreview
+export default SubSectionPreview
                     

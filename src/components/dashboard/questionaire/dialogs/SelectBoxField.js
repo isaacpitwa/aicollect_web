@@ -40,6 +40,7 @@ const SelectBoxField = (props) => {
     
     const [fieldLabel, setFieldLabel] = useState('')
     const [fieldDescription, setFieldDescription] = useState('')
+    const [tooltip, setTooltip] = useState('')
     const [boxes, setBoxes] = useState([
         {
             'boxId': uuidv4(),
@@ -73,7 +74,25 @@ const SelectBoxField = (props) => {
 
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
-    };
+    }
+
+    const handleTooltip = (e) => {
+        setTooltip(e.target.value)
+    }
+
+    const cancel = () => {
+        setFieldLabel('')
+        setFieldDescription('')
+        setTooltip('')
+        setBoxes([
+            {
+                'boxId': uuidv4(),
+                'boxLabel': '',
+                'checked': false,
+            }
+        ])
+        handleClose()
+    }
 
     return (
         <Dialog
@@ -223,14 +242,26 @@ const SelectBoxField = (props) => {
                                 value={fieldDescription}
                                 onChange={handleDescription}
                             />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="tooltip"
+                                label="Tooltip (Optional)"
+                                type="text"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                                value={tooltip}
+                                onChange={handleTooltip}
+                            />
                         </Box>
                     </Grid>
-                    <SelectBoxesPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} checkBoxes={boxes}/>
+                    <SelectBoxesPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} checkBoxes={boxes}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
+                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
                     <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
                 </Grid>
             </DialogActions>

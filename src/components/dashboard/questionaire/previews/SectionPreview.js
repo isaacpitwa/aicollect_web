@@ -4,10 +4,11 @@ import {
     Grid,
     Typography,
 } from '@mui/material'
+import GeneralTooltip from '../previews/GeneralTooltip'
 
 const SectionPreview = (props) => {
 
-    const { sectionLabel, sectionDescription } = props
+    const { sectionLabel, sectionDescription, tooltip } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -20,7 +21,7 @@ const SectionPreview = (props) => {
             >
                 {sectionLabel!=''?
                     <Typography style={{ fontSize: '18px', borderBottom: '1px #5048E5 solid', color: '#5048E5' }}>
-                        {sectionLabel}
+                        {sectionLabel}<GeneralTooltip tipData={tooltip}/>
                     </Typography>
                 :
                     ''

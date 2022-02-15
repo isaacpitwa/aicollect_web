@@ -6,9 +6,11 @@ import {
     TextField
 } from '@mui/material'
 
+import GeneralTooltip from '../previews/GeneralTooltip'
+
 const TextfieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription } = props
+    const { fieldLabel, fieldDescription, tooltip } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -22,6 +24,9 @@ const TextfieldPreview = (props) => {
             <TextField
                 required
                 autoFocus
+                InputProps={{
+                  endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                }}
                 margin="dense"
                 id="label"
                 label={fieldLabel?fieldLabel:'Label'}

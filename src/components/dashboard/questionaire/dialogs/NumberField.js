@@ -32,6 +32,7 @@ const NumberField = (props) => {
     
     const [fieldLabel, setFieldLabel] = useState('')
     const [fieldDescription, setFieldDescription] = useState('')
+    const [tooltip, setTooltip] = useState('')
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -39,7 +40,18 @@ const NumberField = (props) => {
 
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
-    };
+    }
+    
+    const handleTooltip = (e) => {
+        setTooltip(e.target.value)
+    }
+
+    const cancel = () => {
+        setFieldLabel('')
+        setFieldDescription('')
+        setTooltip('')
+        handleClose()
+    }
 
     return (
         <Dialog
@@ -97,16 +109,6 @@ const NumberField = (props) => {
                                 onChange={handleLabel}
                             />
                             <TextField
-                                autoFocus
-                                margin="dense"
-                                id="tooltip"
-                                label="Tooltip (Optional)"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                            />
-                            <TextField
                                 margin="dense"
                                 id="outlined-multiline-static"
                                 label="Description (Optional)"
@@ -118,14 +120,26 @@ const NumberField = (props) => {
                                 value={fieldDescription}
                                 onChange={handleDescription}
                             />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="tooltip"
+                                label="Tooltip (Optional)"
+                                type="text"
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                                value={tooltip}
+                                onChange={handleTooltip}
+                            />
                         </Box>
                     </Grid>
-                    <NumberfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription}/>
+                    <NumberfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={handleClose} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
+                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
                     <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
                 </Grid>
             </DialogActions>
