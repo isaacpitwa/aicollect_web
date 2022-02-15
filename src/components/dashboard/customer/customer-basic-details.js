@@ -59,9 +59,9 @@ export const CustomerBasicDetails = (props) => {
         >
           Reset &amp; Send Password
         </Button>
-        <Button sx={{ m: 1 }}>
+        {/* <Button sx={{ m: 1 }}>
           Login as Customer
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );

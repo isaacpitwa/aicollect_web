@@ -172,7 +172,7 @@ export const CustomerEditForm = (props) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid
+            {/* <Grid
               item
               md={6}
               xs={12}
@@ -187,8 +187,8 @@ export const CustomerEditForm = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.firstTimeProcessor}
               />
-            </Grid>
-            <Grid
+            </Grid> */}
+            {/* <Grid
               item
               md={6}
               xs={12}
@@ -203,7 +203,7 @@ export const CustomerEditForm = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.processor}
               />
-            </Grid>
+            </Grid> */}
             <Grid
               item
               md={6}
