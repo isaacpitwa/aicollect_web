@@ -2,10 +2,10 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
-  DialogActions,
+  // DialogActions,
   DialogContent,
   DialogTitle,
-  Button,
+  // Button,
   Tabs,
   Tab,
   Box,
@@ -54,20 +54,35 @@ const CreateNewUserDialog = ({ open, handleClose }) => {
     setValue(newValue);
   };
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="lg">
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="lg">
       <DialogTitle>Create new user</DialogTitle>
       <DialogContent>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
-              <Tab label="Create User" {...a11yProps(0)} />
-              <Tab label="By Invite" {...a11yProps(1)} />
+            <Tabs
+              value={value}
+              onChange={handleChangeTab}
+              aria-label="basic tabs example">
+              <Tab
+                label="Create User"
+                {...a11yProps(0)} />
+              <Tab
+                label="By Invite"
+                {...a11yProps(1)} />
             </Tabs>
           </Box>
-          <TabPanel value={value} index={0}>
+          <TabPanel
+            value={value}
+            index={0}
+            >
             <CreateUserForm />
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          <TabPanel
+            value={value}
+            index={1}>
             <SendCustomerInvite />
           </TabPanel>
           

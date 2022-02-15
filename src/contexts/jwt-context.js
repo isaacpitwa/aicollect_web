@@ -67,7 +67,7 @@ export const AuthProvider = (props) => {
         const accessToken = window.localStorage.getItem('accessToken');
 
         if (accessToken) {
-          const user = await authApi.me(accessToken);
+          const user = await authenticationApi.userProfile(accessToken);
 
           dispatch({
             type: 'INITIALIZE',

@@ -16,7 +16,7 @@ export const CustomerDataManagement = (props) => (
           color="textSecondary"
           variant="body2"
         >
-          Remove this customer’s chart if he requested that, if not
+          Remove this user&apos;s chart if he requested that, if not
           please be aware that what has been deleted can never brought
           back
         </Typography>

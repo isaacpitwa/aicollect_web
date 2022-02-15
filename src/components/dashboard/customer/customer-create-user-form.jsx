@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  MenuItem,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -21,6 +22,9 @@ const CreateUserForm = (props) => {
     avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
     name: "Anika Visser",
   };
+
+  // const handleChange = (event) => {};
+
   const phoneRegEx = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const formik = useFormik({
     initialValues: {
@@ -32,6 +36,7 @@ const CreateUserForm = (props) => {
       phone: "",
       role: "",
       supervisor: "",
+      profilePhoto: []
     },
     validationSchema: Yup.object({
       firstName: Yup.string().min(3).max(255).required("First Name is required"),
@@ -53,6 +58,7 @@ const CreateUserForm = (props) => {
       console.log(values);
     },
   });
+  console.log(formik.values);
 
   return (
     <form noValidate onSubmit={formik.handleSubmit}>
@@ -74,7 +80,12 @@ const CreateUserForm = (props) => {
             >
               <UserCircleIcon fontSize="small" />
             </Avatar>
-            <Button variant="contained">Choose File. No file Chosen</Button>
+            <input type="file" name="profilePhoto" id="user_avatar" onChange={formik.handleChange} hidden />
+            <label htmlFor="user_avatar">
+            <Button variant="contained" component="span">
+              Choose File. No file Chosen
+            </Button>
+            </label>
           </Box>
         </Grid>
 
@@ -246,20 +257,20 @@ const CreateUserForm = (props) => {
           <Grid item md={6} sm={12}>
             <FormControl fullWidth>
               <FormLabel>Role *</FormLabel>
-              <Select type="date" variant="standard" value="admin" fullWidth>
-                <option value="admin">Super Administrator</option>
-                <option value="moderator">Moderator</option>
-                <option value="user">User</option>
+              <Select type="date" variant="standard" name="role" value={formik.values.role} onChange={formik.handleChange} fullWidth>
+                <MenuItem value="admin">Super Administrator</MenuItem>
+                <MenuItem value="moderator">Moderator</MenuItem>
+                <MenuItem value="user">User</MenuItem>
               </Select>
             </FormControl>
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3}>
             <FormControl fullWidth>
               <FormLabel>Supervisor *</FormLabel>
-              <Select type="date" variant="standard" value="david" fullWidth>
+              <Select type="date" variant="standard" name="supervisor" value={formik.values.supervisor} onChange={formik.handleChange} fullWidth>
                 <option value="david">Kityo David</option>
-                <option value="moderator">Moderator</option>
-                <option value="user">User</option>
+                <option value="kintu">Kintu Hassan</option>
+                <option value="aisha">Mubiru Aisha</option>
               </Select>
             </FormControl>
           </Grid>

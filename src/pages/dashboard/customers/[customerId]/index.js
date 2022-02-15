@@ -1,6 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import {
   Avatar,
   Box,
@@ -15,14 +16,14 @@ import {
   Typography
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { customerApi } from '../../../../__fake-api__/customer-api';
+import { userApi } from '../../../../api/users-api';
 import { AuthGuard } from '../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../components/dashboard/dashboard-layout';
 import { CustomerBasicDetails } from '../../../../components/dashboard/customer/customer-basic-details';
 import { CustomerDataManagement } from '../../../../components/dashboard/customer/customer-data-management';
-import { CustomerEmailsSummary } from '../../../../components/dashboard/customer/customer-emails-summary';
-import { CustomerInvoices } from '../../../../components/dashboard/customer/customer-invoices';
-import { CustomerPayment } from '../../../../components/dashboard/customer/customer-payment';
+// import { CustomerEmailsSummary } from '../../../../components/dashboard/customer/customer-emails-summary';
+// import { CustomerInvoices } from '../../../../components/dashboard/customer/customer-invoices';
+// import { CustomerPayment } from '../../../../components/dashboard/customer/customer-payment';
 import { CustomerLogs } from '../../../../components/dashboard/customer/customer-logs';
 import { useMounted } from '../../../../hooks/use-mounted';
 import { ChevronDown as ChevronDownIcon } from '../../../../icons/chevron-down';
@@ -32,14 +33,18 @@ import { getInitials } from '../../../../utils/get-initials';
 
 const tabs = [
   { label: 'Details', value: 'details' },
-  { label: 'Invoices', value: 'invoices' },
-  { label: 'Logs', value: 'logs' }
+  // { label: 'Invoices', value: 'invoices' },
+  { label: 'Recent Activity', value: 'logs' }
 ];
 
 const CustomerDetails = () => {
   const isMounted = useMounted();
   const [customer, setCustomer] = useState(null);
   const [currentTab, setCurrentTab] = useState('details');
+  const router = useRouter();
+  const { customerId } = router.query;
+  // Log
+  // console.log(customerId);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -47,7 +52,9 @@ const CustomerDetails = () => {
 
   const getCustomer = useCallback(async () => {
     try {
-      const data = await customerApi.getCustomer();
+
+      const data = await userApi.getUserDetails(customerId);
+      console.log(data)
 
       if (isMounted()) {
         setCustomer(data);
@@ -55,7 +62,7 @@ const CustomerDetails = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  }, [isMounted, customerId]);
 
   useEffect(() => {
       getCustomer();
@@ -75,7 +82,7 @@ const CustomerDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer Details | Material Kit Pro
+          Dashboard: User Details | AiCollect
         </title>
       </Head>
       <Box
@@ -105,7 +112,7 @@ const CustomerDetails = () => {
                     sx={{ mr: 1 }}
                   />
                   <Typography variant="subtitle2">
-                    Customers
+                    Users
                   </Typography>
                 </Link>
               </NextLink>
@@ -131,7 +138,7 @@ const CustomerDetails = () => {
                     width: 64
                   }}
                 >
-                  {getInitials(customer.name)}
+                  {getInitials(`${customer.firstname} ${customer.lastname}`)}
                 </Avatar>
                 <div>
                   <Typography variant="h4">
@@ -214,6 +221,9 @@ const CustomerDetails = () => {
                   xs={12}
                 >
                   <CustomerBasicDetails
+                    firstname={customer.firstname}
+                    lastname={customer.lastname}
+                    roles={customer.roles}
                     address1={customer.address1}
                     address2={customer.address2}
                     country={customer.country}
@@ -223,18 +233,18 @@ const CustomerDetails = () => {
                     state={customer.state}
                   />
                 </Grid>
-                <Grid
+                {/* <Grid
                   item
                   xs={12}
                 >
                   <CustomerPayment />
-                </Grid>
-                <Grid
+                </Grid> */}
+                {/* <Grid
                   item
                   xs={12}
                 >
                   <CustomerEmailsSummary />
-                </Grid>
+                </Grid> */}
                 <Grid
                   item
                   xs={12}
@@ -243,7 +253,7 @@ const CustomerDetails = () => {
                 </Grid>
               </Grid>
             )}
-            {currentTab === 'invoices' && <CustomerInvoices />}
+            {/* {currentTab === 'invoices' && <CustomerInvoices />} */}
             {currentTab === 'logs' && <CustomerLogs />}
           </Box>
         </Container>
