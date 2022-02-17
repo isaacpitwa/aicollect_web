@@ -60,7 +60,7 @@ export const AccountPopover = (props) => {
         }}
       >
         <Avatar
-          src={user.profileImage || 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png'}
+          src={user?.profileImage ? user.profileImage : 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png'}
           sx={{
             height: 40,
             width: 40
@@ -74,13 +74,13 @@ export const AccountPopover = (props) => {
           }}
         >
           <Typography variant="body1">
-            {`${user.firstname} ${user.lastname}`}
+            {user && `${user?.firstname} ${user?.lastname}`}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body2"
           >
-            {user.roles}
+            {user?.roles}
           </Typography>
         </Box>
       </Box>
