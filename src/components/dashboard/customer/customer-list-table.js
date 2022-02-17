@@ -180,7 +180,7 @@ export const CustomerListTable = (props) => {
                           color="textSecondary"
                           variant="body2"
                         >
-                          {customer.email}
+                          {customer.roles}
                         </Typography>
                       </Box>
                     </Box>

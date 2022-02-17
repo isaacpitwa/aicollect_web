@@ -47,12 +47,14 @@ const a11yProps = (index) => {
 }
 
 
-const CreateNewUserDialog = ({ open, handleClose }) => {
+const CreateNewUserDialog = ({ open, handleClose, users }) => {
   const [value, setValue] = useState(0);
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
+
+  const supervisors = users.filter((user) => user.roles === 'Admin');
   return (
     <Dialog
       open={open}
@@ -78,7 +80,7 @@ const CreateNewUserDialog = ({ open, handleClose }) => {
             value={value}
             index={0}
             >
-            <CreateUserForm />
+            <CreateUserForm supervisors={supervisors} handleClose={handleClose} />
           </TabPanel>
           <TabPanel
             value={value}

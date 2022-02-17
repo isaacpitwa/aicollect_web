@@ -219,6 +219,7 @@ export const CustomerEditForm = (props) => {
                 onChange={formik.handleChange}
                 disabled
                 value={formik.values.addedBy}
+                hidden
               />
             </Grid>
             <Grid

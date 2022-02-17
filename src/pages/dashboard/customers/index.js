@@ -221,7 +221,8 @@ const CustomerList = () => {
       >
         <CreateUserDialog
           open={openUserDialog}
-          handleClose={handleCloseUserDialog} />
+          handleClose={handleCloseUserDialog}
+          users={customers} />
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Grid

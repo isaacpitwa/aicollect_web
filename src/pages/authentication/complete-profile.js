@@ -17,7 +17,7 @@ const platformIcons = {
   JWT: '/static/icons/jwt.svg'
 };
 
-const PasswordReset = () => {
+const CompleteProfile = () => {
   const router = useRouter();
   const { platform } = useAuth();
   const { disableGuard } = router.query;
@@ -151,10 +151,10 @@ const PasswordReset = () => {
   );
 };
 
-PasswordReset.getLayout = (page) => (
+CompleteProfile.getLayout = (page) => (
   <GuestGuard>
     {page}
   </GuestGuard>
 );
 
-export default PasswordReset;
+export default CompleteProfile;

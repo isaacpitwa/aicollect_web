@@ -57,7 +57,26 @@ class UserApi {
         return data.data;
       }
     } catch (error) {
-      
+      console.error(error);
+    }
+  }
+
+  async createUser(user) {
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/authService/create_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(user)
+      });
+      const data = await response.json();
+      if (data.status === 201) {
+        return data.data;
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 }

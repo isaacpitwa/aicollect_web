@@ -2,35 +2,51 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Card, Container, Divider, Link, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Link, Typography } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 import { AuthBanner } from '../../components/authentication/auth-banner';
 import { AmplifyVerifyCode } from '../../components/authentication/amplify-verify-code';
 import { Logo } from '../../components/logo';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
+import { useState } from 'react';
 
-const platformIcons = {
-  Amplify: '/static/icons/amplify.svg',
-  Auth0: '/static/icons/auth0.svg',
-  Firebase: '/static/icons/firebase.svg',
-  JWT: '/static/icons/jwt.svg'
-};
 
 const VerifyCode = () => {
   const router = useRouter();
   const { platform } = useAuth();
-  const { disableGuard } = router.query;
+  const { disableGuard, token } = router.query;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
+  const handleVerifyEmail = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/authService/verifyEmail?token=${token}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        }
+      });
+      const data = await response.json;
+      if (data.status === 200) {
+        localStorage.setItem('accessToken', data.token);
+        router.push('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false)
+  };
+
   return (
     <>
       <Head>
         <title>
-          Verify Code | Material Kit Pro
+          Verify Email | AiCollect
         </title>
       </Head>
       <Box
@@ -52,40 +68,6 @@ const VerifyCode = () => {
             }
           }}
         >
-          <Box
-            sx={{
-              alignItems: 'center',
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.900'
-                : 'neutral.100',
-              borderColor: 'divider',
-              borderRadius: 1,
-              borderStyle: 'solid',
-              borderWidth: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              mb: 4,
-              p: 2,
-              '& > img': {
-                height: 32,
-                width: 'auto',
-                flexGrow: 0,
-                flexShrink: 0
-              }
-            }}
-          >
-            <Typography
-              color="textSecondary"
-              variant="caption"
-            >
-              The app authenticates via {platform}
-            </Typography>
-            <img
-              alt="Auth platform"
-              src={platformIcons[platform]}
-            />
-          </Box>
           <Card
             elevation={16}
             sx={{ p: 4 }}
@@ -112,40 +94,24 @@ const VerifyCode = () => {
                 </a>
               </NextLink>
               <Typography variant="h4">
-                Verify Code
+                Verify Email
               </Typography>
               <Typography
                 color="textSecondary"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, mb: 4 }}
                 variant="body2"
               >
-                Confirm registration using your verification code
+                Click button below to verify your email
               </Typography>
-            </Box>
-            <Box
-              sx={{
-                flexGrow: 1,
-                mt: 3
-              }}
-            >
-              {platform === 'Amplify' && <AmplifyVerifyCode />}
+              <Button
+                variant="contained"
+                onClick={handleVerifyEmail}
+                disabled={loading}
+                >
+                  { loading ? "Loading..." : "Verify Account" }
+              </Button>
             </Box>
             <Divider sx={{ my: 3 }} />
-            {platform === 'Amplify' && (
-              <NextLink
-                href={disableGuard
-                  ? `/authentication/login?disableGuard=${disableGuard}`
-                  : '/authentication/login'}
-                passHref
-              >
-                <Link
-                  color="textSecondary"
-                  variant="body2"
-                >
-                  Did you not receive the code?
-                </Link>
-              </NextLink>
-            )}
           </Card>
         </Container>
       </Box>
