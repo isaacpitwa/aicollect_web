@@ -2,45 +2,53 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import { Box, Button, Card, Container, Divider, Link, Typography } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 import { AuthBanner } from '../../components/authentication/auth-banner';
-import { AmplifyVerifyCode } from '../../components/authentication/amplify-verify-code';
+// import { AmplifyVerifyCode } from '../../components/authentication/amplify-verify-code';
 import { Logo } from '../../components/logo';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
+import { useMounted } from '../../hooks/use-mounted';
 import { useState } from 'react';
 
 
 const VerifyCode = () => {
   const router = useRouter();
-  const { platform } = useAuth();
+  const { authenticateAfterEmailVerify } = useAuth();
   const { disableGuard, token } = router.query;
   const [loading, setLoading] = useState(false);
+  const isMounted = useMounted();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
   const handleVerifyEmail = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/authService/verifyEmail?token=${token}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'Application/json'
+        const response = await fetch(`http://localhost:5000/api/v1/authService/verifyEmail?token=${token}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'Application/json'
+          }
+        });
+        const data = await response.json();
+        console.log(data);
+        if (data.status === 201) {
+          localStorage.setItem('accessToken', data.data.token);
+          await authenticateAfterEmailVerify();
+          if (isMounted()) {
+            router.push('/dashboard');
+          }
         }
-      });
-      const data = await response.json;
-      if (data.status === 200) {
-        localStorage.setItem('accessToken', data.token);
-        router.push('/');
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-    setLoading(false)
-  };
+      setLoading(false);
+  }
 
   return (
     <>
@@ -105,11 +113,13 @@ const VerifyCode = () => {
               </Typography>
               <Button
                 variant="contained"
-                onClick={handleVerifyEmail}
+                type="submit"
                 disabled={loading}
+                onClick={handleVerifyEmail}
                 >
-                  { loading ? "Loading..." : "Verify Account" }
+                  Verify Account
               </Button>
+              
             </Box>
             <Divider sx={{ my: 3 }} />
           </Card>

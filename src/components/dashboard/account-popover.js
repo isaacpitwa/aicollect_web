@@ -21,13 +21,12 @@ import { SwitchHorizontalOutlined as SwitchHorizontalOutlinedIcon } from '../../
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
-  const user = {
-    avatar: '/stuart.jpg',
-    name: 'Dambi Stuart'
-  };
+  // const user = {
+  //   avatar: '/stuart.jpg',
+  //   name: 'Dambi Stuart'
+  // };
 
   const handleLogout = async () => {
     try {
@@ -61,7 +60,7 @@ export const AccountPopover = (props) => {
         }}
       >
         <Avatar
-          src={user.avatar}
+          src={user.profileImage || 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png'}
           sx={{
             height: 40,
             width: 40
@@ -75,13 +74,13 @@ export const AccountPopover = (props) => {
           }}
         >
           <Typography variant="body1">
-            {user.name}
+            {`${user.firstname} ${user.lastname}`}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body2"
           >
-            Acme Inc
+            {user.roles}
           </Typography>
         </Box>
       </Box>

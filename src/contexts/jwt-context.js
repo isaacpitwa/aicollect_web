@@ -68,7 +68,7 @@ export const AuthProvider = (props) => {
 
         if (accessToken) {
           const user = await authenticationApi.userProfile(accessToken);
-
+          console.log(user);
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -136,6 +136,18 @@ export const AuthProvider = (props) => {
     });
   };
 
+  const authenticateAfterEmailVerify = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    const user = await authenticationApi.userProfile(accessToken);
+    dispatch({
+      type: 'LOGIN',
+      payload: {
+        user
+      }
+    });
+
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -143,7 +155,8 @@ export const AuthProvider = (props) => {
         platform: 'JWT',
         login,
         logout,
-        register
+        register,
+        authenticateAfterEmailVerify
       }}
     >
       {children}

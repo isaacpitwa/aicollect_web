@@ -21,12 +21,14 @@ class AuthApi {
   }
 
   async userProfile(accessToken) {
-    return accessToken && {
-      email: 'stuartdambi@gmail.com',
-      firstname: 'Stuart',
-      lastname: 'Dambi',
-      roles: 'Admin'
-    }
+    const response = await fetch('http://localhost:5000/api/v1/authService/check-user', {
+      headers: {
+        'Content-Type': 'Application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+    const user = await response.json();
+    return user.data;
   }
 }
 
