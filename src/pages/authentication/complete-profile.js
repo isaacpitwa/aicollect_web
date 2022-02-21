@@ -1,21 +1,14 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { Box, Button, Card, Container, Divider, Link, TextField, Typography } from '@mui/material';
-import { GuestGuard } from '../../components/authentication/guest-guard';
-import { AuthBanner } from '../../components/authentication/auth-banner';
-import { AmplifyPasswordReset } from '../../components/authentication/amplify-password-reset';
-import { Logo } from '../../components/logo';
-import { useAuth } from '../../hooks/use-auth';
-import { gtm } from '../../lib/gtm';
+import { useEffect } from "react";
+import Head from "next/head";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { Box, Divider, Typography, Grid } from "@mui/material";
 
-const platformIcons = {
-  Amplify: '/static/icons/amplify.svg',
-  Auth0: '/static/icons/auth0.svg',
-  Firebase: '/static/icons/firebase.svg',
-  JWT: '/static/icons/jwt.svg'
-};
+import { GuestGuard } from "../../components/authentication/guest-guard";
+import { JWTLogin } from "../../components/authentication/jwt-login";
+import { useAuth } from "../../hooks/use-auth";
+import { gtm } from "../../lib/gtm";
+import { CompleteUserProfile } from "../../components/authentication/complete-profile";
 
 const CompleteProfile = () => {
   const router = useRouter();
@@ -23,138 +16,87 @@ const CompleteProfile = () => {
   const { disableGuard } = router.query;
 
   useEffect(() => {
-    gtm.push({ event: 'page_view' });
+    gtm.push({ event: "page_view" });
   }, []);
 
   return (
     <>
       <Head>
-        <title>
-          Password Reset | AiCollect
-        </title>
+        <title>Complete Profile | AI Collect</title>
       </Head>
       <Box
         component="main"
         sx={{
-          backgroundColor: 'background.default',
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh'
+          backgroundColor: "background.default",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
         }}
       >
-        {/* <AuthBanner /> */}
-        <Container
-          maxWidth="sm"
-          sx={{
-            py: {
-              xs: '60px',
-              md: '120px'
-            }
-          }}
-        >
-          <Box
-            sx={{
-              alignItems: 'center',
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.900'
-                : 'neutral.100',
-              borderColor: 'divider',
-              borderRadius: 1,
-              borderStyle: 'solid',
-              borderWidth: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              mb: 4,
-              p: 2,
-              '& > img': {
-                height: 32,
-                width: 'auto',
-                flexGrow: 0,
-                flexShrink: 0
-              }
-            }}
-          >
-            <Typography
-              color="textSecondary"
-              variant="caption"
-            >
-              Password reset Page
-            </Typography>
-          </Box>
-          <Card
-            elevation={16}
-            sx={{ p: 4 }}
+        <Grid container>
+          <Grid
+            item
+            md={6}
+            sm={12}
+            style={{ backgroundImage: 'url("/login.jpg")' }}
+          ></Grid>
+          <Grid
+            item
+            md={6}
+            sm={12}
+            sx={{ p: 30 }}
+            display="flex"
+            justifyContent="center"
+            flexDirection="column"
+            alignItems="center"
           >
             <Box
               sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
               }}
             >
               <NextLink
                 href="/"
-                passHref
-              >
+                passHref>
                 <a>
-                  <Logo
-                    sx={{
-                      height: 40,
-                      width: 40
-                    }}
-                  />
+                  <img
+                    src="/logo.png"
+                    alt="aicollect"
+                    width={40}
+                    height={40} />
                 </a>
               </NextLink>
-              <Typography variant="h4">
-                Password Reset
-              </Typography>
-              <Typography
+              <Typography variant="h4">Complete Profile</Typography>
+              {/* <Typography
                 color="textSecondary"
-                sx={{ mt: 2, mb: 4 }}
-                variant="body2"
-              >
-                Please enter your email below to reset your password.
-              </Typography>
-              <TextField label='Email Address' type='email' placeholder='Enter your email' fullWidth />
-              <Button variant='contained' style={{ marginTop: 15 }}>Send Password Reset</Button>
+                sx={{ mt: 2 }}
+                variant="body2">
+                Don&#39;t have an Account? Register Here.
+              </Typography> */}
             </Box>
             <Box
               sx={{
                 flexGrow: 1,
-                mt: 3
+                mt: 3,
               }}
             >
-              {platform === 'Amplify' && <AmplifyPasswordReset />}
+              <CompleteUserProfile />
             </Box>
+
             <Divider sx={{ my: 3 }} />
-            {platform === 'Amplify' && (
-              <NextLink
-                href={disableGuard
-                  ? `/authentication/password-recovery?disableGuard=${disableGuard}`
-                  : '/authentication/password-recovery'}
-                passHref
-              >
-                <Link
-                  color="textSecondary"
-                  variant="body2"
-                >
-                  Did you not receive the code?
-                </Link>
-              </NextLink>
-            )}
-          </Card>
-        </Container>
+
+            
+
+          </Grid>
+        </Grid>
       </Box>
     </>
   );
 };
 
-CompleteProfile.getLayout = (page) => (
-  <GuestGuard>
-    {page}
-  </GuestGuard>
-);
+CompleteProfile.getLayout = (page) => <GuestGuard>{page}</GuestGuard>;
 
 export default CompleteProfile;

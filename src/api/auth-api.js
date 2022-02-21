@@ -28,7 +28,25 @@ class AuthApi {
       }
     })
     const user = await response.json();
+    console.log(user);
     return user.data;
+  }
+
+  async completeUserProfileAfterEmailInvitation(userDetails) {
+    // console.log("DETAILS", userDetails);
+      const response = await fetch('http://localhost:5000/api/v1/authService/complete-profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({...userDetails})
+      });
+      const data = await response.json();
+      if (data && data.status !== 201) {
+        throw new Error("Something went wrong, please try again");
+      }
+      console.log("DATA", data);
+      return data.data
   }
 }
 

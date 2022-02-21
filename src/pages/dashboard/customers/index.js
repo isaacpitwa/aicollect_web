@@ -45,7 +45,7 @@ const sortOptions = [
   }
 ];
 
-const applyFilters = (customers, filters) => customers.filter((customer) => {
+const applyFilters = (customers, filters) => customers?.filter((customer) => {
   if (filters.query) {
     let queryMatched = false;
     const properties = ['email', 'phone'];

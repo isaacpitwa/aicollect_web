@@ -148,6 +148,18 @@ export const AuthProvider = (props) => {
 
   };
 
+  const completeUserProfile = async (userDetails) => {
+    // console.log(userDetails);
+    const accessToken = await authenticationApi.completeUserProfileAfterEmailInvitation(userDetails);
+    // const user = authenticationApi.userProfile;
+    if (accessToken) {
+      // localStorage.setItem('accessToken', accessToken);
+      dispatch({
+        type: 'COMPLETE_PROFILE',
+      });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -156,7 +168,8 @@ export const AuthProvider = (props) => {
         login,
         logout,
         register,
-        authenticateAfterEmailVerify
+        authenticateAfterEmailVerify,
+        completeUserProfile
       }}
     >
       {children}
