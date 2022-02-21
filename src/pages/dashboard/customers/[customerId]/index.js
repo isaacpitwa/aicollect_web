@@ -249,7 +249,7 @@ const CustomerDetails = () => {
                   item
                   xs={12}
                 >
-                  <CustomerDataManagement />
+                  <CustomerDataManagement id={customerId} />
                 </Grid>
               </Grid>
             )}

@@ -40,7 +40,7 @@ export const CompleteUserProfile = (props) => {
           lastname: values.lastname,
           phone: values.phone,
           password: values.password,
-          token
+          token,
         }
         console.log(user);
         await profileUpdate(user);

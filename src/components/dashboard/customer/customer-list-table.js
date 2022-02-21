@@ -192,18 +192,18 @@ export const CustomerListTable = (props) => {
                     {customer.phone}
                   </TableCell>
                   <TableCell>
-                    {customer.isActive ? "Active" : "Not Active"}
+                    {customer.status ? "Active" : "Not Active"}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {customer.isVerified ? "Verified" : "Not Verified"}
+                      {customer.emailVerified ? "Verified" : "Not Verified"}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    {customer.addedBy}
+                    {customer.addedBy || 'N/A'}
                   </TableCell>
                   <TableCell>
                     {moment(customer.createdAt).format('DD/MM/YYYY')}
