@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
+import MuiPhoneNumber from 'material-ui-phone-number';
 import * as Yup from "yup";
 import { userApi } from '../../../api/users-api';
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
@@ -197,7 +198,7 @@ const CreateUserForm = ({supervisors, handleClose}) => {
           <Grid item md={6} sm={12} marginLeft={3} marginTop={3}>
             <FormControl fullWidth>
               <FormLabel> </FormLabel>
-              <TextField
+              {/* <TextField
                 error={Boolean(formik.touched.phone && formik.errors.phone)}
                 helperText={formik.touched.phone && formik.errors.phone}
                 placeholder="Phone *"
@@ -207,10 +208,15 @@ const CreateUserForm = ({supervisors, handleClose}) => {
                 onChange={formik.handleChange}
                 value={formik.values.phone}
                 fullWidth
-              />
-              {/* <InputMask name="phone" value={formik.values.phone} onChange={formik.handleChange} mask={formik.values.phone} maskChar="(" >
-                {(inputProps) => <TextField {...inputProps} name="phone"   type="tel" disableUnderline />}
-              </InputMask> */}
+              /> */}
+              <MuiPhoneNumber
+                defaultCountry="us"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.phone}
+                error={Boolean(formik.touched.phone && formik.errors.phone)}
+                helperText={formik.touched.phone && formik.errors.phone}
+                 />
               {formik.errors.submit && (
                 <Box sx={{ mt: 3 }}>
                   <FormHelperText error>
