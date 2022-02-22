@@ -2,22 +2,36 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Avatar, Box, Button, FormHelperText, TextField } from "@mui/material";
+import { Avatar, Box, Button, FormHelperText, TextField,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  IconButton,
+  InputAdornment, } from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
 import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
 
 export const CompleteUserProfile = (props) => {
+  const [showPassword, setShowPassword] = useState(false);
   const isMounted = useMounted();
   const router = useRouter();
   const { completeUserProfile: profileUpdate } = useAuth();
   const [profileImage, setProfileImage] = useState(null);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   
   const formik = useFormik({
     initialValues: {
       firstname: "",
       lastname: "",
       phone: "",
+      password: "",
+      confirmPassword: "",
       submit: null,
     },
     validationSchema: Yup.object({
@@ -29,8 +43,9 @@ export const CompleteUserProfile = (props) => {
         .required("Last name is required"),
       phone: Yup.string()
         .max(255)
-        .required("Last name is required"),
+        .required("Phone number is required"),
       password: Yup.string().max(255).required("Password is required"),
+      confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords do not match'),
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -130,18 +145,65 @@ export const CompleteUserProfile = (props) => {
         value={formik.values.phone}
       />
       
-      <TextField
-        error={Boolean(formik.touched.password && formik.errors.password)}
-        fullWidth
-        helperText={formik.touched.password && formik.errors.password}
-        label="Password"
-        margin="normal"
-        name="password"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="password"
-        value={formik.values.password}
-      />
+      <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
+        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <OutlinedInput
+          error={Boolean(formik.touched.password && formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+          id="outlined-adornment-password"
+          type={showPassword ? "text" : "password"}
+          name="password"
+          margin="normal"
+          value={formik.values.password}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Password"
+          fullWidth
+        />
+      </FormControl>
+
+      <FormControl 
+        sx={{ m: 1 }}
+        fullWidth>
+        <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
+        <OutlinedInput
+          error={Boolean(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+          id="confirmPassword"
+          type={showPassword ? "text" : "password"}
+          name="confirmPassword"
+          // margin="normal"
+          value={formik.values.confirmPassword}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Password"
+          fullWidth
+        />
+      </FormControl>
       
       {formik.errors.submit && (
         <Box sx={{ mt: 3 }}>

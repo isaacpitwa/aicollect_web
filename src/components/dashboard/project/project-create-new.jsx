@@ -32,7 +32,7 @@ const CreateNewProjectDialog = ({ open, handleClose }) => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid item md={12} xs={12}>
+                {/* <Grid item md={12} xs={12}>
                   <FormControl marginTop={3} fullWidth>
                     <InputLabel>Select Sector *</InputLabel>
                     <Select label="Select Section *" value="">
@@ -41,7 +41,7 @@ const CreateNewProjectDialog = ({ open, handleClose }) => {
                       <MenuItem value="min">Mining</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item md={12} xs={12}>
                   <FormControl fullWidth>
                     <TextField placeholder="description *" rows={3} multiline  />

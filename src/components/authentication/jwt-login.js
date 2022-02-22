@@ -1,18 +1,37 @@
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Alert, Box, Button, FormHelperText, TextField } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  FormHelperText,
+  TextField,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
 import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
+import { useState } from "react";
 
 // Demo Account
 // email: 'demo@devias.io',
 // password: 'Password123!',
 
 export const JWTLogin = (props) => {
+  const [showPassword, setShowPassword] = useState(false);
   const isMounted = useMounted();
   const router = useRouter();
   const { login } = useAuth();
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -47,9 +66,7 @@ export const JWTLogin = (props) => {
   });
 
   return (
-    <form noValidate
-      onSubmit={formik.handleSubmit}
-      {...props}>
+    <form noValidate onSubmit={formik.handleSubmit} {...props}>
       <TextField
         autoFocus
         error={Boolean(formik.touched.email && formik.errors.email)}
@@ -63,7 +80,7 @@ export const JWTLogin = (props) => {
         type="email"
         value={formik.values.email}
       />
-      <TextField
+      {/* <TextField
         error={Boolean(formik.touched.password && formik.errors.password)}
         fullWidth
         helperText={formik.touched.password && formik.errors.password}
@@ -74,7 +91,36 @@ export const JWTLogin = (props) => {
         onChange={formik.handleChange}
         type="password"
         value={formik.values.password}
-      />
+      /> */}
+
+      <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
+        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <OutlinedInput
+          error={Boolean(formik.touched.password && formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+          id="outlined-adornment-password"
+          type={showPassword ? "text" : "password"}
+          name="password"
+          margin="normal"
+          value={formik.values.password}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Password"
+          fullWidth
+        />
+      </FormControl>
       {formik.errors.submit && (
         <Box sx={{ mt: 3 }}>
           <FormHelperText error>{formik.errors.submit}</FormHelperText>
@@ -90,12 +136,6 @@ export const JWTLogin = (props) => {
         >
           Log In
         </Button>
-      </Box>
-      <Box 
-        sx={{ mt: 2 }}
-        display="flex" 
-        justifyContent="center">
-        <Alert severity="warning">develop mode</Alert>
       </Box>
     </form>
   );
