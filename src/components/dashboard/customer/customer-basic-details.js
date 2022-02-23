@@ -4,7 +4,7 @@ import { PropertyList } from '../../property-list';
 import { PropertyListItem } from '../../property-list-item';
 
 export const CustomerBasicDetails = (props) => {
-  const { address1, address2, country, email, isVerified, phone, state, ...other } = props;
+  const { firstname, lastname, roles, address1, address2, country, email, isVerified, phone, state, ...other } = props;
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
   const align = mdUp ? 'horizontal' : 'vertical';
@@ -14,6 +14,18 @@ export const CustomerBasicDetails = (props) => {
       <CardHeader title="Basic Details" />
       <Divider />
       <PropertyList>
+        <PropertyListItem
+          align={align}
+          divider
+          label="First Name"
+          value={firstname}
+        />
+        <PropertyListItem
+          align={align}
+          divider
+          label="Last Name"
+          value={lastname}
+        />
         <PropertyListItem
           align={align}
           divider
@@ -29,26 +41,8 @@ export const CustomerBasicDetails = (props) => {
         <PropertyListItem
           align={align}
           divider
-          label="Country"
-          value={country}
-        />
-        <PropertyListItem
-          align={align}
-          divider
-          label="State/Region"
-          value={state}
-        />
-        <PropertyListItem
-          align={align}
-          divider
-          label="Address 1"
-          value={state}
-        />
-        <PropertyListItem
-          align={align}
-          divider
-          label="Address 2"
-          value={address2}
+          label="Role"
+          value={roles}
         />
       </PropertyList>
       <CardActions
@@ -65,9 +59,9 @@ export const CustomerBasicDetails = (props) => {
         >
           Reset &amp; Send Password
         </Button>
-        <Button sx={{ m: 1 }}>
+        {/* <Button sx={{ m: 1 }}>
           Login as Customer
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );

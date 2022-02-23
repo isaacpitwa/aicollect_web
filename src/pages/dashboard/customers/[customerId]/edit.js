@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { customerApi } from '../../../../__fake-api__/customer-api';
+import { userApi } from '../../../../api/users-api';
 import { AuthGuard } from '../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../components/dashboard/dashboard-layout';
 import { CustomerEditForm } from '../../../../components/dashboard/customer/customer-edit-form';
@@ -14,6 +15,10 @@ import { getInitials } from '../../../../utils/get-initials';
 const CustomerEdit = () => {
   const isMounted = useMounted();
   const [customer, setCustomer] = useState(null);
+  const router = useRouter();
+  const { customerId } = router.query;
+  // Log Id
+  console.log(customerId);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -21,7 +26,7 @@ const CustomerEdit = () => {
 
   const getCustomer = useCallback(async () => {
     try {
-      const data = await customerApi.getCustomer();
+      const data = await userApi.getUserDetails(customerId);
 
       if (isMounted()) {
         setCustomer(data);
@@ -29,7 +34,7 @@ const CustomerEdit = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  }, [isMounted, customerId]);
 
   useEffect(() => {
       getCustomer();
@@ -45,7 +50,7 @@ const CustomerEdit = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer Edit | Material Kit Pro
+          Dashboard: User Edit | AiCollect
         </title>
       </Head>
       <Box
@@ -75,7 +80,7 @@ const CustomerEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  Customers
+                  Users
                 </Typography>
               </Link>
             </NextLink>
@@ -95,7 +100,7 @@ const CustomerEdit = () => {
                 width: 64
               }}
             >
-              {getInitials(customer.name)}
+              {getInitials(`${customer.firstname} ${customer.lastname}`)}
             </Avatar>
             <div>
               <Typography

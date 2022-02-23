@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -8,41 +9,22 @@ import {
   Divider,
   Grid,
   InputAdornment,
-  Tab,
-  Tabs,
   TextField,
   Typography
 } from '@mui/material';
-import { customerApi } from '../../../__fake-api__/customer-api';
+import { userApi } from '../../../api/users-api';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
 import { CustomerListTable } from '../../../components/dashboard/customer/customer-list-table';
 import { useMounted } from '../../../hooks/use-mounted';
 import { Download as DownloadIcon } from '../../../icons/download';
-import { Plus as PlusIcon } from '../../../icons/plus';
+// import { Plus as PlusIcon } from '../../../icons/plus';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import CreateUserDialog from '../../../components/dashboard/customer/customer-create-new';
 
-const tabs = [
-  {
-    label: 'All',
-    value: 'all'
-  },
-  {
-    label: 'Accepts Marketing',
-    value: 'hasAcceptedMarketing'
-  },
-  {
-    label: 'Prospect',
-    value: 'isProspect'
-  },
-  {
-    label: 'Returning',
-    value: 'isReturning'
-  }
-];
 
 const sortOptions = [
   {
@@ -50,23 +32,23 @@ const sortOptions = [
     value: 'updatedAt|desc'
   },
   {
-    label: 'Last update (oldest)',
+    label: 'Last signed in (oldest)',
     value: 'updatedAt|asc'
   },
   {
-    label: 'Total orders (highest)',
+    label: 'Active',
     value: 'orders|desc'
   },
   {
-    label: 'Total orders (lowest)',
+    label: 'Total Questionaires (lowest)',
     value: 'orders|asc'
   }
 ];
 
-const applyFilters = (customers, filters) => customers.filter((customer) => {
+const applyFilters = (customers, filters) => customers?.filter((customer) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['email', 'phone'];
 
     properties.forEach((property) => {
       if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -145,6 +127,7 @@ const CustomerList = () => {
     isProspect: null,
     isReturning: null
   });
+  const router = useRouter();
 
   const [openUserDialog, setOpenUserDialog] = useState(false);
 
@@ -155,23 +138,30 @@ const CustomerList = () => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  // const getCustomers = useCallback(async () => {
-  //   try {
-  //     const data = await customerApi.getCustomers();
+  const getCustomers = useCallback(async () => {
+    try {
+      const data = await userApi.getUsers();
 
-  //     if (isMounted()) {
-  //       setCustomers(data);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, [isMounted]);
+      if (isMounted()) {
+        // if (data === 'Unauthenticated') {
+        //   localStorage.removeItem('accessToken');
+        //   router.push({
+        //     pathname: '/',
+        //     query: { returnUrl: router.asPath },
+        //   });
+        // }
+        setCustomers(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted]);
 
-  // useEffect(() => {
-  //     getCustomers();
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []);
+  useEffect(() => {
+      getCustomers();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []);
 
 
   const handleTabsChange = (event, value) => {
@@ -219,7 +209,7 @@ const CustomerList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer List | Material Kit Pro
+          Dashboard: Customer List | AiCollect
         </title>
       </Head>
       <Box
@@ -229,7 +219,10 @@ const CustomerList = () => {
           py: 8
         }}
       >
-        <CreateUserDialog open={openUserDialog} handleClose={handleCloseUserDialog} />
+        <CreateUserDialog
+          open={openUserDialog}
+          handleClose={handleCloseUserDialog}
+          users={customers} />
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Grid
@@ -244,11 +237,11 @@ const CustomerList = () => {
               </Grid>
               <Grid item>
                 <Button
-                  startIcon={<PlusIcon fontSize="small" />}
+                  startIcon={<GroupAddIcon fontSize="small" />}
                   variant="contained"
                   onClick={handleOpenUserDialog}
                 >
-                  Add User
+                  Create User
                 </Button>
               </Grid>
             </Grid>

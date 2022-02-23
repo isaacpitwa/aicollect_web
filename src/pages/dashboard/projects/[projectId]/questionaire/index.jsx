@@ -15,19 +15,19 @@ import {
   Stack,
   IconButton
 } from '@mui/material';
+import { useDropzone } from 'react-dropzone';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { customerApi } from '../../../../../__fake-api__/customer-api';
+import XLSX from 'xlsx';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { CustomerListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
 import { useMounted } from '../../../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../../../icons/download';
-import { Plus as PlusIcon } from '../../../../../icons/plus';
 import { Search as SearchIcon } from '../../../../../icons/search';
-import { Upload as UploadIcon } from '../../../../../icons/upload';
 import { gtm } from '../../../../../lib/gtm';
+import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
+import { convertToJSON } from '../../../../../utils/convert-excel-data-to-json';
 
 const tabs = [
   {
@@ -116,16 +116,16 @@ const applySort = (customers, sort) => {
   const stabilizedThis = customers.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
@@ -154,10 +154,56 @@ const QuestionaireList = () => {
     isProspect: null,
     isReturning: null
   });
+  const [openImportData, setOpenImportData] = useState(false);
+  const [excelFile, setExcelFile] = useState(null);
+  const [colDefs, setColDefs] = useState();
+  const [data, setData] = useState(null);
+
+ 
+
+  const onDropExcelFiles = useCallback((acceptedFiles) => {
+    setExcelFile(acceptedFiles[0]);
+    const selectedFile = acceptedFiles[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      // Parse data
+      const bstr = event.target.result;
+      const workbook = XLSX.read(bstr, { type: 'binary' });
+
+      // get first sheet
+      const workSheetName = workbook.SheetNames[0];
+      const workSheet = workbook.Sheets[workSheetName];
+
+      // Convert to array
+      const fileData = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
+      const headers = fileData[0];
+      const heads = headers.map((head) => ({ title: head, field: head }));
+      setColDefs(heads);
+
+      // removing the header
+      fileData.splice(0,1);
+      setData(convertToJSON(headers, fileData));
+    };
+
+    reader.readAsBinaryString(selectedFile)
+    
+  }, []);
+  data && console.log(data);
+
+  
+
+  
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop: onDropExcelFiles, accept: '.xlsx,.csv,xls', maxFiles: 1 })
+
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
+
+  const handleOpenImportData = () => setOpenImportData(true);
+  const handleCloseImportData = () => setOpenImportData(false);
+
 
   // const getCustomers = useCallback(async () => {
   //   try {
@@ -241,19 +287,11 @@ const QuestionaireList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Project XYZ
+                  Project XYZ - Questionaires
                 </Typography>
               </Grid>
-              <Grid item>
-                <Button
-                  startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
-                >
-                  Add
-                </Button>
-              </Grid>
             </Grid>
-            
+
           </Box>
 
           <Stack direction="row" mb={4}>
@@ -298,7 +336,7 @@ const QuestionaireList = () => {
                     }}
                   >
                     <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
-                      <FactCheck  />
+                      <FactCheck />
                     </IconButton>
                     <div>
                       <Typography variant="body2">10</Typography>
@@ -317,7 +355,7 @@ const QuestionaireList = () => {
             </Grid>
           </Stack>
 
-          
+
 
           <Card>
             <Tabs
@@ -373,9 +411,18 @@ const QuestionaireList = () => {
                 startIcon={<CloudDownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
+                onClick={handleOpenImportData}
               >
                 Import
               </Button>
+              <ExcelDataImport
+                open={openImportData}
+                handleClose={handleCloseImportData}
+                excelFile={excelFile}
+                setExcelFile={setExcelFile}
+                getRootProps={getRootProps}
+                getInputProps={getInputProps}
+                isDragActive={isDragActive} />
               <Button
                 startIcon={<AddTaskRounded fontSize="small" />}
                 sx={{ m: 1 }}

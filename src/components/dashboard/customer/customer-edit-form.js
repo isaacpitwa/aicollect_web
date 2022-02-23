@@ -11,53 +11,66 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   Switch,
   TextField,
   Typography
 } from '@mui/material';
+import { userApi } from '../../../api/users-api';
 import { wait } from '../../../utils/wait';
 
 export const CustomerEditForm = (props) => {
-  const { customer, ...other } = props;
+  const { customer, updateUser, ...other } = props;
   const formik = useFormik({
     initialValues: {
-      address1: customer.address1 || '',
-      address2: customer.address2 || '',
-      country: customer.country || '',
+      firstname: customer.firstname || '',
+      lastname: customer.lastname || '',
+      firstTimeProcessor: customer.firstTimeProcessor || '',
       email: customer.email || '',
-      hasDiscount: customer.hasDiscount || false,
+      isActive: customer.isActive || false,
       isVerified: customer.isVerified || false,
-      name: customer.name || '',
+      roles: customer.roles || '',
       phone: customer.phone || '',
-      state: customer.state || '',
+      processor: customer.processor || '',
+      isDeleted: customer.isDeleted || false,
+      addedBy: "Stuar Dambi",
       submit: null
     },
     validationSchema: Yup.object({
-      address1: Yup.string().max(255),
-      address2: Yup.string().max(255),
-      country: Yup.string().max(255),
+      firstname: Yup.string().max(255),
+      lastname: Yup.string().max(255),
+      firstTimeProcessor: Yup.string().max(255),
       email: Yup
         .string()
         .email('Must be a valid email')
         .max(255)
         .required('Email is required'),
-      hasDiscount: Yup.bool(),
+      isActive: Yup.bool(),
       isVerified: Yup.bool(),
-      name: Yup
+      roles: Yup
         .string()
         .max(255)
-        .required('Name is required'),
+        .required('Role is required'),
       phone: Yup.string().max(15),
-      state: Yup.string().max(255)
+      processor: Yup.string().max(255),
+      addedBy: Yup.string().max(255),
+      isDeleted: Yup.bool()
     }),
     onSubmit: async (values, helpers) => {
       try {
         // NOTE: Make API request
-        await wait(500);
-        helpers.setStatus({ success: true });
-        helpers.setSubmitting(false);
-        toast.success('Customer updated!');
+        // await wait(500);
+        const data = await userApi.updateUserDetails(customer.id, {...formik.values, addedBy: 1});
+        if (Array.isArray(data)) {
+          helpers.setStatus({ success: true });
+          helpers.setSubmitting(false);
+          toast.success('User Details have been updated!');
+        }
+        
       } catch (err) {
         console.error(err);
         toast.error('Something went wrong!');
@@ -86,15 +99,32 @@ export const CustomerEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.name && formik.errors.name)}
+                error={Boolean(formik.touched.firstname && formik.errors.firstname)}
                 fullWidth
-                helperText={formik.touched.name && formik.errors.name}
+                helperText={formik.touched.firstname && formik.errors.firstname}
                 label="Full name"
-                name="name"
+                name="firstname"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
-                value={formik.values.name}
+                value={formik.values.firstname}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                error={Boolean(formik.touched.lastname && formik.errors.lastname)}
+                fullWidth
+                helperText={formik.touched.lastname && formik.errors.lastname}
+                label="Full name"
+                name="lastname"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                required
+                value={formik.values.lastname}
               />
             </Grid>
             <Grid
@@ -119,63 +149,77 @@ export const CustomerEditForm = (props) => {
               md={6}
               xs={12}
             >
+              <FormControl fullWidth>
+                <InputLabel>Role</InputLabel>
+                <Select
+                  error={Boolean(formik.touched.roles && formik.errors.roles)}
+                  fullWidth
+                  helperText={formik.touched.roles && formik.errors.roles}
+                  label="Role"
+                  name="roles"
+                  title='Select Roles'
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.roles}
+                >
+                  <MenuItem value="Owner">Owner</MenuItem>
+                  <MenuItem value="Data Manager">Data Manager</MenuItem>
+                  <MenuItem value="Supervisor">Supervisor</MenuItem>
+                  <MenuItem value="Standard user">Standard user</MenuItem>
+                  <MenuItem value="External user">External user</MenuItem>
+                  <MenuItem value="Billing Manager">Billing Manager</MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* <Grid
+              item
+              md={6}
+              xs={12}
+            >
               <TextField
-                error={Boolean(formik.touched.country && formik.errors.country)}
+                error={Boolean(formik.touched.firstTimeProcessor && formik.errors.firstTimeProcessor)}
                 fullWidth
-                helperText={formik.touched.country && formik.errors.country}
-                label="Country"
-                name="country"
+                helperText={formik.touched.firstTimeProcessor && formik.errors.firstTimeProcessor}
+                label="First Time Processor"
+                name="firstTimeProcessor"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.country}
+                value={formik.values.firstTimeProcessor}
               />
-            </Grid>
+            </Grid> */}
+            {/* <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                error={Boolean(formik.touched.processor && formik.errors.processor)}
+                fullWidth
+                helperText={formik.touched.processor && formik.errors.processor}
+                label="Processor"
+                name="processor"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.processor}
+              />
+            </Grid> */}
             <Grid
               item
               md={6}
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.state && formik.errors.state)}
+                error={Boolean(formik.touched.addedBy && formik.errors.addedBy)}
                 fullWidth
-                helperText={formik.touched.state && formik.errors.state}
-                label="State/Region"
-                name="state"
+                helperText={formik.touched.addedBy && formik.errors.addedBy}
+                label="Added By"
+                name="addedBy"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.state}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.address1 && formik.errors.address1)}
-                fullWidth
-                helperText={formik.touched.address1 && formik.errors.address1}
-                label="Address 1"
-                name="address1"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address1}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.address2 && formik.errors.address2)}
-                fullWidth
-                helperText={formik.touched.address2 && formik.errors.address2}
-                label="Address 2"
-                name="address2"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address2}
+                disabled
+                value={formik.values.addedBy}
+                hidden
               />
             </Grid>
             <Grid
@@ -208,15 +252,14 @@ export const CustomerEditForm = (props) => {
                 gutterBottom
                 variant="subtitle1"
               >
-                Make Contact Info Public
+                Is Verified
               </Typography>
               <Typography
                 color="textSecondary"
                 variant="body2"
                 sx={{ mt: 1 }}
               >
-                Means that anyone viewing your profile will be able to see your contacts
-                details
+                Means that user has verified his/her email address
               </Typography>
             </div>
             <Switch
@@ -241,24 +284,23 @@ export const CustomerEditForm = (props) => {
                 gutterBottom
                 variant="subtitle1"
               >
-                Available to hire
+                Is Active
               </Typography>
               <Typography
                 color="textSecondary"
                 variant="body2"
                 sx={{ mt: 1 }}
               >
-                Toggling this will let your teammates know that you are available for
-                acquiring new projects
+                Toggling this will make the user Inactive
               </Typography>
             </div>
             <Switch
-              checked={formik.values.hasDiscount}
+              checked={formik.values.isActive}
               color="primary"
               edge="start"
-              name="hasDiscount"
+              name="isActive"
               onChange={formik.handleChange}
-              value={formik.values.hasDiscount}
+              value={formik.values.isActive}
             />
           </Box>
         </CardContent>
