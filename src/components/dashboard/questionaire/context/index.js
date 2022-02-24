@@ -3,18 +3,40 @@ import { v4 as uuidv4 } from 'uuid'
 
 export const FormContext = createContext();
 
+const compsData = [	
+	{
+		id: '1213',
+		title: 'Section 1',
+		description: 'Section Description 1',
+		type: 'section',
+		components: [
+			{
+                id: '12345',
+				title: 'Text Field'
+			},
+			{
+                id: '123456',
+				title: 'TextArea Field'
+			}
+		],
+	}
+]
+
 const FormProvider = (props) => {
 
+    const [sectionCreated, setSectionCreated] = useState(false)
     const [formData, setFormData] = useState({
         type: 'form',
         formId: uuidv4(),
         userId: uuidv4(),
         components: []
     })
-    const [componentsData, setComponentsData] = useState([])
+
+    const [componentsData, setComponentsData] = useState(compsData)
 
     const addComponent = (newComponent) => {
         setComponentsData(componentsData => [...componentsData, newComponent])
+        setSectionCreated(true)
     }
 
     const createForm = () => {
@@ -27,6 +49,7 @@ const FormProvider = (props) => {
     return (
         <FormContext.Provider
             value={{
+                sectionCreated,
                 formData,
                 addComponent,
                 componentsData,

@@ -7,7 +7,6 @@ import {
 } from '@mui/material'
 import MuiPhoneNumber from 'material-ui-phone-number'
 import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
 import GeneralTooltip from '../previews/GeneralTooltip'
 
 const PhoneFieldPreview = (props) => {

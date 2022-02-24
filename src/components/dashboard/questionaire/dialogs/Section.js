@@ -51,9 +51,11 @@ const Section = (props) => {
     }
 
     const sectionData = {
-        type: 'section',
+        id: uuidv4(),
         title: sectionLabel,
+        type: 'section',
         description: sectionDescription,
+        tooltip: tooltip,
         components: []
     }
 
