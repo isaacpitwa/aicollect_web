@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import NextLink from 'next/link';
 import Head from "next/head";
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -14,6 +15,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import toast from "react-hot-toast";
 import { AuthGuard } from "../../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../../components/dashboard/dashboard-layout";
 import { ProjectListTable } from "../../../../components/dashboard/projectDetails/project-list-table";
@@ -118,12 +120,14 @@ const applyPagination = (customers, page, rowsPerPage) =>
 
 const ProjectList = () => {
   const queryRef = useRef(null);
-  const [customers] = useState([]);
+  const [project, setProject] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
   const [openTaskDialog, setOpenTaskDialog] = useState(false);
+  const router = useRouter();
+  const { projectId } = router.query;
 
   const [filters, setFilters] = useState({
     query: "",
@@ -166,13 +170,33 @@ const ProjectList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(customers, filters);
+  const filteredCustomers = applyFilters(project?.projectTeam || [], filters);
   const sortedCustomers = applySort(filteredCustomers, sort);
   const paginatedCustomers = applyPagination(
     sortedCustomers,
     page,
     rowsPerPage
   );
+
+  useEffect(() => {
+    const getProjects = async () => {
+      if (projectId) {
+        try {
+          const response = await fetch(`http://localhost:4000/api/v1/projects/${projectId}`);
+          const data = await response.json();
+          console.log(data);
+          if (data?.status === 200) {
+            toast.success(data.message, { duration: 10000 });
+            setProject(data.data);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error('Sorry, can not load projects right now, try again later', { duration: 6000 });
+        }
+      }
+    };
+    getProjects();
+  }, [setProject, projectId])
 
   return (
     <>
@@ -190,7 +214,7 @@ const ProjectList = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Project: Rukingiri Farms</Typography>
+                <Typography variant="h4">Project: {project?.projectname}</Typography>
               </Grid>
               <Grid item>
                 <Button
@@ -204,6 +228,7 @@ const ProjectList = () => {
               <AddTeamMember
                 open={openProjectDialog}
                 handleClose={handleCloseProjectDialog}
+                projectId={projectId}
               />
             </Grid>
           </Box>
@@ -211,7 +236,7 @@ const ProjectList = () => {
           <Stack direction="row" mb={4}>
             <Grid container spacing={3}>
               <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
-                <NextLink href="/dashboard/projects/43/questionaire" passHref>
+                <NextLink href={`/dashboard/projects/${projectId}/questionaire`} passHref>
                   <Card elevation={8}>
                     <Box
                       sx={{
@@ -226,7 +251,7 @@ const ProjectList = () => {
                         <GroupAddRounded />
                       </IconButton>
                       <div>
-                        <Typography variant="body2">10</Typography>
+                        <Typography variant="body2">0</Typography>
                         <Typography
                           sx={{ mt: 1 }}
                           color="textSecondary"
@@ -256,7 +281,7 @@ const ProjectList = () => {
                       <FactCheck />
                     </IconButton>
                     <div>
-                      <Typography variant="body2">10</Typography>
+                      <Typography variant="body2">0</Typography>
                       <Typography
                         sx={{ mt: 1 }}
                         color="textSecondary"

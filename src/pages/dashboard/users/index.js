@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -9,19 +10,21 @@ import {
   Grid,
   InputAdornment,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material';
+import { userApi } from '../../../api/users-api';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { ProjectListTable } from '../../../components/dashboard/project/project-list-table';
-// import { useMounted } from '../../../hooks/use-mounted';
+import { UserListTable } from '../../../components/dashboard/user/user-list-table';
+import { useMounted } from '../../../hooks/use-mounted';
 import { Download as DownloadIcon } from '../../../icons/download';
-import { Plus as PlusIcon } from '../../../icons/plus';
+// import { Plus as PlusIcon } from '../../../icons/plus';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
-import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
-import toast from 'react-hot-toast';
+import CreateUserDialog from '../../../components/dashboard/user/user-create-new';
+
 
 const sortOptions = [
   {
@@ -29,23 +32,23 @@ const sortOptions = [
     value: 'updatedAt|desc'
   },
   {
-    label: 'Last update (oldest)',
+    label: 'Last signed in (oldest)',
     value: 'updatedAt|asc'
   },
   {
-    label: 'Total Questionaires (highest)',
+    label: 'Active',
     value: 'orders|desc'
   },
   {
-    label: 'Total Members (lowest)',
+    label: 'Total Questionaires (lowest)',
     value: 'orders|asc'
   }
 ];
 
-const applyFilters = (customers, filters) => customers.filter((customer) => {
+const applyFilters = (customers, filters) => customers?.filter((customer) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['email', 'phone'];
 
     properties.forEach((property) => {
       if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -93,7 +96,6 @@ const applySort = (customers, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
   const stabilizedThis = customers.map((el, index) => [el, index]);
-  
 
   stabilizedThis.sort((a, b) => {
         const newOrder = comparator(a[0], b[0]);
@@ -111,31 +113,72 @@ const applySort = (customers, sort) => {
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProjectList = () => {
+const UserList = () => {
+  const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [projects, setProjects] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
-  const [openProjectDialog, setOpenProjectDialog] = useState(false);
-
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
     isProspect: null,
     isReturning: null
   });
+  const router = useRouter();
 
-  const handleOpenProjectDialog = () => {
-    setOpenProjectDialog(true)
-  };
-  const handleCloseProjectDialog = () => {
-    setOpenProjectDialog(false)
-  };
+  const [openUserDialog, setOpenUserDialog] = useState(false);
+
+  const handleOpenUserDialog = () => setOpenUserDialog(true);
+  const handleCloseUserDialog = () => setOpenUserDialog(false);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
+
+  const getCustomers = useCallback(async () => {
+    try {
+      const data = await userApi.getUsers();
+
+      if (isMounted()) {
+        // if (data === 'Unauthenticated') {
+        //   localStorage.removeItem('accessToken');
+        //   router.push({
+        //     pathname: '/',
+        //     query: { returnUrl: router.asPath },
+        //   });
+        // }
+        setCustomers(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+      getCustomers();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []);
+
+
+  const handleTabsChange = (event, value) => {
+    const updatedFilters = {
+      ...filters,
+      hasAcceptedMarketing: null,
+      isProspect: null,
+      isReturning: null
+    };
+
+    if (value !== 'all') {
+      updatedFilters[value] = true;
+    }
+
+    setFilters(updatedFilters);
+    setCurrentTab(value);
+  };
 
   const handleQueryChange = (event) => {
     event.preventDefault();
@@ -157,32 +200,16 @@ const ProjectList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  useEffect(() => {
-    const getProjects = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/api/v1/projects');
-        const data = await response.json();
-        if (data?.status === 200) {
-          toast.success(data.message, { duration: 10000 });
-          setProjects(data.data);
-        }
-      } catch (error) {
-        toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
-      }
-    };
-    getProjects();
-  }, [setProjects])
-
   // Usually query is done on backend with indexing solutions
-  const filteredProjects = applyFilters(projects, filters);
-  const sortedProjects = applySort(filteredProjects, sort);
-  const paginatedProjects = applyPagination(sortedProjects, page, rowsPerPage);
+  const filteredCustomers = applyFilters(customers, filters);
+  const sortedCustomers = applySort(filteredCustomers, sort);
+  const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Project List | AiCollect
+          Dashboard: Customer List | AiCollect
         </title>
       </Head>
       <Box
@@ -192,6 +219,10 @@ const ProjectList = () => {
           py: 8
         }}
       >
+        <CreateUserDialog
+          open={openUserDialog}
+          handleClose={handleCloseUserDialog}
+          users={customers} />
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Grid
@@ -201,19 +232,18 @@ const ProjectList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Projects
+                  Users
                 </Typography>
               </Grid>
               <Grid item>
                 <Button
-                  startIcon={<PlusIcon fontSize="small" />}
+                  startIcon={<GroupAddIcon fontSize="small" />}
                   variant="contained"
-                  onClick={handleOpenProjectDialog}
+                  onClick={handleOpenUserDialog}
                 >
-                  Add Project
+                  Create User
                 </Button>
               </Grid>
-              <CreateNewProjectDialog open={openProjectDialog} handleClose={handleCloseProjectDialog} />
             </Grid>
             <Box
               sx={{
@@ -240,7 +270,7 @@ const ProjectList = () => {
               indicatorColor="primary"
               onChange={handleTabsChange}
               scrollButtons="auto"
-              sx={{ px: 3 }}`
+              sx={{ px: 3 }}
               textColor="primary"
               value={currentTab}
               variant="scrollable"
@@ -282,7 +312,7 @@ const ProjectList = () => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder="Search projects"
+                  placeholder="Search users"
                 />
               </Box>
               <TextField
@@ -304,9 +334,9 @@ const ProjectList = () => {
                 ))}
               </TextField>
             </Box>
-            <ProjectListTable
-              customers={paginatedProjects}
-              customersCount={filteredProjects.length}
+            <UserListTable
+              customers={paginatedCustomers}
+              customersCount={filteredCustomers.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -319,7 +349,7 @@ const ProjectList = () => {
   );
 };
 
-ProjectList.getLayout = (page) => (
+UserList.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
@@ -327,4 +357,4 @@ ProjectList.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default ProjectList;
+export default UserList;

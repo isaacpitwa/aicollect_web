@@ -173,18 +173,13 @@ export const ProjectListTable = (props) => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${customer.city}, ${customer.state}, ${customer.country}`}
+                    {customer.role}
                   </TableCell>
                   <TableCell>
-                    {customer.totalOrders}
+                    {customer.createdBy}
                   </TableCell>
                   <TableCell>
-                    <Typography
-                      color="success.main"
-                      variant="subtitle2"
-                    >
-                      {numeral(customer.totalAmountSpent).format(`${customer.currency}0,0.00`)}
-                    </Typography>
+                    {customer.createdAt}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink

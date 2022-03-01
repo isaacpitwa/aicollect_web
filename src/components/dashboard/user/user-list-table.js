@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
+  Avatar,
   Box,
   Button,
   Checkbox,
@@ -13,14 +15,15 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
+import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
-import moment from 'moment';
 
-export const ProjectListTable = (props) => {
+export const UserListTable = (props) => {
   const {
     customers,
     customersCount,
@@ -81,12 +84,12 @@ export const ProjectListTable = (props) => {
         >
           Delete
         </Button>
-        <Button
+        {/* <Button
           size="small"
           sx={{ ml: 2 }}
         >
-          Edit
-        </Button>
+          Deactivate
+        </Button> */}
       </Box>
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
@@ -100,25 +103,28 @@ export const ProjectListTable = (props) => {
                 />
               </TableCell>
               <TableCell>
-                Project Name
+                Name
               </TableCell>
               <TableCell>
-                Members
+                Email
               </TableCell>
               <TableCell>
-                Manager
-              </TableCell>
-              <TableCell>
-                Forms
-              </TableCell>
-              <TableCell>
-                Date Created
-              </TableCell>
-              <TableCell>
-                Created By
+                Mobile
               </TableCell>
               <TableCell>
                 Status
+              </TableCell>
+              <TableCell>
+                Verified
+              </TableCell>
+              <TableCell>
+                Added By
+              </TableCell>
+              <TableCell>
+                Date of Joining
+              </TableCell>
+              <TableCell>
+                Last Accessed
               </TableCell>
               <TableCell align="right">
                 Actions
@@ -143,38 +149,81 @@ export const ProjectListTable = (props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography>{customer.projectname}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {customer.projectTeam.length}
-                  </TableCell>
-                  <TableCell>
-                    {customer.createdBy.name}
-                  </TableCell>
-                  <TableCell>
-                    {0}
-                  </TableCell>
-                  <TableCell>
-                   {moment(customer.createdAt).format('MM/DD/YYYY')}
-                  </TableCell>
-                  <TableCell>
-                    {customer.createdBy.name}
-                  </TableCell>
-                  <TableCell>
-                    {"In Progress"}
-                  </TableCell>
-                  
-                  <TableCell align="right">
-                    <NextLink
-                      href={`/dashboard/projects/${customer._id}`}
-                      passHref
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex'
+                      }}
                     >
-                      <IconButton component="a">
-                        <PencilAltIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
+                      <Avatar
+                        src={customer.avatar}
+                        sx={{
+                          height: 42,
+                          width: 42
+                        }}
+                      >
+                        {getInitials(`${customer.firsname} ${customer.lastname}`)}
+                      </Avatar>
+                      <Box sx={{ ml: 1 }}>
+                        <NextLink
+                          href={`/dashboard/users/${customer.id}`}
+                          passHref
+                        >
+                          <Link
+                            color="inherit"
+                            variant="subtitle2"
+                          >
+                            {`${customer.firstname} ${customer.lastname}`}
+                          </Link>
+                        </NextLink>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                        >
+                          {customer.roles}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    {customer.email}
+                  </TableCell>
+                  <TableCell>
+                    {customer.phone}
+                  </TableCell>
+                  <TableCell>
+                    {customer.status ? "Active" : "Not Active"}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      color="success.main"
+                      variant="subtitle2"
+                    >
+                      {customer.emailVerified ? "Verified" : "Not Verified"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {customer.addedBy || 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    {moment(customer.createdAt).format('DD/MM/YYYY')}
+                  </TableCell>
+                  <TableCell>
+                    {moment(customer.updatedAt).format('DD/MM/YYYY')}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Tooltip title="View">
+                      <NextLink
+                        href={`/dashboard/users/${customer.id}/edit`}
+                        passHref
+                      >
+                        <IconButton component="a">
+                          <PencilAltIcon fontSize="small" />
+                        </IconButton>
+                      </NextLink>
+                    </Tooltip>
                     <NextLink
-                      href={`/dashboard/projects/${customer._id}`}
+                      href={`/dashboard/users/${customer.id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -201,7 +250,7 @@ export const ProjectListTable = (props) => {
   );
 };
 
-ProjectListTable.propTypes = {
+UserListTable.propTypes = {
   customers: PropTypes.array.isRequired,
   customersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,

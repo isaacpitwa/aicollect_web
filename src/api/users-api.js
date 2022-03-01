@@ -1,13 +1,14 @@
 class UserApi {
   async getUsers() {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/authService/users', {
+      const response = await fetch('http://localhost:5000/api/v1/authService/clientUsers', {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
       const data = await response.json();
+      console.log(data);
       if (data.status === 200) {
         return data.data;
       }
