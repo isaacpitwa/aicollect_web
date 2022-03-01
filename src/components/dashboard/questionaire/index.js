@@ -75,7 +75,9 @@ const Questionaire = () => {
         formData,
         addComponent,
         componentsData,
-        createForm
+        createForm,
+        formPreview,
+        handleFormPreview
     } = useContext(FormContext)
 
     const [sectionDialog, setSectionDialog] = useState(false)
@@ -96,6 +98,7 @@ const Questionaire = () => {
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
     const [emailFieldDialog, setEmailFieldDialog] = useState(false)
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
+    const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [open, setOpen] = useState(false)
     const [data, setData] = useState({})
 
@@ -143,6 +146,10 @@ const Questionaire = () => {
 
     const handlePhoneField = () => {
         setPhoneFieldDialog(true)
+    }
+
+    const handleAreaMapping = () => {
+        setAreaMappingDialog(true)
     }
 
     const createQuestionaire = () => {
@@ -194,106 +201,135 @@ const Questionaire = () => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Stack direction="row" spacing={2} justifyContent={'right'}>
-                            <Button variant="outlined" size='small' color="primary">Choose From Template</Button>
-                            <Button variant="contained" size='small' color="primary">Create Questionaire</Button>
+                            <Button
+                                variant="outlined"
+                                size='small'
+                                color="primary"
+                            >Save Draft</Button>
+                            <Button
+                                variant="contained"
+                                size='small'
+                                color="primary"
+                                onClick={handleFormPreview}
+                            >{formPreview?'Edit Form':'Form Preview'}</Button>
+                            <Button
+                                variant="contained"
+                                size='small'
+                                color="primary"
+                            >Publish</Button>
                         </Stack>
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={6} md={3.5}>
-                <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
-                    <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-                        <Button startIcon={<CheckBoxOutlineBlankIcon />} draggable="true" onDragEnd={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
-                        <Button startIcon={<SelectAllIcon />} draggable='true' onDragEnd={handleSubSection} variant="contained" style={{ width: '150%', visibility: sectionCreated ? 'visible' : 'hidden' }}>Sub Section</Button>
-                    </Stack>
+            {formPreview ?
+                ''
+                :
+                <Grid item xs={6} md={3.5}>
+                    <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
+                        <Stack direction="row" spacing={2} style={{ width: "100%" }}>
+                            <Button startIcon={<CheckBoxOutlineBlankIcon />} draggable="true" onClick={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
+                            <Button startIcon={<SelectAllIcon />} draggable='true' onClick={handleSubSection} variant="contained" style={{ width: '150%', visibility: sectionCreated ? 'visible' : 'hidden' }}>Sub Section</Button>
+                        </Stack>
+                    </Grid>
+                    <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                            style={{ marginTop: '3px' }}
+                        >
+                            <Typography>Basic Data Types</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={6}>
+                                    <Button startIcon={<TextFieldsIcon />} draggable="true" onClick={handleTextField} variant="contained" size="small" style={{ width: '100%' }}>Text Field</Button>
+                                    <Button startIcon={<TagIcon />} draggable="true" onClick={handleNumberField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Number Field</Button>
+                                    <Button startIcon={<ListIcon />} draggable="true" onClick={handleSelectField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select</Button>
+                                    <Button startIcon={<AlternateEmailIcon />} draggable="true" onClick={handleEmailField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Email Address</Button>
+                                    <Button startIcon={<ImageIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Image</Button>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Button startIcon={<TextSnippetIcon />} draggable="true" onClick={handleTextAreaField} variant="contained" size="small" style={{ width: '100%' }}>Text Area</Button>
+                                    <Button startIcon={<CheckBoxIcon />} draggable="true" onClick={handleSelectBoxField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select Boxes</Button>
+                                    <Button startIcon={<RadioButtonCheckedIcon />} draggable="true" onClick={handleSelectRadioField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Radio</Button>
+                                    <Button startIcon={<PhoneInTalkIcon />} draggable="true" onClick={handlePhoneField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Phone Number</Button>
+                                    <Button startIcon={<AddLocationAltIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Location</Button>
+                                </Grid>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>Advanced Data Types</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={6}>
+                                    <Button startIcon={<MapIcon />} variant="contained" size="small" style={{ width: '100%' }}>Area Mapping</Button>
+                                    <Button startIcon={<MicIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Audio</Button>
+                                    <Button startIcon={<PersonPinIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Image Geo Tag</Button>
+                                    <Button startIcon={<MonetizationOnIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Currency</Button>
+                                    <Button startIcon={<GestureIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Signature</Button>
+                                    <Button startIcon={<TableChartIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Tables</Button>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Button startIcon={<UploadFileIcon />} variant="contained" size="small" style={{ width: '100%' }}>Upload File</Button>
+                                    <Button startIcon={<VideoLibraryIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Video</Button>
+                                    <Button startIcon={<BlurLinearIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Bar Code</Button>
+                                    <Button startIcon={<QrCode2Icon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>QR Code</Button>
+                                    <Button startIcon={<VerticalSplitIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Columns</Button>
+                                    <Button startIcon={<CalculateIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Calculated Field</Button>
+                                </Grid>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>Feedback</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={6}>
+                                    <Button startIcon={<LinearScaleIcon />} variant="contained" size="small" style={{ width: '100%' }}>Likert Scale</Button>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Button startIcon={<GradeIcon />} variant="contained" size="small" style={{ width: '100%' }}>Rating</Button>
+                                </Grid>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
                 </Grid>
-                <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                        style={{ marginTop: '3px' }}
-                    >
-                        <Typography>Basic Data Types</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
-                                <Button startIcon={<TextFieldsIcon />} draggable="true" onDragEnd={handleTextField} variant="contained" size="small" style={{ width: '100%' }}>Text Field</Button>
-                                <Button startIcon={<TagIcon />} draggable="true" onDragEnd={handleNumberField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Number Field</Button>
-                                <Button startIcon={<ListIcon />} draggable="true" onDragEnd={handleSelectField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select</Button>
-                                <Button startIcon={<AlternateEmailIcon />} draggable="true" onDragEnd={handleEmailField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Email Address</Button>
-                                <Button startIcon={<ImageIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Image</Button>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Button startIcon={<TextSnippetIcon />} draggable="true" onDragEnd={handleTextAreaField} variant="contained" size="small" style={{ width: '100%' }}>Text Area</Button>
-                                <Button startIcon={<CheckBoxIcon />} draggable="true" onDragEnd={handleSelectBoxField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Select Boxes</Button>
-                                <Button startIcon={<RadioButtonCheckedIcon />} draggable="true" onDragEnd={handleSelectRadioField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Radio</Button>
-                                <Button startIcon={<PhoneInTalkIcon />} draggable="true" onDragEnd={handlePhoneField} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Phone Number</Button>
-                                <Button startIcon={<AddLocationAltIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Location</Button>
-                            </Grid>
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Advanced Data Types</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
-                                <Button startIcon={<MapIcon />} variant="contained" size="small" style={{ width: '100%' }}>Area Mapping</Button>
-                                <Button startIcon={<MicIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Audio</Button>
-                                <Button startIcon={<PersonPinIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Image Geo Tag</Button>
-                                <Button startIcon={<MonetizationOnIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Currency</Button>
-                                <Button startIcon={<GestureIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Signature</Button>
-                                <Button startIcon={<TableChartIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Tables</Button>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Button startIcon={<UploadFileIcon />} variant="contained" size="small" style={{ width: '100%' }}>Upload File</Button>
-                                <Button startIcon={<VideoLibraryIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Video</Button>
-                                <Button startIcon={<BlurLinearIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Bar Code</Button>
-                                <Button startIcon={<QrCode2Icon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>QR Code</Button>
-                                <Button startIcon={<VerticalSplitIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Columns</Button>
-                                <Button startIcon={<CalculateIcon />} variant="contained" size="small" style={{ width: '100%', marginTop: '10px' }}>Calculated Field</Button>
-                            </Grid>
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Feedback</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
-                                <Button startIcon={<LinearScaleIcon />} variant="contained" size="small" style={{ width: '100%' }}>Likert Scale</Button>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Button startIcon={<GradeIcon />} variant="contained" size="small" style={{ width: '100%' }}>Rating</Button>
-                            </Grid>
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
-            </Grid>
-            <Grid item xs={6} md={8.5}>
-                <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
-                    {/* <DragNDrop componentsData={componentsData} /> */}
-                    <FormRenderer formData={FormRenderer}/>
+            }
+            {formPreview ?
+                <Grid item xs={6} md={12}>
+                    <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
+                        {/* <DragNDrop componentsData={componentsData} /> */}
+                        <FormRenderer editStatus={false}/>
+                    </Grid>
                 </Grid>
-            </Grid>
+
+            :
+                <Grid item xs={6} md={8.5}>
+                    <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
+                        {/* <DragNDrop componentsData={componentsData} /> */}
+                        <FormRenderer editStatus={true}/>
+                    </Grid>
+                </Grid>
+            }
             <Grid item xs={6} md={12}>
                 <Stack direction="row" spacing={2} justifyContent={'right'}>
                     <Button variant="outlined" size='small' color="error">Cancel</Button>
-                    <Button onClick={createQuestionaire} variant="contained" size='small' color="primary">Create Questionaire</Button>
+                    <Button onClick={createQuestionaire} variant="outlined" size='small' color="primary">Save Draft</Button>
+                    <Button onClick={createQuestionaire} variant="contained" size='small' color="primary">Save Form</Button>
                 </Stack>
             </Grid>
         </Grid>

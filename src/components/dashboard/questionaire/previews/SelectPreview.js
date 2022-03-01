@@ -6,11 +6,12 @@ import {
     MenuItem,
     Select
 } from '@mui/material'
+
 import GeneralTooltip from '../previews/GeneralTooltip'
 
 const SelectPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, options } = props
+    const { fieldLabel, fieldDescription, tooltip, options, isRequired } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -22,16 +23,15 @@ const SelectPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
             <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                {fieldLabel} <GeneralTooltip tipData={tooltip}/>
+                {fieldLabel}{isRequired?<small style={{ color: 'red' }}>*</small>:''}<GeneralTooltip tipData={tooltip}/>
             </Typography>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={''}
+                value={options[0].optionLabel}
                 fullWidth
                 size={'small'}
             >
-                <MenuItem disabled>Select Options</MenuItem>
                 {options.map(option=>(
                     <MenuItem value={option.optionLabel}>{option.optionLabel}</MenuItem>
                 ))}

@@ -1,28 +1,20 @@
 import React, { useState } from 'react';
 import {
     Box,
-    Paper,
     Button,
     ButtonGroup,
     Grid,
-    Typography,
-    Stack,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     TextField,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl
+    Typography,
+    Checkbox
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
 
 // This is the field for type=TextField
@@ -33,6 +25,7 @@ const NumberField = (props) => {
     const [fieldLabel, setFieldLabel] = useState('')
     const [fieldDescription, setFieldDescription] = useState('')
     const [tooltip, setTooltip] = useState('')
+    const [isRequired, setIsRequired] = useState(false)
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -46,10 +39,15 @@ const NumberField = (props) => {
         setTooltip(e.target.value)
     }
 
+    const handleChecked = (e) => {
+        setIsRequired(!isRequired)
+    }
+
     const cancel = () => {
         setFieldLabel('')
         setFieldDescription('')
         setTooltip('')
+        setIsRequired(!isRequired)
         handleClose()
     }
 
@@ -85,10 +83,8 @@ const NumberField = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Data</Button>
-                            <Button disabled>Validation</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button>Conditional</Button>
+                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -132,9 +128,12 @@ const NumberField = (props) => {
                                 value={tooltip}
                                 onChange={handleTooltip}
                             />
+                            <Typography style={{ color: '#5048E5' }}>
+                                <Checkbox size={'small'} checked={isRequired} onChange={handleChecked}/>Required<GeneralTooltip tipData={'A required field must be filled.'}/>
+                            </Typography>
                         </Box>
                     </Grid>
-                    <NumberfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip}/>
+                    <NumberfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired}/>
                 </Grid>
             </DialogContent>
             <DialogActions>

@@ -1,22 +1,28 @@
-import FormStyles from '../../styles/FormStyles'
+import formStyles from '../../styles/FormStyles'
 import {
     Grid,
     Typography
 } from "@mui/material"
 
+import { DescriptionCard } from '../../utils'
+import GeneralTooltip from '../../previews/GeneralTooltip'
 import FormField from '../FormField'
 
 const SectionField = (props) => {
 
-    const Styles = FormStyles.sectionStyles
+    const { fieldData, editStatus } = props
 
-    const { fieldData } = props
+    const classes = formStyles();
 
     return (
-        <Grid key={fieldData.id} container style={Styles.section}>
-            <Typography style={Styles.sectionLabel} variant='h5'>
-                {fieldData.label}
+        <Grid key={fieldData.id} container className={editStatus?classes.section2:classes.section}>
+            <Typography
+                className={classes.sectionLabel}
+                variant='h5'
+            >
+                {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
             </Typography>
+            <DescriptionCard description={fieldData.description} helperText={true}/>
             {fieldData.components.map(componentData => (
                 <FormField fieldData={componentData} />
             ))}

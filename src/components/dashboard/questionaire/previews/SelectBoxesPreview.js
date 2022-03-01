@@ -10,7 +10,7 @@ import GeneralTooltip from '../previews/GeneralTooltip'
 
 const SelectBoxesPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, checkBoxes } = props
+    const { fieldLabel, fieldDescription, tooltip, checkBoxes, isRequired } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -22,7 +22,7 @@ const SelectBoxesPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
             <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                {fieldLabel}<GeneralTooltip tipData={tooltip}/>
+                {fieldLabel}{isRequired?<small style={{ color: 'red' }}>*</small>:''}<GeneralTooltip tipData={tooltip}/>
             </Typography>
             {checkBoxes.map(checkbox=>(
                 <Typography key={checkbox.boxId}>

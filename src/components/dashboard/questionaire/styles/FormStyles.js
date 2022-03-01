@@ -1,40 +1,83 @@
+import {
+    makeStyles
+} from '@mui/styles';
 
-const FormStyles = {
+const formStyles = makeStyles({
     form: {
-        padding: '2%'
+        padding: '1%',
     },
-    sectionStyles: {
-        section: {
-            border: '1px #DDDDDD dotted',
-            minHeight: '50px',
-            padding: '10px 1%',
-            margin: '5px 0px',
-            cursor: 'move'
-        },
-        sectionLabel: {
-            width: '100%',
-            color: '#5048E5',
-            fontWeight: '400',
-            height: '30px',
-            borderBottom: '2px #5048E5 solid'
+    sectionLabel: {
+        width: '100%',
+        color: '#5048E5',
+        fontWeight: '400',
+        height: '35px',
+        borderBottom: '2px #5048E5 solid',
+        marginBottom: '5px',
+    },
+    section: {
+        width: '100%',
+        border: '1px #DDDDDD dotted',
+        minHeight: '50px',
+        padding: '10px 1%',
+        paddingTop: '20px',
+        margin: '5px 0px',
+        cursor: 'move',
+        color: '#5F768A',
+        fontSize: '12px',
+        '&:hover': {
+            border: '1px #5048E5 dotted',
         }
     },
-    subSectionStyles: {
-        section: {
-            border: '1px #DDDDDD dotted',
-            minHeight: '50px',
-            padding: '10px 1%',
-            margin: '5px 0px'
-        },
-        sectionLabel: {
-            width: '100%',
-            color: '#aaa',
-            fontSize: '22px',
-            fontWeight: '400',
-            height: '35px',
-            borderBottom: '1px #5048E5 solid'
-        }
-    }
-}
+    section2: {
+        border: 'None',
+        minHeight: '50px',
+        padding: '5px 0px',
+        paddingTop: '20px',
+        margin: '5px 0px',
+        color: '#5F768A',
+        fontSize: '12px',
+    },
+    sectionFields: {
+        width: '100%',
+        border: '1px #DDDDDD dotted',
+        paddingTop: '20px',
+        margin: '5px 0px',
+        cursor: 'move',
+        color: '#5F768A',
+        fontSize: '12px',
+    },
+    sectionLabel: {
+        width: '100%',
+        color: '#5048E5',
+        fontWeight: '400',
+        height: '35px',
+        borderBottom: '2px #5048E5 solid',
+        marginBottom: '5px'
+    },
+});
 
-export default FormStyles
+export const subSectionStyles = makeStyles({
+    subSection: {
+        border: '1px #5048E5 solid',
+        minHeight: '50px',
+        padding: '10px 1%',
+        margin: '5px 0px',
+        cursor: 'move',
+        backgroundColor: 'red',
+    },
+    subSectionLabel: {
+        backgroundColor: '#aaa',
+    }
+});
+
+export const smallBtns = makeStyles({
+    btn: {
+        color: '',
+        width: '20px',
+        height: '20px',
+        margin: '0px 5px',
+        cursor: 'pointer'
+    }
+});
+
+export default formStyles

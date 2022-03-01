@@ -5,11 +5,12 @@ import {
     Typography,
     TextField
 } from '@mui/material'
-import GeneralTooltip from '../previews/GeneralTooltip'
 
-const EmailfieldPreview = (props) => {
+import GeneralTooltip from './GeneralTooltip'
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired } = props
+const TextfieldPreview = (props) => {
+
+    const { fieldLabel, fieldDescription, tooltip } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -21,8 +22,11 @@ const EmailfieldPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
             <TextField
-                required={isRequired}
+                required
                 autoFocus
+                InputProps={{
+                  endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                }}
                 margin="dense"
                 id="label"
                 label={fieldLabel?fieldLabel:'Label'}
@@ -30,9 +34,6 @@ const EmailfieldPreview = (props) => {
                 size="small"
                 fullWidth
                 variant="outlined"
-                InputProps={{
-                    endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                  }}
             />
                 {fieldDescription!=''?
                     <Typography style={{ fontSize: '14px', color: '#5048e598' }}>
@@ -47,5 +48,5 @@ const EmailfieldPreview = (props) => {
     )
 }
 
-export default EmailfieldPreview
+export default TextfieldPreview
                     

@@ -1,44 +1,66 @@
-
+import { useContext } from 'react'
 import SectionField from './sectionField'
 import SubSectionField from './sectionField'
 import TextField from './textField'
 import TextAreaField from './textAreaField'
 import NumberField from './numberField'
+import SelectBoxesField from './selectBoxesField'
+import SelectField from './selectField'
+import RadioField from './radioField'
+import EmailField from './emailField'
+import PhoneNumberField from './phoneNumberField'
+import ImageField from './imageField'
+import LocationField from './locationField'
+
+import AreaMappingField from './areaMappingField'
+import { FormContext } from '../../context'
 
 const FormField = (props) => {
-    const { fieldData } = props
+
+    const { formPreview } = useContext(FormContext)
+
+    const { fieldData, editStatus } = props
 
     const Field = () => {
         switch (fieldData.type) {
             case 'sub-section':
-                return <SubSectionField fieldData={fieldData}/>
+                return <SubSectionField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'text':
-                return <TextField fieldData={fieldData}/>
+                return <TextField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'text-area':
-                return <TextAreaField fieldData={fieldData}/>
+                return <TextAreaField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'number':
-                return <NumberField fieldData={fieldData}/>
+                return <NumberField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'select-box':
-                return 'selectBox Component'
+                return <SelectBoxesField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'select':
-                return 'selectOption Component'
+                return <SelectField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'radio':
-                return 'selectRadio Component'
+                return <RadioField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'email':
-                return 'emailAddress Component'
+                return <EmailField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             case 'phone-number':
-                return 'phoneNumber Component'
+                return <PhoneNumberField fieldData={fieldData} editStatus={editStatus}/>
+                break;
+            case 'image':
+                return <ImageField fieldData={fieldData} editStatus={editStatus}/>
+                break;
+            case 'location':
+                return <LocationField fieldData={fieldData} editStatus={editStatus}/>
+                break;
+            case 'area-mapping':
+                return <AreaMappingField fieldData={fieldData} editStatus={editStatus}/>
                 break;
             default:
-                return <SectionField fieldData={fieldData}/>
+                return <SectionField fieldData={fieldData} editStatus={formPreview}/>
                 break
         }
     }
