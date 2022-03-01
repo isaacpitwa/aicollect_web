@@ -1,6 +1,6 @@
-FROM node:lts as dependencies
-WORKDIR /my-project
-COPY package.json package-lock.lock ./
+FROM node:14.6.0 as dependencies
+WORKDIR /aicollect-web-app
+COPY package.json package-lock.json ./
 RUN npm install --frozen-lockfile
 
 FROM node:lts as builder
