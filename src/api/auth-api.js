@@ -21,15 +21,21 @@ class AuthApi {
   }
 
   async userProfile(accessToken) {
-    const response = await fetch('http://localhost:5000/api/v1/authService/check-user', {
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/authService/check-user', {
       headers: {
         'Content-Type': 'Application/json',
         'Authorization': `Bearer ${accessToken}`
       }
     })
     const user = await response.json();
-    console.log(user);
-    return user.data;
+    if (user && user.status === 200) {
+      return user.data;
+    }
+    return null;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async completeUserProfileAfterEmailInvitation(userDetails) {

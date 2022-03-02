@@ -10,6 +10,7 @@ import {
   Drawer,
   Typography,
   useMediaQuery,
+  Chip
 } from "@mui/material";
 // import { Calendar as CalendarIcon } from '../../icons/calendar';
 // import { Cash as CashIcon } from '../../icons/cash';
@@ -29,7 +30,7 @@ import { Selector as SelectorIcon } from "../../icons/selector";
 // import { Share as ShareIcon } from '../../icons/share';
 // import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 // import { ShoppingCart as ShoppingCartIcon } from '../../icons/shopping-cart';
-// import { Truck as TruckIcon } from '../../icons/truck';
+import { Truck as TruckIcon } from '../../icons/truck';
 // import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
 import { Users as UsersIcon } from "../../icons/users";
 // import { XCircle as XCircleIcon } from '../../icons/x-circle';
@@ -43,57 +44,55 @@ const getSections = (t) => [
     title: t("General"),
     items: [
       {
-        title: t("Overview"),
-        path: "/dashboard",
-        icon: <HomeIcon fontSize="small" />,
-        children: [
-          {
-            title: t("Analytics"),
-            path: "/dashboard/analytics",
-            icon: <ChartBarIcon fontSize="small" />,
-          },
-          {
-            title: t("Finance"),
-            path: "/dashboard/finance",
-            icon: <ChartPieIcon fontSize="small" />,
-          },
-        ],
-      },
-
-      // {
-      //   title: t('Logistics'),
-      //   path: '/dashboard/logistics',
-      //   icon: <TruckIcon fontSize="small" />,
-      //   chip: <Chip
-      //     color="secondary"
-      //     label={(
-      //       <Typography
-      //         sx={{
-      //           fontSize: '10px',
-      //           fontWeight: '600'
-      //         }}
-      //       >
-      //         NEW
-      //       </Typography>
-      //     )}
-      //     size="small"
-      //   />
-      // },
-      {
-        title: t("Users"),
-        path: "/dashboard/users",
-        icon: <UsersIcon fontSize="small" />,
+        title: t('Overview'),
+        path: '/dashboard',
+        icon: <HomeIcon fontSize="small" />
       },
       {
-        title: t("Projects"),
-        path: "/dashboard/projects",
-        icon: <UsersIcon fontSize="small" />,
+        title: t('Analytics'),
+        path: '/dashboard/analytics',
+        icon: <ChartBarIcon fontSize="small" />
       },
-    ],
+      {
+        title: t('Finance'),
+        path: '/dashboard/finance',
+        icon: <ChartPieIcon fontSize="small" />
+      },
+      {
+        title: t('Logistics'),
+        path: '/dashboard/logistics',
+        icon: <TruckIcon fontSize="small" />,
+        chip: <Chip
+          color="secondary"
+          label={(
+            <Typography
+              sx={{
+                fontSize: '10px',
+                fontWeight: '600'
+              }}
+            >
+              NEW
+            </Typography>
+          )}
+          size="small"
+        />
+      },
+      
+    ]
   },
   {
     title: t("Mangement"),
     items: [
+      {
+        title: t("Users"),
+        path: "/dashboard/users",
+        icon: <UsersIcon fontSize="small" />
+      },
+      {
+        title: t("Projects"),
+        path: "/dashboard/projects",
+        icon: <UsersIcon fontSize="small" />
+      },
       {
         title: t("Task Manager"),
         path: "/dashboard/tasks",
