@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { Box, Divider, Typography, Grid, Button } from "@mui/material";
+import { Box, Divider, Typography, Grid, Button, Container, Card, Stack } from "@mui/material";
+import { styled } from '@mui/styles';
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
-
+import MHidden from '../components/theme/MHidden';
 import { GuestGuard } from "../components/authentication/guest-guard";
 import { AmplifyLogin } from "../components/authentication/amplify-login";
 import { Auth0Login } from "../components/authentication/auth0-login";
@@ -23,6 +24,31 @@ import { gtm } from "../lib/gtm";
 //   Firebase: '/static/icons/firebase.svg',
 //   JWT: '/static/icons/jwt.svg'
 // };
+
+const RootStyle = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex'
+  }
+}));
+
+const SectionStyle = styled(Card)(({ theme }) => ({
+  width: '100%',
+  maxWidth: 464,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  margin: theme.spacing(2, 0, 2, 2)
+}));
+
+const ContentStyle = styled('div')(({ theme }) => ({
+  maxWidth: 480,
+  margin: 'auto',
+  display: 'flex',
+  minHeight: '100vh',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  padding: theme.spacing(12, 0)
+}));
 
 const Login = () => {
   const router = useRouter();
@@ -42,25 +68,75 @@ const Login = () => {
       <Head>
         <title>Login | AI Collect</title>
       </Head>
-      <Box
+
+      <RootStyle>
+        <MHidden width="mdDown">
+          <SectionStyle>
+            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+              AiCollect
+            </Typography>
+            <img src="/login.jpg" alt="aicollect-login" />
+          </SectionStyle>
+        </MHidden>
+
+        <Container maxWidth="sm">
+          <ContentStyle>
+            <Stack sx={{ mb: 5 }}>
+              <Typography variant="h4" gutterBottom>
+                Sign in to AiCollect
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Enter your details below</Typography>
+            </Stack>
+            <JWTLogin />
+            <Divider sx={{ my: 3 }} />
+            <Typography
+              color="textSecondary"
+              variant="body2">
+              Or sign in with
+            </Typography>
+            <Box
+              display="flex"
+              flexDirection="row"
+              mt={2}>
+              <Button
+                size="large"
+                color="error"
+                onClick={handleLoginWithGoogle}>
+                <GoogleIcon /> oogle
+              </Button>
+              <Button size="large">
+                <FacebookIcon /> acebook
+              </Button>
+              <Button size="large">
+                <TwitterIcon />
+                Twitter
+              </Button>
+            </Box>
+          </ContentStyle>
+        </Container>
+      </RootStyle>
+
+      {/* <Box
         component="main"
         sx={{
           backgroundColor: "background.default",
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
+          height: '100vh',
+          overflow: 'hidden'
         }}
       >
         <Grid container>
           <Grid
             item
-            md={6}
+            md={5}
             sm={12}
             style={{ backgroundImage: 'url("/login.jpg")' }}
           ></Grid>
           <Grid
             item
-            md={6}
+            md={7}
             sm={12}
             sx={{ p: 30 }}
             display="flex"
@@ -87,7 +163,7 @@ const Login = () => {
                     height={40} />
                 </a>
               </NextLink>
-              <Typography variant="h4">Welcome to AiCollect</Typography>
+              <Typography variant="h4">AiCollect</Typography>
               <Typography
                 color="textSecondary"
                 sx={{ mt: 2 }}
@@ -135,7 +211,7 @@ const Login = () => {
             </Box>
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </>
   );
 };

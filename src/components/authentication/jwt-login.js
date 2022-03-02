@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import NextLink from "next/link";
 import {
   Alert,
   Box,
@@ -12,6 +13,9 @@ import {
   OutlinedInput,
   IconButton,
   InputAdornment,
+  Stack,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -36,6 +40,7 @@ export const JWTLogin = (props) => {
     initialValues: {
       email: "",
       password: "",
+      remember: false,
       submit: null,
     },
     validationSchema: Yup.object({
@@ -44,6 +49,7 @@ export const JWTLogin = (props) => {
         .max(255)
         .required("Email is required"),
       password: Yup.string().max(255).required("Password is required"),
+      remember: Yup.bool()
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -126,6 +132,26 @@ export const JWTLogin = (props) => {
           <FormHelperText error>{formik.errors.submit}</FormHelperText>
         </Box>
       )}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ my: 2 }}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={formik.handleChange}
+              checked={formik.values.remember}
+            />
+          }
+          label="Remember me"
+        />
+
+        <NextLink href="#" variant="subtitle2">
+          Forgot Password.
+        </NextLink>
+      </Stack>
       <Box sx={{ mt: 2 }}>
         <Button
           disabled={formik.isSubmitting}
