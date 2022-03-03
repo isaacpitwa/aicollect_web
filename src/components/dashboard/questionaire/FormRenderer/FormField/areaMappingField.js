@@ -1,11 +1,15 @@
 import { useState, useContext } from 'react'
 import formStyles from '../../styles/FormStyles'
+import { smallBtns } from '../../styles/FormStyles'
 import {
     Card,
-    Grid
-} from '@mui/material'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
+    Grid,
+    Button,
+    TextField,
+    Typography
+} from "@mui/material"
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import AreaMapImg from "./areaMap.jpeg"
@@ -14,12 +18,21 @@ const areaMappingField = (props) => {
     
     const { editStatus } = useContext(FormContext);
 
-    const { fieldData } = props
+    const { fieldData } = props;
+
+    const [display, setDisplay] = useState('hidden');
 
     const classes = formStyles();
-    
+    const smallBtn = smallBtns();
+
     return (
-        <Grid key={fieldData.id} container className={editStatus?classes.section2:classes.section}>
+        <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section2:classes.section}>
+            {!editStatus?
+                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <EditIcon className={smallBtn.editBtn} />
+                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                </Typography>
+            : '' }
             <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
                 <img src={AreaMapImg} style={{ width: '100%' }} />
             </Grid>

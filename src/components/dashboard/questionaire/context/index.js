@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, useEffect, useCallback, createContext } from "react";
 import { v4 as uuidv4 } from 'uuid'
 
 import {
@@ -9,17 +9,34 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
+    const [componentsData, setComponentsData] = useState([])
     const [formData, setFormData] = useState({
-        formId: uuidv4(),
-        userId: uuidv4(),
-        formName: '',
+        id: 1,
+        name: '',
         type: 'form',
-        components: compsData
+        version: 1,
+        createdBy: 111000,
+        createdAt: Date.now(),
+        submittedBy: '',
+        submittedAt: '',
+        timeSpent: '',
+        components: componentsData
     })
-    const [componentsData, setComponentsData] = useState(compsData)
     const [sectionCreated, setSectionCreated] = useState(componentsData[0]&&componentsData[0].type==='section'?true:false)
     const [formPreview, setFormPreview] = useState(false)
     const [editStatus, setEditStatus] = useState(false)
+
+    useEffect(()=>{
+        setComponentsData(compsData);
+    }, [componentsData])
+
+    const updateField = (fieldIndex, fieldData) => {
+
+    }
+
+    const updateComponentsData = useCallback((updatedComponent) => {
+        setComponentsData(updatedComponent)
+    }, []);
 
     const addComponent = (newComponent) => {
         setComponentsData(componentsData => [...componentsData, newComponent])
@@ -43,8 +60,9 @@ const FormProvider = (props) => {
             value={{
                 sectionCreated,
                 formData,
-                addComponent,
                 componentsData,
+                addComponent,
+                updateComponentsData,
                 createForm,
                 formPreview,
                 editStatus,

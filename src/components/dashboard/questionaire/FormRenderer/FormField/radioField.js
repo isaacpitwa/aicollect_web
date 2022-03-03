@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import formStyles from '../../styles/FormStyles'
+import { smallBtns } from '../../styles/FormStyles'
 import {
     Grid,
     Typography,
@@ -8,6 +9,8 @@ import {
     FormControlLabel,
     Radio
 } from '@mui/material'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import { DescriptionCard } from '../../utils'
@@ -20,7 +23,8 @@ const radioField = (props) => {
     const { fieldData } = props
 
     const [radioValue, setRadioValue] = useState(fieldData.fieldData)
-    
+    const [display, setDisplay] = useState('hidden');
+
     const handleRadio = (e) => {
         setRadioValue(e.target.value)
     }
@@ -39,9 +43,16 @@ const radioField = (props) => {
     }
 
     const classes = formStyles();
+    const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} container className={editStatus?classes.section2:classes.section}>
+        <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={!editStatus ? classes.section : classes.section2}>
+            {!editStatus?
+                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <EditIcon className={smallBtn.editBtn} />
+                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                </Typography>
+            : '' }
             <Typography style={{ width: '100%', fontSize: '18px', color: '#5048E5' }}>
                 {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
             </Typography>

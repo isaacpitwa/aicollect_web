@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import SectionField from './sectionField'
 import SubSectionField from './sectionField'
 import TextField from './textField'
@@ -17,9 +17,13 @@ import { FormContext } from '../../context'
 
 const FormField = (props) => {
 
-    const { formPreview } = useContext(FormContext)
+    const { formPreview, componentsData } = useContext(FormContext)
 
     const { fieldData, editStatus } = props
+
+    useEffect(() => {
+
+    }, [componentsData])
 
     const Field = () => {
         switch (fieldData.type) {

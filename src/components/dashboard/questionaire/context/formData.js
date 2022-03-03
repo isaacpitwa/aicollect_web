@@ -2,7 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const compsData = [
     {
-        id: uuidv4(),
+        id: 11,
+        parentId: false,
+        subParentId: false,
         required: false,
         label: 'Personal Information',
         type: 'section',
@@ -10,56 +12,68 @@ export const compsData = [
         tooltip: 'Candidate information',
         components: [
             {
-                id: uuidv4(),
+                id: 111,
+                parentId: 11,
+                subParentId: false,
                 required: false,
                 type: 'image',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Upload Photo',
                 description: 'Add a profile photo for the candidate',
                 tooltip: 'Candidate photo',
 
             },
             {
-                id: uuidv4(),
+                id: 112,
+                parentId: 11,
+                subParentId: false,
                 required: true,
                 type: 'text',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'First Name',
                 description: 'Add first name of candidate here',
                 tooltip: 'First name of candidate'
             },
             {
-                id: uuidv4(),
+                id: 113,
+                parentId: 11,
+                subParentId: false,
                 required: true,
                 type: 'text',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Last Name',
                 description: 'Add last name of candidate here',
                 tooltip: 'Last name of candidate'
             },
             {
-                id: uuidv4(),
+                id: 114,
+                parentId: 11,
+                subParentId: false,
                 required: true,
                 type: 'email',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Email Address',
                 description: 'Official Email address held by candidate',
                 tooltip: 'Candidate Email'
             },
             {
-                id: uuidv4(),
+                id: 115,
+                parentId: 11,
+                subParentId: false,
                 required: false,
                 type: 'phone-number',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Phone number',
                 description: 'Add a reachable phone number of the farmer',
                 tooltip: 'Reachable mobile number'
             },
             {
-                id: uuidv4(),
+                id: 116,
+                parentId: 11,
+                subParentId: false,
                 required: true,
                 type: 'select',
-                defaultValue: null,
+                defaultValue: false,
                 label: "Gender of candidate",
                 description: 'Add the gender of the candidate here',
                 tooltip: 'Candidate gender',
@@ -82,7 +96,9 @@ export const compsData = [
                 ]
             },
             {
-                id: uuidv4(),
+                id: 117,
+                parentId: 11,
+                subParentId: false,
                 required: false,
                 label: 'Family Information',
                 type: 'sub-section',
@@ -90,36 +106,40 @@ export const compsData = [
                 tooltip: 'Candidate family information',
                 components: [
                     {
-                        id: uuidv4(),
+                        id: 1171,
+                        parentId: 11,
+                        subParentId: 117,
                         required: false,
                         type: 'radio',
-                        defaultValue: null,
+                        defaultValue: false,
                         label: "Are you married?",
                         description: 'This is to establish where the candidate has a spouse or not',
                         tooltip: 'Marital status',
                         values: [
                             {
-                                id: uuidv4(),
+                                id: 11711,
                                 label: 'Yes',
                                 checked: false
                             },
                             {
-                                id: uuidv4(),
+                                id: 11712,
                                 label: 'No',
                                 checked: false
                             },
                             {
-                                id: uuidv4(),
+                                id: 11713,
                                 label: 'Not Disclosed',
                                 checked: false
                             }
                         ]
                     },
                     {
-                        id: uuidv4(),
+                        id: 1172,
+                        parentId: 11,
+                        subParentId: 117,
                         required: false,
                         type: 'number',
-                        defaultValue: null,
+                        defaultValue: false,
                         label: 'How many adults in household',
                         description: 'Fill in the number of adults living with the candidate, candidate inclusive',
                         tooltip: 'Number of adults'
@@ -129,7 +149,9 @@ export const compsData = [
         ],
     },
     {
-        id: uuidv4(),
+        id: 12,
+        parentId: false,
+        subParentId: false,
         required: false,
         label: 'Farm Information',
         type: 'section',
@@ -137,7 +159,9 @@ export const compsData = [
         tooltip: '',
         components: [
             {
-                id: uuidv4(),
+                id: 121,
+                parentId: 12,
+                subParentId: false,
                 required: false,
                 type: 'location',
                 defaultValue: 'Kampala',
@@ -146,67 +170,73 @@ export const compsData = [
                 tooltip: 'Location of the farm',
                 values: [
                     {
-                        id: uuidv4(),
+                        id: 1211,
                         label: 'Kampala',
                         checked: false
                     },
                     {
-                        id: uuidv4(),
+                        id: 1212,
                         label: 'Kabarole',
                         checked: false
                     },
                     {
-                        id: uuidv4(),
+                        id: 1213,
                         label: 'Jinja',
                         checked: false
                     }
                 ]
             },
             {
-                id: uuidv4(),
+                id: 122,
+                parentId: 12,
+                subParentId: false,
                 required: false,
                 type: 'select-box',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Mark the type of livestock the farmer currently owns',
                 description: 'This is to know what type of livestock the farm has',
                 tooltip: 'Check livestock farmer owns',
                 values: [
                     {
-                        id: uuidv4(),
+                        id: 1221,
                         label: 'Cows',
                         checked: false
                     },
                     {
-                        id: uuidv4(),
+                        id: 1222,
                         label: 'Goats',
                         checked: false
                     },
                     {
-                        id: uuidv4(),
+                        id: 1223,
                         label: 'Sheep',
                         checked: false
                     },
                     {
-                        id: uuidv4(),
+                        id: 1224,
                         label: 'Rabbits',
                         checked: false
                     }
                 ]
             },
             {
-                id: uuidv4(),
+                id: 123,
+                parentId: 12,
+                subParentId: false,
                 required: false,
                 type: 'text-area',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Summary of farm assets',
                 description: 'Write down the farming assets held by the candidate',
                 tooltip: 'Farm assets'
             },
             {
-                id: uuidv4(),
+                id: 124,
+                parentId: 12,
+                subParentId: false,
                 required: false,
                 type: 'area-mapping',
-                defaultValue: null,
+                defaultValue: false,
                 label: 'Map Farm',
                 description: 'Do an area mapping of the farm of the candidate',
                 tooltip: 'Farm area mapping'

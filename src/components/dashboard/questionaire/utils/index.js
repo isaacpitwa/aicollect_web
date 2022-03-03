@@ -1,6 +1,7 @@
 import FormStyles from '../styles/FormStyles'
 import InfoIcon from '@mui/icons-material/Info'
 
+// This is a description component for displaying descriptions of form fields
 export const DescriptionCard = (props) => {
 
     const Styles = FormStyles.sectionStyles
@@ -21,18 +22,61 @@ export const DescriptionCard = (props) => {
     )
 }
 
-export function allFormFields(data) {
+// This function gets all form fields excluding sections and sub-sections
+export const allFormFields = (data) => {
 
     let allFields = [];
 
     data.forEach((item) => {
-        if (item.type == 'section' || item.type == 'sub-section') {
-            item.components.forEach((comp) => {
+        item.components.forEach((comp) => {
+            if (comp.type === 'sub-section') {
+                allFields.push(...comp.components)
+            } else {
                 allFields.push(comp);
-            });
-        } else {
-            allFields.push(item);
-        }
+            }
+        });
     });
     return allFields
+}
+
+// This function gets the index of a form field from the form data set
+export const findComponentIndex = (newFieldData, componentsData) => {
+
+    let compIndex = null;
+    let sectionField = {};
+    let sectionComponents = []
+
+    if (newFieldData.ParentId && newFieldData.subParentId) {
+        sectionField = componentsData.find(comp => comp.id === newFieldData.parentId);
+        sectionComponents = sectionField.components
+        subSectionComponents = sectionComponents.find(comp => comp.id === newFieldData.subParentId).components;
+        compIndex = subSectionComponents.findIndex(comp => comp.id === newFieldData.id)
+    } else if (!newFieldData.subParentId) {
+        sectionField = componentsData.find(comp => comp.id === newFieldData.parentId);
+        sectionComponents = sectionField.components
+        compIndex = sectionComponents.findIndex(comp => comp.id === newFieldData.id)
+    } else {
+        compIndex = componentsData.findIndex(comp => comp.id === newFieldData.id)
+    }
+
+    return compIndex
+}
+
+// This function edits a form field by it's index
+export const editField = (componentsData, fieldIndex, newFieldData) => {
+    
+    let newComponentsData = componentsData;
+    
+    if (newFieldData.ParentId && newFieldData.subParentId) {
+        let sectionIndex = newComponentsData.components.findIndex(comp => comp.id === newFieldData.parentId);
+        let sectionFieldComponents = newComponentsData.find(comp => comp.id === newFieldData.parentId).components;
+        let subSectionIndex = sectionFieldComponents.findIndex(comp => comp.id === newFieldData.subParentId);
+        newComponentsData[sectionIndex].components[subSectionIndex].components[fieldIndex] = newFieldData;
+    } else if (!newFieldData.subParentId) {
+        let sectionIndex = newComponentsData.findIndex(comp => comp.id === newFieldData.parentId);
+        newComponentsData[sectionIndex].components[fieldIndex] = newFieldData;
+    } else {
+        newComponentsData[fieldIndex] = newFieldData;
+    }
+    return newComponentsData
 }

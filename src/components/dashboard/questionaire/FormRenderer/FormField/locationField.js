@@ -1,11 +1,15 @@
 import { useState, useContext } from 'react'
 import formStyles from '../../styles/FormStyles'
+import { smallBtns } from '../../styles/FormStyles'
 import {
     Grid,
     TextField,
+    Typography,
     MenuItem
 } from '@mui/material'
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import { DescriptionCard } from '../../utils'
@@ -15,12 +19,21 @@ const locationField = (props) => {
 
     const { editStatus } = useContext(FormContext);
 
-    const { fieldData } = props
+    const { fieldData } = props;
+
+    const [display, setDisplay] = useState('hidden');
 
     const classes = formStyles();
+    const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} item sm={12} className={editStatus?classes.section2:classes.section}>
+        <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section2:classes.section}>
+            {!editStatus?
+                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <EditIcon className={smallBtn.editBtn} />
+                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                </Typography>
+            : '' }
             <TextField
                 fullWidth
                 select

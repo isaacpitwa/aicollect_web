@@ -19,7 +19,7 @@ const formStyles = makeStyles({
         border: '1px #DDDDDD dotted',
         minHeight: '50px',
         padding: '10px 1%',
-        paddingTop: '20px',
+        paddingTop: '5px',
         margin: '5px 0px',
         cursor: 'move',
         color: '#5F768A',
@@ -50,7 +50,7 @@ const formStyles = makeStyles({
         width: '100%',
         color: '#5048E5',
         fontWeight: '400',
-        height: '35px',
+        height: '45px',
         borderBottom: '2px #5048E5 solid',
         marginBottom: '5px'
     },
@@ -71,12 +71,31 @@ export const subSectionStyles = makeStyles({
 });
 
 export const smallBtns = makeStyles({
-    btn: {
-        color: '',
+    editBtn: {
+        color: 'blue',
         width: '20px',
         height: '20px',
-        margin: '0px 5px',
-        cursor: 'pointer'
+        margin: '2px 5px',
+        cursor: 'pointer',
+        borderRadius: '5px',
+        padding: '1px',
+        boxShadow: '0px 0px 5px #5048E5',
+        '&:hover': {
+            opacity: '0.6',
+        }
+    },
+    deleteBtn: {
+        color: 'red',
+        width: '20px',
+        height: '20px',
+        margin: '2px 5px',
+        cursor: 'pointer',
+        borderRadius: '5px',
+        padding: '1px',
+        boxShadow: '0px 0px 5px #5048E5',
+        '&:hover': {
+            opacity: '0.6',
+        }
     }
 });
 

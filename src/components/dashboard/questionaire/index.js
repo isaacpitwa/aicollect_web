@@ -71,12 +71,14 @@ const Item = styled(Paper)(({ theme }) => ({
 const Questionaire = () => {
 
     const {
+        refresh,
         sectionCreated,
         formData,
         addComponent,
         componentsData,
         createForm,
         formPreview,
+        editStatus,
         handleFormPreview
     } = useContext(FormContext)
 
@@ -103,9 +105,7 @@ const Questionaire = () => {
     const [data, setData] = useState({})
 
     useEffect(() => {
-        // if(componentsData.length == 1){
-        // }
-    }, [sectionDialog])
+    }, [sectionDialog, componentsData])
 
 
     const handleSection = () => {
@@ -211,7 +211,7 @@ const Questionaire = () => {
                                 size='small'
                                 color="primary"
                                 onClick={handleFormPreview}
-                            >{formPreview?'Edit Form':'Form Preview'}</Button>
+                            >{formPreview ? 'Edit Form' : 'Form Preview'}</Button>
                             <Button
                                 variant="contained"
                                 size='small'
@@ -313,17 +313,18 @@ const Questionaire = () => {
                 <Grid item xs={6} md={12}>
                     <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
                         {/* <DragNDrop componentsData={componentsData} /> */}
-                        <FormRenderer editStatus={false}/>
+                        <FormRenderer editStatus={editStatus} />
                     </Grid>
                 </Grid>
 
-            :
-                <Grid item xs={6} md={8.5}>
-                    <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
-                        {/* <DragNDrop componentsData={componentsData} /> */}
-                        <FormRenderer editStatus={true}/>
+                :
+                refresh ? '' :
+                    <Grid item xs={6} md={8.5}>
+                        <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
+                            {/* <DragNDrop componentsData={componentsData} /> */}
+                            <FormRenderer editStatus={editStatus} />
+                        </Grid>
                     </Grid>
-                </Grid>
             }
             <Grid item xs={6} md={12}>
                 <Stack direction="row" spacing={2} justifyContent={'right'}>

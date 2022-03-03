@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Box,
     Button,
@@ -14,18 +14,30 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import { FormContext } from '../context';
+import {
+    findComponentIndex,
+    editField
+} from '../utils';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import TextfieldPreview from '../previews/TextfieldPreview';
 
 // This is the field for type=TextField
 const TextField_ = (props) => {
 
-    const { open, createTextField, handleClose } = props
+    const { componentsData, updateComponentsData } = useContext(FormContext)
+
+    const { open, createTextField, fieldData, handleClose } = props
     
-    const [fieldLabel, setFieldLabel] = useState('')
-    const [fieldDescription, setFieldDescription] = useState('')
-    const [tooltip, setTooltip] = useState('')
-    const [isRequired, setIsRequired] = useState(false)
+    const [compsData, setCompsData] = useState([]);
+    const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
+    const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
+    const [tooltip, setTooltip] = useState(fieldData?fieldData.tooltip:'')
+    const [isRequired, setIsRequired] = useState(fieldData?fieldData.required:'')
+
+    useEffect(() => {
+        setCompsData(componentsData);
+    }, [compsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -45,6 +57,22 @@ const TextField_ = (props) => {
 
     const handleChecked = (e) => {
         setIsRequired(!isRequired)
+    }
+
+    const handleUpdate = () => {
+        let newField = {
+            id: fieldData.id,
+            parentId: fieldData.parentId,
+            subParentId: fieldData.subParentId,
+            required: isRequired,
+            type: fieldData.type,
+            defaultValue: fieldData.defaultValue,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip
+        }        
+        updateComponentsData(editField(compsData, findComponentIndex(fieldData, compsData), newField))
+        handleClose()
     }
 
     const cancel = () => {
@@ -142,7 +170,7 @@ const TextField_ = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
+                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

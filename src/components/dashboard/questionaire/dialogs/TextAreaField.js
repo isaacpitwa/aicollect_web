@@ -1,48 +1,52 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Box,
-    Paper,
     Button,
     ButtonGroup,
     Grid,
     Typography,
     Checkbox,
-    AccordionSummary,
-    AccordionDetails,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     TextField,
     Select,
     MenuItem,
-    InputLabel,
-    FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { FormContext } from '../context';
-import { allFormFields } from '../utils';
+import {
+    allFormFields,
+    findComponentIndex,
+    editField
+} from '../utils';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import TextareafieldPreview from '../previews/TextareafieldPreview';
 
 // This is the field for type=TextField
 const TextAreaField = (props) => {
 
-    const { componentsData } = useContext(FormContext)
+    const { componentsData, updateComponentsData } = useContext(FormContext)
 
-    const { open, createTextField, handleClose } = props
-    
-    const [fieldLabel, setFieldLabel] = useState('')
-    const [fieldDescription, setFieldDescription] = useState('')
-    const [tooltip, setTooltip] = useState('')
-    const [isRequired, setIsRequired] = useState(false)
+    const { open, createTextField, fieldData, handleClose } = props
+
+    const [compsData, setCompsData] = useState([]);
+    const [buttonFocused, setButtonFocused] = useState('display')
+    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
+    const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
     const [conditional, setConditional] = useState(false)
     const [displayValue, setDisplayValue] = useState('')
     const [whenValue, setWhenValue] = useState('')
     const [compValue, setCompValue] = useState('')
-    
+
+    useEffect(async () => {
+        await setCompsData(componentsData);
+    }, [compsData])
+
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
     }
@@ -63,11 +67,22 @@ const TextAreaField = (props) => {
         setIsRequired(!isRequired)
     }
 
-    const handleConditional = (e) => {
-        setConditional(!conditional)
+    const handleDisplay = (e) => {
+        setButtonFocused("display")
+        setConditional(false)
     }
 
-    const handleDiplay = (e) => {
+    const handleConditional = (e) => {
+        setButtonFocused("conditional")
+        setConditional(true)
+    }
+
+    const handleLogic = (e) => {
+        setButtonFocused("logic")
+        setConditional(false)
+    }
+
+    const handleDiplayValue = (e) => {
         setDisplayValue(e.target.value)
     }
 
@@ -79,15 +94,31 @@ const TextAreaField = (props) => {
         setCompValue(e.target.value)
     }
 
+    const handleUpdate = () => {
+        let newField = {
+            id: fieldData.id,
+            parentId: fieldData.parentId,
+            subParentId: fieldData.subParentId,
+            required: isRequired,
+            type: fieldData.type,
+            defaultValue: fieldData.defaultValue,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip
+        }        
+        updateComponentsData(editField(compsData, findComponentIndex(fieldData, compsData), newField))
+        handleClose()
+    }
+
     const cancel = () => {
         setFieldLabel('')
         setFieldDescription('')
         setTooltip('')
         setIsRequired(!isRequired)
+        setButtonFocused('Display')
+        setConditional(false)
         handleClose()
     }
-
-    console.log()
 
     return (
         <Dialog
@@ -96,7 +127,7 @@ const TextAreaField = (props) => {
             fullWidth={true}
             maxWidth={'lg'}
         >
-            <DialogTitle                
+            <DialogTitle
                 style={{
                     backgroundColor: '#5048E5',
                     color: 'white',
@@ -104,32 +135,32 @@ const TextAreaField = (props) => {
                 }}
             >
                 Text Area Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
+                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose} />
             </DialogTitle>
             <DialogContent>
                 <Grid container>
                     <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
                         <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'left',
-                            '& > *': {
-                            m: 0,
-                            },
-                        }}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'left',
+                                '& > *': {
+                                    m: 0,
+                                },
+                            }}
                         >
-                        <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                            <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button onClick={handleConditional}>Conditional</Button>
-                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
-                        </ButtonGroup>
+                            <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
+                                <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
+                                <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional}>Conditional</Button>
+                                <Button variant={buttonFocused == "logic" ? "contained" : "outlined"} onClick={handleLogic} style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            </ButtonGroup>
                         </Box>
-                            <Box
-                                component="form"
-                                style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
-                            >
-                            {conditional?
+                        <Box
+                            component="form"
+                            style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
+                        >
+                            {conditional ?
                                 <>
                                     <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
                                         This component should Display:
@@ -140,7 +171,7 @@ const TextAreaField = (props) => {
                                         value={displayValue}
                                         fullWidth
                                         size={'small'}
-                                        onChange={handleDiplay}
+                                        onChange={handleDiplayValue}
                                     >
                                         <MenuItem value={true}>True</MenuItem>
                                         <MenuItem value={false}>False</MenuItem>
@@ -156,10 +187,9 @@ const TextAreaField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData).map(option=>(
+                                        {allFormFields(compsData).map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
-                                        <MenuItem value={false}>False</MenuItem>
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         Has the value:
@@ -176,59 +206,59 @@ const TextAreaField = (props) => {
                                         onChange={handleCompValue}
                                     />
                                 </>
-                            :
+                                :
                                 <>
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="label"
-                                    label="Label"
-                                    type="text"
-                                    size="small"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={fieldLabel}
-                                    onChange={handleLabel}
-                                />
-                                <TextField
-                                    margin="dense"
-                                    id="outlined-multiline-static"
-                                    label="Description (Optional)"
-                                    size="small"
-                                    multiline
-                                    rows={4}
-                                    variant="outlined"
-                                    fullWidth
-                                    value={fieldDescription}
-                                    onChange={handleDescription}
-                                />
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="tooltip"
-                                    label="Tooltip (Optional)"
-                                    type="text"
-                                    size="small"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={tooltip}
-                                    onChange={handleTooltip}
-                                />
-                                <Typography style={{ color: '#5048E5' }}>
-                                    <Checkbox size={'small'} checked={isRequired} onChange={handleChecked}/>Required<GeneralTooltip tipData={'A required field must be filled.'}/>
-                                </Typography>
-                            </>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="label"
+                                        label="Label"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={fieldLabel}
+                                        onChange={handleLabel}
+                                    />
+                                    <TextField
+                                        margin="dense"
+                                        id="outlined-multiline-static"
+                                        label="Description (Optional)"
+                                        size="small"
+                                        multiline
+                                        rows={4}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={fieldDescription}
+                                        onChange={handleDescription}
+                                    />
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="tooltip"
+                                        label="Tooltip (Optional)"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={tooltip}
+                                        onChange={handleTooltip}
+                                    />
+                                    <Typography style={{ color: '#5048E5' }}>
+                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                    </Typography>
+                                </>
                             }
-                            </Box>
+                        </Box>
 
                     </Grid>
-                    <TextareafieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired}/>
+                    <TextareafieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createTextField} variant="outlined" size='small' color="success">Add Field</Button>
+                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
