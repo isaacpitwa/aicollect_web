@@ -105,7 +105,7 @@ const Questionaire = () => {
     const [data, setData] = useState({})
 
     useEffect(() => {
-    }, [sectionDialog, componentsData])
+    }, [sectionDialog])
 
 
     const handleSection = () => {

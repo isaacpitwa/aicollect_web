@@ -20,7 +20,6 @@ import { FormContext } from '../context';
 import {
     allFormFields,
     findComponentIndex,
-    editField
 } from '../utils';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import TextareafieldPreview from '../previews/TextareafieldPreview';
@@ -34,17 +33,22 @@ const TextAreaField = (props) => {
 
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
+    const [id, setId] = useState(fieldData?fieldData.id:'')
+    const [parentId, setParentId] = useState(fieldData?fieldData.parentId:'')
+    const [subParentId, setSubParentId] = useState(fieldData?fieldData.subParentId:'')
+    const [type, setType] = useState(fieldData ? fieldData.type : '')
+    const [value, setValue] = useState(fieldData ? fieldData.value : '')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
     const [conditional, setConditional] = useState(false)
-    const [displayValue, setDisplayValue] = useState('')
-    const [whenValue, setWhenValue] = useState('')
+    const [display, setDisplay] = useState('')
+    const [when, setWhen] = useState('')
     const [compValue, setCompValue] = useState('')
 
-    useEffect(async () => {
-        await setCompsData(componentsData);
+    useEffect(() => {
+        setCompsData(componentsData);
     }, [compsData])
 
     const handleLabel = (event) => {
@@ -83,11 +87,11 @@ const TextAreaField = (props) => {
     }
 
     const handleDiplayValue = (e) => {
-        setDisplayValue(e.target.value)
+        setDisplay(e.target.value)
     }
 
     const handleWhen = (e) => {
-        setWhenValue(e.target.value)
+        setWhen(e.target.value)
     }
 
     const handleCompValue = (e) => {
@@ -96,17 +100,17 @@ const TextAreaField = (props) => {
 
     const handleUpdate = () => {
         let newField = {
-            id: fieldData.id,
-            parentId: fieldData.parentId,
-            subParentId: fieldData.subParentId,
+            id: id,
+            parentId: parentId,
+            subParentId: subParentId,
+            type: type,
+            value: value,
             required: isRequired,
-            type: fieldData.type,
-            defaultValue: fieldData.defaultValue,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip
         }        
-        updateComponentsData(editField(compsData, findComponentIndex(fieldData, compsData), newField))
+        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
         handleClose()
     }
 
@@ -168,7 +172,7 @@ const TextAreaField = (props) => {
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={displayValue}
+                                        value={display}
                                         fullWidth
                                         size={'small'}
                                         onChange={handleDiplayValue}
@@ -182,7 +186,7 @@ const TextAreaField = (props) => {
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={whenValue}
+                                        value={when}
                                         fullWidth
                                         size={'small'}
                                         onChange={handleWhen}

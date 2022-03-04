@@ -14,20 +14,22 @@ const FormRenderer = (props) => {
 
     const { editStatus, handleFormUpdate } = props
 
-    const { componentsData } = useContext(FormContext)
+    const { componentsData, fieldResponses } = useContext(FormContext)
 
     const [isLoaded, setIsLoaded] = useState(false);
     const [compsData, setCompsData] = useState([]);
 
     useEffect(async () => {
-        setCompsData(componentsData);
+        // setCompsData(componentsData);
         setIsLoaded(true);
-    }, [compsData])
+    })
+
+    console.log(fieldResponses);
 
     return (
         isLoaded ?
             <Grid container className={classes.form}>
-                {compsData.map(componentData => (
+                {componentsData.map(componentData => (
                     <FormField fieldData={componentData} editStatus={editStatus} handleFormUpdate={handleFormUpdate} />
                 ))}
                 {editStatus ?

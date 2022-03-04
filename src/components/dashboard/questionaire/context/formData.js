@@ -9,7 +9,8 @@ export const compsData = [
         label: 'Personal Information',
         type: 'section',
         description: '',
-        tooltip: 'Candidate information',
+        tooltip: 'Candidate information',                        
+        conditional: false,
         components: [
             {
                 id: 111,
@@ -17,10 +18,11 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 type: 'image',
-                defaultValue: false,
+                value: false,
                 label: 'Upload Photo',
                 description: 'Add a profile photo for the candidate',
-                tooltip: 'Candidate photo',
+                tooltip: 'Candidate photo',                        
+                conditional: false,
 
             },
             {
@@ -29,10 +31,11 @@ export const compsData = [
                 subParentId: false,
                 required: true,
                 type: 'text',
-                defaultValue: false,
+                value: false,
                 label: 'First Name',
                 description: 'Add first name of candidate here',
-                tooltip: 'First name of candidate'
+                tooltip: 'First name of candidate',                        
+                conditional: false,
             },
             {
                 id: 113,
@@ -40,10 +43,11 @@ export const compsData = [
                 subParentId: false,
                 required: true,
                 type: 'text',
-                defaultValue: false,
+                value: false,
                 label: 'Last Name',
                 description: 'Add last name of candidate here',
-                tooltip: 'Last name of candidate'
+                tooltip: 'Last name of candidate',                        
+                conditional: false,
             },
             {
                 id: 114,
@@ -51,10 +55,11 @@ export const compsData = [
                 subParentId: false,
                 required: true,
                 type: 'email',
-                defaultValue: false,
+                value: false,
                 label: 'Email Address',
                 description: 'Official Email address held by candidate',
-                tooltip: 'Candidate Email'
+                tooltip: 'Candidate Email',                        
+                conditional: false,
             },
             {
                 id: 115,
@@ -62,10 +67,11 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 type: 'phone-number',
-                defaultValue: false,
+                value: false,
                 label: 'Phone number',
                 description: 'Add a reachable phone number of the farmer',
-                tooltip: 'Reachable mobile number'
+                tooltip: 'Reachable mobile number',                        
+                conditional: false,
             },
             {
                 id: 116,
@@ -73,10 +79,11 @@ export const compsData = [
                 subParentId: false,
                 required: true,
                 type: 'select',
-                defaultValue: false,
+                value: false,
                 label: "Gender of candidate",
                 description: 'Add the gender of the candidate here',
-                tooltip: 'Candidate gender',
+                tooltip: 'Candidate gender',                        
+                conditional: false,
                 values: [
                     {
                         id: uuidv4(),
@@ -103,7 +110,8 @@ export const compsData = [
                 label: 'Family Information',
                 type: 'sub-section',
                 description: 'Family information of the candidate, e.g number of wives, number of children',
-                tooltip: 'Candidate family information',
+                tooltip: 'Candidate family information',                        
+                conditional: false,
                 components: [
                     {
                         id: 1171,
@@ -111,10 +119,11 @@ export const compsData = [
                         subParentId: 117,
                         required: false,
                         type: 'radio',
-                        defaultValue: false,
+                        value: false,
                         label: "Are you married?",
                         description: 'This is to establish where the candidate has a spouse or not',
                         tooltip: 'Marital status',
+                        conditional: false,
                         values: [
                             {
                                 id: 11711,
@@ -138,11 +147,28 @@ export const compsData = [
                         parentId: 11,
                         subParentId: 117,
                         required: false,
+                        type: 'text',
+                        value: false,
+                        label: 'Spouse Name?',
+                        description: 'Fill in the name of your partner.',
+                        tooltip: 'Name of partner',
+                        conditional: {
+                            display: true,
+                            when: 1171,
+                            value: 'Yes'
+                        }
+                    },
+                    {
+                        id: 1173,
+                        parentId: 11,
+                        subParentId: 117,
+                        required: false,
                         type: 'number',
-                        defaultValue: false,
+                        value: false,
                         label: 'How many adults in household',
                         description: 'Fill in the number of adults living with the candidate, candidate inclusive',
-                        tooltip: 'Number of adults'
+                        tooltip: 'Number of adults',                        
+                        conditional: false,
                     },
                 ]
             },
@@ -156,7 +182,8 @@ export const compsData = [
         label: 'Farm Information',
         type: 'section',
         description: 'Farm Information Description',
-        tooltip: '',
+        tooltip: '',                        
+        conditional: false,
         components: [
             {
                 id: 121,
@@ -164,10 +191,11 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 type: 'location',
-                defaultValue: 'Kampala',
+                value: 'Kampala',
                 label: 'Add Farm Location',
                 description: 'Select location of farm from options given below',
-                tooltip: 'Location of the farm',
+                tooltip: 'Location of the farm',                        
+                conditional: false,
                 values: [
                     {
                         id: 1211,
@@ -192,10 +220,11 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 type: 'select-box',
-                defaultValue: false,
+                value: false,
                 label: 'Mark the type of livestock the farmer currently owns',
                 description: 'This is to know what type of livestock the farm has',
-                tooltip: 'Check livestock farmer owns',
+                tooltip: 'Check livestock farmer owns',                        
+                conditional: false,
                 values: [
                     {
                         id: 1221,
@@ -225,10 +254,11 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 type: 'text-area',
-                defaultValue: false,
+                value: false,
                 label: 'Summary of farm assets',
                 description: 'Write down the farming assets held by the candidate',
-                tooltip: 'Farm assets'
+                tooltip: 'Farm assets',                        
+                conditional: false,
             },
             {
                 id: 124,
@@ -236,10 +266,11 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 type: 'area-mapping',
-                defaultValue: false,
+                value: false,
                 label: 'Map Farm',
                 description: 'Do an area mapping of the farm of the candidate',
-                tooltip: 'Farm area mapping'
+                tooltip: 'Farm area mapping',                        
+                conditional: false,
             },
         ]
     }

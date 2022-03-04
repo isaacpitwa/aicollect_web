@@ -33,7 +33,7 @@ const SubSectionField = (props) => {
                 variant='h5'
             >
                 {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                <small style={{ float: 'right', visibility: display }}>
+                <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
                     <EditIcon className={smallBtn.editBtn} />
                     <HighlightOffIcon className={smallBtn.deleteBtn} />
                 </small>

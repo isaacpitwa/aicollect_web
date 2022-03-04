@@ -1,15 +1,20 @@
-import React, { useState, useEffect, useCallback, createContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { v4 as uuidv4 } from 'uuid'
 
 import {
     compsData
 } from './formData';
 
+import {
+    allFormFields,
+} from '../utils';
+
 export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
     const [componentsData, setComponentsData] = useState([])
+    const [fieldResponses, setFieldResponses] = useState([])
     const [formData, setFormData] = useState({
         id: 1,
         name: '',
@@ -22,21 +27,33 @@ const FormProvider = (props) => {
         timeSpent: '',
         components: componentsData
     })
-    const [sectionCreated, setSectionCreated] = useState(componentsData[0]&&componentsData[0].type==='section'?true:false)
+    const [sectionCreated, setSectionCreated] = useState(componentsData[0] && componentsData[0].type === 'section' ? true : false)
     const [formPreview, setFormPreview] = useState(false)
     const [editStatus, setEditStatus] = useState(false)
 
-    useEffect(()=>{
+    useEffect(() => {
         setComponentsData(compsData);
-    }, [componentsData])
+        setFieldResponses(allFormFields(compsData).map(item => { return { fieldId: item.id, value: item.value }}))
+    }, [])
 
-    const updateField = (fieldIndex, fieldData) => {
+    const updateComponentsData = (fieldIndex, newFieldData) => {
 
+        let newComponentsData = componentsData;
+
+        if (newFieldData.parentId && newFieldData.subParentId) {
+            let sectionIndex = newComponentsData.components.findIndex(comp => comp.id === newFieldData.parentId);
+            let sectionFieldComponents = newComponentsData.find(comp => comp.id === newFieldData.parentId).components;
+            let subSectionIndex = sectionFieldComponents.findIndex(comp => comp.id === newFieldData.subParentId);
+            newComponentsData[sectionIndex].components[subSectionIndex].components[fieldIndex] = newFieldData;
+        } else if (newFieldData.parentId && !newFieldData.subParentId) {
+            let sectionIndex = newComponentsData.findIndex(comp => comp.id === newFieldData.parentId);
+            newComponentsData[sectionIndex].components[fieldIndex] = newFieldData;
+        } else {
+            newComponentsData[fieldIndex] = newFieldData;
+        }
+
+        setComponentsData(newComponentsData)
     }
-
-    const updateComponentsData = useCallback((updatedComponent) => {
-        setComponentsData(updatedComponent)
-    }, []);
 
     const addComponent = (newComponent) => {
         setComponentsData(componentsData => [...componentsData, newComponent])
@@ -47,7 +64,7 @@ const FormProvider = (props) => {
         let newForm = formData
         newForm.components = componentsData
         setFormData(newForm)
-        console.log({'New Form': formData})
+        console.log({ 'New Form': formData })
     }
 
     const handleFormPreview = () => {
@@ -61,6 +78,8 @@ const FormProvider = (props) => {
                 sectionCreated,
                 formData,
                 componentsData,
+                fieldResponses,
+                setFieldResponses,
                 addComponent,
                 updateComponentsData,
                 createForm,

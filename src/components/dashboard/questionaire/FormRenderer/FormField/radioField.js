@@ -13,20 +13,24 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
-import { DescriptionCard } from '../../utils'
+import { DescriptionCard, FieldIndex } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
 const radioField = (props) => {
 
-    const { editStatus } = useContext(FormContext);
+    const { fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
 
     const { fieldData } = props
 
-    const [radioValue, setRadioValue] = useState(fieldData.fieldData)
+    const [fieldId, setFieldId] = useState(fieldData.id)
+    const [radioValue, setRadioValue] = useState(false)
     const [display, setDisplay] = useState('hidden');
 
     const handleRadio = (e) => {
         setRadioValue(e.target.value)
+        let newFieldResponses = fieldResponses
+        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value }
+        setFieldResponses(newFieldResponses)
     }
 
     const RadioOption = (valueSelected) => {
@@ -65,7 +69,7 @@ const radioField = (props) => {
                     onChange={handleRadio}
                 >
                     {fieldData.values.map(option => (
-                        <FormControlLabel value={option.id} control={<Radio />} label={option.label} />
+                        <FormControlLabel value={option.label} control={<Radio />} label={option.label} />
                     ))}
                 </RadioGroup>
             </FormControl>
