@@ -7,20 +7,11 @@ import {
     ButtonGroup,
     Grid,
     Typography,
-    Stack,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     TextField,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
     TableContainer,
     Table,
     TableHead,
@@ -30,7 +21,8 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import SelectPreview from '../previews/SelectPreview'
+import GeneralTooltip from '../previews/GeneralTooltip';
+import SelectPreview from '../previews/SelectPreview';
 
 // This is the field for type=TextField
 const SelectField = (props) => {
@@ -46,6 +38,7 @@ const SelectField = (props) => {
             'optionLabel': '',
         }
     ])
+    const [isRequired, setIsRequired] = useState(false)
 
     const addCheckBox = () => {
         let optionId = uuidv4()
@@ -68,6 +61,10 @@ const SelectField = (props) => {
         setTooltip(e.target.value)
     }
 
+    const handleChecked = (e) => {
+        setIsRequired(!isRequired)
+    }
+
     const cancel = () => {
         setFieldLabel('')
         setFieldDescription('')
@@ -78,6 +75,7 @@ const SelectField = (props) => {
                 'optionLabel': '',
             }
         ])
+        setIsRequired(!isRequired)
         handleClose()
     }
 
@@ -113,10 +111,8 @@ const SelectField = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Data</Button>
-                            <Button disabled>Validation</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button>Conditional</Button>
+                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -124,7 +120,6 @@ const SelectField = (props) => {
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
                             <TextField
-                                required
                                 autoFocus
                                 margin="dense"
                                 id="label"
@@ -226,9 +221,12 @@ const SelectField = (props) => {
                                 value={tooltip}
                                 onChange={handleTooltip}
                             />
+                            <Typography style={{ color: '#5048E5' }}>
+                                <Checkbox size={'small'} checked={isRequired} onChange={handleChecked}/>Required<GeneralTooltip tipData={'A required field must be filled.'}/>
+                            </Typography>
                         </Box>
                     </Grid>
-                    <SelectPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} options={options}/>
+                    <SelectPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} options={options} isRequired={isRequired}/>
                 </Grid>
             </DialogContent>
             <DialogActions>

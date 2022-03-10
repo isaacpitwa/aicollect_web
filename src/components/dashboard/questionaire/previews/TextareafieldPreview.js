@@ -9,7 +9,7 @@ import GeneralTooltip from '../previews/GeneralTooltip'
 
 const TextareafieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip } = props
+    const { fieldLabel, fieldDescription, tooltip, isRequired } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -21,7 +21,7 @@ const TextareafieldPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
             <TextField
-                required
+                required={isRequired}
                 autoFocus
                 margin="dense"
                 id="label"

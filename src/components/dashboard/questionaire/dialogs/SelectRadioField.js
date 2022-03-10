@@ -7,21 +7,12 @@ import {
     ButtonGroup,
     Grid,
     Typography,
-    Stack,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     TextField,
     Radio,
-    RadioGroup,
-    FormControlLabel,
-    FormControl,
-    FormLabel,
     TableContainer,
     Table,
     TableHead,
@@ -31,7 +22,8 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import SelectRadioPreview from '../previews/SelectRadioPreview'
+import GeneralTooltip from '../previews/GeneralTooltip';
+import SelectRadioPreview from '../previews/SelectRadioPreview';
 import { typography } from '@mui/system';
 
 // This is the field for type=TextField
@@ -49,6 +41,7 @@ const SelectRadioField = (props) => {
             'radioLabel': ''
         }
     ])
+    const [isRequired, setIsRequired] = useState(false)
 
     const addRadio = () => {
         let radioId = uuidv4()
@@ -79,6 +72,10 @@ const SelectRadioField = (props) => {
         setTooltip(e.target.value)
     }
 
+    const handleChecked = (e) => {
+        setIsRequired(!isRequired)
+    }
+
     const cancel = () => {
         setFieldLabel('')
         setRadioValue('')
@@ -90,6 +87,7 @@ const SelectRadioField = (props) => {
                 'radioLabel': ''
             }
         ])
+        setIsRequired(!isRequired)
         handleClose()
     }
 
@@ -138,10 +136,8 @@ const SelectRadioField = (props) => {
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Data</Button>
-                            <Button disabled>Validation</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button>Conditional</Button>
+                            <Button style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -149,7 +145,6 @@ const SelectRadioField = (props) => {
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
                             <TextField
-                                required
                                 autoFocus
                                 margin="dense"
                                 id="label"
@@ -255,9 +250,12 @@ const SelectRadioField = (props) => {
                                 value={tooltip}
                                 onChange={handleTooltip}
                             />
+                            <Typography style={{ color: '#5048E5' }}>
+                                <Checkbox size={'small'} checked={isRequired} onChange={handleChecked}/>Required<GeneralTooltip tipData={'A required field must be filled.'}/>
+                            </Typography>
                         </Box>
                     </Grid>
-                    <SelectRadioPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} radioValue={radioValue} radios={radios}/>
+                    <SelectRadioPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} radioValue={radioValue} radios={radios} isRequired={isRequired}/>
                 </Grid>
             </DialogContent>
             <DialogActions>

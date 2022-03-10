@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
     Box,
     Grid,
@@ -7,13 +7,13 @@ import {
     RadioGroup,
     FormControlLabel,
     FormControl,
-    FormLabel
-} from '@mui/material'
-import GeneralTooltip from '../previews/GeneralTooltip'
+} from '@mui/material';
+
+import GeneralTooltip from '../previews/GeneralTooltip';
 
 const SelectRadioPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, radioValue, radios } = props
+    const { fieldLabel, fieldDescription, tooltip, radioValue, radios, isRequired } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -25,7 +25,7 @@ const SelectRadioPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
                 <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                    {fieldLabel}<GeneralTooltip tipData={tooltip}/>
+                    {fieldLabel}{isRequired?<small style={{ color: 'red' }}>*</small>:''}<GeneralTooltip tipData={tooltip}/>
                 </Typography>
                 <FormControl>
                     <RadioGroup
@@ -34,7 +34,7 @@ const SelectRadioPreview = (props) => {
                         value={radioValue}
                     >
                         {radios.map(radio=>(
-                            <FormControlLabel value={radio.radioId} control={<Radio />} label={radio.radioLabel} />
+                            <FormControlLabel value={radio.radioId} control={<Radio />} label={radio.radioLabel}/>
                         ))}
                     </RadioGroup>
                 </FormControl>
