@@ -27,14 +27,19 @@ const FormProvider = (props) => {
         timeSpent: '',
         components: componentsData
     })
-    const [sectionCreated, setSectionCreated] = useState(componentsData[0] && componentsData[0].type === 'section' ? true : false)
+    const [sectionCreated, setSectionCreated] = useState(false)
     const [formPreview, setFormPreview] = useState(false)
     const [editStatus, setEditStatus] = useState(false)
 
     useEffect(() => {
-        setComponentsData(compsData);
+        getFormJson()
         setFieldResponses(allFormFields(compsData).map(item => { return { fieldId: item.id, value: item.value }}))
     }, [])
+
+    const getFormJson = async () => {
+        await setComponentsData(compsData)
+        setSectionCreated(compsData[0] && compsData[0].type === 'section' ? true : false)
+    }
 
     const updateComponentsData = (fieldIndex, newFieldData) => {
 
@@ -78,6 +83,7 @@ const FormProvider = (props) => {
                 sectionCreated,
                 formData,
                 componentsData,
+                setComponentsData,
                 fieldResponses,
                 setFieldResponses,
                 addComponent,

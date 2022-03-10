@@ -54,6 +54,21 @@ const formStyles = makeStyles({
         borderBottom: '2px #5048E5 solid',
         marginBottom: '5px'
     },
+    subSection: {
+        border: '1px #5048e537 solid',
+        minHeight: '50px',
+        margin: '5px 0px',
+        cursor: 'move',
+    },
+    subSectionLabel: {
+        width: '100%',
+        color: '#5048E5',
+        backgroundColor: '#5048e537',
+        fontWeight: '400',
+        borderBottom: '2px #5048E5 solid',
+        marginBottom: '5px',
+        padding: '0px 10px',
+    }
 });
 
 export const subSectionStyles = makeStyles({
@@ -63,9 +78,9 @@ export const subSectionStyles = makeStyles({
         padding: '10px 1%',
         margin: '5px 0px',
         cursor: 'move',
-        backgroundColor: 'red',
     },
     subSectionLabel: {
+        color: '#5048E5',
         backgroundColor: '#aaa',
     }
 });

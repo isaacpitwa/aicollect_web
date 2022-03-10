@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Box,
     Button,
@@ -192,7 +192,7 @@ const TextField_ = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData).map(option => (
+                                        {allFormFields(compsData, fieldData.id, 'text').map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -213,46 +213,46 @@ const TextField_ = (props) => {
                                 </>
                                 :
                                 <>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="label"
-                                label="Label"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                                value={fieldLabel}
-                                onChange={handleLabel}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="outlined-multiline-static"
-                                label="Description (Optional)"
-                                size="small"
-                                multiline
-                                rows={4}
-                                variant="outlined"
-                                fullWidth
-                                value={fieldDescription}
-                                onChange={handleDescription}
-                            />
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="tooltip"
-                                label="Tooltip (Optional)"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                                value={tooltip}
-                                onChange={handleTooltip}
-                            />
-                            <Typography style={{ color: '#5048E5' }}>
-                                <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
-                            </Typography>
-                            </>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="label"
+                                        label="Label"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={fieldLabel}
+                                        onChange={handleLabel}
+                                    />
+                                    <TextField
+                                        margin="dense"
+                                        id="outlined-multiline-static"
+                                        label="Description (Optional)"
+                                        size="small"
+                                        multiline
+                                        rows={4}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={fieldDescription}
+                                        onChange={handleDescription}
+                                    />
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="tooltip"
+                                        label="Tooltip (Optional)"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={tooltip}
+                                        onChange={handleTooltip}
+                                    />
+                                    <Typography style={{ color: '#5048E5' }}>
+                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                    </Typography>
+                                </>
                             }
                         </Box>
                     </Grid>

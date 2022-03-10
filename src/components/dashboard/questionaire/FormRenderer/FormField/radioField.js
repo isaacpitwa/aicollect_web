@@ -29,7 +29,7 @@ const radioField = (props) => {
     const handleRadio = (e) => {
         setRadioValue(e.target.value)
         let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value }
+        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
         setFieldResponses(newFieldResponses)
     }
 
@@ -69,7 +69,7 @@ const radioField = (props) => {
                     onChange={handleRadio}
                 >
                     {fieldData.values.map(option => (
-                        <FormControlLabel value={option.label} control={<Radio />} label={option.label} />
+                        <FormControlLabel value={option.label.toLowerCase()} control={<Radio />} label={option.label} />
                     ))}
                 </RadioGroup>
             </FormControl>

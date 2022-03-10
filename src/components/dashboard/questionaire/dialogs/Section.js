@@ -31,21 +31,22 @@ import SectionPreview from '../previews/SectionPreview'
 // This is the field for type=TextField
 const Section = (props) => {
 
-    const { componentsData, updateComponentsData } = useContext(FormContext)
+    const { componentsData, addComponent, updateComponentsData } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : '')
-    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : '')
+    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : false)
     const [type, setType] = useState(fieldData ? fieldData.type : '')
     const [value, setValue] = useState(fieldData ? fieldData.value : '')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
+    const [dependency, setDependency] = useState(false)
     const [conditional, setConditional] = useState(false)
     const [components] = useState(fieldData ? fieldData.components : [])
     const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : '')
@@ -58,11 +59,11 @@ const Section = (props) => {
 
 
     const handleLabel = (e) => {
-        setsectionLabel(e.target.value)
+        setFieldLabel(e.target.value)
     }
 
     const handleDescription = (e) => {
-        setSectionDescription(e.target.value)
+        setFieldDescription(e.target.value)
     }
 
     const handleTooltip = (e) => {
@@ -100,31 +101,30 @@ const Section = (props) => {
         setCompValue(e.target.value)
     }
 
-    const sectionData = {
-        id: id,
-        parentId: parentId,
-        subParentId: subParentId,
-        type: type,
-        value: value,
-        required: isRequired,
-        label: fieldLabel,
-        description: fieldDescription,
-        tooltip: tooltip,
-        conditional: {
-            display: display,
-            when: when,
-            value: compValue.toLowerCase()
-        },
-        components: components
-    }
-
     const createSection = () => {
+
+        const sectionData = {
+            id: id?id:uuidv4(),
+            parentId: false,
+            subParentId: false,
+            required: isRequired,
+            display: 'visible',
+            type: 'section',
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            dependency: dependency,
+            conditional: conditional,
+            components: components
+        }
+
         addComponent(sectionData)
         handleClose()
+
     }
 
     const handleUpdate = () => {
-        let newField = {
+        let sectionData = {
             id: id,
             parentId: parentId,
             subParentId: subParentId,
@@ -141,8 +141,7 @@ const Section = (props) => {
             },
             components: components
         }
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
-        console.log(componentsData)
+        updateComponentsData(findComponentIndex(fieldData, compsData), sectionData)
         handleClose()
     }
 
@@ -219,7 +218,7 @@ const Section = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData).map(option => (
+                                        {allFormFields(compsData, id, 'section').map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -290,7 +289,7 @@ const Section = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:createSection} variant="outlined" size='small' color="success">Save</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

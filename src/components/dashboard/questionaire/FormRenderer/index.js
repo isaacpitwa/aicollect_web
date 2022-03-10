@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 import { FormContext } from '../context'
-import FormField from './FormField'
+import SectionField from './FormField/sectionField'
 
 const FormRenderer = (props) => {
 
@@ -30,9 +30,9 @@ const FormRenderer = (props) => {
         isLoaded ?
             <Grid container className={classes.form}>
                 {componentsData.map(componentData => (
-                    <FormField fieldData={componentData} editStatus={editStatus} handleFormUpdate={handleFormUpdate} />
+                    <SectionField fieldData={componentData} editStatus={editStatus} handleFormUpdate={handleFormUpdate} />
                 ))}
-                {editStatus ?
+                {componentsData.length===0?
                     <Box style={{ background: '#448AFF', color: 'white', padding: '10px', width: '100%', textAlign: 'center', marginTop: '20px' }}>
                         Drag and Drop a form component
                     </Box>

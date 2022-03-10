@@ -157,7 +157,7 @@ const TextAreaField = (props) => {
                             <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                                 <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
                                 <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional}>Conditional</Button>
-                                <Button variant={buttonFocused == "logic" ? "contained" : "outlined"} onClick={handleLogic} style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                                <Button disabled variant={buttonFocused == "logic" ? "contained" : "outlined"} onClick={handleLogic} style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                             </ButtonGroup>
                         </Box>
                         <Box
@@ -191,7 +191,7 @@ const TextAreaField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData).map(option => (
+                                        {allFormFields(compsData, fieldData.id, 'text-area').map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>

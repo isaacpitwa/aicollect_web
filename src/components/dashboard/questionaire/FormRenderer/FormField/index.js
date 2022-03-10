@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import SectionField from './sectionField'
-import SubSectionField from './sectionField'
+import SubSectionField from './subSectionField'
 import TextField from './textField'
 import TextAreaField from './textAreaField'
 import NumberField from './numberField'
@@ -31,43 +31,28 @@ const FormField = (props) => {
     switch (fieldData.type) {
         case 'sub-section':
             return <SubSectionField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'text':
             return <TextField fieldData={fieldData} editStatus={editStatus} fieldUpdated={fieldUpdated}/>
-            break;
         case 'text-area':
             return <TextAreaField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'number':
             return <NumberField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'select-box':
             return <SelectBoxesField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'select':
             return <SelectField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'radio':
             return <RadioField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'email':
             return <EmailField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'phone-number':
             return <PhoneNumberField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'image':
             return <ImageField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'location':
             return <LocationField fieldData={fieldData} editStatus={editStatus}/>
-            break;
         case 'area-mapping':
             return <AreaMappingField fieldData={fieldData} editStatus={editStatus}/>
-            break;
-        default:
-            return <SectionField fieldData={fieldData} editStatus={formPreview}/>
-            break
     }
 }
 

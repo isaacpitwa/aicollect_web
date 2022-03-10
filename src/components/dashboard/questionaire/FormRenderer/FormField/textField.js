@@ -47,7 +47,6 @@ const textField = (props) => {
     }
 
     const handleClose = () => {
-        // Dialog box closing method
         setTextFieldDialog(false)
         fieldUpdated()
     }
@@ -58,7 +57,7 @@ const textField = (props) => {
 
     return (        
         fieldData.conditional?
-        fieldResponses.find(item=>item.fieldId === fieldData.conditional.when).value === fieldData.conditional.value?
+        fieldResponses.find(item => item.fieldId === fieldData.conditional.when).value === fieldData.conditional.value?
             <Grid style={{ display: 'block' }} key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
                 <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
                 {!editStatus ?
@@ -100,10 +99,9 @@ const textField = (props) => {
                     fullWidth
                     type={'text'}
                     variant={'outlined'}
+                    label={fieldData.label}
                     value={value}
                     onChange={handleFieldValue}
-                    label={fieldData.label}
-
                     helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                     InputProps={{
                         endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false

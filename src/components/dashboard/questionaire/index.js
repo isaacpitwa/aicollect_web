@@ -224,7 +224,7 @@ const Questionaire = () => {
             {formPreview ?
                 ''
                 :
-                <Grid item xs={6} md={3.5}>
+                <Grid item xs={12} sm={12} md={3.5}>
                     <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
                         <Stack direction="row" spacing={2} style={{ width: "100%" }}>
                             <Button startIcon={<CheckBoxOutlineBlankIcon />} draggable="true" onClick={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
@@ -310,7 +310,7 @@ const Questionaire = () => {
                 </Grid>
             }
             {formPreview ?
-                <Grid item xs={6} md={12}>
+                <Grid item xs={12} sm={12} md={12}>
                     <Grid container style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}>
                         {/* <DragNDrop componentsData={componentsData} /> */}
                         <FormRenderer editStatus={editStatus} />
