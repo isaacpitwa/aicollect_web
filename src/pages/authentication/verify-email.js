@@ -41,7 +41,7 @@ const VerifyCode = () => {
           localStorage.setItem('accessToken', data.data.token);
           await authenticateAfterEmailVerify();
           if (isMounted()) {
-            router.push('/dashboard');
+            router.push('/createProfile');
           }
         }
       } catch (error) {
