@@ -19,7 +19,7 @@ export const UserDataManagement = (props) => {
     setLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/v1/authService/delete-user",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/delete-user`,
         {
           method: "POST",
           headers: {

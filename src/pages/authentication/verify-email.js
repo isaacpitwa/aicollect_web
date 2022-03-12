@@ -29,7 +29,7 @@ const VerifyCode = () => {
   const handleVerifyEmail = async () => {
     setLoading(true);
     try {
-        const response = await fetch(`http://localhost:5000/api/v1/authService/verifyEmail?token=${token}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/verifyEmail?token=${token}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'Application/json'

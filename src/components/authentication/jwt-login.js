@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import NextLink from "next/link";
 import {
-  Alert,
   Box,
   Button,
   FormHelperText,
@@ -86,18 +85,6 @@ export const JWTLogin = (props) => {
         type="email"
         value={formik.values.email}
       />
-      {/* <TextField
-        error={Boolean(formik.touched.password && formik.errors.password)}
-        fullWidth
-        helperText={formik.touched.password && formik.errors.password}
-        label="Password"
-        margin="normal"
-        name="password"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="password"
-        value={formik.values.password}
-      /> */}
 
       <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>

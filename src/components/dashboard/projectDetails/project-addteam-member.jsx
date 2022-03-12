@@ -39,7 +39,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId }) => {
   useEffect(() => {
     const fetchUserList = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/v1/authService/users', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/users`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
           }
@@ -65,7 +65,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId }) => {
         role: member.role,
         createdBy: "Stuart Dambi",
       }
-      const response = await fetch('http://localhost:5000/api/v1/projects/addTeamMember', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects/addTeamMember`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',

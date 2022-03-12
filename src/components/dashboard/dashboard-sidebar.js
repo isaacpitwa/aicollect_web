@@ -12,28 +12,14 @@ import {
   useMediaQuery,
   Chip
 } from "@mui/material";
-// import { Calendar as CalendarIcon } from '../../icons/calendar';
-// import { Cash as CashIcon } from '../../icons/cash';
+import AppsIcon from '@mui/icons-material/Apps';
+import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
 import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
-// import { ChatAlt2 as ChatAlt2Icon } from '../../icons/chat-alt2';
-// import { ClipboardList as ClipboardListIcon } from '../../icons/clipboard-list';
-// import { CreditCard as CreditCardIcon } from '../../icons/credit-card';
 import { Home as HomeIcon } from "../../icons/home";
-// import { LockClosed as LockClosedIcon } from '../../icons/lock-closed';
-// import { Mail as MailIcon } from '../../icons/mail';
-// import { MailOpen as MailOpenIcon } from '../../icons/mail-open';
-// import { Newspaper as NewspaperIcon } from '../../icons/newspaper';
-// import { OfficeBuilding as OfficeBuildingIcon } from '../../icons/office-building';
-// import { ReceiptTax as ReceiptTaxIcon } from '../../icons/receipt-tax';
 import { Selector as SelectorIcon } from "../../icons/selector";
-// import { Share as ShareIcon } from '../../icons/share';
-// import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-// import { ShoppingCart as ShoppingCartIcon } from '../../icons/shopping-cart';
 import { Truck as TruckIcon } from '../../icons/truck';
-// import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
 import { Users as UsersIcon } from "../../icons/users";
-// import { XCircle as XCircleIcon } from '../../icons/x-circle';
 import { Logo } from "../logo";
 import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
@@ -81,7 +67,7 @@ const getSections = (t) => [
     ]
   },
   {
-    title: t("Mangement"),
+    title: t("Management"),
     items: [
       {
         title: t("Users"),
@@ -91,12 +77,12 @@ const getSections = (t) => [
       {
         title: t("Projects"),
         path: "/dashboard/projects",
-        icon: <UsersIcon fontSize="small" />
+        icon: <AppsIcon fontSize="small" />
       },
       {
         title: t("Task Manager"),
         path: "/dashboard/tasks",
-        icon: <UsersIcon fontSize="small" />,
+        icon: <LowPriorityIcon fontSize="small" />,
         children: [
           {
             title: t("Tasks"),

@@ -34,7 +34,7 @@ const CreateNewProjectDialog = ({ open, handleClose }) => {
   const handleCreateProject = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/v1/projects/create', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',

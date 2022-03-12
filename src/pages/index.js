@@ -60,8 +60,7 @@ const Login = () => {
   }, []);
 
   const handleLoginWithGoogle = async () => {
-    router.push('http://localhost:5000/api/v1/authService/google');
-    // window.open('http://localhost:5000/api/v1/authService/google', '_blank')
+    router.push(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/google`);
   };
   return (
     <>
