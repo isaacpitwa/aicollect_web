@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid'
 import {
     Box,
-    Paper,
     Button,
     ButtonGroup,
     Grid,
@@ -10,11 +9,9 @@ import {
     Select,
     MenuItem,
     Checkbox,
-    AccordionDetails,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     TextField
 } from '@mui/material';
@@ -37,10 +34,10 @@ const Section = (props) => {
 
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : false)
-    const [type, setType] = useState(fieldData ? fieldData.type : '')
+    const [id] = useState(fieldData ? fieldData.id : '')
+    const [parentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
+    const [type] = useState(fieldData ? fieldData.type : 'section')
     const [value, setValue] = useState(fieldData ? fieldData.value : '')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
@@ -57,7 +54,6 @@ const Section = (props) => {
         setCompsData(componentsData);
     }, [compsData])
 
-
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
     }
@@ -70,10 +66,6 @@ const Section = (props) => {
         setTooltip(e.target.value)
     }
 
-    const handleChecked = (e) => {
-        setIsRequired(!isRequired)
-    }
-
     const handleDisplay = (e) => {
         setButtonFocused("display")
         setConditional(false)
@@ -82,11 +74,6 @@ const Section = (props) => {
     const handleConditional = (e) => {
         setButtonFocused("conditional")
         setConditional(true)
-    }
-
-    const handleLogic = (e) => {
-        setButtonFocused("logic")
-        setConditional(false)
     }
 
     const handleDiplayValue = (e) => {
@@ -276,9 +263,6 @@ const Section = (props) => {
                                         value={tooltip}
                                         onChange={handleTooltip}
                                     />
-                                    <Typography style={{ color: '#5048E5' }}>
-                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
-                                    </Typography>
                                 </>
                             }
                         </Box>

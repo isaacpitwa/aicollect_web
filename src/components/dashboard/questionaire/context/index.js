@@ -13,6 +13,7 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
+    const [sectionId, setSectionId] = useState('')
     const [componentsData, setComponentsData] = useState([])
     const [fieldResponses, setFieldResponses] = useState([])
     const [formData, setFormData] = useState({
@@ -80,6 +81,8 @@ const FormProvider = (props) => {
     return (
         <FormContext.Provider
             value={{
+                sectionId,
+                setSectionId,
                 sectionCreated,
                 formData,
                 componentsData,

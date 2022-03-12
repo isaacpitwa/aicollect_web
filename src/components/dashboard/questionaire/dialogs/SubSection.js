@@ -1,64 +1,116 @@
-import React, { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid'
 import {
     Box,
-    Paper,
     Button,
     ButtonGroup,
     Grid,
     Typography,
-    Stack,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
+    Select,
+    MenuItem,
+    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     TextField
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import { FormContext } from '../context'
+import {
+    allFormFields,
+    findComponentIndex,
+} from '../utils';
+
+import GeneralTooltip from '../previews/GeneralTooltip';
 import SubSectionPreview from '../previews/SubSectionPreview'
 
 // This is the field for type=TextField
 const SubSection = (props) => {
 
-    const { open, handleClose } = props
+    const { sectionId, componentsData, addComponent, updateComponentsData } = useContext(FormContext)
 
-    const [sectionLabel, setSectionLabel] = useState('')
-    const [sectionDescription, setSectionDescription] = useState('')
-    const [tooltip, setTooltip] = useState('')
+    const { open, fieldData, handleClose } = props
+
+    const [compsData, setCompsData] = useState([]);
+    const [buttonFocused, setButtonFocused] = useState('display')
+    const [id, setId] = useState(fieldData ? fieldData.id : '')
+    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : false)
+    const [type, setType] = useState(fieldData ? fieldData.type : '')
+    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
+    const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
+    const [dependency, setDependency] = useState(false)
+    const [conditional, setConditional] = useState(false)
+    const [components] = useState(fieldData ? fieldData.components : [])
+    const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : '')
+    const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
+    const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
+
+    useEffect(() => {
+        setCompsData(componentsData);
+    }, [compsData])
 
     const handleLabel = (e) => {
-        setSectionLabel(e.target.value)
+        setFieldLabel(e.target.value)
     }
 
     const handleDescription = (e) => {
-        setSectionDescription(e.target.value)
+        setFieldDescription(e.target.value)
     }
-    
+
     const handleTooltip = (e) => {
         setTooltip(e.target.value)
     }
 
-    const fieldData = {
-        fieldId: uuidv4(),
-        type: 'sub-section',
-        title: sectionLabel,
-        description: sectionDescription,
+    const handleChecked = (e) => {
+        setIsRequired(!isRequired)
+    }
 
+    const handleDisplay = (e) => {
+        setButtonFocused("display")
+        setConditional(false)
+    }
+
+    const handleConditional = (e) => {
+        setButtonFocused("conditional")
+        setConditional(true)
     }
 
     const createSubSection = () => {
+
+        let sectionObj = componentsData.find(comp => comp.id === sectionId )
+        let newSectionObj = componentsData.find(comp => comp.id === sectionId )
+
+        const newSubSection = {
+            id: id?id:uuidv4(),
+            parentId: sectionId,
+            subParentId: false,
+            required: isRequired,
+            display: 'visible',
+            type: 'sub-section',
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            dependency: dependency,
+            conditional: conditional,
+            components: components
+        }
+
+        newSectionObj.components.push(newSubSection)
+        updateComponentsData(findComponentIndex(sectionObj, componentsData), newSectionObj)
         handleClose()
     }
 
     const cancel = () => {
-        setSectionLabel('')
-        setSectionDescription('')
+        setFieldLabel('')
+        setFieldDescription('')
         setTooltip('')
+
         handleClose()
     }
 
@@ -93,9 +145,8 @@ const SubSection = (props) => {
                         }}
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                            <Button disabled variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
+                            <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional} style={{ borderRadius: '0px 8px 0px 0px' }}>Conditional</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
@@ -112,7 +163,7 @@ const SubSection = (props) => {
                                 size="small"
                                 fullWidth
                                 variant="outlined"
-                                value={sectionLabel}
+                                value={fieldLabel}
                                 onChange={handleLabel}
                                 // error={sectionTitle==''?true:false}
                                 // helperText={'Missing field'}
@@ -126,7 +177,7 @@ const SubSection = (props) => {
                                 rows={4}
                                 variant="outlined"
                                 fullWidth
-                                value={sectionDescription}
+                                value={fieldDescription}
                                 onChange={handleDescription}
                             />
                             <TextField
@@ -143,7 +194,7 @@ const SubSection = (props) => {
                             />
                         </Box>
                     </Grid>
-                    <SubSectionPreview sectionLabel={sectionLabel} sectionDescription={sectionDescription} tooltip={tooltip}/>
+                    <SubSectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
                 </Grid>
             </DialogContent>
             <DialogActions>

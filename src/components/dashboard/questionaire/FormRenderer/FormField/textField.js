@@ -38,10 +38,6 @@ const textField = (props) => {
         setTextFieldDialog(true)
     }
 
-    const triggerUpdate = () => {
-        fieldUpdated()
-    }
-
     const createTextField = () => {
         setTextFieldDialog(false)
     }
