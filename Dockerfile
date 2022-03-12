@@ -9,7 +9,7 @@ FROM node:lts as builder
 WORKDIR /aicollect-web-app
 COPY . .
 COPY --from=dependencies /aicollect-web-app/node_modules ./node_modules
-COPY --from=dependencies /aicollectAdmin/.env ./.env
+COPY --from=dependencies /aicollect-web-app/.env ./.env
 RUN yarn build
 
 FROM node:lts as runner
@@ -21,7 +21,7 @@ COPY --from=builder /aicollect-web-app/public ./public
 COPY --from=builder /aicollect-web-app/.next ./.next
 COPY --from=builder /aicollect-web-app/node_modules ./node_modules
 COPY --from=builder /aicollect-web-app/package.json ./package.json
-COPY --from=builder /aicollectAdmin/.env ./.env
+COPY --from=builder /aicollect-web-app/.env ./.env
 
 EXPOSE 3000
 CMD ["npm", "start"]
