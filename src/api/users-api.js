@@ -1,7 +1,7 @@
 class UserApi {
   async getUsers() {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/v1/authService/clientUsers`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/clientUsers`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -20,7 +20,7 @@ class UserApi {
 
   async getUserDetails(userid) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/v1/authService/users/${userid}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/users/${userid}`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`

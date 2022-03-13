@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import {
   Box,
@@ -20,6 +20,7 @@ import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
+import { useMounted } from '../../../hooks/use-mounted';
 import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
 import toast from 'react-hot-toast';
 
@@ -112,6 +113,7 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
   page * rowsPerPage + rowsPerPage);
 
 const ProjectList = () => {
+  const isMounted = useMounted();
   const queryRef = useRef(null);
   const [projects, setProjects] = useState([]);
   const [page, setPage] = useState(0);
@@ -157,22 +159,25 @@ const ProjectList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  useEffect(() => {
-    const getProjects = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
-        const data = await response.json();
+  const getProjects = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
+      const data = await response.json();
+      if (isMounted()) {
         if (data?.status === 200) {
           toast.success(data.message, { duration: 10000 });
           setProjects(data.data);
         }
-      } catch (error) {
-        console.log(error);
-        toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
       }
-    };
+    } catch (error) {
+      console.log(error);
+      toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
     getProjects();
-  }, [setProjects])
+  }, []);
 
   // Usually query is done on backend with indexing solutions
   const filteredProjects = applyFilters(projects, filters);
@@ -214,7 +219,11 @@ const ProjectList = () => {
                   Add Project
                 </Button>
               </Grid>
-              <CreateNewProjectDialog open={openProjectDialog} handleClose={handleCloseProjectDialog} />
+              <CreateNewProjectDialog
+                open={openProjectDialog}
+                handleClose={handleCloseProjectDialog}
+                getProjects={getProjects}
+              />
             </Grid>
             <Box
               sx={{

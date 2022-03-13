@@ -20,11 +20,10 @@ import { useAuth } from '../../../hooks/use-auth';
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 
 // TODO: Refactor Function to reduce Cognitive Complexity
-const CreateUserForm = ({ supervisors, handleClose }) => {
+const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
   // To get the user from the authContext, you can use
   // `const { user } = useAuth();`
   const { user } = useAuth();
-  console.log(user)
 
   const handleCreateUser = async () => {
     const clientId = user.roles === 'Owner' ? user.id : user.clientId;
@@ -32,6 +31,8 @@ const CreateUserForm = ({ supervisors, handleClose }) => {
     const data = await userApi.createUser({ ...formik.values, clientId, addedBy: 1, profileImage: null })
     if (data) {
       toast("User created successfully");
+      getClientUsers();
+      handleClose();
     }
   };
 
@@ -61,38 +62,13 @@ const CreateUserForm = ({ supervisors, handleClose }) => {
       supervisor: Yup.string().required("Please set the supervisor"),
     }),
     onSubmit: async (values, helpers) => {
-      handleCreateUser()
+      handleCreateUser();
     },
   });
 
   return (
     <form noValidate onSubmit={formik.handleSubmit}>
       <Grid container spacing={3}>
-        {/* <Grid item md={12} xs={12}>
-          <Box
-            sx={{
-              alignItems: "center",
-              display: "flex",
-            }}
-          >
-            <Avatar
-              src="/static/mock-images/avatars/avatar-anika_visser.png"
-              sx={{
-                height: 64,
-                mr: 2,
-                width: 64,
-              }}
-            >
-              <UserCircleIcon fontSize="small" />
-            </Avatar>
-            <input type="file" name="profilePhoto" id="user_avatar" onChange={formik.handleChange} hidden />
-            <label htmlFor="user_avatar">
-              <Button variant="contained" component="span">
-                Choose File. No file Chosen
-              </Button>
-            </label>
-          </Box>
-        </Grid> */}
 
         <Grid
           item

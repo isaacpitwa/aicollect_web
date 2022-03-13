@@ -47,7 +47,7 @@ const a11yProps = (index) => {
 }
 
 
-const CreateNewUserDialog = ({ open, handleClose, users }) => {
+const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
   const [value, setValue] = useState(0);
 
   const handleChangeTab = (event, newValue) => {
@@ -80,7 +80,7 @@ const CreateNewUserDialog = ({ open, handleClose, users }) => {
             value={value}
             index={0}
             >
-            <CreateUserForm supervisors={supervisors} handleClose={handleClose} />
+            <CreateUserForm supervisors={supervisors} handleClose={handleClose} getClientUsers={getClientUsers} />
           </TabPanel>
           <TabPanel
             value={value}

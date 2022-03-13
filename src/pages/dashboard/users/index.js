@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -45,13 +45,13 @@ const sortOptions = [
   }
 ];
 
-const applyFilters = (customers, filters) => customers?.filter((customer) => {
+const applyFilters = (users, filters) => users?.filter((user) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'phone'];
+    const properties = ['email', 'phone', 'status', 'firstname', 'lastname'];
 
     properties.forEach((property) => {
-      if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      if (user[property].toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });
@@ -61,15 +61,15 @@ const applyFilters = (customers, filters) => customers?.filter((customer) => {
     }
   }
 
-  if (filters.hasAcceptedMarketing && !customer.hasAcceptedMarketing) {
+  if (filters.hasAcceptedMarketing && !user.hasAcceptedMarketing) {
     return false;
   }
 
-  if (filters.isProspect && !customer.isProspect) {
+  if (filters.isProspect && !user.isProspect) {
     return false;
   }
 
-  if (filters.isReturning && !customer.isReturning) {
+  if (filters.isReturning && !user.isReturning) {
     return false;
   }
 
@@ -116,8 +116,7 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
 const UserList = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [customers, setCustomers] = useState([]);
-  const [currentTab, setCurrentTab] = useState('all');
+  const [users, setUsers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
@@ -127,7 +126,7 @@ const UserList = () => {
     isProspect: null,
     isReturning: null
   });
-  const router = useRouter();
+  // const router = useRouter();
 
   const [openUserDialog, setOpenUserDialog] = useState(false);
 
@@ -138,19 +137,12 @@ const UserList = () => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomers = useCallback(async () => {
+  const getClientUsers = useCallback(async () => {
     try {
       const data = await userApi.getUsers();
 
       if (isMounted()) {
-        // if (data === 'Unauthenticated') {
-        //   localStorage.removeItem('accessToken');
-        //   router.push({
-        //     pathname: '/',
-        //     query: { returnUrl: router.asPath },
-        //   });
-        // }
-        setCustomers(data);
+        setUsers(data);
       }
     } catch (err) {
       console.error(err);
@@ -158,27 +150,11 @@ const UserList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getCustomers();
+      getClientUsers();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
-
-  const handleTabsChange = (event, value) => {
-    const updatedFilters = {
-      ...filters,
-      hasAcceptedMarketing: null,
-      isProspect: null,
-      isReturning: null
-    };
-
-    if (value !== 'all') {
-      updatedFilters[value] = true;
-    }
-
-    setFilters(updatedFilters);
-    setCurrentTab(value);
-  };
 
   const handleQueryChange = (event) => {
     event.preventDefault();
@@ -201,7 +177,7 @@ const UserList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(customers, filters);
+  const filteredCustomers = applyFilters(users, filters);
   const sortedCustomers = applySort(filteredCustomers, sort);
   const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
 
@@ -222,7 +198,9 @@ const UserList = () => {
         <CreateUserDialog
           open={openUserDialog}
           handleClose={handleCloseUserDialog}
-          users={customers} />
+          users={users}
+          getClientUsers={getClientUsers}
+        />
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Grid
@@ -266,23 +244,6 @@ const UserList = () => {
             </Box>
           </Box>
           <Card>
-            {/* <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs> */}
             <Divider />
             <Box
               sx={{

@@ -16,13 +16,13 @@ import {
 } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import toast from "react-hot-toast";
+import { useAuth } from '../../../hooks/use-auth';
 
-const CreateNewProjectDialog = ({ open, handleClose }) => {
+const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
+  const { user } = useAuth();
   const [project, setProject] = useState({
     projectname: '',
     description: '',
-    userId: 1,
-    name: 'Dambi Stuart'
   });
   const [loading, setLoading] = useState(false)
 
@@ -34,16 +34,17 @@ const CreateNewProjectDialog = ({ open, handleClose }) => {
   const handleCreateProject = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
         },
-        body: JSON.stringify(project)
+        body: JSON.stringify({...project, userId: user.id, name: `${user.firstname} ${user.lastname}`, roles: user.roles})
       });
       const data = await response.json();
       if (data?.status === 201) {
         toast.success("Project has been created successfully", { duration: 9000 });
+        getProjects();
         handleClose();
       } else {
         toast.error("Sorry, project could not be created")
