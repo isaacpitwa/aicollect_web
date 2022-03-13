@@ -18,7 +18,7 @@ import {
 import toast from "react-hot-toast";
 import { AuthGuard } from "../../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../../components/dashboard/dashboard-layout";
-import { ProjectListTable } from "../../../../components/dashboard/projectDetails/project-list-table";
+import { ProjectTeamMembersTable } from "../../../../components/dashboard/projectDetails/project-team-members-list-table";
 import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import { Trash as TrashIcon } from "../../../../icons/trash";
 import { Search as SearchIcon } from "../../../../icons/search";
@@ -46,15 +46,15 @@ const sortOptions = [
   },
 ];
 
-const applyFilters = (customers, filters) =>
-  customers.filter((customer) => {
+const applyFilters = (projectMembers, filters) =>
+  projectMembers.filter((member) => {
     if (filters.query) {
       let queryMatched = false;
       const properties = ["email", "name"];
 
       properties.forEach((property) => {
         if (
-          customer[property].toLowerCase().includes(filters.query.toLowerCase())
+          member[property].toLowerCase().includes(filters.query.toLowerCase())
         ) {
           queryMatched = true;
         }
@@ -65,15 +65,15 @@ const applyFilters = (customers, filters) =>
       }
     }
 
-    if (filters.hasAcceptedMarketing && !customer.hasAcceptedMarketing) {
+    if (filters.hasAcceptedMarketing && !member.hasAcceptedMarketing) {
       return false;
     }
 
-    if (filters.isProspect && !customer.isProspect) {
+    if (filters.isProspect && !member.isProspect) {
       return false;
     }
 
-    if (filters.isReturning && !customer.isReturning) {
+    if (filters.isReturning && !member.isReturning) {
       return false;
     }
 
@@ -118,7 +118,7 @@ const applySort = (customers, sort) => {
 const applyPagination = (customers, page, rowsPerPage) =>
   customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const ProjectList = () => {
+const ProjectDetails = () => {
   const queryRef = useRef(null);
   const [project, setProject] = useState(null);
   const [page, setPage] = useState(0);
@@ -170,10 +170,10 @@ const ProjectList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(project?.projectTeam || [], filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(
-    sortedCustomers,
+  const filteredTeamMembers = applyFilters(project?.projectTeam || [], filters);
+  const sortedTeamMembers = applySort(filteredTeamMembers, sort);
+  const paginatedTeamMembers = applyPagination(
+    sortedTeamMembers,
     page,
     rowsPerPage
   );
@@ -182,7 +182,7 @@ const ProjectList = () => {
     const getProjects = async () => {
       if (projectId) {
         try {
-          const response = await fetch(`http://localhost:4000/api/v1/projects/${projectId}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/${projectId}`);
           const data = await response.json();
           console.log(data);
           if (data?.status === 200) {
@@ -191,7 +191,7 @@ const ProjectList = () => {
           }
         } catch (error) {
           console.log(error);
-          toast.error('Sorry, can not load projects right now, try again later', { duration: 6000 });
+          toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
         }
       }
     };
@@ -201,7 +201,7 @@ const ProjectList = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Project List | AI Collect</title>
+        <title>Dashboard: Project Details | AiCollect</title>
       </Head>
       <Box
         component="main"
@@ -334,9 +334,9 @@ const ProjectList = () => {
               <Button startIcon={<AddTaskRounded fontSize="small" />} onClick={handleOpenTaskDialog}>Task Manager</Button>
               <ProjectTaskManager open={openTaskDialog} handleClose={handleCloseTaskDialog} />
             </Box>
-            <ProjectListTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
+            <ProjectTeamMembersTable
+              projectMembers={paginatedTeamMembers}
+              projectMembersCount={filteredTeamMembers.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -349,10 +349,10 @@ const ProjectList = () => {
   );
 };
 
-ProjectList.getLayout = (page) => (
+ProjectDetails.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export default ProjectList;
+export default ProjectDetails;

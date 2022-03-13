@@ -6,7 +6,7 @@ class AuthApi {
    * @returns {string} User token
    */
   async login({ email, password }) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/login`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json'
@@ -22,7 +22,7 @@ class AuthApi {
 
   async userProfile(accessToken) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/check-user`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/check-user`, {
       headers: {
         'Content-Type': 'Application/json',
         'Authorization': `Bearer ${accessToken}`
@@ -40,7 +40,7 @@ class AuthApi {
 
   async completeUserProfileAfterEmailInvitation(userDetails) {
     // console.log("DETAILS", userDetails);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/complete-profile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/complete-profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'

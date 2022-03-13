@@ -1,7 +1,7 @@
 class UserApi {
   async getUsers() {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/authService/clientUsers`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/v1/authService/clientUsers`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -20,7 +20,7 @@ class UserApi {
 
   async getUserDetails(userid) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/authService/users/${userid}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/v1/authService/users/${userid}`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -42,7 +42,7 @@ class UserApi {
 
   async updateUserDetails(userId, updateDetails) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/update`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -64,7 +64,7 @@ class UserApi {
 
   async createUser(user) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/create_user`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/create_user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',

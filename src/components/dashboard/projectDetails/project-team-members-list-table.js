@@ -22,45 +22,45 @@ import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 
-export const ProjectListTable = (props) => {
+export const ProjectTeamMembersTable = (props) => {
   const {
-    customers,
-    customersCount,
+    projectMembers,
+    projectMembersCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedMembers, setSelectedMembers] = useState([]);
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedCustomers.length) {
-        setSelectedCustomers([]);
+      if (selectedMembers.length) {
+        setSelectedMembers([]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customers]);
+    [projectMembers]);
 
-  const handleSelectAllCustomers = (event) => {
-    setSelectedCustomers(event.target.checked
-      ? customers.map((customer) => customer.id)
+  const handleSelectAllMembers = (event) => {
+    setSelectedMembers(event.target.checked
+      ? projectMembers.map((customer) => customer.id)
       : []);
   };
 
-  const handleSelectOneCustomer = (event, customerId) => {
-    if (!selectedCustomers.includes(customerId)) {
-      setSelectedCustomers((prevSelected) => [...prevSelected, customerId]);
+  const handleSelectOneMember = (event, memberId) => {
+    if (!selectedMembers.includes(memberId)) {
+      setSelectedMembers((prevSelected) => [...prevSelected, memberId]);
     } else {
-      setSelectedCustomers((prevSelected) => prevSelected.filter((id) => id !== customerId));
+      setSelectedMembers((prevSelected) => prevSelected.filter((id) => id !== memberId));
     }
   };
 
-  const enableBulkActions = selectedCustomers.length > 0;
-  const selectedSomeCustomers = selectedCustomers.length > 0
-    && selectedCustomers.length < customers.length;
-  const selectedAllCustomers = selectedCustomers.length === customers.length;
+  const enableBulkActions = selectedMembers.length > 0;
+  const selectedSomeMembers = selectedMembers.length > 0
+    && selectedMembers.length < projectMembers.length;
+  const selectedAllMembers = selectedMembers.length === projectMembers.length;
 
   return (
     <div {...other}>
@@ -73,9 +73,9 @@ export const ProjectListTable = (props) => {
         }}
       >
         <Checkbox
-          checked={selectedAllCustomers}
-          indeterminate={selectedSomeCustomers}
-          onChange={handleSelectAllCustomers}
+          checked={selectedAllMembers}
+          indeterminate={selectedSomeMembers}
+          onChange={handleSelectAllMembers}
         />
         <Button
           size="small"
@@ -96,9 +96,9 @@ export const ProjectListTable = (props) => {
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedAllCustomers}
-                  indeterminate={selectedSomeCustomers}
-                  onChange={handleSelectAllCustomers}
+                  checked={selectedAllMembers}
+                  indeterminate={selectedSomeMembers}
+                  onChange={handleSelectAllMembers}
                 />
               </TableCell>
               <TableCell>
@@ -119,8 +119,8 @@ export const ProjectListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((customer) => {
-              const isCustomerSelected = selectedCustomers.includes(customer.id);
+            {projectMembers.map((customer) => {
+              const isCustomerSelected = selectedMembers.includes(customer.id);
 
               return (
                 <TableRow
@@ -131,7 +131,7 @@ export const ProjectListTable = (props) => {
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneCustomer(event, customer.id)}
+                      onChange={(event) => handleSelectOneMember(event, customer.id)}
                       value={isCustomerSelected}
                     />
                   </TableCell>
@@ -207,7 +207,7 @@ export const ProjectListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={customersCount}
+        count={projectMembersCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -218,7 +218,7 @@ export const ProjectListTable = (props) => {
   );
 };
 
-ProjectListTable.propTypes = {
+ProjectTeamMembersTable.propTypes = {
   customers: PropTypes.array.isRequired,
   customersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,

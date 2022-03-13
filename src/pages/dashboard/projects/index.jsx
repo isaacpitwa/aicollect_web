@@ -160,13 +160,14 @@ const ProjectList = () => {
   useEffect(() => {
     const getProjects = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/projects');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
         const data = await response.json();
         if (data?.status === 200) {
           toast.success(data.message, { duration: 10000 });
           setProjects(data.data);
         }
       } catch (error) {
+        console.log(error);
         toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
       }
     };
@@ -305,8 +306,8 @@ const ProjectList = () => {
               </TextField>
             </Box>
             <ProjectListTable
-              customers={paginatedProjects}
-              customersCount={filteredProjects.length}
+              projects={paginatedProjects}
+              projectsCount={filteredProjects.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
