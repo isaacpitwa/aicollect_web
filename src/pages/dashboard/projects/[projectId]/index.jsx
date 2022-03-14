@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import NextLink from 'next/link';
 import Head from "next/head";
 import { useRouter } from 'next/router';
@@ -178,25 +178,26 @@ const ProjectDetails = () => {
     rowsPerPage
   );
 
-  useEffect(() => {
-    const getProjects = async () => {
-      if (projectId) {
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/${projectId}`);
-          const data = await response.json();
-          console.log(data);
-          if (data?.status === 200) {
-            toast.success(data.message, { duration: 10000 });
-            setProject(data.data);
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
+  const getProjects = useCallback(async () => {
+    if (projectId) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/${projectId}`);
+        const data = await response.json();
+        console.log(data);
+        if (data?.status === 200) {
+          toast.success(data.message, { duration: 10000 });
+          setProject(data.data);
         }
+      } catch (error) {
+        console.log(error);
+        toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
       }
-    };
+    }
+  }, []);
+
+  useEffect(() => {
     getProjects();
-  }, [setProject, projectId])
+  }, [])
 
   return (
     <>
@@ -229,6 +230,7 @@ const ProjectDetails = () => {
                 open={openProjectDialog}
                 handleClose={handleCloseProjectDialog}
                 projectId={projectId}
+                getProjects={getProjects}
               />
             </Grid>
           </Box>

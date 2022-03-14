@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Button,
-  TextField,
   Select,
   Card,
   CardContent,
   FormControl,
   Grid,
   MenuItem,
-  InputLabel,
   FormLabel,
   RadioGroup,
   FormControlLabel,
@@ -21,8 +20,9 @@ import {
   Typography
 } from "@mui/material";
 import toast from 'react-hot-toast';
+import { userApi } from '../../../api/users-api';
 
-const AddNewTeamMember = ({ open, handleClose, projectId }) => {
+const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
   const [member, setMember] = useState({
     userObj: {},
     role: '',
@@ -39,14 +39,9 @@ const AddNewTeamMember = ({ open, handleClose, projectId }) => {
   useEffect(() => {
     const fetchUserList = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/users`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        });
-        const data = await response.json();
-        if (data?.status === 200) {
-          setUsers(data.data);
+        const users = await userApi.getUsers()
+        if (users) {
+          setUsers(users);
         }
         handleClose();
       } catch (error) {
@@ -65,7 +60,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId }) => {
         role: member.role,
         createdBy: "Stuart Dambi",
       }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects/addTeamMember`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/addTeamMember`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -75,8 +70,11 @@ const AddNewTeamMember = ({ open, handleClose, projectId }) => {
       const data = await response.json();
       if (data.status === 200) {
         toast.success('User has been added to project');
+        getProjects();
+        handleClose();
       }
     } catch (error) {
+      toast.error('User could not be added, try again later.');
       console.log(error);
     }
   };
@@ -124,6 +122,13 @@ const AddNewTeamMember = ({ open, handleClose, projectId }) => {
       </Card>
     </Dialog>
   );
+};
+
+AddNewTeamMember.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  projectId: PropTypes.string.isRequired,
+  getProjects: PropTypes.func.isRequired
 };
 
 export default AddNewTeamMember;
