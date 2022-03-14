@@ -46,9 +46,9 @@ export const Profile = (props) => {
     validationSchema: Yup.object({
       userType: Yup.string().max(255).required("User Type is required"),
       user: Yup.string(),
-      billingPlan: Yup.string().max(255).required("Billing Plan is required"),
-      sector: Yup.string().max(255).required("Please choose a sector"),
-      companyName: Yup.string().max(255).required("Company Name is required"),
+      billingPlan: Yup.string().max(255),
+      sector: Yup.string().max(255),
+      companyName: Yup.string().max(255),
       policy: Yup.boolean().oneOf([true], "This field must be checked"),
     }),
     onSubmit: async (values, helpers) => {
@@ -64,7 +64,7 @@ export const Profile = (props) => {
         if (isMounted() && data) {
           if (data) {
             const returnUrl = router.query.returnUrl || "/dashboard";
-            router.push(returnUrl);
+            router.push(returnUrl, null, { shallow: false });
           }
         }
       } catch (err) {

@@ -54,6 +54,25 @@ class AuthApi {
       console.log("DATA", data);
       return data.data
   }
+
+  async createUserProfile(profileDetails) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/profiles/create-profile`, {
+        method: 'POST',
+        'headers': {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(profileDetails)
+      });
+      const data = await response.json();
+      if (data.status === 201) {
+        return data.data
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export const authenticationApi = new AuthApi();
