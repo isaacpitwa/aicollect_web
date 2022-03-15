@@ -13,7 +13,8 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
-    const [sectionId, setSectionId] = useState('')
+    const [sectionId, setSectionId] = useState(false)
+    const [subSectionId, setSubSectionId] = useState(false)
     const [componentsData, setComponentsData] = useState([])
     const [fieldResponses, setFieldResponses] = useState([])
     const [formData, setFormData] = useState({
@@ -70,7 +71,6 @@ const FormProvider = (props) => {
         let newForm = formData
         newForm.components = componentsData
         setFormData(newForm)
-        console.log({ 'New Form': formData })
     }
 
     const handleFormPreview = () => {
@@ -83,6 +83,8 @@ const FormProvider = (props) => {
             value={{
                 sectionId,
                 setSectionId,
+                subSectionId,
+                setSubSectionId,
                 sectionCreated,
                 formData,
                 componentsData,

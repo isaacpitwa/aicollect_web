@@ -20,52 +20,18 @@ import FormField from '../FormField'
 
 const SubSectionField = (props) => {
 
-    const { fieldResponses, editStatus } = useContext(FormContext);
+    const { sectionId, setSectionId, subSectionId, setSubSectionId, fieldResponses, editStatus } = useContext(FormContext);
 
     const { fieldData } = props
 
     const [subSectionDialog, setSubSectionDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
-    const [numericFieldValue, SetNumericFieldValue] = useState(0)
+    const [numericFieldValue, setNumericFieldValue] = useState(0);
 
     useEffect(() => {
-        SetNumericFieldValue(fieldData.dependency?DependencyFieldValue():0)
+        setNumericFieldValue(fieldData.dependency?DependencyFieldValue():0)
     }, [fieldResponses])
 
-    const handleLabel = (e) => {
-        setFieldLabel(e.target.value)
-    }
-
-    const handleDescription = (e) => {
-        setFieldDescription(e.target.value)
-    }
-
-    const handleTooltip = (e) => {
-        setTooltip(e.target.value)
-    }
-
-    const handleDisplay = (e) => {
-        setButtonFocused("display")
-        setConditional(false)
-    }
-
-    const handleConditional = (e) => {
-        setButtonFocused("conditional")
-        setConditional(true)
-    }
-
-    const handleDiplayValue = (e) => {
-        setDisplay(e.target.value)
-    }
-
-    const handleWhen = (e) => {
-        setWhen(e.target.value)
-    }
-
-    const handleCompValue = (e) => {
-        setCompValue(e.target.value)
-    }
-    
     const DependencyFieldValue = () => {
         let fieldObj = fieldResponses.find(field => field.fieldId === fieldData.dependency.when)
         return fieldObj.value
@@ -74,6 +40,14 @@ const SubSectionField = (props) => {
     const handleSubSection = () => {
         setSubSectionDialog(true)
     }
+
+    const getSectionIDs = () => {
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.id)
+        console.log(`Section ID: ${sectionId}`)
+        console.log(`Sub-Section ID: ${subSectionId}`)
+    }
+    
 
     const handleClose = () => {
         setSubSectionDialog(false)
@@ -125,7 +99,7 @@ const SubSectionField = (props) => {
                 ))
             : ""
         :
-            <Grid key={fieldData.id} container className={classes.subSection} style={{ visibility: fieldData.display }}>
+            <Grid key={fieldData.id} container onClick={getSectionIDs} className={classes.subSection} style={{ visibility: fieldData.display }}>
                 <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }

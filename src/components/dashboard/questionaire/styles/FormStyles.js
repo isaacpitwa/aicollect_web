@@ -26,6 +26,9 @@ const formStyles = makeStyles({
         fontSize: '12px',
         '&:hover': {
             border: '1px #5048E5 dotted',
+        },
+        '&:focus': {
+            border: '1px #8BC34A dotted',
         }
     },
     section2: {
