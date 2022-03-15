@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 const VerifyCode = () => {
   const router = useRouter();
-  const { authenticateAfterEmailVerify } = useAuth();
+  const { authenticateAfterEmailVerify, user } = useAuth();
   const { disableGuard, token } = router.query;
   const [loading, setLoading] = useState(false);
   const isMounted = useMounted();
@@ -41,7 +41,7 @@ const VerifyCode = () => {
           localStorage.setItem('accessToken', data.data.token);
           await authenticateAfterEmailVerify();
           if (isMounted()) {
-            router.push('/createProfile');
+            router.push('/createPassword');
           }
         }
       } catch (error) {

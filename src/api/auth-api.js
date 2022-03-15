@@ -73,6 +73,25 @@ class AuthApi {
       console.log(error);
     }
   }
+
+  async createUserPassword(userDetails) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/setPassword`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(userDetails)
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export const authenticationApi = new AuthApi();
