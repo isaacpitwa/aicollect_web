@@ -1,0 +1,24 @@
+services:
+  - docker:dind
+stages:
+  - build_and_push
+  - deploy
+
+#2
+variables:
+  REGISTRY: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app"
+  IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app:latest"
+
+before_script:
+  - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
+  - docker info
+
+#4
+build_and_push:
+  stage: build_and_push
+  only:
+    - develop
+  script:
+    - docker build -t $REGISTRY .
+    - docker push $REGISTRY
+        
