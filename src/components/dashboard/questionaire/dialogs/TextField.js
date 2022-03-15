@@ -27,7 +27,7 @@ import TextfieldPreview from '../previews/TextfieldPreview';
 // This is the field for type=TextField
 const TextField_ = (props) => {
 
-    const { componentsData, updateComponentsData } = useContext(FormContext)
+    const { sectionId, setSectionId, subSectionId, setSubSectionId, componentsData, updateComponentsData } = useContext(FormContext)
 
     const { open, createTextField, fieldData, handleClose } = props
 
@@ -92,6 +92,36 @@ const TextField_ = (props) => {
 
     const handleCompValue = (e) => {
         setCompValue(e.target.value)
+    }
+
+    const getSectionId = () => {
+        setSectionId(sectionId)
+        setSubSectionId(subSectionId)
+    }
+    
+    const addTextField = () => {
+
+        let sectionObj = componentsData.find(comp => comp.id === sectionId )
+        let newSectionObj = componentsData.find(comp => comp.id === sectionId )
+        let newSubSectionObj = sectionObj.components.find(comp => comp.id === sectionId )
+
+        const newFieldData = {
+            id: id?id:uuidv4(),
+            parentId: sectionId,
+            subParentId: subSectionId,
+            required: isRequired,
+            display: 'visible',
+            type: 'sub-section',
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            dependency: dependency,
+            conditional: conditional
+        }
+
+        newSectionObj.components.push(newFieldData)
+        updateComponentsData(findComponentIndex(sectionObj, componentsData), newSectionObj)
+        handleClose()
     }
 
     const handleUpdate = () => {
@@ -262,7 +292,7 @@ const TextField_ = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={addTextField} variant="outlined" size='small' color="success">Save</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

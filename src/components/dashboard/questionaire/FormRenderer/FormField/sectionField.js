@@ -16,7 +16,7 @@ import FormField from '../FormField'
 
 const SectionField = (props) => {
 
-    const { sectionId, setSectionId, fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const { setSectionId, setSubSectionId, fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
 
     const { fieldData } = props
 
@@ -71,13 +71,14 @@ const SectionField = (props) => {
                 </Grid>
                 : ''
             :
-            <Grid key={fieldData.id} container onMouseOver={getSectionId} className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldData.id} container className={editStatus ? classes.section2 : classes.section}>
                 <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
                     onMouseOver={() => { setDisplay('visible') }}
                     onMouseOut={() => { setDisplay('hidden') }}
                     className={classes.sectionLabel}
                     variant='h5'
+                    onClick={getSectionId}
                 >
                     {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
                     {!editStatus ?

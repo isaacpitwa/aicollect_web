@@ -29,7 +29,7 @@ import SubSectionPreview from '../previews/SubSectionPreview'
 // This is the field for type=TextField
 const SubSection = (props) => {
 
-    const { sectionId, componentsData, addComponent, updateComponentsData } = useContext(FormContext)
+    const { sectionId, subSectionId, componentsData, addComponent, updateComponentsData } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
@@ -81,6 +81,18 @@ const SubSection = (props) => {
         setConditional(true)
     }
 
+    const handleDiplayValue = (e) => {
+        setDisplay(e.target.value)
+    }
+
+    const handleWhen = (e) => {
+        setWhen(e.target.value)
+    }
+
+    const handleCompValue = (e) => {
+        setCompValue(e.target.value)
+    }
+    
     const createSubSection = () => {
 
         let sectionObj = componentsData.find(comp => comp.id === sectionId )
@@ -153,45 +165,93 @@ const SubSection = (props) => {
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            <TextField
-                                required
-                                autoFocus
-                                margin="dense"
-                                id="label"
-                                label="Sub-Section Label"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                                value={fieldLabel}
-                                onChange={handleLabel}
-                                // error={sectionTitle==''?true:false}
-                                // helperText={'Missing field'}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="outlined-multiline-static"
-                                label="Description (Optional)"
-                                size="small"
-                                multiline
-                                rows={4}
-                                variant="outlined"
-                                fullWidth
-                                value={fieldDescription}
-                                onChange={handleDescription}
-                            />
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="tooltip"
-                                label="Tooltip (Optional)"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                                value={tooltip}
-                                onChange={handleTooltip}
-                            />
+                            {conditional ?
+                                <>
+                                    <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
+                                        This component should Display:
+                                    </Typography>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={display}
+                                        fullWidth
+                                        size={'small'}
+                                        onChange={handleDiplayValue}
+                                    >
+                                        <MenuItem value={true}>True</MenuItem>
+                                        <MenuItem value={false}>False</MenuItem>
+                                    </Select>
+                                    <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
+                                        When the form component:
+                                    </Typography>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={when}
+                                        fullWidth
+                                        size={'small'}
+                                        onChange={handleWhen}
+                                    >
+                                        {allFormFields(compsData, id, 'section').map(option => (
+                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
+                                        Has the value:
+                                    </Typography>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="tooltip"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={compValue}
+                                        onChange={handleCompValue}
+                                    />
+                                </>
+                                :
+                                <>
+                                    <TextField
+                                        required
+                                        autoFocus
+                                        margin="dense"
+                                        id="label"
+                                        label="Sub-Section Label"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={fieldLabel}
+                                        onChange={handleLabel}
+                                    />
+                                    <TextField
+                                        margin="dense"
+                                        id="outlined-multiline-static"
+                                        label="Description (Optional)"
+                                        size="small"
+                                        multiline
+                                        rows={4}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={fieldDescription}
+                                        onChange={handleDescription}
+                                    />
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="tooltip"
+                                        label="Tooltip (Optional)"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={tooltip}
+                                        onChange={handleTooltip}
+                                    />
+                                </>
+                            }
                         </Box>
                     </Grid>
                     <SubSectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
