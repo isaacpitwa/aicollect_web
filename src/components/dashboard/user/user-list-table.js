@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
+  Avatar,
   Box,
   Button,
   Checkbox,
@@ -14,19 +15,18 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   Typography
 } from '@mui/material';
-import moment from 'moment';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import SavedSearchIcon from '@mui/icons-material/SavedSearch';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
-import { Scrollbar } from '../../../scrollbar';
+import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
+import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
+import { getInitials } from '../../../utils/get-initials';
+import { Scrollbar } from '../../scrollbar';
 
-export const QuestionaireListTable = (props) => {
+export const UserListTable = (props) => {
   const {
-    questionaires,
-    questionairesCount,
+    customers,
+    customersCount,
     onPageChange,
     onRowsPerPageChange,
     page,
@@ -34,7 +34,6 @@ export const QuestionaireListTable = (props) => {
     ...other
   } = props;
   const [selectedCustomers, setSelectedCustomers] = useState([]);
-  const router = useRouter();
 
   // Reset selected customers when customers change
   useEffect(() => {
@@ -43,11 +42,11 @@ export const QuestionaireListTable = (props) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionaires]);
+    [customers]);
 
   const handleSelectAllCustomers = (event) => {
     setSelectedCustomers(event.target.checked
-      ? questionaires.map((customer) => customer.id)
+      ? customers.map((customer) => customer.id)
       : []);
   };
 
@@ -61,8 +60,8 @@ export const QuestionaireListTable = (props) => {
 
   const enableBulkActions = selectedCustomers.length > 0;
   const selectedSomeCustomers = selectedCustomers.length > 0
-    && selectedCustomers.length < questionaires.length;
-  const selectedAllCustomers = selectedCustomers.length === questionaires.length;
+    && selectedCustomers.length < customers.length;
+  const selectedAllCustomers = selectedCustomers.length === customers.length;
 
   return (
     <div {...other}>
@@ -85,12 +84,12 @@ export const QuestionaireListTable = (props) => {
         >
           Delete
         </Button>
-        <Button
+        {/* <Button
           size="small"
           sx={{ ml: 2 }}
         >
-          Edit
-        </Button>
+          Deactivate
+        </Button> */}
       </Box>
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
@@ -104,19 +103,28 @@ export const QuestionaireListTable = (props) => {
                 />
               </TableCell>
               <TableCell>
-                Form name
+                Name
               </TableCell>
               <TableCell>
-                Created
+                Email
               </TableCell>
               <TableCell>
-                Modified
-              </TableCell>
-              <TableCell>
-                Version
+                Mobile
               </TableCell>
               <TableCell>
                 Status
+              </TableCell>
+              <TableCell>
+                Verified
+              </TableCell>
+              <TableCell>
+                Added By
+              </TableCell>
+              <TableCell>
+                Date of Joining
+              </TableCell>
+              <TableCell>
+                Last Accessed
               </TableCell>
               <TableCell align="right">
                 Actions
@@ -124,19 +132,19 @@ export const QuestionaireListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {questionaires.map((questionaire) => {
-              const isCustomerSelected = selectedCustomers.includes(questionaire.id);
+            {customers.map((customer) => {
+              const isCustomerSelected = selectedCustomers.includes(customer.id);
 
               return (
                 <TableRow
                   hover
-                  key={questionaire.id}
+                  key={customer.id}
                   selected={isCustomerSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneCustomer(event, questionaire.id)}
+                      onChange={(event) => handleSelectOneCustomer(event, customer.id)}
                       value={isCustomerSelected}
                     />
                   </TableCell>
@@ -147,74 +155,79 @@ export const QuestionaireListTable = (props) => {
                         display: 'flex'
                       }}
                     >
+                      <Avatar
+                        src={customer.avatar}
+                        sx={{
+                          height: 42,
+                          width: 42
+                        }}
+                      >
+                        {getInitials(`${customer.firsname} ${customer.lastname}`)}
+                      </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire.id}`}
+                          href={`/dashboard/users/${customer.id}`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {questionaire.name}
+                            {`${customer.firstname} ${customer.lastname}`}
                           </Link>
                         </NextLink>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                        >
+                          {customer.roles}
+                        </Typography>
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {moment(questionaire.createdAt).format('DD/MM/YYYY')}
+                    {customer.email}
                   </TableCell>
                   <TableCell>
-                    {moment(questionaire.updatedAt).format('DD/MM/YYYY')}
+                    {customer.phone}
                   </TableCell>
                   <TableCell>
-                    <Typography
-                      color="success.main"
-                      variant="subtitle2"
-                    >
-                      {`v${questionaire.version}`}
-                    </Typography>
+                    {customer.status ? "Active" : "Not Active"}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {questionaire.status ? 'Active' : 'Not Active'}
+                      {customer.emailVerified ? "Verified" : "Not Verified"}
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {customer.addedBy || 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    {moment(customer.createdAt).format('DD/MM/YYYY')}
+                  </TableCell>
+                  <TableCell>
+                    {moment(customer.updatedAt).format('DD/MM/YYYY')}
                   </TableCell>
                   <TableCell align="right">
+                    <Tooltip title="View">
+                      <NextLink
+                        href={`/dashboard/users/${customer.id}/edit`}
+                        passHref
+                      >
+                        <IconButton component="a">
+                          <PencilAltIcon fontSize="small" />
+                        </IconButton>
+                      </NextLink>
+                    </Tooltip>
                     <NextLink
-                      href="/dashboard/projects/43/questionaire/6"
+                      href={`/dashboard/users/${customer.id}`}
                       passHref
                     >
                       <IconButton component="a">
-                        <PencilAltIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
-                    <NextLink
-                      href="/dashboard/projects/43/questionaire/6"
-                      passHref
-                    >
-                      <IconButton component="a">
-                        <RemoveRedEyeIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
-                    <NextLink
-                      href="/dashboard/projects/43/questionaire/6"
-                      passHref
-                    >
-                      <IconButton component="a">
-                        <SavedSearchIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
-                    <NextLink
-                      href="/dashboard/customers/1"
-                      passHref
-                    >
-                      <IconButton component="a">
-                        <DeleteSweepIcon fontSize="small" />
+                        <ArrowRightIcon fontSize="small" />
                       </IconButton>
                     </NextLink>
                   </TableCell>
@@ -226,7 +239,7 @@ export const QuestionaireListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={questionairesCount}
+        count={customersCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -237,9 +250,9 @@ export const QuestionaireListTable = (props) => {
   );
 };
 
-QuestionaireListTable.propTypes = {
-  questionaires: PropTypes.array.isRequired,
-  questionairesCount: PropTypes.number.isRequired,
+UserListTable.propTypes = {
+  customers: PropTypes.array.isRequired,
+  customersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,

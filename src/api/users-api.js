@@ -1,13 +1,14 @@
 class UserApi {
   async getUsers() {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/authService/users', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/clientUsers`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
       const data = await response.json();
+      console.log(data);
       if (data.status === 200) {
         return data.data;
       }
@@ -19,7 +20,7 @@ class UserApi {
 
   async getUserDetails(userid) {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/authService/users/${userid}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/users/${userid}`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -41,7 +42,7 @@ class UserApi {
 
   async updateUserDetails(userId, updateDetails) {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/authService/update', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -63,7 +64,7 @@ class UserApi {
 
   async createUser(user) {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/authService/create_user', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/create_user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',

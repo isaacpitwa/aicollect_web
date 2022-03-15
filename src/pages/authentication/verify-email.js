@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import * as Yup from "yup";
-import { useFormik } from "formik";
+// import * as Yup from "yup";
+// import { useFormik } from "formik";
 import { Box, Button, Card, Container, Divider, Link, Typography } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 import { AuthBanner } from '../../components/authentication/auth-banner';
@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 const VerifyCode = () => {
   const router = useRouter();
-  const { authenticateAfterEmailVerify } = useAuth();
+  const { authenticateAfterEmailVerify, user } = useAuth();
   const { disableGuard, token } = router.query;
   const [loading, setLoading] = useState(false);
   const isMounted = useMounted();
@@ -29,7 +29,7 @@ const VerifyCode = () => {
   const handleVerifyEmail = async () => {
     setLoading(true);
     try {
-        const response = await fetch(`http://localhost:5000/api/v1/authService/verifyEmail?token=${token}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/verifyEmail?token=${token}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'Application/json'
@@ -41,7 +41,7 @@ const VerifyCode = () => {
           localStorage.setItem('accessToken', data.data.token);
           await authenticateAfterEmailVerify();
           if (isMounted()) {
-            router.push('/dashboard');
+            router.push('/createPassword');
           }
         }
       } catch (error) {
