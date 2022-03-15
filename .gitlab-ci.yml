@@ -10,6 +10,7 @@ variables:
   IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app:latest"
 
 before_script:
+  - npm install
   - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
   - docker info
 
