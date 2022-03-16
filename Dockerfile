@@ -10,7 +10,7 @@ WORKDIR /aicollect-web-app
 COPY . .
 COPY --from=dependencies /aicollect-web-app/node_modules ./node_modules
 COPY --from=dependencies /aicollect-web-app/.env.example ./.env
-RUN yarn build
+RUN npm run build
 
 FROM node:lts as runner
 WORKDIR /aicollect-web-app
