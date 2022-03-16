@@ -5,37 +5,28 @@ import {
   FormControl,
   FormLabel,
   MenuItem,
+  InputLabel,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 // TODO: Refactor Function to reduce Cognitive Complexity
 const TaskInformationForm = (props) => {
-  // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      username: "",
-      email: "",
-      expiryDate: "",
-      phone: "",
-      role: "",
-      supervisor: "",
+      title: "",
+      taskType: "",
+      description: "",
+      startDate: "",
+      dueDate: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().min(3).max(255).required("First Name is required"),
-      lastName: Yup.string().max(255).required("Last Name is required"),
-      userName: Yup.string().max(255).required("Username is required"),
-      email: Yup.string()
-        .max(255)
-        .email("Must be a valid email")
-        .required("Email is required"),
-      expiryDate: Yup.date().required("Expiry Date is required"),
-      role: Yup.string().required("User role is required"),
-      supervisor: Yup.string().required("Please set the supervisor"),
+      title: Yup.string().min(3).max(255).required("Title is required"),
+      taskType: Yup.string().max(255).required("task type is required"),
+      description: Yup.string().max(255).required("Description is required"),
+      startDate: Yup.date().required("Start Date is required"),
+      dueDate: Yup.date().required("Due Date is required"),
     }),
     onSubmit: async (values, helpers) => {
       console.log(values);
@@ -54,42 +45,40 @@ const TaskInformationForm = (props) => {
           flexDirection="row "
           justifyContent="space-between"
         >
-          <Grid item md={6} sm={12}>
+          <Grid item md={6} sm={12} mt={2}>
             <FormControl fullWidth >
-            <TextField
-              error={Boolean(formik.touched.firstName && formik.errors.firstName)}
-              helperText={Boolean(formik.touched.firstName && formik.errors.firstName)}
-              name="title"
-              value={formik.values.firstName}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="Title *"
-              variant="standard"
-              fullWidth
-            />
+              <TextField
+                error={Boolean(formik.touched.title && formik.errors.title)}
+                helperText={Boolean(formik.touched.title && formik.errors.title)}
+                name="title"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Title *"
+                variant="standard"
+                fullWidth
+              />
             </FormControl>
-            
-           
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3}>
-          <FormControl fullWidth>
-          <Select
-              error={Boolean(formik.touched.lastName && formik.errors.lastName)}
-              helperText={Boolean(formik.touched.lastName && formik.errors.lastName)}
-              name="tasktype"
-              value="def"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="Last Name *"
-              defaultValue="def"
-              variant="standard"
-              fullWidth
-            >
-              <option value="def" hidden>Task Type *</option>
-              <MenuItem value="reg">Registration</MenuItem>
-              <MenuItem value="train">Training</MenuItem>
-              <MenuItem value="insp">Inspection</MenuItem>
-            </Select>
+            <FormControl fullWidth>
+              <InputLabel>Task Type</InputLabel>
+              <Select
+                error={Boolean(formik.touched.taskType && formik.errors.taskType)}
+                helperText={Boolean(formik.touched.taskType && formik.errors.taskType)}
+                name="taskType"
+                value={formik.values.taskType}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Last Name *"
+                defaultValue="def"
+                variant="standard"
+                fullWidth
+              >
+                <MenuItem value="registration">Registration</MenuItem>
+                <MenuItem value="training">Training</MenuItem>
+                <MenuItem value="inspection">Inspection</MenuItem>
+              </Select>
             </FormControl>
           </Grid>
         </Grid>
@@ -102,16 +91,16 @@ const TaskInformationForm = (props) => {
           justifyContent="space-between"
         >
           <TextField
-              error={Boolean(formik.touched.email && formik.errors.email)}
-              helperText={Boolean(formik.touched.email && formik.errors.email)}
-              name="description"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="Description *"
-              variant="standard"
-              fullWidth
-            />
+            error={Boolean(formik.touched.description && formik.errors.description)}
+            helperText={Boolean(formik.touched.description && formik.errors.description)}
+            name="description"
+            value={formik.values.description}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="Description *"
+            variant="standard"
+            fullWidth
+          />
         </Grid>
         <Grid
           item
@@ -125,39 +114,36 @@ const TaskInformationForm = (props) => {
             <FormControl fullWidth>
               <FormLabel>Start Date *</FormLabel>
               <TextField
-              type="date"
-              error={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-              helperText={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-              name="expiryDate"
-              value={formik.values.expiryDate}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              variant="standard"
-              fullWidth
-            />
-            
+                type="date"
+                error={Boolean(formik.touched.startDate && formik.errors.startDate)}
+                helperText={Boolean(formik.touched.startDate && formik.errors.startDate)}
+                name="startDate"
+                value={formik.values.startDate}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                variant="standard"
+                fullWidth
+              />
+
             </FormControl>
           </Grid>
           <Grid item md={6} sm={12} ml={3}>
             <FormControl fullWidth>
               <FormLabel>End Date *</FormLabel>
               <TextField
-              type="date"
-              error={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-              helperText={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-              name="expiryDate"
-              value={formik.values.expiryDate}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              variant="standard"
-              fullWidth
-            />
-            
+                type="date"
+                error={Boolean(formik.touched.dueDate && formik.errors.dueDate)}
+                helperText={Boolean(formik.touched.dueDate && formik.errors.dueDate)}
+                name="dueDate"
+                value={formik.values.dueDate}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                variant="standard"
+                fullWidth
+              />
             </FormControl>
           </Grid>
-          
         </Grid>
-        
       </Grid>
     </form>
   );

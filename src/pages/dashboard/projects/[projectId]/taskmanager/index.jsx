@@ -306,7 +306,7 @@ const TasksList = () => {
               </TextField>
             </Box>
             {
-              tasks.length === 0 ? (
+              tasks.length !== 0 ? (
                 <Container maxWidth="md">
                   <Typography
                     align="center"
