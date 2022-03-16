@@ -25,7 +25,7 @@ import { Search as SearchIcon } from "../../../../icons/search";
 import { UserAdd as UserAddIcon } from "../../../../icons/user-add";
 import { gtm } from "../../../../lib/gtm";
 import AddTeamMember from "../../../../components/dashboard/projectDetails/project-addteam-member";
-import ProjectTaskManager from "../../../../components/dashboard/projectDetails/project-task-manager";
+// import ProjectTaskManager from "../../../../components/dashboard/projectDetails/project-task-manager";
 
 const sortOptions = [
   {
@@ -125,7 +125,7 @@ const ProjectDetails = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
-  const [openTaskDialog, setOpenTaskDialog] = useState(false);
+  // const [openTaskDialog, setOpenTaskDialog] = useState(false);
   const router = useRouter();
   const { projectId } = router.query;
 
@@ -142,12 +142,12 @@ const ProjectDetails = () => {
   const handleCloseProjectDialog = () => {
     setOpenProjectDialog(false);
   };
-  const handleOpenTaskDialog = () => {
-    setOpenTaskDialog(true);
-  };
-  const handleCloseTaskDialog = () => {
-    setOpenTaskDialog(false);
-  };
+  // const handleOpenTaskDialog = () => {
+  //   setOpenTaskDialog(true);
+  // };
+  // const handleCloseTaskDialog = () => {
+  //   setOpenTaskDialog(false);
+  // };
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
@@ -268,33 +268,33 @@ const ProjectDetails = () => {
                 </NextLink>
               </Grid>
               <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
-              <NextLink href="/dashboard/projects/43/questionaire" passHref>
-                <Card elevation={8}>
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "start",
-                      px: 3,
-                      py: 2,
-                    }}
-                  >
-                    <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
-                      <FactCheck />
-                    </IconButton>
-                    <div>
-                      <Typography variant="body2">0</Typography>
-                      <Typography
-                        sx={{ mt: 1 }}
-                        color="textSecondary"
-                        variant="h8"
-                      >
-                        Inspection
-                      </Typography>
-                    </div>
-                    {/* <LineChart /> */}
-                  </Box>
-                </Card>
+                <NextLink href="/dashboard/projects/43/questionaire" passHref>
+                  <Card elevation={8}>
+                    <Box
+                      sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        justifyContent: "start",
+                        px: 3,
+                        py: 2,
+                      }}
+                    >
+                      <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
+                        <FactCheck />
+                      </IconButton>
+                      <div>
+                        <Typography variant="body2">0</Typography>
+                        <Typography
+                          sx={{ mt: 1 }}
+                          color="textSecondary"
+                          variant="h8"
+                        >
+                          Inspection
+                        </Typography>
+                      </div>
+                      {/* <LineChart /> */}
+                    </Box>
+                  </Card>
                 </NextLink>
               </Grid>
             </Grid>
@@ -332,9 +332,21 @@ const ProjectDetails = () => {
                   placeholder="Search Team Members"
                 />
               </Box>
-              <Button variant="contained" startIcon={<UserAddIcon fontSize="small" />} onClick={handleOpenProjectDialog}>Add Team Member</Button>
-              <Button startIcon={<AddTaskRounded fontSize="small" />} onClick={handleOpenTaskDialog}>Task Manager</Button>
-              <ProjectTaskManager open={openTaskDialog} handleClose={handleCloseTaskDialog} />
+              <Button
+                variant="contained"
+                startIcon={<UserAddIcon fontSize="small" />}
+                onClick={handleOpenProjectDialog}
+              >
+                Add Team Member
+              </Button>
+              <Button
+                startIcon={<AddTaskRounded fontSize="small" />}
+                onClick={() => {
+                  router.push(`/dashboard/projects/${projectId}/taskmanager`)
+                }}>
+                Task Manager
+              </Button>
+              
             </Box>
             <ProjectTeamMembersTable
               projectMembers={paginatedTeamMembers}

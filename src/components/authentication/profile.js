@@ -27,6 +27,7 @@ import { billingPlanApi } from "../../api/billingplan-api";
 
 export const Profile = (props) => {
   const [profileImage, setProfileImage] = useState(null);
+  console.log(props.user);
   const [companyLogo, setCompanyLogo] = useState(null);
   const [sectors, setSectors] = useState([]);
   const [billingPlans, setBillingPlans] = useState([]);

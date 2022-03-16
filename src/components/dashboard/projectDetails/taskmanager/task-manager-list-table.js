@@ -14,50 +14,50 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
-import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
-import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
-import { Scrollbar } from '../../scrollbar';
 import moment from 'moment';
+import { ArrowRight as ArrowRightIcon } from '../../../../icons/arrow-right';
+import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
+import { Scrollbar } from '../../../scrollbar';
 
-export const ProjectListTable = (props) => {
+export const TaskManagerListTable = (props) => {
   const {
-    projects,
-    projectsCount,
+    tasks,
+    tasksCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [selectedProjects, setSelectedProjects] = useState([]);
+  const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedProjects.length) {
-        setSelectedProjects([]);
+      if (selectedTasks.length) {
+        setSelectedTasks([]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [projects]);
+    [tasks]);
 
-  const handleSelectAllProjects = (event) => {
-    setSelectedProjects(event.target.checked
-      ? projects.map((project) => project.id)
+  const handleSelectAllTasks = (event) => {
+    setSelectedTasks(event.target.checked
+      ? tasks.map((project) => project.id)
       : []);
   };
 
-  const handleSelectOneProject = (event, projectId) => {
-    if (!selectedProjects.includes(projectId)) {
-      setSelectedProjects((prevSelected) => [...prevSelected, projectId]);
+  const handleSelectOneTask = (event, taskId) => {
+    if (!selectedTasks.includes(taskId)) {
+      setSelectedTasks((prevSelected) => [...prevSelected, taskId]);
     } else {
-      setSelectedProjects((prevSelected) => prevSelected.filter((id) => id !== projectId));
+      setSelectedTasks((prevSelected) => prevSelected.filter((id) => id !== taskId));
     }
   };
 
-  const enableBulkActions = selectedProjects.length > 0;
-  const selectedSomeProjects = selectedProjects.length > 0
-    && selectedProjects.length < projects.length;
-  const selectedAllProjects = selectedProjects.length === projects.length;
+  const enableBulkActions = selectedTasks.length > 0;
+  const selectedSomeTasks = selectedTasks.length > 0
+    && selectedTasks.length < tasks.length;
+  const selectedAllTasks = selectedTasks.length === tasks.length;
 
   return (
     <div {...other}>
@@ -70,9 +70,9 @@ export const ProjectListTable = (props) => {
         }}
       >
         <Checkbox
-          checked={selectedAllProjects}
-          indeterminate={selectedSomeProjects}
-          onChange={handleSelectAllProjects}
+          checked={selectedAllTasks}
+          indeterminate={selectedSomeTasks}
+          onChange={handleSelectAllTasks}
         />
         <Button
           size="small"
@@ -93,31 +93,40 @@ export const ProjectListTable = (props) => {
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedAllProjects}
-                  indeterminate={selectedSomeProjects}
-                  onChange={handleSelectAllProjects}
+                  checked={selectedAllTasks}
+                  indeterminate={selectedSomeTasks}
+                  onChange={handleSelectAllTasks}
                 />
               </TableCell>
               <TableCell>
-                Project Name
+                Title
               </TableCell>
               <TableCell>
-                Members
-              </TableCell>
-              <TableCell>
-                Manager
-              </TableCell>
-              <TableCell>
-                Forms
-              </TableCell>
-              <TableCell>
-                Date Created
-              </TableCell>
-              <TableCell>
-                Created By
+                Task Type
               </TableCell>
               <TableCell>
                 Status
+              </TableCell>
+              <TableCell>
+                Assigned To
+              </TableCell>
+              <TableCell>
+                Completed
+              </TableCell>
+              <TableCell>
+                Priority
+              </TableCell>
+              <TableCell>
+                Start Date
+              </TableCell>
+              <TableCell>
+                Due Date
+              </TableCell>
+              <TableCell>
+                Rescheduled
+              </TableCell>
+              <TableCell>
+                Finish
               </TableCell>
               <TableCell align="right">
                 Actions
@@ -125,40 +134,40 @@ export const ProjectListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((project) => {
-              const isProjectSelected = selectedProjects.includes(project.id);
+            {tasks.map((task) => {
+              const isTaskSelected = selectedTasks.includes(task.id);
               // console.log(project)
 
               return (
                 <TableRow
                   hover
-                  key={project.id}
-                  selected={isProjectSelected}
+                  key={task.id}
+                  selected={isTaskSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={isProjectSelected}
-                      onChange={(event) => handleSelectOneProject(event, project.id)}
-                      value={isProjectSelected}
+                      checked={isTaskSelected}
+                      onChange={(event) => handleSelectOneTask(event, task.id)}
+                      value={isTaskSelected}
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography>{project.projectname}</Typography>
+                    <Typography>{task.projectname}</Typography>
                   </TableCell>
                   <TableCell>
-                    {project.projectTeam.length}
+                    {task.projectTeam.length}
                   </TableCell>
                   <TableCell>
-                    {project.createdBy.name}
+                    {task.createdBy.name}
                   </TableCell>
                   <TableCell>
                     {0}
                   </TableCell>
                   <TableCell>
-                   {moment(project.createdAt).format('MM/DD/YYYY')}
+                   {moment(task.createdAt).format('MM/DD/YYYY')}
                   </TableCell>
                   <TableCell>
-                    {project.createdBy.name}
+                    {task.createdBy.name}
                   </TableCell>
                   <TableCell>
                     {"In Progress"}
@@ -166,7 +175,7 @@ export const ProjectListTable = (props) => {
                   
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/projects/${project._id}`}
+                      href={`/dashboard/projects/${task._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -174,7 +183,7 @@ export const ProjectListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${project._id}`}
+                      href={`/dashboard/projects/${task._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -190,7 +199,7 @@ export const ProjectListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={projectsCount}
+        count={tasksCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -201,7 +210,7 @@ export const ProjectListTable = (props) => {
   );
 };
 
-ProjectListTable.propTypes = {
+TaskManagerListTable.propTypes = {
   projects: PropTypes.array.isRequired,
   projectsCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,

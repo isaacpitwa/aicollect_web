@@ -10,19 +10,25 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  useMediaQuery
 } from '@mui/material';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { ProjectListTable } from '../../../components/dashboard/project/project-list-table';
-// import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
-import { Plus as PlusIcon } from '../../../icons/plus';
-import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
-import { gtm } from '../../../lib/gtm';
-import { useMounted } from '../../../hooks/use-mounted';
-import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
+import { useTheme } from '@mui/material/styles';
 import toast from 'react-hot-toast';
+
+import { AuthGuard } from '../../../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
+import { ProjectListTable } from '../../../../../components/dashboard/project/project-list-table';
+// import { useMounted } from '../../../hooks/use-mounted';
+import { Download as DownloadIcon } from '../../../../../icons/download';
+import { Plus as PlusIcon } from '../../../../../icons/plus';
+import { Search as SearchIcon } from '../../../../../icons/search';
+import { Upload as UploadIcon } from '../../../../../icons/upload';
+import { gtm } from '../../../../../lib/gtm';
+import { useMounted } from '../../../../../hooks/use-mounted';
+// import CreateNewProjectDialog from '../../../../../components/dashboard/project/project-create-new';
+import CreateNewTask from '../../../../../components/dashboard/projectDetails/taskmanager/project-task-manager';
+import { TaskManagerListTable } from '../../../../../components/dashboard/projectDetails/taskmanager/task-manager-list-table';
+
 
 const sortOptions = [
   {
@@ -94,32 +100,34 @@ const applySort = (customers, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
   const stabilizedThis = customers.map((el, index) => [el, index]);
-  
+
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProjectList = () => {
+const TasksList = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [projects, setProjects] = useState([]);
+  const theme = useTheme();
+  const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
-  const [openProjectDialog, setOpenProjectDialog] = useState(false);
+  const [openTaskDialog, setOpenTaskDialog] = useState(false);
 
   const [filters, setFilters] = useState({
     query: '',
@@ -128,11 +136,11 @@ const ProjectList = () => {
     isReturning: null
   });
 
-  const handleOpenProjectDialog = () => {
-    setOpenProjectDialog(true)
+  const handleOpenTaskDialog = () => {
+    setOpenTaskDialog(true);
   };
-  const handleCloseProjectDialog = () => {
-    setOpenProjectDialog(false)
+  const handleCloseTaskDialog = () => {
+    setOpenTaskDialog(false);
   };
 
   useEffect(() => {
@@ -159,36 +167,36 @@ const ProjectList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const getProjects = useCallback(async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
-      const data = await response.json();
-      if (isMounted()) {
-        if (data?.status === 200) {
-          toast.success(data.message, { duration: 10000 });
-          setProjects(data.data);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
-    }
-  }, [isMounted]);
+  // const getProjects = useCallback(async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
+  //     const data = await response.json();
+  //     if (isMounted()) {
+  //       if (data?.status === 200) {
+  //         toast.success(data.message, { duration: 10000 });
+  //         setTasks(data.data);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
+  //   }
+  // }, [isMounted]);
 
-  useEffect(() => {
-    getProjects();
-  }, []);
+  // useEffect(() => {
+  //   getProjects();
+  // }, []);
 
   // Usually query is done on backend with indexing solutions
-  const filteredProjects = applyFilters(projects, filters);
-  const sortedProjects = applySort(filteredProjects, sort);
-  const paginatedProjects = applyPagination(sortedProjects, page, rowsPerPage);
+  const filteredTasks = applyFilters(tasks, filters);
+  const sortedTasks = applySort(filteredTasks, sort);
+  const paginatedTasks = applyPagination(sortedTasks, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Project List | AiCollect
+          Dashboard: Task Manager | AiCollect
         </title>
       </Head>
       <Box
@@ -207,22 +215,22 @@ const ProjectList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Projects
+                  Task Manager
                 </Typography>
               </Grid>
               <Grid item>
                 <Button
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
-                  onClick={handleOpenProjectDialog}
+                  onClick={handleOpenTaskDialog}
                 >
-                  Add Project
+                  Create Task
                 </Button>
               </Grid>
-              <CreateNewProjectDialog
-                open={openProjectDialog}
-                handleClose={handleCloseProjectDialog}
-                getProjects={getProjects}
+              <CreateNewTask
+                open={openTaskDialog}
+                handleClose={handleCloseTaskDialog}
+              // getProjects={getProjects}
               />
             </Grid>
             <Box
@@ -246,23 +254,6 @@ const ProjectList = () => {
             </Box>
           </Box>
           <Card>
-            {/* <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}`
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs> */}
             <Divider />
             <Box
               sx={{
@@ -292,7 +283,7 @@ const ProjectList = () => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder="Search projects"
+                  placeholder="Search task"
                 />
               </Box>
               <TextField
@@ -314,14 +305,68 @@ const ProjectList = () => {
                 ))}
               </TextField>
             </Box>
-            <ProjectListTable
-              projects={paginatedProjects}
-              projectsCount={filteredProjects.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-            />
+            {
+              tasks.length === 0 ? (
+                <Container maxWidth="md">
+                  <Typography
+                    align="center"
+                    variant={mobileDevice ? 'h6' : 'h4'}
+                  >
+                    Looks empty here.
+                  </Typography>
+                  <Typography
+                    align="center"
+                    color="textSecondary"
+                    sx={{ mt: 0.5 }}
+                    variant="subtitle2"
+                  >
+                    Please try creating some tasks to get started.
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      mt: 6
+                    }}
+                  >
+                    <Box
+                      alt="Under development"
+                      component="img"
+                      src="/empty.svg"
+                      sx={{
+                        height: 'auto',
+                        maxWidth: '100%',
+                        width: 400
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      mt: 3,
+                      mb: 3
+                    }}
+                  >
+                      <Button
+                        variant="outlined"
+                      >
+                        Create Tasks
+                      </Button>
+                  </Box>
+                </Container>
+              ) : (
+                <TaskManagerListTable
+                  tasks={paginatedTasks}
+                  tasksCount={filteredTasks.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                />
+              )
+            }
+
           </Card>
         </Container>
       </Box>
@@ -329,7 +374,7 @@ const ProjectList = () => {
   );
 };
 
-ProjectList.getLayout = (page) => (
+TasksList.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
@@ -337,4 +382,4 @@ ProjectList.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default ProjectList;
+export default TasksList;
