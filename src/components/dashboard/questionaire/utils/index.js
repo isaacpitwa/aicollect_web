@@ -34,7 +34,7 @@ export const DescriptionCard = (props) => {
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
-export const allFormFields = (data, fieldId, fieldType) => {
+export const allFormFields = (data, fieldId=null, fieldType=null) => {
 
     let allFields = [];
 
@@ -73,8 +73,7 @@ export const findComponentIndex = (newFieldData, componentsData) => {
     let sectionComponents = []
 
     if (newFieldData.parentId && newFieldData.subParentId) {
-        sectionField = componentsData.find(comp => comp.id === newFieldData.parentId);
-        sectionComponents = sectionField.components
+        sectionComponents = componentsData.find(comp => comp.id === newFieldData.parentId).components;
         subSectionComponents = sectionComponents.find(comp => comp.id === newFieldData.subParentId).components;
         compIndex = subSectionComponents.findIndex(comp => comp.id === newFieldData.id)
     } else if (newFieldData.parentId && !newFieldData.subParentId) {
@@ -116,4 +115,9 @@ export const allHiddenSubSections = (parentId, componentsData) => {
     let sectionComponents = componentsData.find(comp => comp.id === parentId).components
     let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.display === 'hidden')
     return subSections
+}
+
+export const getDependantField = (allFields, fieldId) => {
+    let dependantField = allFields.find(field => field.id === fieldId)
+    return dependantField
 }

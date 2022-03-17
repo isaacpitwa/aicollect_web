@@ -13,9 +13,12 @@ const formStyles = makeStyles({
         height: '35px',
         borderBottom: '2px #5048E5 solid',
         marginBottom: '5px',
+        cursor: 'pointer',
+
     },
     section: {
         width: '100%',
+        backgroundColor: '#ffffff',
         border: '1px #DDDDDD dotted',
         minHeight: '50px',
         padding: '10px 1%',
@@ -26,9 +29,6 @@ const formStyles = makeStyles({
         fontSize: '12px',
         '&:hover': {
             border: '1px #5048E5 dotted',
-        },
-        '&:focus': {
-            border: '1px #8BC34A dotted',
         }
     },
     section2: {
@@ -37,6 +37,18 @@ const formStyles = makeStyles({
         padding: '5px 0px',
         paddingTop: '20px',
         margin: '5px 0px',
+        color: '#5F768A',
+        fontSize: '12px',
+    },
+    section3: {
+        width: '100%',
+        backgroundColor: '#5048e519',
+        border: '1px #5048E5 solid',
+        minHeight: '50px',
+        padding: '10px 1%',
+        paddingTop: '5px',
+        margin: '5px 0px',
+        cursor: 'move',
         color: '#5F768A',
         fontSize: '12px',
     },
@@ -59,6 +71,16 @@ const formStyles = makeStyles({
     },
     subSection: {
         border: '1px #5048e537 solid',
+        minHeight: '50px',
+        margin: '5px 0px',
+        cursor: 'move',
+        '&:hover': {
+            backgroundColor: '#5048e519',
+        }
+    },
+    subSection2: {
+        backgroundColor: '#5048e519',
+        border: '1px #5048E5 solid',
         minHeight: '50px',
         margin: '5px 0px',
         cursor: 'move',

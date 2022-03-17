@@ -228,6 +228,7 @@ export const compsData = [
                         label: 'Spouse Name?',
                         description: 'Fill in the name of your partner.',
                         tooltip: 'Name of partner',
+                        dependency: false,
                         conditional: {
                             display: true,
                             when: 1191,

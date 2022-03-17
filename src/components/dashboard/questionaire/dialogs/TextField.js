@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid'
 import {
     Box,
     Button,
@@ -27,18 +28,18 @@ import TextfieldPreview from '../previews/TextfieldPreview';
 // This is the field for type=TextField
 const TextField_ = (props) => {
 
-    const { componentsData, updateComponentsData } = useContext(FormContext)
+    const { sectionId, subSectionId, componentsData, setComponentsData, addComponentToSection, updateComponentsData } = useContext(FormContext)
 
-    const { open, createTextField, fieldData, handleClose } = props
+    const { open, fieldData, handleClose } = props
 
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : '')
-    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : '')
-    const [type, setType] = useState(fieldData ? fieldData.type : '')
-    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [parentId] = useState(fieldData ? fieldData.parentId : sectionId)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : subSectionId)
+    const [type] = useState(fieldData ? fieldData.type : 'text')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
@@ -48,11 +49,15 @@ const TextField_ = (props) => {
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
 
     useEffect(() => {
-        setCompsData(componentsData);
-    }, [compsData])
+        // setCompsData(componentsData);
+    }, [componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
+    }
+
+    const handleFieldValue = (e) => {
+        setFieldValue(e.target.value)
     }
 
     const handleDescription = (event) => {
@@ -94,13 +99,25 @@ const TextField_ = (props) => {
         setCompValue(e.target.value)
     }
 
+    const conditionalLogic = () => {
+        if(display!==''&&when!==''&&compValue!==''){
+            return {
+                display: display,
+                when: when,
+                value: compValue.toLowerCase()                
+            }
+        } else {
+            return false
+        }
+    }
+
     const handleUpdate = () => {
         let newField = {
             id: id,
             parentId: parentId,
             subParentId: subParentId,
             type: type,
-            value: value,
+            value: fieldValue,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
@@ -111,7 +128,42 @@ const TextField_ = (props) => {
                 value: compValue.toLowerCase()
             }
         }
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+
+        updateComponentsData(findComponentIndex(fieldData, componentsData), newField)
+        handleClose()
+
+    }
+
+    const addTextField = () => {
+
+        let sectionObj = componentsData.find(comp => comp.id === sectionId )
+
+        let subSectionObj = sectionObj.components.find(comp => comp.id === subSectionId )
+
+        let newSectionObj = {}
+        let newsubSectionObj = {}
+
+        let newFieldObj = {
+            id: uuidv4(),
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: fieldValue,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            conditional: conditionalLogic()
+        }
+
+        if(subSectionId) {
+            newsubSectionObj = subSectionObj.components.push(newFieldObj)
+            newSectionObj = sectionObj.components.push(newsubSectionObj)
+        } else {
+            newSectionObj = sectionObj.components.push(newFieldObj)            
+        }
+
+        addComponentToSection(newSectionObj, componentsData)
         handleClose()
     }
 
@@ -192,7 +244,7 @@ const TextField_ = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, fieldData.id, 'text').map(option => (
+                                        {allFormFields(componentsData, fieldData.id, 'text').map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -262,7 +314,7 @@ const TextField_ = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:addTextField} variant="outlined" size='small' color="success">{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

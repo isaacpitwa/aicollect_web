@@ -16,13 +16,14 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
 
 const textField = (props) => {
 
-    const { fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const { setFieldResponses, editStatus } = useContext(FormContext);
 
-    const { fieldData, fieldUpdated } = props;
+    const { fieldKey, fieldData, fieldResponses, fieldUpdated } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [value, setValue] = useState(fieldData.value?fieldData.value:'');
     const [textFieldDialog, setTextFieldDialog] = useState(false);
+    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
 
     useEffect(() => {
     }, [fieldResponses])
@@ -52,9 +53,8 @@ const textField = (props) => {
 
 
     return (        
-        fieldData.conditional?
-        fieldResponses.find(item => item.fieldId === fieldData.conditional.when).value === fieldData.conditional.value?
-            <Grid style={{ display: 'block' }} key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
+        dependantField&&dependantField.value===fieldData.conditional.value?
+            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
                 <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
                 {!editStatus ?
                     <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
@@ -77,9 +77,8 @@ const textField = (props) => {
                     }}
                 />
             </Grid>
-            : ''
             : 
-            <Grid style={{ display: 'block' }} key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
                 <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
                 {!editStatus ?
                     <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >

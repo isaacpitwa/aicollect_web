@@ -29,7 +29,7 @@ import SubSectionPreview from '../previews/SubSectionPreview'
 // This is the field for type=TextField
 const SubSection = (props) => {
 
-    const { sectionId, subSectionId, componentsData, addComponent, updateComponentsData } = useContext(FormContext)
+    const { sectionId, subSectionId, componentsData, addComponentToSection, updateComponentsData } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
@@ -53,7 +53,7 @@ const SubSection = (props) => {
 
     useEffect(() => {
         setCompsData(componentsData);
-    }, [compsData])
+    }, [componentsData])
 
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
@@ -93,10 +93,7 @@ const SubSection = (props) => {
         setCompValue(e.target.value)
     }
     
-    const createSubSection = () => {
-
-        let sectionObj = componentsData.find(comp => comp.id === sectionId )
-        let newSectionObj = componentsData.find(comp => comp.id === sectionId )
+    const addSubSection = () => {
 
         const newSubSection = {
             id: id?id:uuidv4(),
@@ -113,9 +110,18 @@ const SubSection = (props) => {
             components: components
         }
 
-        newSectionObj.components.push(newSubSection)
-        updateComponentsData(findComponentIndex(sectionObj, componentsData), newSectionObj)
+        // newSectionObj.components.push(newSubSection)
+
+        // setComponentsData(componentsData => [...section])
+
+        // newSectionObj = sectionObj.components.push(newSubSection)
+        
+        // updateComponentsData(findComponentIndex(sectionObj, componentsData), newSubSection)
+
+        addComponentToSection(newSubSection)
+
         handleClose()
+
     }
 
     const cancel = () => {
@@ -260,7 +266,7 @@ const SubSection = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={createSubSection} variant="outlined" size='small' color="primary">Add Sub Section</Button>
+                    <Button onClick={addSubSection} variant="outlined" size='small' color="primary">Add Sub Section</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

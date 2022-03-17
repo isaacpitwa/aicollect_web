@@ -16,16 +16,26 @@ import FormField from '../FormField'
 
 const SectionField = (props) => {
 
-    const { setSectionId, setSubSectionId, fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const {
+        sectionId,
+        setSectionId,
+        subSectionId,
+        setSubSectionId,
+        componentsData,
+        fieldResponses,
+        setFieldResponses,
+        editStatus
+    } = useContext(FormContext);
 
     const { fieldData } = props
 
+    const [fieldStyles, setFieldStyles] = useState(0)
     const [sectionDialog, setSectionDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
 
     useEffect(() => {
-        // setRefresh(false)
-    }, [])
+        setFieldStyles(sectionId===fieldData.id?3:0)
+    }, [sectionId, componentsData, editStatus])
 
     const handleSectionField = () => {
         setSectionDialog(true)
@@ -34,19 +44,21 @@ const SectionField = (props) => {
     const getSectionId = () => {
         setSectionId(fieldData.id)
         setSubSectionId(false)
+        console.log(`Section Id: ${sectionId}`)
+        console.log(`Sub-Section Id: ${subSectionId}`)
     }
 
     const handleClose = () => {
         setSectionDialog(false)
     }
 
-    const classes = formStyles();
     const smallBtn = smallBtns();
+    let classes = formStyles();
 
     return (
-        fieldData.conditional ?
-            fieldResponses.find(item => item.fieldId === fieldData.conditional.when).value === fieldData.conditional.value ?
-                <Grid key={fieldData.id} container className={editStatus ? classes.section2 : classes.section}>
+        fieldData.conditional && fieldResponses.find(item => item.fieldId === fieldData.conditional.when).value === fieldData.conditional.value?
+            editStatus?
+                <Grid key={fieldData.id} container className={fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3}>
                     <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
                     <Typography
                         onMouseOver={() => { setDisplay('visible') }}
@@ -55,7 +67,6 @@ const SectionField = (props) => {
                         variant='h5'
                     >
                         {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                        {!editStatus ?
                             <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
                                 <EditIcon
                                     onClick={handleSectionField}
@@ -63,18 +74,18 @@ const SectionField = (props) => {
                                 />
                                 <HighlightOffIcon className={smallBtn.deleteBtn} />
                             </small>
-                            : ''}
                     </Typography>
                     <DescriptionCard description={fieldData.description} helperText={true} />
-                    {fieldData.components.map(componentData => (
-                        <FormField fieldData={componentData} />
+                    {fieldData.components.map((componentData, index) => (
+                        <FormField fieldKey={index} fieldData={componentData}  fieldResponses={fieldResponses}/>
                     ))}
                 </Grid>
                 : ''
             :
-            <Grid key={fieldData.id} container onClick={getSectionId} className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldData.id} container className={fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3}>
                 <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
+                    onClick={getSectionId}
                     onMouseOver={() => { setDisplay('visible') }}
                     onMouseOut={() => { setDisplay('hidden') }}
                     className={classes.sectionLabel}
@@ -92,8 +103,8 @@ const SectionField = (props) => {
                         : ''}
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={true} />
-                {fieldData.components.map(componentData => (
-                    <FormField fieldData={componentData} />
+                {fieldData.components.map((comp, index) => (
+                    <FormField fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
                 ))}
             </Grid>
     )

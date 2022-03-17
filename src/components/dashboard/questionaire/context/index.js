@@ -13,34 +13,57 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
+    const formsData = [
+        {
+            id: 1,
+            name: '',
+            type: 'form',
+            version: 1,
+            createdBy: 111000,
+            createdAt: Date.now(),
+            submittedBy: '',
+            submittedAt: '',
+            timeSpent: '',
+            formFields: compsData
+        }
+    ]
+
+    localStorage.setItem('forms', JSON.stringify(formsData))
+
+
+    const forms = JSON.parse(localStorage.getItem('forms'));
+
+    const [isLoaded, setIsLoaded] = useState(false);
     const [sectionId, setSectionId] = useState(false)
     const [subSectionId, setSubSectionId] = useState(false)
     const [componentsData, setComponentsData] = useState([])
     const [fieldResponses, setFieldResponses] = useState([])
-    const [formData, setFormData] = useState({
-        id: 1,
-        name: '',
-        type: 'form',
-        version: 1,
-        createdBy: 111000,
-        createdAt: Date.now(),
-        submittedBy: '',
-        submittedAt: '',
-        timeSpent: '',
-        components: componentsData
-    })
+    const [formData, setFormData] = useState()
     const [sectionCreated, setSectionCreated] = useState(false)
     const [formPreview, setFormPreview] = useState(false)
     const [editStatus, setEditStatus] = useState(false)
 
-    useEffect(() => {
-        getFormJson()
-        setFieldResponses(allFormFields(compsData).map(item => { return { fieldId: item.id, value: item.value }}))
-    }, [])
+    useEffect(async () => {
+        setIsLoaded(false)
+        await getFormsData()
+        await getFormFields()
+        // setSectionCreated(componentsData[0] && componentsData[0].type === 'section' ? true : false)
+        // setFieldResponses(allFormFields(componentsData).map(item => { return { id: item.id, value: item.value }}))
+        setIsLoaded(true)
+    }, [componentsData])
 
-    const getFormJson = async () => {
-        await setComponentsData(compsData)
-        setSectionCreated(compsData[0] && compsData[0].type === 'section' ? true : false)
+    const getFormsData = async () => {
+        setFormData(forms)
+        setComponentsData(forms[0].formFields)
+        setSectionCreated(forms[0].formFields[0] && forms[0].formFields[0].type === 'section' ? true : false)
+        setFieldResponses(allFormFields(forms[0].formFields).map(item => { return { id: item.id, value: item.value }}))
+        // console.log('Forms Data: ', forms);
+        // console.log('Forms Fields: ', forms[0].formFields);
+        // console.log('Forms Field Responses: ', allFormFields(forms[0].formFields).map(item => { return { fieldId: item.id, value: item.value }}));
+    }
+
+    const getFormFields = async () => {
+        setComponentsData(forms[0].formFields)
     }
 
     const updateComponentsData = (fieldIndex, newFieldData) => {
@@ -62,6 +85,27 @@ const FormProvider = (props) => {
         setComponentsData(newComponentsData)
     }
 
+    const addComponentToSection = (compData) => {
+
+        let allSections = componentsData;
+        let newSection = allSections.find(section => section.id === compData.parentId);
+        let sectionIndex = allSections.findIndex(section => section.id === compData.parentId);
+
+        if(compData.subParentId) {
+            let newSubSection = newSection.components.find(subSec => subSec.id === compData.subParentId)
+            let subSectionIndex = newSection.components.findIndex(subSec => subSec.id === compData.subParentId)
+            newSubSection = newSubSection.push(compData)
+            newSection[subSectionIndex] = newSubSection
+            allSections[sectionIndex] = newSection
+        } else {
+            newSection = newSection.push(compData)
+            allSections[sectionIndex] = newSection
+        }
+
+        setComponentsData(allSections)
+
+    }
+
     const addComponent = (newComponent) => {
         setComponentsData(componentsData => [...componentsData, newComponent])
         setSectionCreated(true)
@@ -81,9 +125,10 @@ const FormProvider = (props) => {
     return (
         <FormContext.Provider
             value={{
+                isLoaded,
                 sectionId,
-                setSectionId,
                 subSectionId,
+                setSectionId,
                 setSubSectionId,
                 sectionCreated,
                 formData,
@@ -93,6 +138,7 @@ const FormProvider = (props) => {
                 setFieldResponses,
                 addComponent,
                 updateComponentsData,
+                addComponentToSection,
                 createForm,
                 formPreview,
                 editStatus,
