@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -122,6 +124,7 @@ const TasksList = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
   const theme = useTheme();
+  const router = useRouter();
   const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(0);
@@ -219,13 +222,16 @@ const TasksList = () => {
                 </Typography>
               </Grid>
               <Grid item>
+                <NextLink href={`/dashboard/projects/${router.query.projectId}/taskmanager/create`}>
                 <Button
+
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
                   onClick={handleOpenTaskDialog}
                 >
                   Create Task
                 </Button>
+                </NextLink>
               </Grid>
               <CreateNewTask
                 open={openTaskDialog}
@@ -306,7 +312,7 @@ const TasksList = () => {
               </TextField>
             </Box>
             {
-              tasks.length !== 0 ? (
+              tasks.length === 0 ? (
                 <Container maxWidth="md">
                   <Typography
                     align="center"
