@@ -10,8 +10,8 @@ import {
   Container,
   Card,
   Stack,
+  styled
 } from "@mui/material";
-import { styled } from "@mui/styles";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
