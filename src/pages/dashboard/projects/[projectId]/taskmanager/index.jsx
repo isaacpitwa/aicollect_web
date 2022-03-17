@@ -227,7 +227,7 @@ const TasksList = () => {
 
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
-                  onClick={handleOpenTaskDialog}
+                  // onClick={handleOpenTaskDialog}
                 >
                   Create Task
                 </Button>
