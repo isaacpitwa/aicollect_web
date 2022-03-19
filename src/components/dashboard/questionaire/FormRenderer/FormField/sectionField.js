@@ -33,7 +33,6 @@ const SectionField = (props) => {
 
     const getSectionId = () => {
         setSectionId(fieldData.id)
-        setSubSectionId(false)
     }
 
     const handleClose = () => {
@@ -72,7 +71,7 @@ const SectionField = (props) => {
                 </Grid>
                 : ''
             :
-            <Grid key={fieldData.id} container onClick={getSectionId} className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldData.id} container className={editStatus ? classes.section2 : classes.section}>
                 <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
                     onMouseOver={() => { setDisplay('visible') }}

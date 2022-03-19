@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
     Button,
@@ -21,24 +22,36 @@ import {
     allFormFields,
     findComponentIndex,
 } from '../utils';
+import {
+    FieldError,
+} from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import TextfieldPreview from '../previews/TextfieldPreview';
 
 // This is the field for type=TextField
 const TextField_ = (props) => {
 
-    const { sectionId, setSectionId, subSectionId, setSubSectionId, componentsData, updateComponentsData } = useContext(FormContext)
+    const {
+        setError,
+        selectSection,
+        sectionId,
+        subSectionId,
+        componentsData,
+        addComponentToSection,
+        updateComponentsData
+    } = useContext(FormContext)
 
-    const { open, createTextField, fieldData, handleClose } = props
+    const { open, fieldData, handleClose } = props
 
+    const [errorTag, setErrorTag] = useState(false)
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : '')
-    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : '')
-    const [type, setType] = useState(fieldData ? fieldData.type : '')
-    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [parentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
+    const [type] = useState(fieldData ? fieldData.type : 'text')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
@@ -48,11 +61,17 @@ const TextField_ = (props) => {
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
 
     useEffect(() => {
-        setCompsData(componentsData);
-    }, [compsData])
+        // setCompsData(componentsData);
+    }, [componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
+        setError(false)
+        setErrorTag(false);
+    }
+
+    const handleFieldValue = (e) => {
+        setFieldValue(e.target.value)
     }
 
     const handleDescription = (event) => {
@@ -63,7 +82,7 @@ const TextField_ = (props) => {
         setTooltip(e.target.value)
     }
 
-    const handleChecked = (e) => {
+    const handleIsRequired = (e) => {
         setIsRequired(!isRequired)
     }
 
@@ -94,43 +113,60 @@ const TextField_ = (props) => {
         setCompValue(e.target.value)
     }
 
-    const getSectionId = () => {
-        setSectionId(sectionId)
-        setSubSectionId(subSectionId)
+    const conditionalLogic = () => {
+        if(display!==''&&when!==''&&compValue!==''){
+            return {
+                display: display,
+                when: when,
+                value: compValue.toLowerCase()                
+            }
+        } else {
+            return false
+        }
     }
-    
+
     const addTextField = () => {
 
-        let sectionObj = componentsData.find(comp => comp.id === sectionId )
-        let newSectionObj = componentsData.find(comp => comp.id === sectionId )
-        let newSubSectionObj = sectionObj.components.find(comp => comp.id === sectionId )
-
-        const newFieldData = {
-            id: id?id:uuidv4(),
+        let newFieldObj = {
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
+            type: type,
+            value: fieldValue,
             required: isRequired,
-            display: 'visible',
-            type: 'sub-section',
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            dependency: dependency,
-            conditional: conditional
+            conditional: conditionalLogic()
         }
 
-        newSectionObj.components.push(newFieldData)
-        updateComponentsData(findComponentIndex(sectionObj, componentsData), newSectionObj)
-        handleClose()
+        if(sectionId&&fieldLabel!=='') {
+            addComponentToSection(newFieldObj)
+            setError(false)
+            setErrorTag(false)
+            setFieldLabel('')
+            setFieldDescription('')
+            setTooltip('')
+            setIsRequired(false)
+            setButtonFocused('Display')
+            setConditional(false)
+            handleClose()
+        } else {
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+        }
     }
 
     const handleUpdate = () => {
+
         let newField = {
             id: id,
-            parentId: parentId,
-            subParentId: subParentId,
+            parentId: sectionId,
+            subParentId: subSectionId,
             type: type,
-            value: value,
+            value: fieldValue,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
@@ -141,12 +177,18 @@ const TextField_ = (props) => {
                 value: compValue.toLowerCase()
             }
         }
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+
+        addComponentToSection(newField)
+
         handleClose()
+
     }
 
     const cancel = () => {
+        setError(false)
+        setErrorTag(false)
         setFieldLabel('')
+        setFieldValue('')
         setFieldDescription('')
         setTooltip('')
         setIsRequired(!isRequired)
@@ -174,7 +216,8 @@ const TextField_ = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
+                        <FieldError errorTag={errorTag}/>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -222,7 +265,7 @@ const TextField_ = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, fieldData.id, 'text').map(option => (
+                                        {allFormFields(componentsData, fieldData.id, 'text').map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -280,7 +323,7 @@ const TextField_ = (props) => {
                                         onChange={handleTooltip}
                                     />
                                     <Typography style={{ color: '#5048E5' }}>
-                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        <Checkbox size={'small'} checked={isRequired} onChange={handleIsRequired} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                     </Typography>
                                 </>
                             }
@@ -292,7 +335,7 @@ const TextField_ = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={addTextField} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:addTextField} variant="outlined" size='small' color="success">{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

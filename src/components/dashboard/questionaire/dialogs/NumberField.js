@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
     Button,
@@ -23,24 +24,36 @@ import {
     findComponentIndex,
     allHiddenSubSections
 } from '../utils';
+import {
+    FieldError,
+} from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
 
 // This is the field for type=TextField
 const NumberField = (props) => {
 
-    const { componentsData, updateComponentsData } = useContext(FormContext)
+    const {
+        setError,
+        selectSection,
+        sectionId,
+        subSectionId,
+        componentsData,
+        addComponentToSection,
+        updateComponentsData
+    } = useContext(FormContext)
 
     const { open, createNumberField, fieldData, handleClose } = props
     
+    const [errorTag, setErrorTag] = useState(false)
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : '')
-    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : '')
-    const [type, setType] = useState(fieldData ? fieldData.type : '')
-    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [parentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
+    const [type] = useState(fieldData ? fieldData.type : 'text')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
@@ -48,9 +61,7 @@ const NumberField = (props) => {
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
-
     const [dependency, setDependency] = useState(false)
-    const [subSectionId, setSubSectionId] = useState('')
     const [subSectionDisplay, setSubSectionDisplay] = useState('')
 
     useEffect(() => {
@@ -59,6 +70,12 @@ const NumberField = (props) => {
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
+        setError(false)
+        setErrorTag(false);
+    }
+
+    const handleFieldValue = (e) => {
+        setFieldValue(e.target.value)
     }
 
     const handleDescription = (event) => {
@@ -110,16 +127,56 @@ const NumberField = (props) => {
         setCompValue(e.target.value)
     }
 
-    const handleSubSectionId = (e) => {
-        setSubSectionId(e.target.value)
-    }
-
     const handleSubSectionDisplay = (e) => {
         setSubSectionDisplay(e.target.value)
     }
 
-    const handleFieldValue = (e) => {
-        setValue(e.target.value)
+    const conditionalLogic = () => {
+        if(display!==''&&when!==''&&compValue!==''){
+            return {
+                display: display,
+                when: when,
+                value: compValue.toLowerCase()                
+            }
+        } else {
+            return false
+        }
+    }
+
+
+    const addNumberField = () => {
+
+        let newFieldObj = {
+            id: id,
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: fieldValue,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            dependency: dependency,
+            conditional: conditionalLogic()
+        }
+
+        if(sectionId&&fieldLabel!=='') {
+            addComponentToSection(newFieldObj)
+            setError(false)
+            setErrorTag(false)
+            setFieldLabel('')
+            setFieldDescription('')
+            setTooltip('')
+            setIsRequired(!isRequired)
+            setButtonFocused('Display')
+            setConditional(false)
+            handleClose()
+        } else {
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+        }
     }
 
     const handleUpdate = () => {
@@ -144,6 +201,8 @@ const NumberField = (props) => {
     }
 
     const cancel = () => {
+        setError(false)
+        setErrorTag(false)
         setFieldLabel('')
         setFieldDescription('')
         setTooltip('')
@@ -170,16 +229,17 @@ const NumberField = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
+                        <FieldError errorTag={errorTag}/>
                         <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'left',
-                            '& > *': {
-                            m: 0,
-                            },
-                        }}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'left',
+                                '& > *': {
+                                m: 0,
+                                },
+                            }}
                         >
                         <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
                             <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
@@ -337,7 +397,7 @@ const NumberField = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:addNumberField} variant="outlined" size='small' color="success">{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

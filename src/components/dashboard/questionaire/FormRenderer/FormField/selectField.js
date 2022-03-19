@@ -26,8 +26,8 @@ const selectField = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section2:classes.section}>
-            {!editStatus?
+        <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section:classes.section2}>
+            {editStatus?
                 <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
                     <EditIcon className={smallBtn.editBtn} />
                     <HighlightOffIcon className={smallBtn.deleteBtn} />

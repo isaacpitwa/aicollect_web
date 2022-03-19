@@ -127,8 +127,8 @@ export const compsData = [
                 subParentId: false,
                 required: false,
                 display: 'hidden',
-                label: 'Family Member Information',
                 type: 'sub-section',
+                label: 'Family Member Information',
                 description: 'Family information of the candidate, e.g number of wives, number of children',
                 tooltip: 'Candidate family information',                        
                 conditional: false,
@@ -228,6 +228,7 @@ export const compsData = [
                         label: 'Spouse Name?',
                         description: 'Fill in the name of your partner.',
                         tooltip: 'Name of partner',
+                        dependency: false,
                         conditional: {
                             display: true,
                             when: 1191,

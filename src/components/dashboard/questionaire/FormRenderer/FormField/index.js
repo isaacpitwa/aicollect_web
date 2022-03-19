@@ -19,10 +19,9 @@ const FormField = (props) => {
 
     const { formPreview, componentsData, fieldResponses } = useContext(FormContext)
 
-    const { fieldData, editStatus } = props
+    const { fieldKey, fieldData, editStatus } = props
 
     const [refresh, setRefresh] = useState(false)
-
 
     const fieldUpdated = () => {
         setRefresh(true)
@@ -30,29 +29,29 @@ const FormField = (props) => {
     
     switch (fieldData.type) {
         case 'sub-section':
-            return <SubSectionField fieldData={fieldData} editStatus={editStatus}/>
+            return <SubSectionField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'text':
-            return <TextField fieldData={fieldData} editStatus={editStatus} fieldUpdated={fieldUpdated}/>
+            return <TextField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus} fieldUpdated={fieldUpdated}/>
         case 'text-area':
-            return <TextAreaField fieldData={fieldData} editStatus={editStatus}/>
+            return <TextAreaField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'number':
-            return <NumberField fieldData={fieldData} editStatus={editStatus}/>
+            return <NumberField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'select-box':
-            return <SelectBoxesField fieldData={fieldData} editStatus={editStatus}/>
+            return <SelectBoxesField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'select':
-            return <SelectField fieldData={fieldData} editStatus={editStatus}/>
+            return <SelectField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'radio':
-            return <RadioField fieldData={fieldData} editStatus={editStatus}/>
+            return <RadioField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'email':
-            return <EmailField fieldData={fieldData} editStatus={editStatus}/>
+            return <EmailField fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'phone-number':
-            return <PhoneNumberField fieldData={fieldData} editStatus={editStatus}/>
+            return <PhoneNumberField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'image':
-            return <ImageField fieldData={fieldData} editStatus={editStatus}/>
+            return <ImageField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'location':
-            return <LocationField fieldData={fieldData} editStatus={editStatus}/>
+            return <LocationField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'area-mapping':
-            return <AreaMappingField fieldData={fieldData} editStatus={editStatus}/>
+            return <AreaMappingField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
     }
 }
 
