@@ -22,6 +22,7 @@ import { Bell as BellIcon } from '../../icons/bell';
 import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
 import { Search as SearchIcon } from '../../icons/search';
 import { Users as UsersIcon } from '../../icons/users';
+import { useAuth } from '../../hooks/use-auth';
 
 const languages = {
   en: '/static/icons/uk_flag.svg',
@@ -199,11 +200,7 @@ const AccountButton = () => {
   const anchorRef = useRef(null);
   const [openPopover, setOpenPopover] = useState(false);
   // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
-  const user = {
-    avatar: '/stuart.jpg',
-    name: 'Dambi Stuart'
-  };
+  const { user } = useAuth();
 
   const handleOpenPopover = () => {
     setOpenPopover(true);
@@ -230,7 +227,7 @@ const AccountButton = () => {
             height: 40,
             width: 40
           }}
-          src={user.avatar}
+          src={user?.profileImage ? user.profileImage : 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png'}
         >
           <UserCircleIcon fontSize="small" />
         </Avatar>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import {
   Box,
@@ -9,7 +9,7 @@ import {
   Grid,
   InputAdornment,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
@@ -20,7 +20,9 @@ import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
+import { useMounted } from '../../../hooks/use-mounted';
 import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
+import toast from 'react-hot-toast';
 
 const sortOptions = [
   {
@@ -32,11 +34,11 @@ const sortOptions = [
     value: 'updatedAt|asc'
   },
   {
-    label: 'Total orders (highest)',
+    label: 'Total Questionaires (highest)',
     value: 'orders|desc'
   },
   {
-    label: 'Total orders (lowest)',
+    label: 'Total Members (lowest)',
     value: 'orders|asc'
   }
 ];
@@ -44,7 +46,7 @@ const sortOptions = [
 const applyFilters = (customers, filters) => customers.filter((customer) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['projectname'];
 
     properties.forEach((property) => {
       if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -111,14 +113,14 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
   page * rowsPerPage + rowsPerPage);
 
 const ProjectList = () => {
+  const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [customers] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
 
-  
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
@@ -157,16 +159,36 @@ const ProjectList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const getProjects = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
+      const data = await response.json();
+      if (isMounted()) {
+        if (data?.status === 200) {
+          toast.success(data.message, { duration: 10000 });
+          setProjects(data.data);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(customers, filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
+  const filteredProjects = applyFilters(projects, filters);
+  const sortedProjects = applySort(filteredProjects, sort);
+  const paginatedProjects = applyPagination(sortedProjects, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Project List | AI Collect
+          Dashboard: Project List | AiCollect
         </title>
       </Head>
       <Box
@@ -197,7 +219,11 @@ const ProjectList = () => {
                   Add Project
                 </Button>
               </Grid>
-              <CreateNewProjectDialog open={openProjectDialog} handleClose={handleCloseProjectDialog} />
+              <CreateNewProjectDialog
+                open={openProjectDialog}
+                handleClose={handleCloseProjectDialog}
+                getProjects={getProjects}
+              />
             </Grid>
             <Box
               sx={{
@@ -224,7 +250,7 @@ const ProjectList = () => {
               indicatorColor="primary"
               onChange={handleTabsChange}
               scrollButtons="auto"
-              sx={{ px: 3 }}
+              sx={{ px: 3 }}`
               textColor="primary"
               value={currentTab}
               variant="scrollable"
@@ -289,8 +315,8 @@ const ProjectList = () => {
               </TextField>
             </Box>
             <ProjectListTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
+              projects={paginatedProjects}
+              projectsCount={filteredProjects.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}

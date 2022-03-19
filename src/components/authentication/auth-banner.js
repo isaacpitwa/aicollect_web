@@ -33,54 +33,20 @@ export const AuthBanner = () => (
           size="small"
         />
         <Typography variant="subtitle2">
-          Visit our
+          Welcome to
           {' '}
           <NextLink
             href="/docs/welcome"
             passHref
           >
             <Link variant="subtitle2">
-              docs
+              AiCollect.
             </Link>
           </NextLink>
           {' '}
-          and find out how to switch between
+          Verify email and continue to use Platform
         </Typography>
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            '& img': {
-              height: 30,
-              m: 1
-            }
-          }}
-        >
-          <Tooltip title="Amplify">
-            <img
-              alt="Amplify"
-              src={platformIcons.Amplify}
-            />
-          </Tooltip>
-          <Tooltip title="Auth0">
-            <img
-              alt="Auth0"
-              src={platformIcons.Auth0}
-            />
-          </Tooltip>
-          <Tooltip title="Firebase">
-            <img
-              alt="Firebase"
-              src={platformIcons.Firebase}
-            />
-          </Tooltip>
-          <Tooltip title="JSON Web Token">
-            <img
-              alt="JWT"
-              src={platformIcons.JWT}
-            />
-          </Tooltip>
-        </Box>
+        
       </Box>
     </Container>
   </Box>

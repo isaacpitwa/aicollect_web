@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import numeral from 'numeral';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Button,
   Checkbox,
@@ -17,18 +16,17 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
+import moment from 'moment';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import { ArrowRight as ArrowRightIcon } from '../../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
-import { getInitials } from '../../../../utils/get-initials';
 import { Scrollbar } from '../../../scrollbar';
 
-export const CustomerListTable = (props) => {
+export const QuestionaireListTable = (props) => {
   const {
-    customers,
-    customersCount,
+    questionaires,
+    questionairesCount,
     onPageChange,
     onRowsPerPageChange,
     page,
@@ -36,6 +34,7 @@ export const CustomerListTable = (props) => {
     ...other
   } = props;
   const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const router = useRouter();
 
   // Reset selected customers when customers change
   useEffect(() => {
@@ -44,11 +43,11 @@ export const CustomerListTable = (props) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customers]);
+    [questionaires]);
 
   const handleSelectAllCustomers = (event) => {
     setSelectedCustomers(event.target.checked
-      ? customers.map((customer) => customer.id)
+      ? questionaires.map((customer) => customer.id)
       : []);
   };
 
@@ -62,8 +61,8 @@ export const CustomerListTable = (props) => {
 
   const enableBulkActions = selectedCustomers.length > 0;
   const selectedSomeCustomers = selectedCustomers.length > 0
-    && selectedCustomers.length < customers.length;
-  const selectedAllCustomers = selectedCustomers.length === customers.length;
+    && selectedCustomers.length < questionaires.length;
+  const selectedAllCustomers = selectedCustomers.length === questionaires.length;
 
   return (
     <div {...other}>
@@ -125,19 +124,19 @@ export const CustomerListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((customer) => {
-              const isCustomerSelected = selectedCustomers.includes(customer.id);
+            {questionaires.map((questionaire) => {
+              const isCustomerSelected = selectedCustomers.includes(questionaire.id);
 
               return (
                 <TableRow
                   hover
-                  key={customer.id}
+                  key={questionaire.id}
                   selected={isCustomerSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneCustomer(event, customer.id)}
+                      onChange={(event) => handleSelectOneCustomer(event, questionaire.id)}
                       value={isCustomerSelected}
                     />
                   </TableCell>
@@ -150,31 +149,31 @@ export const CustomerListTable = (props) => {
                     >
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/customers/1"
+                          href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire.id}`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {customer.name}
+                            {questionaire.name}
                           </Link>
                         </NextLink>
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {customer.created}
+                    {moment(questionaire.createdAt).format('DD/MM/YYYY')}
                   </TableCell>
                   <TableCell>
-                    {customer.modified}
+                    {moment(questionaire.updatedAt).format('DD/MM/YYYY')}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {customer.version}
+                      {`v${questionaire.version}`}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -182,7 +181,7 @@ export const CustomerListTable = (props) => {
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {customer.status}
+                      {questionaire.status ? 'Active' : 'Not Active'}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -227,7 +226,7 @@ export const CustomerListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={customersCount}
+        count={questionairesCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -238,9 +237,9 @@ export const CustomerListTable = (props) => {
   );
 };
 
-CustomerListTable.propTypes = {
-  customers: PropTypes.array.isRequired,
-  customersCount: PropTypes.number.isRequired,
+QuestionaireListTable.propTypes = {
+  questionaires: PropTypes.array.isRequired,
+  questionairesCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,
