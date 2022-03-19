@@ -17,7 +17,10 @@ import FormField from '../FormField'
 const SectionField = (props) => {
 
     const {
+        setError,
+        selectSection,
         sectionId,
+        setSelectSection,
         setSectionId,
         subSectionId,
         setSubSectionId,
@@ -42,10 +45,19 @@ const SectionField = (props) => {
     }
 
     const getSectionId = () => {
-        setSectionId(fieldData.id)
-        setSubSectionId(false)
-        console.log(`Section Id: ${sectionId}`)
-        console.log(`Sub-Section Id: ${subSectionId}`)
+        if(editStatus){
+            if(selectSection) {
+                setError(false)
+                setSelectSection(false)
+                setSectionId(false)
+                setSubSectionId(false)
+            } else {
+                setError(false)
+                setSelectSection(true)
+                setSectionId(fieldData.id)
+                setSubSectionId(false)
+            }
+        }
     }
 
     const handleClose = () => {
@@ -67,6 +79,7 @@ const SectionField = (props) => {
                         variant='h5'
                     >
                         {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                        {editStatus?
                             <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
                                 <EditIcon
                                     onClick={handleSectionField}
@@ -74,6 +87,9 @@ const SectionField = (props) => {
                                 />
                                 <HighlightOffIcon className={smallBtn.deleteBtn} />
                             </small>
+                        :
+                            ""
+                        }
                     </Typography>
                     <DescriptionCard description={fieldData.description} helperText={true} />
                     {fieldData.components.map((componentData, index) => (
@@ -92,7 +108,7 @@ const SectionField = (props) => {
                     variant='h5'
                 >
                     {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                    {!editStatus ?
+                    {editStatus ?
                         <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
                             <EditIcon
                                 onClick={handleSectionField}

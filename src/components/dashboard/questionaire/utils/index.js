@@ -51,15 +51,17 @@ export const allFormFields = (data, fieldId=null, fieldType=null) => {
             });
         });
     } else {
-        data.forEach((item) => {
-            item.components.forEach((comp) => {
-                if (comp.type === 'sub-section') {
-                    allFields.push(...comp.components)
-                } else {
-                    allFields.push(comp);
-                }
+        if(data){
+            data.map((item) => {
+                item.components.forEach((comp) => {
+                    if (comp.type === 'sub-section') {
+                        allFields.push(...comp.components)
+                    } else {
+                        allFields.push(comp);
+                    }
+                });
             });
-        });
+        }
     }
 
     return allFields

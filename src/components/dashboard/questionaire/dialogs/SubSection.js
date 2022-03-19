@@ -96,7 +96,7 @@ const SubSection = (props) => {
     const addSubSection = () => {
 
         const newSubSection = {
-            id: id?id:uuidv4(),
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: false,
             required: isRequired,

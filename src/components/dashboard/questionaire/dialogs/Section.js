@@ -28,7 +28,7 @@ import SectionPreview from '../previews/SectionPreview'
 // This is the field for type=TextField
 const Section = (props) => {
 
-    const { componentsData, addComponent, updateComponentsData } = useContext(FormContext)
+    const { componentsData, setComponentsData, setSectionCreated, addComponent, updateComponentsData } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
@@ -105,7 +105,11 @@ const Section = (props) => {
             components: components
         }
 
-        addComponent(sectionData)
+        // addComponent(sectionData)
+        let formFields = componentsData
+        formFields.push(sectionData)
+        setComponentsData(formFields)
+        setSectionCreated(true)
         handleClose()
 
     }

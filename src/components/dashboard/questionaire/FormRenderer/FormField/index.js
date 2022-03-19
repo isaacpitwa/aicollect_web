@@ -23,7 +23,6 @@ const FormField = (props) => {
 
     const [refresh, setRefresh] = useState(false)
 
-
     const fieldUpdated = () => {
         setRefresh(true)
     }

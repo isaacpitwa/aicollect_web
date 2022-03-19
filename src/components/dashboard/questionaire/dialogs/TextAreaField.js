@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid'
 import {
     Box,
     Button,
@@ -27,18 +28,18 @@ import TextareafieldPreview from '../previews/TextareafieldPreview';
 // This is the field for type=TextField
 const TextAreaField = (props) => {
 
-    const { componentsData, updateComponentsData } = useContext(FormContext)
+    const { sectionId, subSectionId, componentsData, addComponentToSection, updateComponentsData } = useContext(FormContext)
 
-    const { open, createTextField, fieldData, handleClose } = props
+    const { open, fieldData, handleClose } = props
 
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id, setId] = useState(fieldData?fieldData.id:'')
-    const [parentId, setParentId] = useState(fieldData?fieldData.parentId:'')
-    const [subParentId, setSubParentId] = useState(fieldData?fieldData.subParentId:'')
-    const [type, setType] = useState(fieldData ? fieldData.type : '')
-    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [parentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
+    const [type] = useState(fieldData ? fieldData.type : 'text-area')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
@@ -55,9 +56,9 @@ const TextAreaField = (props) => {
         setFieldLabel(event.target.value);
     }
 
-    const handlePosition = (event) => {
-        setPosition(event.target.value);
-    };
+    const handleFieldValue = (e) => {
+        setFieldValue(e.target.value)
+    }
 
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
@@ -98,6 +99,18 @@ const TextAreaField = (props) => {
         setCompValue(e.target.value)
     }
 
+    const conditionalLogic = () => {
+        if(display!==''&&when!==''&&compValue!==''){
+            return {
+                display: display,
+                when: when,
+                value: compValue.toLowerCase()                
+            }
+        } else {
+            return false
+        }
+    }
+
     const handleUpdate = () => {
         let newField = {
             id: id,
@@ -111,6 +124,31 @@ const TextAreaField = (props) => {
             tooltip: tooltip
         }        
         updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+        handleClose()
+    }
+
+    const addTextAreaField = () => {
+
+        let newFieldObj = {
+            id: uuidv4(),
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: fieldValue,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            conditional: conditionalLogic()
+        }
+
+        addComponentToSection(newFieldObj)
+        setFieldLabel('')
+        setFieldDescription('')
+        setTooltip('')
+        setIsRequired(!isRequired)
+        setButtonFocused('Display')
+        setConditional(false)
         handleClose()
     }
 
@@ -262,7 +300,7 @@ const TextAreaField = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={handleUpdate} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:addTextAreaField} variant="outlined" size='small' color="success">{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

@@ -32,6 +32,7 @@ const formStyles = makeStyles({
         }
     },
     section2: {
+        backgroundColor: '#ffffff',
         border: 'None',
         minHeight: '50px',
         padding: '5px 0px',
@@ -84,6 +85,12 @@ const formStyles = makeStyles({
         minHeight: '50px',
         margin: '5px 0px',
         cursor: 'move',
+    },
+    subSection3: {
+        border: '1px #5048e537 solid',
+        minHeight: '50px',
+        margin: '5px 0px',
+        cursor: 'cursor',
     },
     subSectionLabel: {
         width: '100%',

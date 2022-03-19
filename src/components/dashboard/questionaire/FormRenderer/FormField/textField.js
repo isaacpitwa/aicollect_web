@@ -54,9 +54,9 @@ const textField = (props) => {
 
     return (        
         dependantField&&dependantField.value===fieldData.conditional.value?
-            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
                 <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
-                {!editStatus ?
+                {editStatus ?
                     <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
                         <EditIcon
                             onClick={handleTextField}
@@ -78,9 +78,9 @@ const textField = (props) => {
                 />
             </Grid>
             : 
-            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
                 <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
-                {!editStatus ?
+                {editStatus ?
                     <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
                         <EditIcon
                             onClick={handleTextField}

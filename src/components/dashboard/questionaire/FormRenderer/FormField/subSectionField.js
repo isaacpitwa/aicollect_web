@@ -46,10 +46,10 @@ const SubSectionField = (props) => {
     }
 
     const getSectionIDs = () => {
-        setSectionId(fieldData.parentId)
-        setSubSectionId(fieldData.id)
-        console.log(`Section Id: ${sectionId}`)
-        console.log(`Sub-Section Id: ${subSectionId}`)
+        if(editStatus){
+            setSectionId(fieldData.parentId)
+            setSubSectionId(fieldData.id)
+        }
     }
     
 
@@ -61,35 +61,13 @@ const SubSectionField = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        fieldData.dependency?
-            editStatus?
-                [...Array(DependencyFieldValue()).keys()].map(() => (
-                    <Grid
-                        key={fieldData.id}
-                        container
-                        className={classes.subSection}
-                    >
-                        <Typography
-                            className={classes.subSectionLabel}
-                            variant='h5'
-                        >
-                            {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                        </Typography>
-                        <DescriptionCard description={fieldData.description} helperText={true} />
-                        <Grid
-                            item
-                            sm={12}
-                            style={{ padding: '10px' }}
-                        >
-                            {fieldData.components.map((componentData, index) => (
-                                <FormField fieldKey={index} fieldData={componentData} />
-                            ))}
-                        </Grid>
-                    </Grid>
-                ))
-            : ""
-        :
-            <Grid key={fieldData.id} container onClick={getSectionIDs} className={fieldStyles===2?classes.subSection2:classes.subSection} style={{ visibility: fieldData.display }}>
+        fieldData.display?
+            <Grid
+                key={fieldData.id}
+                container
+                onClick={getSectionIDs}
+                className={editStatus?fieldStyles===2?classes.subSection2:classes.subSection:classes.subSection3}
+            >
                 <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }
@@ -98,15 +76,19 @@ const SubSectionField = (props) => {
                     variant='h5'
                 >
                     {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                    <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                    <EditIcon
-                        onClick={handleSubSection}
-                        className={smallBtn.editBtn}
-                    />
-                    <HighlightOffIcon
-                        className={smallBtn.deleteBtn}
-                    />
-                    </small>
+                    {editStatus?
+                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
+                        <EditIcon
+                            onClick={handleSubSection}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            className={smallBtn.deleteBtn}
+                        />
+                        </small>
+                    :
+                        ""
+                    }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={true} />
                 <Grid
@@ -119,6 +101,48 @@ const SubSectionField = (props) => {
                     ))}
                 </Grid>
             </Grid>
+        : ""
+                // [...Array(DependencyFieldValue()).keys()].map((field, index) => (
+                //     <Grid
+                //         key={index}
+                //         container
+                //         onClick={getSectionIDs}
+                //         className={fieldStyles===2?classes.subSection2:classes.subSection}
+                //         style={{ visibility: fieldData.display }}
+                //     >
+                //         <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
+                //         <Typography
+                //             onMouseOver={() => { setDisplay('visible'); } }
+                //             onMouseOut={() => { setDisplay('hidden'); } }
+                //             className={classes.subSectionLabel}
+                //             variant='h5'
+                //         >
+                //             {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                //             {editStatus?
+                //                 ""
+                //             :
+                //                 <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
+                //                 <EditIcon
+                //                     onClick={handleSubSection}
+                //                     className={smallBtn.editBtn}
+                //                 />
+                //                 <HighlightOffIcon
+                //                     className={smallBtn.deleteBtn}
+                //                 />
+                //                 </small>
+                //             }
+                //         </Typography>
+                //         <Grid
+                //             item
+                //             sm={12}
+                //             style={{ padding: '10px' }}
+                //         >
+                //             {fieldData.components.map((componentData, index) => (
+                //                 <FormField fieldKey={index} fieldData={componentData} />
+                //             ))}
+                //         </Grid>
+                //     </Grid>
+                // ))
     )
 }
 

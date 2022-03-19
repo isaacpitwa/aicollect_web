@@ -13,7 +13,7 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
-    const formsData = [
+    let formsData = [
         {
             id: 1,
             name: '',
@@ -24,46 +24,31 @@ const FormProvider = (props) => {
             submittedBy: '',
             submittedAt: '',
             timeSpent: '',
-            formFields: compsData
+            formFields: []
         }
-    ]
-
-    localStorage.setItem('forms', JSON.stringify(formsData))
-
-
-    const forms = JSON.parse(localStorage.getItem('forms'));
+    ]    
 
     const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(false)
+    const [selectSection, setSelectSection] = useState(false)
     const [sectionId, setSectionId] = useState(false)
     const [subSectionId, setSubSectionId] = useState(false)
-    const [componentsData, setComponentsData] = useState([])
+    const [componentsData, setComponentsData] = useState(formsData.formFields?formsData.formFields:[])
     const [fieldResponses, setFieldResponses] = useState([])
-    const [formData, setFormData] = useState()
+    const [formData, setFormData] = useState(formsData[0])
     const [sectionCreated, setSectionCreated] = useState(false)
     const [formPreview, setFormPreview] = useState(false)
-    const [editStatus, setEditStatus] = useState(false)
+    const [editStatus, setEditStatus] = useState(true)
 
     useEffect(async () => {
         setIsLoaded(false)
-        await getFormsData()
-        await getFormFields()
-        // setSectionCreated(componentsData[0] && componentsData[0].type === 'section' ? true : false)
-        // setFieldResponses(allFormFields(componentsData).map(item => { return { id: item.id, value: item.value }}))
+        await getformsDataData()
         setIsLoaded(true)
-    }, [componentsData])
+    }, [selectSection, sectionCreated, componentsData])
 
-    const getFormsData = async () => {
-        setFormData(forms)
-        setComponentsData(forms[0].formFields)
-        setSectionCreated(forms[0].formFields[0] && forms[0].formFields[0].type === 'section' ? true : false)
-        setFieldResponses(allFormFields(forms[0].formFields).map(item => { return { id: item.id, value: item.value }}))
-        // console.log('Forms Data: ', forms);
-        // console.log('Forms Fields: ', forms[0].formFields);
-        // console.log('Forms Field Responses: ', allFormFields(forms[0].formFields).map(item => { return { fieldId: item.id, value: item.value }}));
-    }
-
-    const getFormFields = async () => {
-        setComponentsData(forms[0].formFields)
+    const getformsDataData = async () => {
+        setSectionCreated(componentsData[0] && componentsData[0].type === 'section' ? true : false)
+        setFieldResponses(allFormFields(componentsData).map(item => { return { id: item.id, value: item.value }}))
     }
 
     const updateComponentsData = (fieldIndex, newFieldData) => {
@@ -86,23 +71,23 @@ const FormProvider = (props) => {
     }
 
     const addComponentToSection = (compData) => {
-
-        let allSections = componentsData;
-        let newSection = allSections.find(section => section.id === compData.parentId);
-        let sectionIndex = allSections.findIndex(section => section.id === compData.parentId);
+        
+        let newComponentsData = componentsData;
+        let newSection = newComponentsData.find(section => section.id === compData.parentId);
+        let sectionIndex = newComponentsData.findIndex(section => section.id === compData.parentId);
 
         if(compData.subParentId) {
             let newSubSection = newSection.components.find(subSec => subSec.id === compData.subParentId)
             let subSectionIndex = newSection.components.findIndex(subSec => subSec.id === compData.subParentId)
-            newSubSection = newSubSection.push(compData)
-            newSection[subSectionIndex] = newSubSection
-            allSections[sectionIndex] = newSection
+            newSubSection.components.push(compData)
+            newSection.components[subSectionIndex] = newSubSection
+            newComponentsData[sectionIndex] = newSection
         } else {
-            newSection = newSection.push(compData)
-            allSections[sectionIndex] = newSection
+            newSection.components.push(compData)
+            newComponentsData[sectionIndex] = newSection
         }
 
-        setComponentsData(allSections)
+        setComponentsData(newComponentsData)
 
     }
 
@@ -120,14 +105,22 @@ const FormProvider = (props) => {
     const handleFormPreview = () => {
         setFormPreview(!formPreview)
         setEditStatus(!editStatus)
+        setSelectSection(false)
+        setSectionId(false)
+        setSubSectionId(false)
     }
 
     return (
         <FormContext.Provider
             value={{
                 isLoaded,
+                error,
+                setError,
+                selectSection,
+                setSelectSection,
                 sectionId,
                 subSectionId,
+                setSectionCreated,
                 setSectionId,
                 setSubSectionId,
                 sectionCreated,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
     Button,
@@ -22,21 +22,33 @@ import {
     allFormFields,
     findComponentIndex,
 } from '../utils';
+import {
+    FieldError,
+} from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import TextfieldPreview from '../previews/TextfieldPreview';
 
 // This is the field for type=TextField
 const TextField_ = (props) => {
 
-    const { sectionId, subSectionId, componentsData, setComponentsData, addComponentToSection, updateComponentsData } = useContext(FormContext)
+    const {
+        setError,
+        selectSection,
+        sectionId,
+        subSectionId,
+        componentsData,
+        addComponentToSection,
+        updateComponentsData
+    } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
+    const [errorTag, setErrorTag] = useState(false)
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [parentId] = useState(fieldData ? fieldData.parentId : sectionId)
-    const [subParentId] = useState(fieldData ? fieldData.subParentId : subSectionId)
+    const [parentId] = useState(fieldData ? fieldData.parentId : false)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
     const [type] = useState(fieldData ? fieldData.type : 'text')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
@@ -54,6 +66,8 @@ const TextField_ = (props) => {
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
+        setError(false)
+        setErrorTag(false);
     }
 
     const handleFieldValue = (e) => {
@@ -68,7 +82,7 @@ const TextField_ = (props) => {
         setTooltip(e.target.value)
     }
 
-    const handleChecked = (e) => {
+    const handleIsRequired = (e) => {
         setIsRequired(!isRequired)
     }
 
@@ -111,37 +125,7 @@ const TextField_ = (props) => {
         }
     }
 
-    const handleUpdate = () => {
-        let newField = {
-            id: id,
-            parentId: parentId,
-            subParentId: subParentId,
-            type: type,
-            value: fieldValue,
-            required: isRequired,
-            label: fieldLabel,
-            description: fieldDescription,
-            tooltip: tooltip,
-            conditional: {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()
-            }
-        }
-
-        updateComponentsData(findComponentIndex(fieldData, componentsData), newField)
-        handleClose()
-
-    }
-
     const addTextField = () => {
-
-        let sectionObj = componentsData.find(comp => comp.id === sectionId )
-
-        let subSectionObj = sectionObj.components.find(comp => comp.id === subSectionId )
-
-        let newSectionObj = {}
-        let newsubSectionObj = {}
 
         let newFieldObj = {
             id: uuidv4(),
@@ -156,19 +140,55 @@ const TextField_ = (props) => {
             conditional: conditionalLogic()
         }
 
-        if(subSectionId) {
-            newsubSectionObj = subSectionObj.components.push(newFieldObj)
-            newSectionObj = sectionObj.components.push(newsubSectionObj)
+        if(sectionId&&fieldLabel!=='') {
+            addComponentToSection(newFieldObj)
+            setError(false)
+            setErrorTag(false)
+            setFieldLabel('')
+            setFieldDescription('')
+            setTooltip('')
+            setIsRequired(false)
+            setButtonFocused('Display')
+            setConditional(false)
+            handleClose()
         } else {
-            newSectionObj = sectionObj.components.push(newFieldObj)            
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+        }
+    }
+
+    const handleUpdate = () => {
+
+        let newField = {
+            id: id,
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: fieldValue,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            conditional: {
+                display: display,
+                when: when,
+                value: compValue.toLowerCase()
+            }
         }
 
-        addComponentToSection(newSectionObj, componentsData)
+        addComponentToSection(newField)
+
         handleClose()
+
     }
 
     const cancel = () => {
+        setError(false)
+        setErrorTag(false)
         setFieldLabel('')
+        setFieldValue('')
         setFieldDescription('')
         setTooltip('')
         setIsRequired(!isRequired)
@@ -196,7 +216,8 @@ const TextField_ = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
+                        <FieldError errorTag={errorTag}/>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -302,7 +323,7 @@ const TextField_ = (props) => {
                                         onChange={handleTooltip}
                                     />
                                     <Typography style={{ color: '#5048E5' }}>
-                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        <Checkbox size={'small'} checked={isRequired} onChange={handleIsRequired} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                     </Typography>
                                 </>
                             }
