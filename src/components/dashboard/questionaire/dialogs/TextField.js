@@ -33,7 +33,6 @@ const TextField_ = (props) => {
 
     const {
         setError,
-        selectSection,
         sectionId,
         subSectionId,
         componentsData,
@@ -128,7 +127,7 @@ const TextField_ = (props) => {
     const addTextField = () => {
 
         let newFieldObj = {
-            id: uuidv4(),
+            id: id,
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,

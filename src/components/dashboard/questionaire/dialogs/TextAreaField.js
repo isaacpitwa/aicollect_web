@@ -22,16 +22,27 @@ import {
     allFormFields,
     findComponentIndex,
 } from '../utils';
+import {
+    FieldError,
+} from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import TextareafieldPreview from '../previews/TextareafieldPreview';
 
 // This is the field for type=TextField
 const TextAreaField = (props) => {
 
-    const { sectionId, subSectionId, componentsData, addComponentToSection, updateComponentsData } = useContext(FormContext)
+    const {
+        setError,
+        sectionId,
+        subSectionId,
+        componentsData,
+        addComponentToSection,
+        updateComponentsData
+    } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
+    const [errorTag, setErrorTag] = useState(false)
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
@@ -54,6 +65,8 @@ const TextAreaField = (props) => {
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
+        setError(false)
+        setErrorTag(false);
     }
 
     const handleFieldValue = (e) => {
@@ -130,7 +143,7 @@ const TextAreaField = (props) => {
     const addTextAreaField = () => {
 
         let newFieldObj = {
-            id: uuidv4(),
+            id: id,
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
@@ -142,17 +155,28 @@ const TextAreaField = (props) => {
             conditional: conditionalLogic()
         }
 
-        addComponentToSection(newFieldObj)
-        setFieldLabel('')
-        setFieldDescription('')
-        setTooltip('')
-        setIsRequired(!isRequired)
-        setButtonFocused('Display')
-        setConditional(false)
-        handleClose()
+        if(sectionId&&fieldLabel!=='') {
+            addComponentToSection(newFieldObj)
+            setError(false)
+            setErrorTag(false)
+            setFieldLabel('')
+            setFieldDescription('')
+            setTooltip('')
+            setIsRequired(!isRequired)
+            setButtonFocused('Display')
+            setConditional(false)
+            handleClose()
+        } else {
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+        }
     }
 
     const cancel = () => {
+        setError(false)
+        setErrorTag(false)
         setFieldLabel('')
         setFieldDescription('')
         setTooltip('')
@@ -181,7 +205,8 @@ const TextAreaField = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
+                        <FieldError errorTag={errorTag}/>
                         <Box
                             sx={{
                                 display: 'flex',
