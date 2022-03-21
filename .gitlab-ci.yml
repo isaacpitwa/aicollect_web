@@ -14,14 +14,14 @@ variables:
 # before_script:
 #   - npm test
 #4
-# build_and_push:
-#   stage: build_and_push
-#   only:
-#     - develop
-#   script:
-#     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
-#     - docker build -t $REGISTRY .
-#     - docker push $REGISTRY
+build_and_push:
+  stage: build_and_push
+  only:
+    - develop
+  script:
+    - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
+    - docker build -t $REGISTRY .
+    - docker push $REGISTRY
 
 #5 
 
