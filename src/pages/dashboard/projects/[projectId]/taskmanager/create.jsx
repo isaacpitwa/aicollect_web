@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import {
   Avatar,
   Box,
-  Chip,
+  Alert,
   Container,
   Link,
   Typography,
@@ -20,10 +20,25 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  FormControl
+  FormControl,
+  styled,
+  colors,
+  ListItemIcon,
+  Stack,
+  LinearProgress,
+  IconButton,
+  Tooltip,
+  List,
+  ListItem,
+  ListItemText,
 } from '@mui/material';
+import { useDropzone } from 'react-dropzone';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { Icon } from '@iconify/react';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 // import { userApi } from '../../../../api/users-api';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
@@ -31,27 +46,25 @@ import { DashboardLayout } from '../../../../../components/dashboard/dashboard-l
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { gtm } from '../../../../../lib/gtm';
 import { getInitials } from '../../../../../utils/get-initials';
+import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
+import { bytesToSize } from '../../../../../utils/bytes-to-size';
 
-const steps = [
-  {
-    label: 'Task Information',
-    description: `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and more.`,
-  },
-  {
-    label: 'Upload Schedule',
-    description:
-      'An ad group contains one or more ads which target a shared set of keywords.',
-  },
-  {
-    label: 'Assign Questionaire',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
-  },
-];
+const FileDropZone = styled('div')(({ theme }) => ({
+  border: `1px dashed ${theme.palette.divider}`,
+  padding: theme.spacing(6),
+  marginTop: 6,
+  outline: 'none',
+  display: 'flex',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  '&:hover': {
+    backgroundColor: colors.grey[50],
+    opacity: 0.5,
+    cursor: 'pointer'
+  }
+}));
+
 
 const CreateTask = () => {
   const isMounted = useMounted();
@@ -64,13 +77,73 @@ const CreateTask = () => {
     questionaire: ''
   });
 
+  const steps = [
+    {
+      label: 'Task Information',
+      description: `For each ad campaign that you create, you can control how much
+                you're willing to spend on clicks and conversions, which networks
+                and geographical locations you want your ads to show on, and more.`,
+    },
+    {
+      label: activeStep === 1 && taskInformation.taskType === 'registration' ? "Add Team Member" : "Upload Schedule",
+      description:
+        'An ad group contains one or more ads which target a shared set of keywords.',
+    },
+    {
+      label: 'Assign Questionaire',
+      description: `Try out different ad text to see what brings in the most customers,
+                and learn how to enhance your ads using features like ad extensions.
+                If you run into any problems with your ads, find out how to tell if
+                they're running and how to resolve approval issues.`,
+    },
+  ];
+
   const [schedule, setSchedule] = useState(null);
+  const [fileError, setFileError] = useState(null);
 
   const router = useRouter();
   const { userId } = router.query;
   const [activeStep, setActiveStep] = useState(0);
 
+  const onDropExcelFiles = useCallback((acceptedFiles,) => {
+    setSchedule(acceptedFiles[0]);
+    // const selectedFile = acceptedFiles[0];
+    // const questionaire = {
+    //   name: acceptedFiles[0].name.replace(/\.[^/.]+$/, ""),
+    //   version: 'v1',
+    //   status: 'active'
+    // }
+    // // setQuestionaires((prevState) => ([...prevState].concat(questionaire)));
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      // Parse data
+      const bstr = event.target.result;
+      const workbook = XLSX.read(bstr, { type: 'binary' });
+
+      // get first sheet
+      const workSheetName = workbook.SheetNames[0];
+      const workSheet = workbook.Sheets[workSheetName];
+
+      // Convert to array
+      const fileData = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
+      const headers = fileData[0];
+      const heads = headers.map((head) => ({ title: head, field: head }));
+      // setColDefs(heads);
+      // console.log("COLS", colDefs);
+      // removing the header
+      fileData.splice(0, 1);
+      // setData(convertToJSON(headers, fileData));
+    };
+    reader.onerror = (event) => {
+      setFileError("Wrong file type, please use excel or csv file");
+    }
+
+    // reader.readAsBinaryString(selectedFile)
+
+  }, []);
+
   const handleNext = () => {
+    handleCreateTask()
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -92,13 +165,22 @@ const CreateTask = () => {
     setSchedule(event.target.files[0]);
   };
 
+  const handleCreateTask = async () => {
+    try {
+      // Make call to task creation API
+      console.log(taskInformation)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Log Id
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-
+  const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({ onDrop: onDropExcelFiles, accept: '.xlsx,.csv,.xls', maxFiles: 1, })
 
   return (
     <>
@@ -178,7 +260,7 @@ const CreateTask = () => {
                       ) : null
                     }
                   >
-                    {step.label}
+                    {activeStep === 1 && taskInformation.taskType === "registration" ? "Add Team Members" : step.label}
                   </StepLabel>
                   <StepContent>
 
@@ -217,15 +299,32 @@ const CreateTask = () => {
                     }
 
                     {
-                      activeStep === 1 && (
-                        <Box sx={{ mb: 2, mt: 3 }}>
-                          <Typography variant="h6">Import CSV or Excel File</Typography>
-                          <Typography variant="caption">
-                            Acceptable file types CSV or Excel. First row should contain column names.
-                            Sample Template excel file for importing can be <a href='/templates/Template.xlsx' download>DOWNLOADED HERE</a>
-                          </Typography> <br />
+                      activeStep === 1 &&
+                      (
+                        taskInformation.taskType === 'registration' ? (
+                          <Box sx={{ mb: 2 }}>
+                            <Grid container spacing={2}>
+                              <Grid item md={12} mt={3} sm={12}>
+                                <FormControl fullWidth>
+                                  <InputLabel>Add Team Members</InputLabel>
+                                  <Select name="questionaire" fullWidth>
+                                    <MenuItem value="qn1">Opio 1</MenuItem>
+                                    <MenuItem value="qn2">Musoke 2</MenuItem>
+                                    <MenuItem value="qn3">Achen 3</MenuItem>
+                                  </Select>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        ) : (
+                          <Box sx={{ mb: 2, mt: 3 }}>
+                            <Typography variant="h6">Import CSV or Excel File</Typography>
+                            <Typography variant="caption" mb={3}>
+                              Acceptable file types CSV or Excel. First row should contain column names.
+                              Sample Template excel file for importing can be <a href='/templates/Template.xlsx' download>DOWNLOADED HERE</a>
+                            </Typography> <br />
 
-                          <input
+                            {/* <input
                             accept="image/*"
                             style={{ display: 'none' }}
                             id="raised-button-file"
@@ -235,12 +334,67 @@ const CreateTask = () => {
                           <label htmlFor='raised-button-file'>
                             <Button sx={{ mt: 2, mb: 2 }} startIcon={<UploadFileIcon fontSize="small" />}>
                               Upload File
-                              {/* <input type="file" hidden/> */}
                             </Button>
-                          </label>
+                          </label> */}
+                            <FileDropZone {...getRootProps()}>
+                              <input
+                                {...getInputProps()}
+                                required />
+                              <div>
+                                <img
+                                  src="/undraw_add_file_gvbb.jpg"
+                                  style={{ width: 130 }}
+                                  alt="Select file" />
+                              </div>
+                              {
+                                isDragActive ? (
+                                  <Typography variant="body1">Drop Excel files here</Typography>
+                                ) : (<p>Drag and drop Excel file here or click to browse</p>)
+                              }
+                            </FileDropZone>
+                            {
+                              fileRejections.length > 0 && <Alert sx={{ mt: 3 }} severity="error">Wrong file type, please use excel or csv file</Alert>
+                            }
+                            {
+                              schedule && (
+                                <>
+                                  <PerfectScrollbar>
+                                    <List style={{ maxHeight: 320 }}>
+                                      <Stack
+                                        direction="column"
+                                        spacing={1}>
+                                        <ListItem>
+                                          <ListItemIcon>
+                                            <Icon icon={<AttachFileIcon />} />
+                                          </ListItemIcon>
+                                          <ListItemText
+                                            primary={schedule.name}
+                                            primaryTypographyProps={{ variant: 'h5' }}
+                                            secondary={bytesToSize(schedule.size)} />
+                                          <Tooltip title="Delete">
+                                            <IconButton
+                                              edge="end"
+                                              onClick={() => setSchedule(null)}>
+                                              <Icon icon={DeleteForeverIcon} />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </ListItem>
+                                        <LinearProgress
+                                          variant='determinate'
+                                          value={100}
+                                          style={{ marginTop: '5px', backgroundColor: 'red' }}
+                                          title="Progress" />
+                                      </Stack>
+                                    </List>
+                                  </PerfectScrollbar>
+                                </>
+                              )
+                            }
 
-                        </Box>
+                          </Box>
+                        )
                       )
+
                     }
 
                     {
@@ -294,7 +448,7 @@ const CreateTask = () => {
             )}
           </Box>
         </Container>
-      </Box>
+      </Box >
     </>
   );
 };
