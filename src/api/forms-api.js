@@ -15,6 +15,21 @@ class Forms {
       console.log(error);
     }
   }
+
+  async getFormDetails(formId) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/api/v1/forms/${formId}`, {
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export const FormsApi = new Forms();
