@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -14,6 +15,7 @@ import { Grid, IconButton, Stack } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 
 export const CreateNewFormDialog = ({ open, handleClose, user }) => {
+  const router = useRouter();
   const [metaData, setMetaData] = React.useState({
     name: '',
     createdBy: {
@@ -61,7 +63,9 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
     try {
       const formResponse = await FormsApi.createNewForm(metaData);
       console.log(formResponse);
-      // console.log(metaData);
+      if (formResponse.data.name) {
+        router.push(`/dashboard/projects/${projectId}/questionaire/${formResponse.data._id}/form`);
+      }
     } catch (error) {
       console.log(error);
     }
