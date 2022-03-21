@@ -2,14 +2,14 @@ FROM node:lts as dependencies
 #FROM node:14.6.0 as dependencies
 WORKDIR /aicollect-web-app
 COPY package.json package-lock.json ./
-COPY .env.example ./.env
+COPY env_file ./.env
 RUN npm install -u --frozen-lockfile
 
 FROM node:lts as builder
 WORKDIR /aicollect-web-app
 COPY . .
 COPY --from=dependencies /aicollect-web-app/node_modules ./node_modules
-COPY --from=dependencies /aicollect-web-app/.env.example ./.env
+COPY --from=dependencies env_file ./.env
 RUN npm run build
 
 FROM node:lts as runner
@@ -21,7 +21,7 @@ COPY --from=builder /aicollect-web-app/public ./public
 COPY --from=builder /aicollect-web-app/.next ./.next
 COPY --from=builder /aicollect-web-app/node_modules ./node_modules
 COPY --from=builder /aicollect-web-app/package.json ./package.json
-COPY --from=builder /aicollect-web-app/.env.example ./.env
+COPY --from=builder env_file ./.env
 
 EXPOSE 3000
 CMD ["npm", "start"]
