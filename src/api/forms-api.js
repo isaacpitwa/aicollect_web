@@ -2,7 +2,7 @@ class Forms {
   async createNewForm(formMeta) {
     try {
       // const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/create`, {
-      const response = await fetch(`http://localhost:4000/api/v1/forms/create`, {
+      const response = await fetch(`http://localhost:4000/api/v1/forms/create/newForm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
