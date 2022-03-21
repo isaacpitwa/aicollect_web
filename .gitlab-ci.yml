@@ -18,8 +18,8 @@ variables:
    stage: build_and_push
    variables:
      - env: $ENVIROMENT_FILE
-   only:
-     - develop
+#   only:
+#     - develop
    script:
      - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
      - docker build -t  --build-arg env_file=${env} $REGISTRY .
