@@ -105,7 +105,7 @@ const Questionaire = () => {
     const [data, setData] = useState({})
 
     useEffect(() => {
-    }, [sectionDialog])
+    }, [sectionDialog, componentsData])
 
 
     const handleSection = () => {
@@ -197,7 +197,7 @@ const Questionaire = () => {
                 </Typography>
                 <Grid container>
                     <Grid item xs={12} md={6}>
-                        <TextField fullWidth required id="outlined-basic" label="Form Title" size='small' variant="outlined" />
+                        <TextField fullWidth required id="outlined-basic" label={formData.name} size='small' variant="outlined" />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Stack direction="row" spacing={2} justifyContent={'right'}>
@@ -329,7 +329,7 @@ const Questionaire = () => {
             <Grid item xs={6} md={12}>
                 <Stack direction="row" spacing={2} justifyContent={'right'}>
                     <Button variant="outlined" size='small' color="error">Cancel</Button>
-                    <Button onClick={createQuestionaire} variant="outlined" size='small' color="primary">Save Draft</Button>
+                    <Button variant="outlined" size='small' color="primary">Save Draft</Button>
                     <Button onClick={createQuestionaire} variant="contained" size='small' color="primary">Save Form</Button>
                 </Stack>
             </Grid>

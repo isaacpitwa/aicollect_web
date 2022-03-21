@@ -1,7 +1,7 @@
 class Forms {
   async createNewForm(formMeta) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/create/newForm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -17,17 +17,40 @@ class Forms {
   }
 
   async getFormDetails(formId) {
+    console.log('DEBUG ', formId);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/api/v1/forms/${formId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/${formId}`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
       const data = await response.json();
-      return data;
+      if (data && data.status === 200) {
+        console.log('DEBUG DATA\n', data);
+        return data.data;
+      }
     } catch (error) {
-      console.log(error);
+      console.log('failed to get form \n', error);
+    }
+  }
+
+  async addFieldsToNewForm(formData) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (data && data.status === 200) {
+        return data.data;
+      }
+    } catch (error) {
+      console.log('failed to get form \n', error);
     }
   }
 }

@@ -12,27 +12,33 @@ const FormRenderer = (props) => {
 
     const classes = formStyles();
 
-    const { isLoaded, componentsData, fieldResponses } = useContext(FormContext)
+    const { isLoaded, componentsData, setComponentsData, fieldResponses } = useContext(FormContext)
 
     const { editStatus, handleFormUpdate } = props
 
     const [compsData, setCompsData] = useState([]);
 
-    useEffect(async () => {
-        // setCompsData(componentsData);
-        // setIsLoaded(true);
+    useEffect(() => {
         setCompsData(componentsData)
-    }, [isLoaded])
+    }, [compsData])    
 
-    
+    const handleRemove = (fieldId) => {
+        setCompsData(componentsData.filter(section => section.id !== fieldId))
+    }
 
     return (
         isLoaded ?
             <Grid container className={classes.form}>
-                {componentsData.map(componentData => (
-                    <SectionField fieldData={componentData} fieldResponses={fieldResponses} editStatus={editStatus} handleFormUpdate={handleFormUpdate} />
+                {compsData.map(componentData => (
+                    <SectionField
+                        fieldData={componentData}
+                        fieldResponses={fieldResponses}
+                        editStatus={editStatus}
+                        handleFormUpdate={handleFormUpdate}
+                        handleRemove={handleRemove}
+                    />
                 ))}
-                {componentsData.length===0?
+                {compsData.length===0?
                     <Box style={{ background: '#448AFF', color: 'white', padding: '10px', width: '100%', textAlign: 'center', marginTop: '20px' }}>
                         Drag and Drop a form component
                     </Box>

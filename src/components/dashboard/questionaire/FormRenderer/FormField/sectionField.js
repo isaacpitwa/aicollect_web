@@ -25,6 +25,7 @@ const SectionField = (props) => {
         subSectionId,
         setSubSectionId,
         componentsData,
+        setComponentsData,
         fieldResponses,
         setFieldResponses,
         editStatus
@@ -85,7 +86,12 @@ const SectionField = (props) => {
                                     onClick={handleSectionField}
                                     className={smallBtn.editBtn}
                                 />
-                                <HighlightOffIcon className={smallBtn.deleteBtn} />
+                                <HighlightOffIcon
+                                    onClick={() => {
+                                        setComponentsData(componentsData.filter(section => section.id !== fieldId))
+                                    }}
+                                    className={smallBtn.deleteBtn}
+                                />
                             </small>
                         :
                             ""

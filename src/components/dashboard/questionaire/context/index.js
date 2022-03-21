@@ -1,10 +1,10 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useCallback } from "react";
 import { v4 as uuidv4 } from 'uuid'
-
 import {
     compsData
 } from './formData';
 
+import { FormsApi } from '../../../../api/forms-api'
 import {
     allFormFields,
 } from '../utils';
@@ -13,6 +13,8 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
+    const { questionaireId } = props
+    console.log(questionaireId)
     let formsData = [
         {
             id: 1,
@@ -33,22 +35,36 @@ const FormProvider = (props) => {
     const [selectSection, setSelectSection] = useState(false)
     const [sectionId, setSectionId] = useState(false)
     const [subSectionId, setSubSectionId] = useState(false)
-    const [componentsData, setComponentsData] = useState(formsData.formFields?formsData.formFields:[])
+    const [componentsData, setComponentsData] = useState([])
     const [fieldResponses, setFieldResponses] = useState([])
-    const [formData, setFormData] = useState(formsData[0])
+    const [formData, setFormData] = useState({})
     const [sectionCreated, setSectionCreated] = useState(false)
     const [formPreview, setFormPreview] = useState(false)
     const [editStatus, setEditStatus] = useState(true)
 
-    useEffect(async () => {
-        setIsLoaded(false)
-        await getformsDataData()
-        setIsLoaded(true)
-    }, [selectSection, sectionCreated, componentsData])
 
-    const getformsDataData = async () => {
-        setSectionCreated(componentsData[0] && componentsData[0].type === 'section' ? true : false)
+    const getFormData = useCallback(async () => {
+        setIsLoaded(false)
+        let data = await FormsApi.getFormDetails(questionaireId);
+        const formDets = data && getFormDetails(data)
+        formDets && getformsDataData()
+        setIsLoaded(true)
+    }, [])
+
+    useEffect(() => {
+        getFormData();
+    }, [])
+
+    const getformsDataData = () => {
+        console.log(componentsData)
+        setSectionCreated(componentsData[0]&&componentsData[0].type === 'section' ? true : false)
         setFieldResponses(allFormFields(componentsData).map(item => { return { id: item.id, value: item.value }}))
+    }
+
+    const getFormDetails = (data) => {
+        setComponentsData(data.formFields);
+        setFormData(data);
+
     }
 
     const updateComponentsData = (fieldIndex, newFieldData) => {
@@ -96,10 +112,13 @@ const FormProvider = (props) => {
         setSectionCreated(true)
     }
 
-    const createForm = () => {
+    const createForm = async () => {
         let newForm = formData
-        newForm.components = componentsData
+        newForm.formFields = componentsData
         setFormData(newForm)
+        const updatedForm = await FormsApi.addFieldsToNewForm({formId: newForm._id, ...newForm});
+        console.log('UPDATED FORM: ', updatedForm)
+        getFormData(updatedForm.formId);
     }
 
     const handleFormPreview = () => {

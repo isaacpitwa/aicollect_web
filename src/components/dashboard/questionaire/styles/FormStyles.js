@@ -20,6 +20,7 @@ const formStyles = makeStyles({
         width: '100%',
         backgroundColor: '#ffffff',
         border: '1px #DDDDDD dotted',
+        borderRadius: '8px',
         minHeight: '50px',
         padding: '10px 1%',
         paddingTop: '5px',
@@ -34,6 +35,7 @@ const formStyles = makeStyles({
     section2: {
         backgroundColor: '#ffffff',
         border: 'None',
+        borderRadius: '8px',
         minHeight: '50px',
         padding: '5px 0px',
         paddingTop: '20px',
@@ -45,6 +47,7 @@ const formStyles = makeStyles({
         width: '100%',
         backgroundColor: '#5048e519',
         border: '1px #5048E5 solid',
+        borderRadius: '8px',
         minHeight: '50px',
         padding: '10px 1%',
         paddingTop: '5px',
@@ -72,6 +75,7 @@ const formStyles = makeStyles({
     },
     subSection: {
         border: '1px #5048e537 solid',
+        borderRadius: '5px',
         minHeight: '50px',
         margin: '5px 0px',
         cursor: 'move',
@@ -82,12 +86,14 @@ const formStyles = makeStyles({
     subSection2: {
         backgroundColor: '#5048e519',
         border: '1px #5048E5 solid',
+        borderRadius: '5px',
         minHeight: '50px',
         margin: '5px 0px',
         cursor: 'move',
     },
     subSection3: {
         border: '1px #5048e537 solid',
+        borderRadius: '5px',
         minHeight: '50px',
         margin: '5px 0px',
         cursor: 'cursor',
