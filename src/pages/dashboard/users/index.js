@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import Head from 'next/head';
+import { useState, useEffect, useCallback, useRef } from "react";
+import Head from "next/head";
 // import { useRouter } from 'next/router';
 import {
   Box,
@@ -10,71 +10,78 @@ import {
   Grid,
   InputAdornment,
   TextField,
-  Typography
-} from '@mui/material';
-import { userApi } from '../../../api/users-api';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { UserListTable } from '../../../components/dashboard/user/user-list-table';
-import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
+  Typography,
+} from "@mui/material";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { UserListTable } from "../../../components/dashboard/user/user-list-table";
+import { useMounted } from "../../../hooks/use-mounted";
+import { Download as DownloadIcon } from "../../../icons/download";
 // import { Plus as PlusIcon } from '../../../icons/plus';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
-import { gtm } from '../../../lib/gtm';
-import CreateUserDialog from '../../../components/dashboard/user/user-create-new';
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import { Search as SearchIcon } from "../../../icons/search";
+import { Upload as UploadIcon } from "../../../icons/upload";
+import { gtm } from "../../../lib/gtm";
+import CreateUserDialog from "../../../components/dashboard/user/user-create-new";
 
+// Fetch Users Util Function
+import { userApi } from "../../../api/users-api";
+
+import { LoadingSkeleton } from "../../../components/dashboard/dashboard-wait-for-data-loader";
+import { WithFetchData } from "../../../hocs/with-fech-data";
 
 const sortOptions = [
   {
-    label: 'Last update (newest)',
-    value: 'updatedAt|desc'
+    label: "Last update (newest)",
+    value: "updatedAt|desc",
   },
   {
-    label: 'Last signed in (oldest)',
-    value: 'updatedAt|asc'
+    label: "Last signed in (oldest)",
+    value: "updatedAt|asc",
   },
   {
-    label: 'Active',
-    value: 'orders|desc'
+    label: "Active",
+    value: "orders|desc",
   },
   {
-    label: 'Total Questionaires (lowest)',
-    value: 'orders|asc'
-  }
+    label: "Total Questionaires (lowest)",
+    value: "orders|asc",
+  },
 ];
 
-const applyFilters = (users, filters) => users?.filter((user) => {
-  if (filters.query) {
-    let queryMatched = false;
-    const properties = ['email', 'phone', 'status', 'firstname', 'lastname'];
+const applyFilters = (users, filters) =>
+  users?.filter((user) => {
+    if (filters.query) {
+      let queryMatched = false;
+      const properties = ["email", "phone", "status", "firstname", "lastname"];
 
-    properties.forEach((property) => {
-      if (user[property].toLowerCase().includes(filters.query.toLowerCase())) {
-        queryMatched = true;
+      properties.forEach((property) => {
+        if (
+          user[property].toLowerCase().includes(filters.query.toLowerCase())
+        ) {
+          queryMatched = true;
+        }
+      });
+
+      if (!queryMatched) {
+        return false;
       }
-    });
+    }
 
-    if (!queryMatched) {
+    if (filters.hasAcceptedMarketing && !user.hasAcceptedMarketing) {
       return false;
     }
-  }
 
-  if (filters.hasAcceptedMarketing && !user.hasAcceptedMarketing) {
-    return false;
-  }
+    if (filters.isProspect && !user.isProspect) {
+      return false;
+    }
 
-  if (filters.isProspect && !user.isProspect) {
-    return false;
-  }
+    if (filters.isReturning && !user.isReturning) {
+      return false;
+    }
 
-  if (filters.isReturning && !user.isReturning) {
-    return false;
-  }
-
-  return true;
-});
+    return true;
+  });
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -88,43 +95,45 @@ const descendingComparator = (a, b, orderBy) => {
   return 0;
 };
 
-const getComparator = (order, orderBy) => (order === 'desc'
-  ? (a, b) => descendingComparator(a, b, orderBy)
-  : (a, b) => -descendingComparator(a, b, orderBy));
+const getComparator = (order, orderBy) =>
+  order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
 
-const applySort = (customers, sort) => {
-  const [orderBy, order] = sort.split('|');
+const applySort = (users, sort) => {
+  const [orderBy, order] = sort.split("|");
   const comparator = getComparator(order, orderBy);
-  const stabilizedThis = customers.map((el, index) => [el, index]);
+  const stabilizedThis = users.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
-const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
-  page * rowsPerPage + rowsPerPage);
+const applyPagination = (customers, page, rowsPerPage) =>
+  customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const UserList = () => {
+const UserList = (props) => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [users, setUsers] = useState([]);
+  const { data: users, loading, handleFetchData } = props;
+  // const [users, setUsers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [filters, setFilters] = useState({
-    query: '',
+    query: "",
     hasAcceptedMarketing: null,
     isProspect: null,
-    isReturning: null
+    isReturning: null,
   });
   // const router = useRouter();
 
@@ -134,33 +143,14 @@ const UserList = () => {
   const handleCloseUserDialog = () => setOpenUserDialog(false);
 
   useEffect(() => {
-    gtm.push({ event: 'page_view' });
+    gtm.push({ event: "page_view" });
   }, []);
-
-  const getClientUsers = useCallback(async () => {
-    try {
-      const data = await userApi.getUsers();
-
-      if (isMounted()) {
-        setUsers(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(() => {
-      getClientUsers();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []);
-
 
   const handleQueryChange = (event) => {
     event.preventDefault();
     setFilters((prevState) => ({
       ...prevState,
-      query: queryRef.current?.value
+      query: queryRef.current?.value,
     }));
   };
 
@@ -177,41 +167,37 @@ const UserList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(users, filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
+  const filteredUsers = applyFilters(users || [], filters);
+  const sortedUsers = applySort(filteredUsers, sort);
+  const paginatedUsers = applyPagination(
+    sortedUsers,
+    page,
+    rowsPerPage
+  );
 
   return (
     <>
       <Head>
-        <title>
-          Dashboard: Customer List | AiCollect
-        </title>
+        <title>Dashboard: Users List | AiCollect</title>
       </Head>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
         <CreateUserDialog
           open={openUserDialog}
           handleClose={handleCloseUserDialog}
-          users={users}
-          getClientUsers={getClientUsers}
+          users={users || []}
+          getClientUsers={handleFetchData}
         />
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <Grid
-              container
-              justifyContent="space-between"
-              spacing={3}
-            >
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">
-                  Users
-                </Typography>
+                <Typography variant="h4">Users</Typography>
               </Grid>
               <Grid item>
                 <Button
@@ -226,13 +212,10 @@ const UserList = () => {
             <Box
               sx={{
                 m: -1,
-                mt: 3
+                mt: 3,
               }}
             >
-              <Button
-                startIcon={<UploadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
+              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
                 Import
               </Button>
               <Button
@@ -247,11 +230,11 @@ const UserList = () => {
             <Divider />
             <Box
               sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexWrap: 'wrap',
+                alignItems: "center",
+                display: "flex",
+                flexWrap: "wrap",
                 m: -1.5,
-                p: 3
+                p: 3,
               }}
             >
               <Box
@@ -259,7 +242,7 @@ const UserList = () => {
                 onSubmit={handleQueryChange}
                 sx={{
                   flexGrow: 1,
-                  m: 1.5
+                  m: 1.5,
                 }}
               >
                 <TextField
@@ -271,7 +254,7 @@ const UserList = () => {
                       <InputAdornment position="start">
                         <SearchIcon fontSize="small" />
                       </InputAdornment>
-                    )
+                    ),
                   }}
                   placeholder="Search users"
                 />
@@ -286,23 +269,24 @@ const UserList = () => {
                 value={sort}
               >
                 {sortOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
+                  <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
               </TextField>
             </Box>
-            <UserListTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-            />
+            {!loading ? (
+              <UserListTable
+                customers={paginatedUsers}
+                customersCount={filteredUsers.length}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                rowsPerPage={rowsPerPage}
+                page={page}
+              />
+            ) : (
+              <LoadingSkeleton />
+            )}
           </Card>
         </Container>
       </Box>
@@ -310,12 +294,12 @@ const UserList = () => {
   );
 };
 
-UserList.getLayout = (page) => (
+const UserListWithLayout = WithFetchData(userApi.getUsers)(UserList);
+
+UserListWithLayout.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
+    <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export default UserList;
+export default UserListWithLayout;
