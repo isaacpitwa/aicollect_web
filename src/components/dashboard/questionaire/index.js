@@ -79,12 +79,13 @@ const Questionaire = () => {
         setFormData,
         addComponent,
         componentsData,
-        createForm,
+        updateFormData,
         formPreview,
         editStatus,
         handleFormPreview
     } = useContext(FormContext)
 
+    const [dataIsLoaded, setDataIsLoaded] = useState(false)
     const [formName, setFormName] = useState('')
     const [sectionDialog, setSectionDialog] = useState(false)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
@@ -100,8 +101,9 @@ const Questionaire = () => {
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
+        setDataIsLoaded(isLoaded)
         setFormName(formData.name)
-    }, [sectionDialog, componentsData])
+    }, [isLoaded, componentsData, sectionDialog])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
@@ -151,8 +153,8 @@ const Questionaire = () => {
         setAreaMappingDialog(true)
     }
 
-    const createQuestionaire = () => {
-        createForm()
+    const saveFormChanges = () => {
+        updateFormData()
     }
 
     const createTextField = () => {
@@ -163,7 +165,7 @@ const Questionaire = () => {
         let newForm = formData
         newForm.name = formName
         setFormData(newForm)
-        createForm()
+        updateFormData()
     }
 
     const handleClose = () => {
@@ -199,7 +201,7 @@ const Questionaire = () => {
             <PhoneField open={phoneFieldDialog} createTextField={createTextField} handleClose={handleClose} />
             <Grid item xs={6} md={12}>
                 <Typography variant="h5" gutterBottom color="primary" component="div" style={{ fontWeight: '300' }}>
-                    {isLoaded?formData.formFields.length === 0?'Create New Form':'Edit Form': 'Form Builder Loading....'}
+                    {dataIsLoaded?formData.formFields.length === 0?'Create New Form':'Edit Form': 'Form Builder dataIsLoaded....'}
                 </Typography>
                 <Grid container>
                     <Grid item xs={12} md={4}>
@@ -217,7 +219,7 @@ const Questionaire = () => {
                     />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        {isLoaded?
+                        {dataIsLoaded?
                             <Button
                                 disabled={formData.name===formName}
                                 variant="contained"
@@ -259,15 +261,15 @@ const Questionaire = () => {
                 <Grid item xs={12} sm={12} md={3.5}>
                     <Grid container style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px" }}>
                         <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-                            {isLoaded?
+                            {dataIsLoaded?
                                 <Button startIcon={<CheckBoxOutlineBlankIcon />} draggable="true" onClick={handleSection} variant="contained" style={{ width: '150%' }}>Section</Button>
                             : <ButtonsLoader/> }
-                            {isLoaded?
+                            {dataIsLoaded?
                                 <Button startIcon={<SelectAllIcon />} draggable='true' onClick={handleSubSection} variant="contained" style={{ width: '150%', visibility: sectionCreated ? 'visible' : 'hidden' }}>Sub Section</Button>
                             : <ButtonsLoader/> }
                         </Stack>
                     </Grid>
-                    {isLoaded?
+                    {dataIsLoaded?
                         <>
                             <Accordion variant="contained" style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}>
                                 <AccordionSummary
@@ -370,7 +372,7 @@ const Questionaire = () => {
                 <Stack direction="row" spacing={2} justifyContent={'right'}>
                     <Button variant="outlined" size='small' color="error">Cancel</Button>
                     <Button variant="outlined" size='small' color="primary">Save Draft</Button>
-                    <Button onClick={createQuestionaire} variant="contained" size='small' color="primary">Save Form</Button>
+                    <Button onClick={saveFormChanges} variant="contained" size='small' color="primary">Save Form</Button>
                 </Stack>
             </Grid>
         </Grid>

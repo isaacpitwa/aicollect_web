@@ -19,7 +19,7 @@ const FormRenderer = (props) => {
     const { editStatus, handleFormUpdate } = props
 
     useEffect(() => {
-    }, [componentsData])    
+    }, [isLoaded, componentsData])    
 
     const handleRemove = (fieldId) => {
         setComponentsData(componentsData.filter(section => section.id !== fieldId))

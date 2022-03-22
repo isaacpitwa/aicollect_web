@@ -83,12 +83,16 @@ const FormProvider = (props) => {
 
     }
 
-    const addComponent = (newComponent) => {
-        setComponentsData(componentsData => [...componentsData, newComponent])
-        setSectionCreated(true)
+    const updateSection = (sectionData) => {
+
+        let newFormFields = componentsData;
+        let sectionIndex = componentsData.findIndex(section => section.id === sectionData.id);
+        newFormFields[sectionIndex] = sectionData
+
+        setComponentsData(newFormFields)
     }
 
-    const createForm = async () => {
+    const updateFormData = async () => {
         let newForm = formData
         newForm.formFields = componentsData
         setFormData(newForm)
@@ -108,6 +112,7 @@ const FormProvider = (props) => {
         <FormContext.Provider
             value={{
                 isLoaded,
+                setIsLoaded,
                 error,
                 setError,
                 selectSection,
@@ -124,10 +129,10 @@ const FormProvider = (props) => {
                 setComponentsData,
                 fieldResponses,
                 setFieldResponses,
-                addComponent,
+                updateSection,
                 updateComponentsData,
                 addComponentToSection,
-                createForm,
+                updateFormData,
                 formPreview,
                 editStatus,
                 handleFormPreview

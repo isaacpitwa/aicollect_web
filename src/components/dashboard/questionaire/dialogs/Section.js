@@ -28,7 +28,7 @@ import SectionPreview from '../previews/SectionPreview'
 // This is the field for type=TextField
 const Section = (props) => {
 
-    const { componentsData, setComponentsData, setSectionCreated, addComponent, updateComponentsData } = useContext(FormContext)
+    const { setIsLoaded, componentsData, setComponentsData, setSectionCreated, updateSection } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
@@ -51,8 +51,7 @@ const Section = (props) => {
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
 
     useEffect(() => {
-        setCompsData(componentsData);
-    }, [compsData])
+    }, [componentsData])
 
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
@@ -121,6 +120,7 @@ const Section = (props) => {
     }
 
     const handleUpdate = () => {
+        setIsLoaded(false)
         let sectionData = {
             id: id,
             parentId: parentId,
@@ -128,18 +128,22 @@ const Section = (props) => {
             type: type,
             value: value,
             required: isRequired,
+            display: 'visible',
+            type: 'section',
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            conditional: {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()
-            },
+            dependency: dependency,
+            conditional: conditional,
             components: components
         }
-        updateComponentsData(findComponentIndex(fieldData, compsData), sectionData)
+
+        let newFormFields = componentsData;
+        let sectionIndex = componentsData.findIndex(section => section.id === sectionData.id);
+        newFormFields[sectionIndex] = sectionData
+        setComponentsData(newFormFields)
         handleClose()
+        setIsLoaded(true)
     }
 
     const cancel = () => {
