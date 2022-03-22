@@ -196,7 +196,7 @@ const Questionaire = () => {
             <NumberField open={numberFieldDialog} createTextField={createTextField} handleClose={handleClose} />
             <SelectBoxField open={selectBoxDialog} createTextField={createTextField} handleClose={handleClose} />
             <SelectField open={selectDialog} createTextField={createTextField} handleClose={handleClose} />
-            <SelectRadioField open={selectRadioDialog} createTextField={createTextField} handleClose={handleClose} />
+            <SelectRadioField open={selectRadioDialog} fieldData={false} handleClose={handleClose} />
             <EmailField open={emailFieldDialog} createTextField={createTextField} handleClose={handleClose} />
             <PhoneField open={phoneFieldDialog} createTextField={createTextField} handleClose={handleClose} />
             <Grid item xs={6} md={12}>

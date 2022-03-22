@@ -43,7 +43,6 @@ const TextField_ = (props) => {
     const { open, fieldData, handleClose } = props
 
     const [errorTag, setErrorTag] = useState(false)
-    const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
     const [parentId] = useState(fieldData ? fieldData.parentId : false)

@@ -28,7 +28,7 @@ import SectionPreview from '../previews/SectionPreview'
 // This is the field for type=TextField
 const Section = (props) => {
 
-    const { setIsLoaded, componentsData, setComponentsData, setSectionCreated, updateSection } = useContext(FormContext)
+    const { setIsLoaded, componentsData, setComponentsData, setSectionCreated, updateSection, updateFormData } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
@@ -120,7 +120,6 @@ const Section = (props) => {
     }
 
     const handleUpdate = () => {
-        setIsLoaded(false)
         let sectionData = {
             id: id,
             parentId: parentId,
@@ -138,12 +137,8 @@ const Section = (props) => {
             components: components
         }
 
-        let newFormFields = componentsData;
-        let sectionIndex = componentsData.findIndex(section => section.id === sectionData.id);
-        newFormFields[sectionIndex] = sectionData
-        setComponentsData(newFormFields)
+        updateSection(sectionData)
         handleClose()
-        setIsLoaded(true)
     }
 
     const cancel = () => {

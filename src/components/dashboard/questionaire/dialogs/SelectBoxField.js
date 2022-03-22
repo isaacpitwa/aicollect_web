@@ -46,18 +46,16 @@ const SelectBoxField = (props) => {
 
     const {
         setError,
-        selectSection,
         sectionId,
         subSectionId,
         componentsData,
         addComponentToSection,
-        updateComponentsData
+        updateFieldInSection,
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
     
     const [errorTag, setErrorTag] = useState(false)
-    const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
     const [parentId] = useState(fieldData ? fieldData.parentId : false)
@@ -67,7 +65,7 @@ const SelectBoxField = (props) => {
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [values, setValues] = useState([
+    const [values, setValues] = useState(fieldData? fieldData.values : [
         {
             'id': uuidv4(),
             'label': '',
@@ -79,6 +77,9 @@ const SelectBoxField = (props) => {
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+
+    useEffect(() => {
+    }, [componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -188,9 +189,48 @@ const SelectBoxField = (props) => {
             setFieldValue('')
             setFieldDescription('')
             setTooltip('')
+            setValues([
+                {
+                    'id': uuidv4(),
+                    'label': '',
+                    'checked': false,
+                }
+            ])
             setIsRequired(!isRequired)
             setButtonFocused('Display')
             setConditional(false)
+            handleClose()
+        } else {
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+            if(!labelStatus){
+                setErrorTag('Options Label')
+            }
+        }
+    }
+
+    const handleUpdate = () => {
+
+        let labelStatus = valuesLabelStatus()
+
+        let newFieldObj = {
+            id: id,
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: fieldValue,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            values: values,
+            conditional: conditionalLogic()
+        }
+
+        if(sectionId&&fieldLabel!==''&&labelStatus) {
+            updateFieldInSection(newFieldObj)
             handleClose()
         } else {
             setError(true)

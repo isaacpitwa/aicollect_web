@@ -83,6 +83,28 @@ const FormProvider = (props) => {
 
     }
 
+    const updateFieldInSection = (fieldData) => {
+
+        let newFormFields = componentsData;
+        let section = componentsData.find(section => section.id === fieldData.parentId);
+        let sectionIndex = componentsData.findIndex(section => section.id === fieldData.parentId);
+
+        if(fieldData.subParentId) {
+            let subSection = section.components.find(subSection => subSection.id === fieldData.subParentId);
+            let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.subParentId);
+            let fieldIndex = subSection.components.findIndex(field => field.id === fieldData.id);
+            section.components[subSectionIndex].components[fieldIndex] = fieldData;
+        } else {
+            let fieldIndex = section.components.findIndex(field => field.id === fieldData.id);
+            section.components[fieldIndex] = fieldData;
+        }
+        newFormFields[sectionIndex] = section
+
+        setComponentsData(newFormFields)
+
+        updateFormData()        
+    }
+
     const updateSection = (sectionData) => {
 
         let newFormFields = componentsData;
@@ -90,6 +112,8 @@ const FormProvider = (props) => {
         newFormFields[sectionIndex] = sectionData
 
         setComponentsData(newFormFields)
+
+        updateFormData()
     }
 
     const updateFormData = async () => {
@@ -132,6 +156,7 @@ const FormProvider = (props) => {
                 updateSection,
                 updateComponentsData,
                 addComponentToSection,
+                updateFieldInSection,
                 updateFormData,
                 formPreview,
                 editStatus,
