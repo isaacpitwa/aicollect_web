@@ -119,6 +119,7 @@ const FormProvider = (props) => {
                 setSubSectionId,
                 sectionCreated,
                 formData,
+                setFormData,
                 componentsData,
                 setComponentsData,
                 fieldResponses,

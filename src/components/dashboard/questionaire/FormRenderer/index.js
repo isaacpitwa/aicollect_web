@@ -4,6 +4,8 @@ import {
     Grid,
     Box,
 } from "@mui/material";
+import FormLoader from '../utils/FormLoader';
+
 
 import { FormContext } from '../context'
 import SectionField from './FormField/sectionField'
@@ -43,7 +45,8 @@ const FormRenderer = (props) => {
                     ''
                 }
             </Grid>
-            : "Loading Form"
+            : 
+            <FormLoader/>
     )
 }
 

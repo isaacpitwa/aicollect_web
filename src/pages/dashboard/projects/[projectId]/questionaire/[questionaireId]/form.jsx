@@ -14,7 +14,7 @@ const Form = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Questionaires</title>
+        <title>Dashboard: Form Builder</title>
       </Head>
       <Box
         component="main"

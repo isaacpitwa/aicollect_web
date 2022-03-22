@@ -104,8 +104,7 @@ const Section = (props) => {
             conditional: conditional,
             components: components
         }
-
-        // addComponent(sectionData)
+        
         let formFields = componentsData
         formFields.push(sectionData)
         setComponentsData(formFields)
