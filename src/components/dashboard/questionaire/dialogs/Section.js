@@ -45,7 +45,7 @@ const Section = (props) => {
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
     const [dependency, setDependency] = useState(false)
     const [conditional, setConditional] = useState(false)
-    const [components] = useState(fieldData ? fieldData.components : [])
+    const [components, setComponents] = useState(fieldData ? fieldData.components : [])
     const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : '')
     const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
@@ -88,7 +88,7 @@ const Section = (props) => {
         setCompValue(e.target.value)
     }
 
-    const createSection = () => {
+    const addSection = () => {
 
         const sectionData = {
             id: id?id:uuidv4(),
@@ -110,6 +110,13 @@ const Section = (props) => {
         formFields.push(sectionData)
         setComponentsData(formFields)
         setSectionCreated(true)
+        setFieldLabel('')
+        setFieldDescription('')
+        setTooltip('')
+        setIsRequired(false)
+        setDependency(false)
+        setConditional(false)
+        setComponents([])
         handleClose()
 
     }
@@ -277,7 +284,7 @@ const Section = (props) => {
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={fieldData?handleUpdate:createSection} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:addSection} variant="outlined" size='small' color="success">Save</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

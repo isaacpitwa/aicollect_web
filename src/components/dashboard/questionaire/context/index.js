@@ -1,8 +1,4 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
-import { v4 as uuidv4 } from 'uuid'
-import {
-    compsData
-} from './formData';
 
 import { FormsApi } from '../../../../api/forms-api'
 import {
@@ -13,22 +9,7 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
-    const { questionaireId } = props
-    console.log(questionaireId)
-    let formsData = [
-        {
-            id: 1,
-            name: '',
-            type: 'form',
-            version: 1,
-            createdBy: 111000,
-            createdAt: Date.now(),
-            submittedBy: '',
-            submittedAt: '',
-            timeSpent: '',
-            formFields: []
-        }
-    ]    
+    const { questionaireId } = props 
 
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false)
@@ -46,8 +27,7 @@ const FormProvider = (props) => {
     const getFormData = useCallback(async () => {
         setIsLoaded(false)
         let data = await FormsApi.getFormDetails(questionaireId);
-        const formDets = data && getFormDetails(data)
-        formDets && getformsDataData()
+        data && getFormDetails(data)
         setIsLoaded(true)
     }, [])
 
@@ -55,15 +35,11 @@ const FormProvider = (props) => {
         getFormData();
     }, [])
 
-    const getformsDataData = () => {
-        console.log(componentsData)
-        setSectionCreated(componentsData[0]&&componentsData[0].type === 'section' ? true : false)
-        setFieldResponses(allFormFields(componentsData).map(item => { return { id: item.id, value: item.value }}))
-    }
-
     const getFormDetails = (data) => {
         setComponentsData(data.formFields);
         setFormData(data);
+        setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false)
+        setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}))
 
     }
 
@@ -117,7 +93,6 @@ const FormProvider = (props) => {
         newForm.formFields = componentsData
         setFormData(newForm)
         const updatedForm = await FormsApi.addFieldsToNewForm({formId: newForm._id, ...newForm});
-        console.log('UPDATED FORM: ', updatedForm)
         getFormData(updatedForm.formId);
     }
 

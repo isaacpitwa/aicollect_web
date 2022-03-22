@@ -181,7 +181,7 @@ const Questionaire = () => {
 
     return (
         <Grid container spacing={2}>
-            <Section open={sectionDialog} handleClose={handleClose} />
+            <Section open={sectionDialog} fieldData={false} handleClose={handleClose} />
             <SubSection open={subSectionDialog} handleClose={handleClose} />
             <TextField_ open={textFieldDialog} createTextField={createTextField} handleClose={handleClose} />
             <TextAreaField open={textAreaFieldDialog} createTextField={createTextField} handleClose={handleClose} />
@@ -197,7 +197,17 @@ const Questionaire = () => {
                 </Typography>
                 <Grid container>
                     <Grid item xs={12} md={6}>
-                        <TextField fullWidth required id="outlined-basic" label={formData.name} size='small' variant="outlined" />
+                        <TextField
+                        fullWidth
+                        required
+                        id="outlined-basic"
+                        value={formData.name}
+                        size='small'
+                        variant="outlined"
+                        style={{
+                            fontSize: '20px'
+                        }}
+                    />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Stack direction="row" spacing={2} justifyContent={'right'}>
