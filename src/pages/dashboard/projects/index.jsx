@@ -47,6 +47,8 @@ const sortOptions = [
     value: 'orders|asc'
   }
 ];
+const url = window.location.host;
+console.log('YOO', url);
 
 const applyFilters = (customers, filters) => customers.filter((customer) => {
   if (filters.query) {
@@ -303,7 +305,8 @@ const ProjectList = (props) => {
   );
 };
 
-const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects)(ProjectList);
+// In this case I do not need to pass the second argument 
+const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects, null)(ProjectList);
 
 ProjectsListWithLayout.getLayout = (page) => (
   <AuthGuard>

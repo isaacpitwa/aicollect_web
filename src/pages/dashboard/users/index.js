@@ -294,7 +294,7 @@ const UserList = (props) => {
   );
 };
 
-const UserListWithLayout = WithFetchData(userApi.getUsers)(UserList);
+const UserListWithLayout = WithFetchData(userApi.getUsers, null)(UserList);
 
 UserListWithLayout.getLayout = (page) => (
   <AuthGuard>

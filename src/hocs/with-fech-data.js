@@ -5,18 +5,21 @@ import { useMounted } from '../hooks/use-mounted';
 /**
  * @description Higher Order Function to return data to a component
  * @param {Function} utilFetchFunction Helper Function to fetch Data from API
+ * @param {string}
  * @returns {React.FC} New React Functional Component with Data
  */
-export const WithFetchData = (utilFetchFunction) => (OriginalComponent) => {
+
+// HIGHER ORDER COMPONENT
+export const WithFetchData = (utilFetchFunction, params) => (OriginalComponent) => {
   const NewComponent = () => {
     const isMounted = useMounted();
     const [state, setState] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    params && console.log('param -> ', params);
     const handleFetchData = useCallback(async () => {
       setLoading(true);
       try {
-        const data = await utilFetchFunction();
+        const data = await utilFetchFunction(params);
         console.log('DEBUG --< ', data);
         if (data && isMounted()) {
           toast.success('Data has been successfully fetched');
