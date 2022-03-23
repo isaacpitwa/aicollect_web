@@ -17,7 +17,9 @@ import {
     TableHead,
     TableBody,
     TableRow,
-    TableCell
+    TableCell,
+    Select,
+    MenuItem
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -304,7 +306,7 @@ const SelectField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, fieldData.id, 'text').map(option => (
+                                        {allFormFields(componentsData, id, 'text').map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>

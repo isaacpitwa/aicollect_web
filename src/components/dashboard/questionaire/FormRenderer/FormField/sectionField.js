@@ -104,7 +104,7 @@ const SectionField = (props) => {
                 </Grid>
                 : ''
             :
-            <Grid key={fieldData.id} container className={fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3}>
+            <Grid key={fieldData.id} container className={editStatus?fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3:classes.section2}>
                 <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
                     onClick={getSectionId}
