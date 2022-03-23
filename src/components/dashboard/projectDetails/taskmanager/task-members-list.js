@@ -36,7 +36,7 @@ const members = [
   }
 ];
 
-export const TaskMembers = () => (
+export const TaskMembers = ({ team: members }) => (
   <Box
     sx={{
       backgroundColor: 'background.default',
@@ -53,13 +53,13 @@ export const TaskMembers = () => (
         />
         <CardContent sx={{ pt: 0 }}>
           <List>
-            {members.map((member) => (
+            {members?.map((member) => (
               <ListItem
                 disableGutters
-                key={member.id}
+                key={member.userId}
               >
                 <ListItemAvatar>
-                  <Avatar src={member.avatar} />
+                  <Avatar src='/static/mock-images/avatars/avatar-marcus_finn.png' />
                 </ListItemAvatar>
                 <ListItemText
                   primary={(
@@ -72,7 +72,7 @@ export const TaskMembers = () => (
                       color="textSecondary"
                       variant="body2"
                     >
-                      {member.job}
+                      {member.roles}
                     </Typography>
                   )}
                 />

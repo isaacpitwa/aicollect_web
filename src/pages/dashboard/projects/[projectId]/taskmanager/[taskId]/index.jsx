@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
   Box,
@@ -11,15 +12,46 @@ import {
   IconButton
 } from '@mui/material';
 import Map from "react-map-gl"
+import toast from 'react-hot-toast';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 // Layout files
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
 import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 import { ArrowBackTwoTone, ArrowForwardTwoTone } from '@mui/icons-material';
 import { TaskMembers } from '../../../../../../components/dashboard/projectDetails/taskmanager/task-members-list';
-import { Table3 } from '../../../../../../components/widgets/tables/table-3';
 import { TaskManagerSchedule } from '../../../../../../components/dashboard/projectDetails/taskmanager/task-manager-shedule';
 
 const ProjectTaskDetails = () => {
+  const router = useRouter();
+  const { taskId } = router.query;
+
+  const [task, setTask] = useState(null);
+
+  const fetchTaskDetails = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/tasks/${taskId}`, {
+        headers: {
+          'Content-Type': 'Application/json'
+        }
+      });
+      const data = await response.json();
+      if (data && data.status === 200) {
+        toast.success('Data loaded successfully');
+        setTask(data.data);
+      }
+    } catch (error) {
+      toast.error('failed to load data', { duration: 700 });
+    }
+  }, [setTask]);
+
+  useEffect(() => {
+    fetchTaskDetails();
+  }, []);
+
   return (
     <>
       <Head>
@@ -40,51 +72,34 @@ const ProjectTaskDetails = () => {
               justifyContent="space-between"
               spacing={3}
             >
-              <Grid item>
-                <Typography variant="h4">
-                  Task Manager
+              <Grid item flex flexDirection="column" spacing={2}>
+                <Typography variant="caption">
+                  Task ({task?.taskType})
+                </Typography>
+                <Typography variant='h6'>
+                  {task?.title}
                 </Typography>
               </Grid>
               <Grid item>
-                <Button
-
-                  // startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
-                // onClick={handleOpenTaskDialog}
-                >
-                  Create Task
-                </Button>
-
-              </Grid>
-
-
-              <Grid item>
-                <Button
-
-                  // startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
-                // onClick={handleOpenTaskDialog}
-                >
-                  Create Task
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-
-                  // startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
-                // onClick={handleOpenTaskDialog}
-                >
-                  Create Task
-                </Button>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <Button startIcon={<FormatListBulletedIcon fontSize="small" />}>List</Button>
+                  </Grid>
+                  <Grid item>
+                    <Button startIcon={<AccountTreeIcon fontSize="small" />}>Board</Button>
+                  </Grid>
+                  <Grid item>
+                    <Button startIcon={<DateRangeIcon fontSize="small" />}>Calender</Button>
+                  </Grid>
+                </Grid>
               </Grid>
 
               <Grid item flex flexDirection="row">
                 <IconButton size='large'>
-                  <ArrowBackTwoTone />
+                  <ChevronLeftIcon />
                 </IconButton>
                 <IconButton size='large'>
-                  <ArrowForwardTwoTone />
+                  <ChevronRightIcon />
                 </IconButton>
               </Grid>
             </Grid>
@@ -97,7 +112,7 @@ const ProjectTaskDetails = () => {
             }}>
             <Grid container spacing={2}>
               <Grid item md={4} sm={6}>
-                <TaskMembers />
+                <TaskMembers team={task?.team} />
               </Grid>
               <Grid item md={8} sm={6}>
                 <Map

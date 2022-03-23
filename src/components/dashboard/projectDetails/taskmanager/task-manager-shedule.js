@@ -1,14 +1,11 @@
-import numeral from 'numeral';
 import { subDays, subHours } from 'date-fns';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
   Divider,
   IconButton,
   InputAdornment,
-  Link,
   Tab,
   Table,
   TableBody,
@@ -18,96 +15,31 @@ import {
   TableRow,
   Tabs,
   TextField,
-  Typography
 } from '@mui/material';
 import { Scrollbar } from '../../../scrollbar';
-import { ArrowRight as ArrowRightIcon } from '../../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
 import { Search as SearchIcon } from '../../../../icons/search';
+import { DeleteForever } from '@mui/icons-material';
 
 const now = new Date();
 
 const customers = [
   {
     id: '5e887ac47eed253091be10cb',
-    avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
-    city: 'Cleveland',
-    country: 'USA',
-    currency: '$',
-    email: 'carson.darrin@devias.io',
-    hasAcceptedMarketing: true,
-    isProspect: false,
-    isReturning: true,
-    name: 'Carson Darrin',
-    state: 'Ohio',
-    totalAmountSpent: 300.00,
-    totalOrders: 3,
+    status: 'Completed',
+    account: 'Mukisa Dan',
+    eventType: 'Field',
+    contact: '+2567843635',
+    gps: '1.8737',
+    lastVisit: '02/73/3098',
+    gpsLock: false,
+    visitType: 'Recurring',
+    startDate: '02/73/3098',
+    day: 'Friday',
+    recurring: 'Yes',
+    agent: 'John Kent',
     updatedAt: subDays(subHours(now, 7), 1).getTime()
   },
-  {
-    id: '5e887b209c28ac3dd97f6db5',
-    avatar: '/static/mock-images/avatars/avatar-fran_perez.png',
-    city: 'Atlanta',
-    country: 'USA',
-    currency: '$',
-    email: 'fran.perez@devias.io',
-    hasAcceptedMarketing: true,
-    isProspect: true,
-    isReturning: false,
-    name: 'Fran Perez',
-    state: 'Georgia',
-    totalAmountSpent: 0.00,
-    totalOrders: 0,
-    updatedAt: subDays(subHours(now, 1), 2).getTime()
-  },
-  {
-    id: '5e887b7602bdbc4dbb234b27',
-    avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
-    city: 'North Canton',
-    country: 'USA',
-    currency: '$',
-    email: 'jie.yan.song@devias.io',
-    hasAcceptedMarketing: false,
-    isProspect: false,
-    isReturning: false,
-    name: 'Jie Yan Song',
-    state: 'Ohio',
-    totalAmountSpent: 5600.00,
-    totalOrders: 6,
-    updatedAt: subDays(subHours(now, 4), 2).getTime()
-  },
-  {
-    id: '5e86809283e28b96d2d38537',
-    avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-    city: 'Madrid',
-    country: 'Spain',
-    currency: '$',
-    email: 'anika.visser@devias.io',
-    hasAcceptedMarketing: true,
-    isProspect: false,
-    isReturning: true,
-    name: 'Anika Visser',
-    state: 'Madrid',
-    totalAmountSpent: 500.00,
-    totalOrders: 1,
-    updatedAt: subDays(subHours(now, 11), 2).getTime()
-  },
-  {
-    id: '5e86805e2bafd54f66cc95c3',
-    avatar: '/static/mock-images/avatars/avatar-miron_vitold.png',
-    city: 'San Diego',
-    country: 'USA',
-    currency: '$',
-    email: 'miron.vitold@devias.io',
-    hasAcceptedMarketing: true,
-    isProspect: true,
-    isReturning: false,
-    name: 'Miron Vitold',
-    totalAmountSpent: 0.00,
-    totalOrders: 0,
-    state: 'California',
-    updatedAt: subDays(subHours(now, 7), 3).getTime()
-  }
 ];
 
 const tabs = [
@@ -232,16 +164,40 @@ export const TaskManagerSchedule = () => (
                 <Checkbox />
               </TableCell>
               <TableCell>
-                Name
+                Live Status
               </TableCell>
               <TableCell>
-                Location
+                Account
               </TableCell>
               <TableCell>
-                Orders
+                Event Type
               </TableCell>
               <TableCell>
-                Spent
+                Contact
+              </TableCell>
+              <TableCell>
+                GPS
+              </TableCell>
+              <TableCell>
+                Last Visit
+              </TableCell>
+              <TableCell>
+                GPS LOCK
+              </TableCell>
+              <TableCell>
+                Visit Type
+              </TableCell>
+              <TableCell>
+                Start Date
+              </TableCell>
+              <TableCell>
+                Day 
+              </TableCell>
+              <TableCell>
+                Recurring
+              </TableCell>
+              <TableCell>
+                Agent
               </TableCell>
               <TableCell align="right">
                 Actions
@@ -258,51 +214,47 @@ export const TaskManagerSchedule = () => (
                   <Checkbox />
                 </TableCell>
                 <TableCell>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex'
-                    }}
-                  >
-                    <Avatar
-                      src={customer.avatar}
-                      sx={{
-                        height: 42,
-                        width: 42
-                      }}
-                    />
-                    <Box sx={{ ml: 1 }}>
-                      <Link
-                        color="inherit"
-                        variant="subtitle2"
-                      >
-                        {customer.name}
-                      </Link>
-                      <Typography
-                        color="textSecondary"
-                        variant="body2"
-                      >
-                        {customer.email}
-                      </Typography>
-                    </Box>
-                  </Box>
+                  {customer.status}
                 </TableCell>
                 <TableCell>
-                  {`${customer.city}, ${customer.state}, ${customer.country}`}
+                  {customer.account}
                 </TableCell>
                 <TableCell>
-                  {customer.totalOrders}
+                  {customer.eventType}
                 </TableCell>
                 <TableCell>
-                  {numeral(customer.totalAmountSpent)
-                    .format(`${customer.currency}0,0.00`)}
+                  {customer.contact}
+                </TableCell>
+                <TableCell>
+                  {customer.gps}
+                </TableCell>
+                <TableCell>
+                  {customer.lastVisit}
+                </TableCell>
+                <TableCell>
+                  {customer.gpsLock ? "Yes" : "No"}
+                </TableCell>
+                <TableCell>
+                  {customer.visitType}
+                </TableCell>
+                <TableCell>
+                  {customer.startDate}
+                </TableCell>
+                <TableCell>
+                  {customer.day}
+                </TableCell>
+                <TableCell>
+                  {customer.recurring}
+                </TableCell>
+                <TableCell>
+                  {customer.agent}
                 </TableCell>
                 <TableCell align="right">
                   <IconButton>
                     <PencilAltIcon fontSize="small" />
                   </IconButton>
                   <IconButton>
-                    <ArrowRightIcon fontSize="small" />
+                    <DeleteForever fontSize="small" />
                   </IconButton>
                 </TableCell>
               </TableRow>
