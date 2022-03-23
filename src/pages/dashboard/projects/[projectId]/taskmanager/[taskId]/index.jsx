@@ -1,63 +1,30 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
+import NextLink from 'next/link';
 import {
   Box,
-  Button,
-  Card,
   Container,
-  Divider,
-  Grid,
-  InputAdornment,
-  TextField,
   Typography,
-  useMediaQuery
+  Button,
+  Grid,
+  Divider,
+  IconButton
 } from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
-import toast from 'react-hot-toast';
-
-import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
+import Map from "react-map-gl"
+// Layout files
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
-import { gtm } from '../../../../../../lib/gtm';
-import { TaskMap } from '../../../../../../components/dashboard/projectDetails/taskmanager/task-map-area';
+import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
+import { ArrowBackTwoTone, ArrowForwardTwoTone } from '@mui/icons-material';
+import { TaskMembers } from '../../../../../../components/dashboard/projectDetails/taskmanager/task-members-list';
+import { Table3 } from '../../../../../../components/widgets/tables/table-3';
+import { TaskManagerSchedule } from '../../../../../../components/dashboard/projectDetails/taskmanager/task-manager-shedule';
 
-const TaskDetails = () => {
-  // const isMounted = useMounted();
-  const queryRef = useRef(null);
-  
-
-
-  useEffect(() => {
-    gtm.push({ event: 'page_view' });
-  }, []);
-
-
-  // const getProjects = useCallback(async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
-  //     const data = await response.json();
-  //     if (isMounted()) {
-  //       if (data?.status === 200) {
-  //         toast.success(data.message, { duration: 10000 });
-  //         setTasks(data.data);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
-  //   }
-  // }, [isMounted]);
-
-  // useEffect(() => {
-  //   getProjects();
-  // }, []);
-
-  // Usually query is done on backend with indexing solutions
-
+const ProjectTaskDetails = () => {
   return (
     <>
       <Head>
         <title>
-          Dashboard: Task Manager | AiCollect
+          Dashboard: Task Details | AiCollect
         </title>
       </Head>
       <Box
@@ -65,8 +32,7 @@ const TaskDetails = () => {
         sx={{
           flexGrow: 1,
           py: 8
-        }}
-      >
+        }}>
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Grid
@@ -76,44 +42,97 @@ const TaskDetails = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Task Details
+                  Task Manager
                 </Typography>
               </Grid>
               <Grid item>
                 <Button
+
                   // startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
-                  // onClick={handleOpenTaskDialog}
+                // onClick={handleOpenTaskDialog}
                 >
-                  Delete Task
+                  Create Task
+                </Button>
+
+              </Grid>
+
+
+              <Grid item>
+                <Button
+
+                  // startIcon={<PlusIcon fontSize="small" />}
+                  variant="contained"
+                // onClick={handleOpenTaskDialog}
+                >
+                  Create Task
                 </Button>
               </Grid>
-            </Grid>
-            
-          </Box>
-          <Card>
-            <Divider />
-            
-            <Grid container spacing={2}>
-              <Grid item md={4}></Grid>  
-              <Grid item md={8}>
-                <TaskMap />
-              </Grid>  
-            </Grid>
+              <Grid item>
+                <Button
 
-          </Card>
+                  // startIcon={<PlusIcon fontSize="small" />}
+                  variant="contained"
+                // onClick={handleOpenTaskDialog}
+                >
+                  Create Task
+                </Button>
+              </Grid>
+
+              <Grid item flex flexDirection="row">
+                <IconButton size='large'>
+                  <ArrowBackTwoTone />
+                </IconButton>
+                <IconButton size='large'>
+                  <ArrowForwardTwoTone />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box
+            sx={{
+              backgroundColor: 'background.paper',
+              p: 3
+            }}>
+            <Grid container spacing={2}>
+              <Grid item md={4} sm={6}>
+                <TaskMembers />
+              </Grid>
+              <Grid item md={8} sm={6}>
+                <Map
+                  initialViewState={{
+                    longitude: -122.45,
+                    latitude: 37.78,
+                    zoom: 14,
+                    width: "100%",
+                  }}
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_GOOGLE_MAP_TOKEN}
+                  mapStyle="mapbox://styles/mapbox/streets-v9"
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box
+          sx={{
+            backgroundColor: 'background.paper',
+            p: 3
+          }}>
+            <TaskManagerSchedule />
+          </Box>
         </Container>
       </Box>
     </>
-  );
+  )
 };
 
-TaskDetails.getLayout = (page) => (
+ProjectTaskDetails.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
     </DashboardLayout>
   </AuthGuard>
-);
+)
 
-export default TaskDetails;
+export default ProjectTaskDetails;

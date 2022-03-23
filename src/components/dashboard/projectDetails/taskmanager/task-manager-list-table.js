@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -29,6 +30,8 @@ export const TaskManagerListTable = (props) => {
     rowsPerPage,
     ...other
   } = props;
+  const router = useRouter();
+  const { projectId } = router.query;
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Reset selected customers when customers change
@@ -111,9 +114,6 @@ export const TaskManagerListTable = (props) => {
                 Assigned To
               </TableCell>
               <TableCell>
-                Completed
-              </TableCell>
-              <TableCell>
                 Priority
               </TableCell>
               <TableCell>
@@ -126,7 +126,7 @@ export const TaskManagerListTable = (props) => {
                 Rescheduled
               </TableCell>
               <TableCell>
-                Finish
+                Task Completed
               </TableCell>
               <TableCell align="right">
                 Actions
@@ -152,30 +152,36 @@ export const TaskManagerListTable = (props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography>{task.projectname}</Typography>
+                    <Typography>{task.title}</Typography>
                   </TableCell>
                   <TableCell>
-                    {task.projectTeam.length}
+                    {task.taskType}
                   </TableCell>
                   <TableCell>
-                    {task.createdBy.name}
-                  </TableCell>
-                  <TableCell>
-                    {0}
-                  </TableCell>
-                  <TableCell>
-                   {moment(task.createdAt).format('MM/DD/YYYY')}
+                    {task.status}
                   </TableCell>
                   <TableCell>
                     {task.createdBy.name}
                   </TableCell>
                   <TableCell>
-                    {"In Progress"}
+                    {task.priority}
+                  </TableCell>
+                  <TableCell>
+                    {moment(task.startDate).format('MM/DD/YYYY')}
+                  </TableCell>
+                  <TableCell>
+                    {moment(task.dueDate).format('MM/DD/YYYY')}
+                  </TableCell>
+                  <TableCell>
+                    {task.rescheduled ? 'Yes' : 'No'}
+                  </TableCell>
+                  <TableCell>
+                    {task.completed ? task.dataCompleted : 'Not Completed'}
                   </TableCell>
                   
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/projects/${task._id}`}
+                      href={`/dashboard/projects/${projectId}/taskmanager/${task._id}/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -183,7 +189,7 @@ export const TaskManagerListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${task._id}`}
+                      href={`/dashboard/projects/${projectId}/taskmanager/${task._id}`}
                       passHref
                     >
                       <IconButton component="a">

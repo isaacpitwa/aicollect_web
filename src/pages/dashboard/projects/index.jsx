@@ -47,8 +47,6 @@ const sortOptions = [
     value: 'orders|asc'
   }
 ];
-const url = window.location.host;
-console.log('YOO', url);
 
 const applyFilters = (customers, filters) => customers.filter((customer) => {
   if (filters.query) {

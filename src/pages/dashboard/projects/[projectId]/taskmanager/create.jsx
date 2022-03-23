@@ -31,6 +31,9 @@ import {
   List,
   ListItem,
   ListItemText,
+  Chip,
+  OutlinedInput,
+  useTheme
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -48,6 +51,60 @@ import { gtm } from '../../../../../lib/gtm';
 import { getInitials } from '../../../../../utils/get-initials';
 import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
 import { bytesToSize } from '../../../../../utils/bytes-to-size';
+import { tasksApi } from '../../../../../api/tasks-api';
+
+const questionairesList = [
+  {
+    id: '673ndsid',
+    name: 'Nabbingo Farms Form'
+  },
+  {
+    id: '673ndsidslkfh',
+    name: 'Refugee Camp Forms'
+  },
+  {
+    id: '673ndjsdsid',
+    name: 'Sacco Management'
+  },
+]
+
+const teamMembers = [
+  {
+    userId: 1,
+    name: "Musoke Dan",
+    roles: "Standard User"
+  },
+  {
+    userId: 2,
+    name: "Hassan Kent",
+    roles: "Standard User"
+  },
+  {
+    userId: 3,
+    name: "Isaac Pitwa",
+    roles: "Standard User"
+  },
+]
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(questionaire, questionaireList, theme) {
+  return {
+    fontWeight:
+      questionaireList.indexOf(questionaire) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 const FileDropZone = styled('div')(({ theme }) => ({
   border: `1px dashed ${theme.palette.divider}`,
@@ -68,14 +125,20 @@ const FileDropZone = styled('div')(({ theme }) => ({
 
 const CreateTask = () => {
   const isMounted = useMounted();
+  const router = useRouter();
+  const theme = useTheme();
   const [taskInformation, setTaskInformation] = useState({
     title: '',
     taskType: '',
     description: '',
     startDate: '',
     dueDate: '',
-    questionaire: ''
   });
+  const [questionaires, setQuestionaires] = useState([]);
+  const [team, setTeam] = useState([]);
+  const [schedule, setSchedule] = useState(null);
+  const [fileError, setFileError] = useState(null);
+  const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
     {
@@ -98,12 +161,26 @@ const CreateTask = () => {
     },
   ];
 
-  const [schedule, setSchedule] = useState(null);
-  const [fileError, setFileError] = useState(null);
-
-  const router = useRouter();
   const { userId } = router.query;
-  const [activeStep, setActiveStep] = useState(0);
+
+  const handleChangeQuestionaires = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setQuestionaires(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+  const handleChangeTeam = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setTeam(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
 
   const onDropExcelFiles = useCallback((acceptedFiles,) => {
     setSchedule(acceptedFiles[0]);
@@ -143,7 +220,6 @@ const CreateTask = () => {
   }, []);
 
   const handleNext = () => {
-    handleCreateTask()
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -168,7 +244,17 @@ const CreateTask = () => {
   const handleCreateTask = async () => {
     try {
       // Make call to task creation API
-      console.log(taskInformation)
+      let qnList = [];
+      questionaires.forEach((item) => {
+        qnList.push(item.id);
+      });
+      const task = {
+        ...taskInformation,
+        questionaire: qnList,
+        team,
+        schedule
+      };
+      const data = await tasksApi.createTask(task);
     } catch (error) {
       console.log(error);
     }
@@ -305,14 +391,37 @@ const CreateTask = () => {
                           <Box sx={{ mb: 2 }}>
                             <Grid container spacing={2}>
                               <Grid item md={12} mt={3} sm={12}>
-                                <FormControl fullWidth>
-                                  <InputLabel>Add Team Members</InputLabel>
-                                  <Select name="questionaire" fullWidth>
-                                    <MenuItem value="qn1">Opio 1</MenuItem>
-                                    <MenuItem value="qn2">Musoke 2</MenuItem>
-                                    <MenuItem value="qn3">Achen 3</MenuItem>
-                                  </Select>
-                                </FormControl>
+                              <FormControl fullWidth>
+                                <InputLabel id="select-team">Select Team</InputLabel>
+                                <Select
+                                  labelId="select-team"
+                                  id="select-team"
+                                  multiple
+                                  value={team}
+                                  onChange={handleChangeTeam}
+                                  input={<OutlinedInput id="select-team" label="Chip" />}
+                                  renderValue={(selected) => (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                      {selected.map((value, idx) => (
+                                        <Chip
+                                          key={idx} 
+                                          label={value.name} />
+                                      ))}
+                                    </Box>
+                                  )}
+                                  MenuProps={MenuProps}
+                                >
+                                  {teamMembers.map((member, idx) => (
+                                    <MenuItem
+                                      key={idx}
+                                      value={member}
+                                      style={getStyles(member, questionaires, theme)}
+                                    >
+                                      {member.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
                               </Grid>
                             </Grid>
                           </Box>
@@ -324,18 +433,6 @@ const CreateTask = () => {
                               Sample Template excel file for importing can be <a href='/templates/Template.xlsx' download>DOWNLOADED HERE</a>
                             </Typography> <br />
 
-                            {/* <input
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            id="raised-button-file"
-                            type="file"
-                            onChange={handleChangeScheduleFile}
-                          />
-                          <label htmlFor='raised-button-file'>
-                            <Button sx={{ mt: 2, mb: 2 }} startIcon={<UploadFileIcon fontSize="small" />}>
-                              Upload File
-                            </Button>
-                          </label> */}
                             <FileDropZone {...getRootProps()}>
                               <input
                                 {...getInputProps()}
@@ -403,11 +500,34 @@ const CreateTask = () => {
                           <Grid container spacing={2}>
                             <Grid item md={12} mt={3} sm={12}>
                               <FormControl fullWidth>
-                                <InputLabel>Select Questionaire</InputLabel>
-                                <Select name="questionaire" fullWidth>
-                                  <MenuItem value="qn1">Questionaire 1</MenuItem>
-                                  <MenuItem value="qn2">Questionaire 2</MenuItem>
-                                  <MenuItem value="qn3">Questionaire 3</MenuItem>
+                                <InputLabel id="select-questionaires">Questionaire</InputLabel>
+                                <Select
+                                  labelId="select-questionaires"
+                                  id="select-questionaires"
+                                  multiple
+                                  value={questionaires}
+                                  onChange={handleChangeQuestionaires}
+                                  input={<OutlinedInput id="select-questionaires" label="Chip" />}
+                                  renderValue={(selected) => (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                      {selected.map((value) => (
+                                        <Chip
+                                          key={value} 
+                                          label={value.name} />
+                                      ))}
+                                    </Box>
+                                  )}
+                                  MenuProps={MenuProps}
+                                >
+                                  {questionairesList.map((name) => (
+                                    <MenuItem
+                                      key={name}
+                                      value={name}
+                                      style={getStyles(name, questionaires, theme)}
+                                    >
+                                      {name.name}
+                                    </MenuItem>
+                                  ))}
                                 </Select>
                               </FormControl>
                             </Grid>
@@ -419,10 +539,10 @@ const CreateTask = () => {
                       <div>
                         <Button
                           variant="contained"
-                          onClick={handleNext}
+                          onClick={index === steps.length - 1 ? handleCreateTask : handleNext}
                           sx={{ mt: 1, mr: 1 }}
                         >
-                          {index === steps.length - 1 ? 'Finish' : 'Continue'}
+                          {index === steps.length - 1 ? 'Create Task' : 'Continue'}
                         </Button>
                         <Button
                           disabled={index === 0}
