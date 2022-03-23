@@ -50,15 +50,17 @@ const SectionField = (props) => {
             if(selectSection) {
                 setError(false)
                 setSelectSection(false)
-                setSectionId(false)
-                setSubSectionId(false)
+                setSectionId(null)
+                setSubSectionId(null)
             } else {
                 setError(false)
                 setSelectSection(true)
                 setSectionId(fieldData.id)
-                setSubSectionId(false)
+                setSubSectionId(null)
             }
         }
+        console.log('Section ID: ', sectionId)
+        console.log('Sub Section ID: ', subSectionId)        
     }
 
     const handleClose = () => {

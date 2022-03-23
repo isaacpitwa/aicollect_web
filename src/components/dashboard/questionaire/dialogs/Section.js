@@ -35,14 +35,11 @@ const Section = (props) => {
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : '')
-    const [parentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
     const [type] = useState(fieldData ? fieldData.type : 'section')
     const [value, setValue] = useState(fieldData ? fieldData.value : '')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
     const [dependency, setDependency] = useState(false)
     const [conditional, setConditional] = useState(false)
     const [components, setComponents] = useState(fieldData ? fieldData.components : [])
@@ -91,11 +88,8 @@ const Section = (props) => {
 
         const sectionData = {
             id: id?id:uuidv4(),
-            parentId: false,
-            subParentId: false,
-            required: isRequired,
-            display: 'visible',
             type: 'section',
+            display: 'visible',
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
@@ -111,7 +105,6 @@ const Section = (props) => {
         setFieldLabel('')
         setFieldDescription('')
         setTooltip('')
-        setIsRequired(false)
         setDependency(false)
         setConditional(false)
         setComponents([])
@@ -122,11 +115,7 @@ const Section = (props) => {
     const handleUpdate = () => {
         let sectionData = {
             id: id,
-            parentId: parentId,
-            subParentId: subParentId,
             type: type,
-            value: value,
-            required: isRequired,
             display: 'visible',
             type: 'section',
             label: fieldLabel,
@@ -276,7 +265,7 @@ const Section = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
+                    <SectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip}/>
                 </Grid>
             </DialogContent>
             <DialogActions>

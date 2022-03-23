@@ -51,8 +51,6 @@ const SelectRadioField = (props) => {
     const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [parentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
     const [type] = useState(fieldData ? fieldData.type : 'radio')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
@@ -65,7 +63,7 @@ const SelectRadioField = (props) => {
             'value': '',
         }
     ])
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
     const [conditional, setConditional] = useState(false)
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')

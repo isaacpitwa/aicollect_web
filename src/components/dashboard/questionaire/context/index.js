@@ -14,8 +14,8 @@ const FormProvider = (props) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false)
     const [selectSection, setSelectSection] = useState(false)
-    const [sectionId, setSectionId] = useState(false)
-    const [subSectionId, setSubSectionId] = useState(false)
+    const [sectionId, setSectionId] = useState(null)
+    const [subSectionId, setSubSectionId] = useState(null)
     const [componentsData, setComponentsData] = useState([])
     const [fieldResponses, setFieldResponses] = useState([])
     const [formData, setFormData] = useState({})
@@ -128,8 +128,8 @@ const FormProvider = (props) => {
         setFormPreview(!formPreview)
         setEditStatus(!editStatus)
         setSelectSection(false)
-        setSectionId(false)
-        setSubSectionId(false)
+        setSectionId(null)
+        setSubSectionId(null)
     }
 
     return (

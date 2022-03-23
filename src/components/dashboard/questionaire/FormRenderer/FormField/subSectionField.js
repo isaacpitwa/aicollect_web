@@ -32,7 +32,7 @@ const SubSectionField = (props) => {
     const [numericFieldValue, setNumericFieldValue] = useState(0);
 
     useEffect(() => {
-        setSubSectionId(subSectionId!==fieldData.id?false:subSectionId)
+        setSubSectionId(subSectionId!==fieldData.id?null:subSectionId)
         setFieldStyles(subSectionId===fieldData.id?2:0)
         setNumericFieldValue(fieldData.dependency?DependencyFieldValue():0)
     }, [setSectionId, subSectionId, fieldResponses, editStatus])
@@ -50,6 +50,7 @@ const SubSectionField = (props) => {
             setSectionId(fieldData.parentId)
             setSubSectionId(fieldData.id)
         }
+        console.log('Sub Section ID: ', subSectionId)
     }
     
 

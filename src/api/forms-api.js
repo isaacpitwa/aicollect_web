@@ -17,7 +17,6 @@ class Forms {
   }
 
   async getFormDetails(formId) {
-    console.log('DEBUG ', formId);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/${formId}`, {
         headers: {
@@ -27,7 +26,6 @@ class Forms {
       });
       const data = await response.json();
       if (data && data.status === 200) {
-        console.log('DEBUG DATA\n', data);
         return data.data;
       }
     } catch (error) {
