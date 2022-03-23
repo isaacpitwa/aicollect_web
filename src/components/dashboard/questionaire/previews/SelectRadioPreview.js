@@ -13,7 +13,7 @@ import GeneralTooltip from '../previews/GeneralTooltip';
 
 const SelectRadioPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, radioValue, radios, isRequired } = props
+    const { fieldLabel, fieldDescription, tooltip, fieldValue, radios, isRequired } = props
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
@@ -31,10 +31,10 @@ const SelectRadioPreview = (props) => {
                     <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="controlled-radio-buttons-group"
-                        value={radioValue}
+                        value={fieldValue}
                     >
                         {radios.map(radio=>(
-                            <FormControlLabel value={radio.radioId} control={<Radio />} label={radio.radioLabel}/>
+                            <FormControlLabel value={radio.id} control={<Radio />} label={radio.label}/>
                         ))}
                     </RadioGroup>
                 </FormControl>

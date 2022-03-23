@@ -13,18 +13,29 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
+import SelectRadioField from '../../dialogs/SelectRadioField'
 import { DescriptionCard, FieldIndex } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
 const radioField = (props) => {
 
-    const { fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        editStatus
+    } = useContext(FormContext);
 
     const { fieldData } = props
 
-    const [fieldId, setFieldId] = useState(fieldData.id)
+    const [selectRadioDialog, setSelectRadioDialog] = useState(false)
     const [radioValue, setRadioValue] = useState(false)
     const [display, setDisplay] = useState('hidden');
+
+    const handleSelectRadioField = () => {
+        setSelectRadioDialog(true)
+    }
 
     const handleRadio = (e) => {
         setRadioValue(e.target.value)
@@ -46,17 +57,27 @@ const radioField = (props) => {
         )
     }
 
+    const handleClose = () => {
+        setSelectRadioDialog(false)
+    }
+
     const classes = formStyles();
     const smallBtn = smallBtns();
 
     return (
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
             {editStatus?
-                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
-                    <EditIcon className={smallBtn.editBtn} />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
-                </Typography>
-            : '' }
+                <>
+                    <SelectRadioField open={selectRadioDialog} fieldData={fieldData} handleClose={handleClose} />
+                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                        <EditIcon
+                            onClick={handleSelectRadioField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon className={smallBtn.deleteBtn} />
+                    </Typography>
+                </>
+        : '' }
             <Typography style={{ width: '100%', fontSize: '18px', color: '#5048E5' }}>
                 {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
             </Typography>
@@ -68,8 +89,8 @@ const radioField = (props) => {
                     value={radioValue}
                     onChange={handleRadio}
                 >
-                    {fieldData.values.map(option => (
-                        <FormControlLabel value={option.label.toLowerCase()} control={<Radio />} label={option.label} />
+                    {fieldData.radios.map(radio => (
+                        <FormControlLabel value={radio.label.toLowerCase()} control={<Radio />} label={radio.label} />
                     ))}
                 </RadioGroup>
             </FormControl>

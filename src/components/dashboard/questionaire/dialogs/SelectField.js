@@ -24,7 +24,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormContext } from '../context';
 import {
     allFormFields,
-    findComponentIndex,
 } from '../utils';
 import {
     FieldError,
@@ -229,8 +228,9 @@ const SelectField = (props) => {
         setTooltip('')
         setOptions([
             {
-                'optionId': uuidv4(),
-                'optionLabel': '',
+                'id': uuidv4(),
+                'label': '',
+                'value': '',
             }
         ])
         setIsRequired(!isRequired)
