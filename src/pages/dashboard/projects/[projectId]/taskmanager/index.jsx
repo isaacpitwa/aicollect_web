@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -10,24 +12,26 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  useMediaQuery
 } from '@mui/material';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { ProjectListTable } from '../../../components/dashboard/project/project-list-table';
+import { useTheme } from '@mui/material/styles';
+import toast from 'react-hot-toast';
+
+import { AuthGuard } from '../../../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
+import { ProjectListTable } from '../../../../../components/dashboard/project/project-list-table';
 // import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
-import { Plus as PlusIcon } from '../../../icons/plus';
-import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
-import { gtm } from '../../../lib/gtm';
-import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
+import { Download as DownloadIcon } from '../../../../../icons/download';
+import { Plus as PlusIcon } from '../../../../../icons/plus';
+import { Search as SearchIcon } from '../../../../../icons/search';
+import { Upload as UploadIcon } from '../../../../../icons/upload';
+import { gtm } from '../../../../../lib/gtm';
+import { useMounted } from '../../../../../hooks/use-mounted';
+// import CreateNewProjectDialog from '../../../../../components/dashboard/project/project-create-new';
+import CreateNewTask from '../../../../../components/dashboard/projectDetails/taskmanager/project-task-manager';
+import { TaskManagerListTable } from '../../../../../components/dashboard/projectDetails/taskmanager/task-manager-list-table';
+import { tasksApi } from '../../../../../api/tasks-api';
 
-// Fetch Projects API
-import { projectsApi } from '../../../api/projects-api';
-
-// Higher Order Componet
-import { WithFetchData } from '../../../hocs/with-fech-data';
-import { LoadingSkeleton } from '../../../components/dashboard/dashboard-wait-for-data-loader';
 
 const sortOptions = [
   {
@@ -117,14 +121,17 @@ const applySort = (customers, sort) => {
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProjectList = (props) => {
+const TasksList = () => {
+  const isMounted = useMounted();
   const queryRef = useRef(null);
-  const { data: projects, loading, handleFetchData } = props;
-  // const [projects, setProjects] = useState([]);
+  const theme = useTheme();
+  const router = useRouter();
+  const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
-  const [openProjectDialog, setOpenProjectDialog] = useState(false);
+  const [openTaskDialog, setOpenTaskDialog] = useState(false);
 
   const [filters, setFilters] = useState({
     query: '',
@@ -133,11 +140,11 @@ const ProjectList = (props) => {
     isReturning: null
   });
 
-  const handleOpenProjectDialog = () => {
-    setOpenProjectDialog(true)
+  const handleOpenTaskDialog = () => {
+    setOpenTaskDialog(true);
   };
-  const handleCloseProjectDialog = () => {
-    setOpenProjectDialog(false)
+  const handleCloseTaskDialog = () => {
+    setOpenTaskDialog(false);
   };
 
   useEffect(() => {
@@ -164,16 +171,34 @@ const ProjectList = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const getProjectTasks = useCallback(async () => {
+    try {
+      const { projectId } = router.query;
+      const data = await tasksApi.getProjectTasks(projectId);
+      if (isMounted() && data) {
+        toast.success('Data loaded successfully', { duration: 10000 });
+        console.log(data)
+        setTasks(data);
+      }
+    } catch (error) {
+      toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    getProjectTasks();
+  }, []);
+
   // Usually query is done on backend with indexing solutions
-  const filteredProjects = applyFilters(projects || [], filters);
-  const sortedProjects = applySort(filteredProjects, sort);
-  const paginatedProjects = applyPagination(sortedProjects, page, rowsPerPage);
+  const filteredTasks = applyFilters(tasks, filters);
+  const sortedTasks = applySort(filteredTasks, sort);
+  const paginatedTasks = applyPagination(sortedTasks, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Project List | AiCollect
+          Dashboard: Task Manager | AiCollect
         </title>
       </Head>
       <Box
@@ -192,22 +217,25 @@ const ProjectList = (props) => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Projects
+                  Task Manager
                 </Typography>
               </Grid>
               <Grid item>
+                <NextLink href={`/dashboard/projects/${router.query.projectId}/taskmanager/create`}>
                 <Button
+
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
-                  onClick={handleOpenProjectDialog}
+                  // onClick={handleOpenTaskDialog}
                 >
-                  Add Project
+                  Create Task
                 </Button>
+                </NextLink>
               </Grid>
-              <CreateNewProjectDialog
-                open={openProjectDialog}
-                handleClose={handleCloseProjectDialog}
-                getProjects={handleFetchData}
+              <CreateNewTask
+                open={openTaskDialog}
+                handleClose={handleCloseTaskDialog}
+              // getProjects={getProjects}
               />
             </Grid>
             <Box
@@ -260,7 +288,7 @@ const ProjectList = (props) => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder="Search projects"
+                  placeholder="Search task"
                 />
               </Box>
               <TextField
@@ -283,19 +311,67 @@ const ProjectList = (props) => {
               </TextField>
             </Box>
             {
-              !loading ? (
-                <ProjectListTable
-                  projects={paginatedProjects}
-                  projectsCount={filteredProjects.length}
+              tasks.length === 0 ? (
+                <Container maxWidth="md">
+                  <Typography
+                    align="center"
+                    variant={mobileDevice ? 'h6' : 'h4'}
+                  >
+                    Looks empty here.
+                  </Typography>
+                  <Typography
+                    align="center"
+                    color="textSecondary"
+                    sx={{ mt: 0.5 }}
+                    variant="subtitle2"
+                  >
+                    Please try creating some tasks to get started.
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      mt: 6
+                    }}
+                  >
+                    <Box
+                      alt="Under development"
+                      component="img"
+                      src="/empty.svg"
+                      sx={{
+                        height: 'auto',
+                        maxWidth: '100%',
+                        width: 400
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      mt: 3,
+                      mb: 3
+                    }}
+                  >
+                      <Button
+                        variant="outlined"
+                      >
+                        Create Tasks
+                      </Button>
+                  </Box>
+                </Container>
+              ) : (
+                <TaskManagerListTable
+                  tasks={paginatedTasks}
+                  tasksCount={filteredTasks.length}
                   onPageChange={handlePageChange}
                   onRowsPerPageChange={handleRowsPerPageChange}
                   rowsPerPage={rowsPerPage}
                   page={page}
                 />
-              ) : (
-                <LoadingSkeleton />
               )
             }
+
           </Card>
         </Container>
       </Box>
@@ -303,10 +379,7 @@ const ProjectList = (props) => {
   );
 };
 
-// In this case I do not need to pass the second argument 
-const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects, null)(ProjectList);
-
-ProjectsListWithLayout.getLayout = (page) => (
+TasksList.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
@@ -314,4 +387,4 @@ ProjectsListWithLayout.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default ProjectsListWithLayout;
+export default TasksList;

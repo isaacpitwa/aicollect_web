@@ -86,7 +86,7 @@ export const JWTLogin = (props) => {
         value={formik.values.email}
       />
 
-      <FormControl sx={{ m: 1 }} variant="outlined" fullWidth error={Boolean(formik.touched.password && formik.errors.password)}>
+      <FormControl variant="outlined" sx={{ mt: 2 }} fullWidth>
         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
         <OutlinedInput
           error={Boolean(formik.touched.password && formik.errors.password)}
@@ -95,7 +95,6 @@ export const JWTLogin = (props) => {
           type={showPassword ? "text" : "password"}
           name="password"
           margin="normal"
-        
           value={formik.values.password}
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}

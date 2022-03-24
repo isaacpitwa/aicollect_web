@@ -13,7 +13,8 @@ import {
   Chip
 } from "@mui/material";
 import AppsIcon from '@mui/icons-material/Apps';
-import LowPriorityIcon from '@mui/icons-material/LowPriority';
+// import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
 import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
 import { Home as HomeIcon } from "../../icons/home";
@@ -82,7 +83,7 @@ const getSections = (t) => [
       {
         title: t("Task Manager"),
         path: "/dashboard/tasks",
-        icon: <LowPriorityIcon fontSize="small" />,
+        icon: <AssignmentIcon fontSize="small" />,
         children: [
           {
             title: t("Tasks"),

@@ -24,6 +24,7 @@ import toast from 'react-hot-toast';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
+import { CreateNewFormDialog } from '../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { useAuth } from '../../../../../hooks/use-auth';
 import { Search as SearchIcon } from '../../../../../icons/search';
@@ -152,6 +153,10 @@ const QuestionaireList = () => {
   const [excelFile, setExcelFile] = useState(null);
   const [colDefs, setColDefs] = useState();
   const [data, setData] = useState(null);
+  const [openCreateFormDialog, setOpenCreateFormDialog] = useState(false);
+
+  const handleOpenCreateFormDialog = () => setOpenCreateFormDialog(true);
+  const handleCloseCreateFormDialog = () => setOpenCreateFormDialog(false);
 
  
   /**
@@ -468,9 +473,15 @@ const QuestionaireList = () => {
                 startIcon={<AddCircleOutlineIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
+                onClick={handleOpenCreateFormDialog}
               >
                 Create New Form
               </Button>
+              <CreateNewFormDialog
+                open={openCreateFormDialog}
+                handleClose={handleCloseCreateFormDialog}
+                user={user}
+              />
               <TextField
                 label="Sort By"
                 name="sort"

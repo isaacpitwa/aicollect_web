@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import BadgeIcon from '@mui/icons-material/Badge';
-import { useAuth } from "../../hooks/use-auth";
 import { authenticationApi } from '../../api/auth-api';
 import { sectorApi } from '../../api/sectors-api';
 import { useMounted } from "../../hooks/use-mounted";
@@ -32,7 +31,6 @@ export const Profile = (props) => {
   const [billingPlans, setBillingPlans] = useState([]);
   const isMounted = useMounted();
   const router = useRouter();
-  const { register } = useAuth();
   const formik = useFormik({
     initialValues: {
       userType: props.user.roles === "Owner" ? "Client" : "System user",

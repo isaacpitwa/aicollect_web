@@ -54,7 +54,6 @@ const UserDetails = () => {
     try {
 
       const data = await userApi.getUserDetails(userId);
-      console.log(data)
 
       if (isMounted()) {
         setCustomer(data);
