@@ -43,6 +43,24 @@ const FormProvider = (props) => {
 
     }
 
+    const getNumericFieldValues = () => {
+
+    }
+
+    const addDependency = (fieldData) => {
+        if(fieldData.dependency) {
+            let newComponentsData = componentsData;
+            let section = newComponentsData.find(section => section.id === fieldData.parentId);
+            let sectionIndex = newComponentsData.findIndex(section => section.id === fieldData.parentId);
+            let subSection = section.components.find(subSection => subSection.id === fieldData.dependency);
+            let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.dependency);
+            subSection.display = 'hidden';
+            section.components[subSectionIndex] = subSection;
+            newComponentsData[sectionIndex] = section;
+            setComponentsData(newComponentsData);
+        }
+    }
+
     const updateComponentsData = (fieldIndex, newFieldData) => {
 
         let newComponentsData = componentsData;
@@ -157,6 +175,7 @@ const FormProvider = (props) => {
                 updateComponentsData,
                 addComponentToSection,
                 updateFieldInSection,
+                addDependency,
                 updateFormData,
                 formPreview,
                 editStatus,

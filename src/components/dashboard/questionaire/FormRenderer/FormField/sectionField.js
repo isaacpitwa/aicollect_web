@@ -47,7 +47,7 @@ const SectionField = (props) => {
 
     const getSectionId = () => {
         if(editStatus){
-            if(selectSection) {
+            if(sectionId===fieldData.id) {
                 setError(false)
                 setSelectSection(false)
                 setSectionId(null)

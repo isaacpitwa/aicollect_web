@@ -21,9 +21,17 @@ import FormField from '../FormField'
 
 const SubSectionField = (props) => {
 
-    const { sectionId, setSectionId, subSectionId, setSubSectionId, editStatus } = useContext(FormContext);
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        subSectionId,
+        setSubSectionId,
+        fieldResponses,
+        editStatus
+    } = useContext(FormContext);
 
-    const { fieldData, fieldResponses } = props
+    const { fieldData } = props
 
     const [fieldStyles, setFieldStyles] = useState(0)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
@@ -32,7 +40,6 @@ const SubSectionField = (props) => {
     const [numericFieldValue, setNumericFieldValue] = useState(0);
 
     useEffect(() => {
-        setSubSectionId(subSectionId!==fieldData.id?null:subSectionId)
         setFieldStyles(subSectionId===fieldData.id?2:0)
         setNumericFieldValue(fieldData.dependency?DependencyFieldValue():0)
     }, [setSectionId, subSectionId, fieldResponses, editStatus])
@@ -47,10 +54,16 @@ const SubSectionField = (props) => {
 
     const getSectionIDs = () => {
         if(editStatus){
-            setSectionId(fieldData.parentId)
-            setSubSectionId(fieldData.id)
+            if(subSectionId===fieldData.id) {
+                setError(false)
+                setSubSectionId(null)
+            } else {
+                setError(false)
+                setSelectSection(true)
+                setSectionId(fieldData.parentId)
+                setSubSectionId(fieldData.id)
+            }
         }
-        console.log('Sub Section ID: ', subSectionId)
     }
     
 

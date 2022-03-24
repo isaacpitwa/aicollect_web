@@ -19,7 +19,15 @@ import GeneralTooltip from '../../previews/GeneralTooltip'
 
 const numberField = (props) => {
 
-    const { fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        fieldResponses,
+        setFieldResponses,
+        editStatus
+    } = useContext(FormContext);
 
     const { fieldData, fieldUpdated } = props;
 
@@ -28,6 +36,10 @@ const numberField = (props) => {
     const [numberFieldDialog, setNumberFieldDialog] = useState(false)
 
     const handleNumberField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setNumberFieldDialog(true)
     }
 
@@ -38,13 +50,9 @@ const numberField = (props) => {
         setFieldResponses(newFieldResponses)
     }
 
-    const createNumberField = () => {
-        setNumberFieldDialog(false)
-    }
 
     const handleClose = () => {
         setNumberFieldDialog(false)
-        fieldUpdated()
     }
 
     const classes = formStyles();
@@ -52,7 +60,7 @@ const numberField = (props) => {
 
     return (
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-            <NumberField open={numberFieldDialog} createNumberField={createNumberField} fieldData={fieldData} handleClose={handleClose} />
+            <NumberField open={numberFieldDialog} fieldData={fieldData} handleClose={handleClose} />
             {editStatus?
                 <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
                     <EditIcon
