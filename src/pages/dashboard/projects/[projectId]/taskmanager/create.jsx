@@ -21,11 +21,7 @@ import {
   InputLabel,
   MenuItem,
   FormControl,
-  styled,
-  colors,
   ListItemIcon,
-  Stack,
-  LinearProgress,
   IconButton,
   Tooltip,
   List,
@@ -35,13 +31,9 @@ import {
   OutlinedInput,
   useTheme
 } from '@mui/material';
-import { useDropzone } from 'react-dropzone';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Icon } from '@iconify/react';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { useDropzone } from 'react-dropzone';;
+// import XLSX from 'xlsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 // import { userApi } from '../../../../api/users-api';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
@@ -49,9 +41,13 @@ import { DashboardLayout } from '../../../../../components/dashboard/dashboard-l
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { gtm } from '../../../../../lib/gtm';
 import { getInitials } from '../../../../../utils/get-initials';
-import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
 import { bytesToSize } from '../../../../../utils/bytes-to-size';
+import { convertToJSON } from '../../../../../utils/convert-excel-data-to-json';
 import { tasksApi } from '../../../../../api/tasks-api';
+import { Duplicate as DuplicateIcon } from '../../../../../icons/duplicate';
+import { X as XIcon } from '../../../../../icons/x';
+import { ScheduleStagingTable } from '../../../../../components/dashboard/projectDetails/taskmanager/schedule-stage-table';
+import toast from 'react-hot-toast';
 
 const questionairesList = [
   {
@@ -106,22 +102,8 @@ function getStyles(questionaire, questionaireList, theme) {
   };
 }
 
-const FileDropZone = styled('div')(({ theme }) => ({
-  border: `1px dashed ${theme.palette.divider}`,
-  padding: theme.spacing(6),
-  marginTop: 6,
-  outline: 'none',
-  display: 'flex',
-  justifyContent: 'center',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  '&:hover': {
-    backgroundColor: colors.grey[50],
-    opacity: 0.5,
-    cursor: 'pointer'
-  }
-}));
-
+const applyPagination = (data, page, rowsPerPage) =>
+  data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const CreateTask = () => {
   const isMounted = useMounted();
@@ -134,11 +116,17 @@ const CreateTask = () => {
     startDate: '',
     dueDate: '',
   });
+
   const [questionaires, setQuestionaires] = useState([]);
   const [team, setTeam] = useState([]);
-  const [schedule, setSchedule] = useState(null);
+  const [excelFile, setExcelFile] = useState(null);
+  const [schedule, setSchedule] = useState([]);
   const [fileError, setFileError] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [colDefs, setColDefs] = useState();
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const steps = [
     {
@@ -182,43 +170,65 @@ const CreateTask = () => {
     );
   };
 
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+  // Todo: Fix use of paginated members on excel import.
+  const paginatedTeamMembers = applyPagination(
+    data || [],
+    page,
+    rowsPerPage
+  );
+
   const onDropExcelFiles = useCallback((acceptedFiles,) => {
-    setSchedule(acceptedFiles[0]);
-    // const selectedFile = acceptedFiles[0];
-    // const questionaire = {
-    //   name: acceptedFiles[0].name.replace(/\.[^/.]+$/, ""),
-    //   version: 'v1',
-    //   status: 'active'
-    // }
-    // // setQuestionaires((prevState) => ([...prevState].concat(questionaire)));
+    setExcelFile(acceptedFiles[0]);
+    const selectedFile = acceptedFiles[0];
+    const scheduleFile = {
+      name: acceptedFiles[0].name.replace(/\.[^/.]+$/, ""),
+      version: 'v1',
+      status: 'active'
+    }
+    setSchedule((prevState) => ([...prevState].concat(scheduleFile)));
     const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
     reader.onload = (event) => {
+      const XLSX = require('xlsx');
       // Parse data
       const bstr = event.target.result;
-      const workbook = XLSX.read(bstr, { type: 'binary' });
+      const workbook = XLSX.read(bstr, { type: rABS ? 'binary' : 'array' });
+
 
       // get first sheet
       const workSheetName = workbook.SheetNames[0];
       const workSheet = workbook.Sheets[workSheetName];
 
-      // Convert to array
+      // // Convert to array
       const fileData = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
       const headers = fileData[0];
+      // console.log('headers');
       const heads = headers.map((head) => ({ title: head, field: head }));
-      // setColDefs(heads);
+      setColDefs(heads);
       // console.log("COLS", colDefs);
       // removing the header
       fileData.splice(0, 1);
-      // setData(convertToJSON(headers, fileData));
+      setData(convertToJSON(headers, fileData));
+      // console.log(data);
     };
+    
     reader.onerror = (event) => {
       setFileError("Wrong file type, please use excel or csv file");
-    }
+    };
 
-    // reader.readAsBinaryString(selectedFile)
+    if (rABS) reader.readAsBinaryString(selectedFile);
+    else reader.readAsArrayBuffer(selectedFile);
 
   }, []);
-
+  console.log('data', data);
+  console.log('cols', colDefs);
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -244,9 +254,9 @@ const CreateTask = () => {
   const handleCreateTask = async () => {
     try {
       // Make call to task creation API
-      let qnList = [];
-      questionaires.forEach((item) => {
-        qnList.push(item.id);
+      let schedule = [];
+      data.forEach((item) => {
+        schedule.push(item.id);
       });
       const task = {
         ...taskInformation,
@@ -255,7 +265,11 @@ const CreateTask = () => {
         schedule
       };
       const data = await tasksApi.createTask(task);
+      if (data) {
+        toast.success("Yeah, you have create a task");
+      }
     } catch (error) {
+      toast.error("Awww, failed to create a task", { duration: 9000 });
       console.log(error);
     }
   };
@@ -391,37 +405,37 @@ const CreateTask = () => {
                           <Box sx={{ mb: 2 }}>
                             <Grid container spacing={2}>
                               <Grid item md={12} mt={3} sm={12}>
-                              <FormControl fullWidth>
-                                <InputLabel id="select-team">Select Team</InputLabel>
-                                <Select
-                                  labelId="select-team"
-                                  id="select-team"
-                                  multiple
-                                  value={team}
-                                  onChange={handleChangeTeam}
-                                  input={<OutlinedInput id="select-team" label="Chip" />}
-                                  renderValue={(selected) => (
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                      {selected.map((value, idx) => (
-                                        <Chip
-                                          key={idx} 
-                                          label={value.name} />
-                                      ))}
-                                    </Box>
-                                  )}
-                                  MenuProps={MenuProps}
-                                >
-                                  {teamMembers.map((member, idx) => (
-                                    <MenuItem
-                                      key={idx}
-                                      value={member}
-                                      style={getStyles(member, questionaires, theme)}
-                                    >
-                                      {member.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
+                                <FormControl fullWidth>
+                                  <InputLabel id="select-team">Select Team</InputLabel>
+                                  <Select
+                                    labelId="select-team"
+                                    id="select-team"
+                                    multiple
+                                    value={team}
+                                    onChange={handleChangeTeam}
+                                    input={<OutlinedInput id="select-team" label="Chip" />}
+                                    renderValue={(selected) => (
+                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                        {selected.map((value, idx) => (
+                                          <Chip
+                                            key={idx}
+                                            label={value.name} />
+                                        ))}
+                                      </Box>
+                                    )}
+                                    MenuProps={MenuProps}
+                                  >
+                                    {teamMembers.map((member, idx) => (
+                                      <MenuItem
+                                        key={idx}
+                                        value={member}
+                                        style={getStyles(member, questionaires, theme)}
+                                      >
+                                        {member.name}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
                               </Grid>
                             </Grid>
                           </Box>
@@ -433,57 +447,137 @@ const CreateTask = () => {
                               Sample Template excel file for importing can be <a href='/templates/Template.xlsx' download>DOWNLOADED HERE</a>
                             </Typography> <br />
 
-                            <FileDropZone {...getRootProps()}>
-                              <input
-                                {...getInputProps()}
-                                required />
-                              <div>
+                            <Box
+                              sx={{
+                                alignItems: 'center',
+                                border: 1,
+                                borderRadius: 1,
+                                borderStyle: 'dashed',
+                                borderColor: 'divider',
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                justifyContent: 'center',
+                                outline: 'none',
+                                p: 6,
+                                ...(isDragActive && {
+                                  backgroundColor: 'action.active',
+                                  opacity: 0.5
+                                }),
+                                '&:hover': {
+                                  backgroundColor: 'action.hover',
+                                  cursor: 'pointer',
+                                  opacity: 0.5
+                                }
+                              }}
+                              {...getRootProps()}>
+                              <input {...getInputProps()} />
+                              <Box
+                                sx={{
+                                  '& img': {
+                                    width: 100
+                                  }
+                                }}
+                              >
                                 <img
-                                  src="/undraw_add_file_gvbb.jpg"
-                                  style={{ width: 130 }}
-                                  alt="Select file" />
-                              </div>
-                              {
-                                isDragActive ? (
-                                  <Typography variant="body1">Drop Excel files here</Typography>
-                                ) : (<p>Drag and drop Excel file here or click to browse</p>)
-                              }
-                            </FileDropZone>
+                                  alt="Select file"
+                                  src="/static/undraw_add_file2_gvbb.svg"
+                                />
+                              </Box>
+                              <Box sx={{ p: 2 }}>
+                                <Typography variant="h6">
+                                  {`Select file`}
+                                </Typography>
+                                <Box sx={{ mt: 2 }}>
+                                  <Typography variant="body1">
+                                    {`Drop file`}
+                                    {' '}
+                                    <Link underline="always">
+                                      browse
+                                    </Link>
+                                    {' '}
+                                    thorough your machine
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
                             {
                               fileRejections.length > 0 && <Alert sx={{ mt: 3 }} severity="error">Wrong file type, please use excel or csv file</Alert>
                             }
                             {
-                              schedule && (
+                              excelFile && (
                                 <>
-                                  <PerfectScrollbar>
-                                    <List style={{ maxHeight: 320 }}>
-                                      <Stack
-                                        direction="column"
-                                        spacing={1}>
-                                        <ListItem>
-                                          <ListItemIcon>
-                                            <Icon icon={<AttachFileIcon />} />
-                                          </ListItemIcon>
-                                          <ListItemText
-                                            primary={schedule.name}
-                                            primaryTypographyProps={{ variant: 'h5' }}
-                                            secondary={bytesToSize(schedule.size)} />
-                                          <Tooltip title="Delete">
-                                            <IconButton
-                                              edge="end"
-                                              onClick={() => setSchedule(null)}>
-                                              <Icon icon={DeleteForeverIcon} />
-                                            </IconButton>
-                                          </Tooltip>
-                                        </ListItem>
-                                        <LinearProgress
-                                          variant='determinate'
-                                          value={100}
-                                          style={{ marginTop: '5px', backgroundColor: 'red' }}
-                                          title="Progress" />
-                                      </Stack>
+                                  <Box sx={{ mt: 2 }}>
+                                    <List>
+                                      <ListItem
+                                        key={excelFile.path}
+                                        sx={{
+                                          border: 1,
+                                          borderColor: 'divider',
+                                          borderRadius: 1,
+                                          '& + &': {
+                                            mt: 1
+                                          }
+                                        }}
+                                      >
+                                        <ListItemIcon>
+                                          <DuplicateIcon fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                          primary={excelFile.name}
+                                          primaryTypographyProps={{
+                                            color: 'textPrimary',
+                                            variant: 'subtitle2'
+                                          }}
+                                          secondary={bytesToSize(excelFile.size)}
+                                        />
+                                        <Tooltip title="Remove">
+                                          <IconButton
+                                            edge="end"
+                                            onClick={() => setExcelFile(null)}
+                                          >
+                                            <XIcon fontSize="small" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </ListItem>
                                     </List>
-                                  </PerfectScrollbar>
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        mt: 2
+                                      }}
+                                    >
+                                      <Button
+                                        // onClick={onRemoveAll}
+                                        size="small"
+                                        type="button"
+                                      >
+                                        Remove All
+                                      </Button>
+                                      <Button
+                                        // onClick={onUpload}
+                                        size="small"
+                                        sx={{ ml: 2 }}
+                                        type="button"
+                                        variant="contained"
+                                      >
+                                        Upload
+                                      </Button>
+                                    </Box>
+                                  </Box>
+
+                                  {
+                                    data && colDefs && (
+                                      <ScheduleStagingTable
+                                    cols={colDefs || []}
+                                    tasks={data || []}
+                                    tasksCount={data?.length}
+                                    onPageChange={handlePageChange}
+                                    onRowsPerPageChange={handleRowsPerPageChange}
+                                    page={page}
+                                    rowsPerPage={rowsPerPage} />
+                                    )
+                                  }
                                 </>
                               )
                             }
@@ -512,7 +606,7 @@ const CreateTask = () => {
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                       {selected.map((value) => (
                                         <Chip
-                                          key={value} 
+                                          key={value}
                                           label={value.name} />
                                       ))}
                                     </Box>

@@ -11,7 +11,7 @@ import {
   Divider,
   IconButton
 } from '@mui/material';
-import Map from "react-map-gl"
+import Map, { Marker } from "react-map-gl"
 import toast from 'react-hot-toast';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -111,29 +111,34 @@ const ProjectTaskDetails = () => {
               p: 3
             }}>
             <Grid container spacing={2}>
-              <Grid item md={4} sm={6}>
+              <Grid item md={5} sm={6}>
                 <TaskMembers team={task?.team} />
               </Grid>
-              <Grid item md={8} sm={6}>
+              <Grid item md={7} sm={6}>
                 <Map
                   initialViewState={{
-                    longitude: -122.45,
-                    latitude: 37.78,
+                    longitude: -1.135171,
+                    latitude: 52.6376,
                     zoom: 14,
                     width: "100%",
                   }}
+
                   mapboxAccessToken={process.env.NEXT_PUBLIC_GOOGLE_MAP_TOKEN}
                   mapStyle="mapbox://styles/mapbox/streets-v9"
-                />
+                >
+                  <Marker latitude={0.347596} longitude={32.582520} >
+                    <img src="https://www.pinclipart.com/picdir/middle/561-5612244_map-pin-icon-green-green-map-pin-png.png" width={50} height={50} />
+                  </Marker>
+                </Map>
               </Grid>
             </Grid>
           </Box>
 
           <Box
-          sx={{
-            backgroundColor: 'background.paper',
-            p: 3
-          }}>
+            sx={{
+              backgroundColor: 'background.paper',
+              p: 3
+            }}>
             <TaskManagerSchedule />
           </Box>
         </Container>

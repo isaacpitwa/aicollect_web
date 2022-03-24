@@ -41,10 +41,11 @@ export const TaskMembers = ({ team: members }) => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
+      width: '100%',
       p: 3
     }}
   >
-    <Container maxWidth="sm">
+    {/* <Container> */}
       <Card>
         <CardHeader
           sx={{ pb: 0 }}
@@ -87,6 +88,6 @@ export const TaskMembers = ({ team: members }) => (
           </Button>
         </CardActions>
       </Card>
-    </Container>
+    {/* </Container> */}
   </Box>
 );
