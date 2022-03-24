@@ -40,6 +40,7 @@ const NumberField = (props) => {
         subSectionId,
         componentsData,
         addComponentToSection,
+        updateFieldInSection,
         updateComponentsData
     } = useContext(FormContext)
 
@@ -49,17 +50,18 @@ const NumberField = (props) => {
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [type] = useState(fieldData ? fieldData.type : 'text')
+    const [type] = useState(fieldData ? fieldData.type : 'number')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
     const [conditional, setConditional] = useState(false)
+    const [dependency, setDependency] = useState(fieldData?fieldData.dependency:null)
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
-    const [dependency, setDependency] = useState(false)
+    const [dependantFieldId, setDependantFieldId] = useState('')
     const [subSectionDisplay, setSubSectionDisplay] = useState('')
 
     useEffect(() => {
@@ -90,26 +92,18 @@ const NumberField = (props) => {
 
     const handleDisplay = (e) => {
         setButtonFocused("display")
-        setConditional(false)
-        setDependency(false)
     }
 
     const handleConditional = (e) => {
         setButtonFocused("conditional")
-        setConditional(true)
-        setDependency(false)
     }
 
     const handleLogic = (e) => {
         setButtonFocused("logic")
-        setConditional(false)
-        setDependency(false)
     }
 
     const handleDependency = (e) => {
         setButtonFocused("dependency")
-        setDependency(true)
-        setConditional(false)
 
     }
 
@@ -141,6 +135,13 @@ const NumberField = (props) => {
         }
     }
 
+    const addDependency = (e) => {
+        setDependency(e.target.value)
+    }
+
+    const selectSubSection = (e) => {
+        setDependantFieldId(e.target.value)
+    }
 
     const addNumberField = () => {
 
@@ -178,23 +179,22 @@ const NumberField = (props) => {
     }
 
     const handleUpdate = () => {
+
         let newField = {
             id: id,
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
-            value: value,
+            value: fieldValue,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            conditional: {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()
-            }
+            dependency: dependency,
+            conditional: conditionalLogic()
         }
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+
+        updateFieldInSection(newField)
         handleClose()
     }
 
@@ -250,7 +250,7 @@ const NumberField = (props) => {
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {conditional?
+                            {buttonFocused==="conditional"?
                                 <>
                                     <Typography style={{ fontSize: '15px', color: '#5048E5' }}>
                                         This component should Display:
@@ -296,7 +296,7 @@ const NumberField = (props) => {
                                         onChange={handleCompValue}
                                     />
                                 </>
-                            :dependency?
+                            :buttonFocused==="dependency"?
                                 <>
                                     <Typography style={{ fontSize: '15px', color: '#5048E5' }}>
                                         For Sub-Section:
@@ -304,41 +304,15 @@ const NumberField = (props) => {
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={subSectionId}
+                                        value={dependency}
                                         fullWidth
                                         size={'small'}
-                                        onChange={handleSubSectionId}
+                                        onChange={addDependency}
                                     >
                                         {allHiddenSubSections(fieldData.parentId, componentsData).map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
-                                    <DescriptionCard description={'Only applies for hidden Sub-Sections'} helperText={true} />
-                                    <Typography style={{ marginTop: '20px', fontSize: '15px', color: '#5048E5' }}>
-                                        Display by field value:
-                                    </Typography>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={subSectionDisplay}
-                                        fullWidth
-                                        size={'small'}
-                                        onChange={handleSubSectionDisplay}
-                                    >
-                                        <MenuItem value={'hidden'}>True</MenuItem>
-                                        <MenuItem value={'visible'}>False</MenuItem>
-                                    </Select>
-                                    <Typography style={{ marginTop: '10px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}>
-                                        Offset Value:
-                                    </Typography>
-                                    <TextField
-                                        fullWidth
-                                        type={'number'}
-                                        variant={'outlined'}
-                                        value={value}
-                                        size={'small'}
-                                        onChange={handleFieldValue}
-                                    />
                                 </>                                        
                             :
                                 <>

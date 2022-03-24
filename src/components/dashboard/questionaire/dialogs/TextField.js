@@ -175,7 +175,6 @@ const TextField_ = (props) => {
         }
 
         addComponentToSection(newField)
-
         handleClose()
 
     }
