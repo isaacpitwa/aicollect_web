@@ -9,7 +9,8 @@ stages:
 
 #2
 variables:
-  REGISTRY: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app"
+  #REGISTRY: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app"
+  REGISTRY: "registry.gitlab.com"
   IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app:latest"
 
 # before_script:
