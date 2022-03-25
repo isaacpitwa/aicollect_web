@@ -283,6 +283,7 @@ const CreateTask = () => {
       const data = await tasksApi.createTask(task);
       if (data) {
         toast.success("Yeah, you have create a task");
+        router.push(`/dashboard/projects/${projectId}/taskmanager`);
       }
     } catch (error) {
       toast.error("Awww, failed to create a task", { duration: 9000 });
