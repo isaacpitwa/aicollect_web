@@ -11,7 +11,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 import { FormsApi } from '../../../../api/forms-api';
-import { Grid, IconButton, Stack } from '@mui/material';
+import { CircularProgress, Grid, IconButton, Stack } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 
 export const CreateNewFormDialog = ({ open, handleClose, user }) => {
@@ -151,7 +151,9 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleCreateNewForm} variant="contained">Create Form</Button>
+        <Button onClick={handleCreateNewForm} disabled={loading} variant="contained">
+          { loading ? <CircularProgress /> : "Create Form"}
+        </Button>
       </DialogActions>
     </Dialog>
   );
