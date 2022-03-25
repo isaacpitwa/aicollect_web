@@ -22,6 +22,8 @@ const FormProvider = (props) => {
     const [sectionCreated, setSectionCreated] = useState(false)
     const [formPreview, setFormPreview] = useState(false)
     const [editStatus, setEditStatus] = useState(true)
+    const [dependantId, setDependantId] = useState("")
+    const [dependecyValue, setDependecyValue] = useState("")
 
 
     const getFormData = useCallback(async () => {
@@ -48,13 +50,14 @@ const FormProvider = (props) => {
     }
 
     const addDependency = (fieldData) => {
-        if(fieldData.dependency) {
+        if(fieldData.type==="number"&&fieldData.dependency) {
             let newComponentsData = componentsData;
             let section = newComponentsData.find(section => section.id === fieldData.parentId);
             let sectionIndex = newComponentsData.findIndex(section => section.id === fieldData.parentId);
             let subSection = section.components.find(subSection => subSection.id === fieldData.dependency);
             let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.dependency);
             subSection.display = 'hidden';
+            subSection.dependency = fieldData.id
             section.components[subSectionIndex] = subSection;
             newComponentsData[sectionIndex] = section;
             setComponentsData(newComponentsData);
@@ -119,7 +122,7 @@ const FormProvider = (props) => {
         newFormFields[sectionIndex] = section
 
         setComponentsData(newFormFields)
-
+        addDependency(fieldData)
         updateFormData()        
     }
 
@@ -179,7 +182,11 @@ const FormProvider = (props) => {
                 updateFormData,
                 formPreview,
                 editStatus,
-                handleFormPreview
+                handleFormPreview,
+                dependantId,
+                setDependantId,
+                dependecyValue,
+                setDependecyValue
             }}
         >
             {props.children}

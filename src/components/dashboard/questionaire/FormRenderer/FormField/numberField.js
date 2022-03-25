@@ -26,7 +26,9 @@ const numberField = (props) => {
         setSubSectionId,
         fieldResponses,
         setFieldResponses,
-        editStatus
+        editStatus,
+        setDependantId,
+        setDependecyValue
     } = useContext(FormContext);
 
     const { fieldData, fieldUpdated } = props;
@@ -45,9 +47,10 @@ const numberField = (props) => {
 
     const handleFieldValue = (e) => {
         setValue(e.target.value)
-        let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: Number(e.target.value) }
-        setFieldResponses(newFieldResponses)
+        if(fieldData.dependency) {
+            setDependantId(fieldData.id)
+            setDependecyValue(e.target.value)
+        }
     }
 
 

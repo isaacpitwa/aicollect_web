@@ -162,7 +162,6 @@ const NumberField = (props) => {
 
         if(sectionId&&fieldLabel!=='') {
             addComponentToSection(newFieldObj)
-            addDependency(newFieldObj)
             setError(false)
             setErrorTag(false)
             setFieldLabel('')
@@ -197,7 +196,6 @@ const NumberField = (props) => {
         }
 
         updateFieldInSection(newField)
-        addDependency(newField)
         handleClose()
     }
 
