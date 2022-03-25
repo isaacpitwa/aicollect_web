@@ -30,6 +30,7 @@ import { useMounted } from '../../../../../hooks/use-mounted';
 // import CreateNewProjectDialog from '../../../../../components/dashboard/project/project-create-new';
 import CreateNewTask from '../../../../../components/dashboard/projectDetails/taskmanager/project-task-manager';
 import { TaskManagerListTable } from '../../../../../components/dashboard/projectDetails/taskmanager/task-manager-list-table';
+import { tasksApi } from '../../../../../api/tasks-api';
 
 
 const sortOptions = [
@@ -170,25 +171,23 @@ const TasksList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  // const getProjects = useCallback(async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
-  //     const data = await response.json();
-  //     if (isMounted()) {
-  //       if (data?.status === 200) {
-  //         toast.success(data.message, { duration: 10000 });
-  //         setTasks(data.data);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
-  //   }
-  // }, [isMounted]);
+  const getProjectTasks = useCallback(async () => {
+    try {
+      const { projectId } = router.query;
+      const data = await tasksApi.getProjectTasks(projectId);
+      if (isMounted() && data) {
+        toast.success('Data loaded successfully', { duration: 10000 });
+        console.log(data)
+        setTasks(data);
+      }
+    } catch (error) {
+      toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
+    }
+  }, [isMounted]);
 
-  // useEffect(() => {
-  //   getProjects();
-  // }, []);
+  useEffect(() => {
+    getProjectTasks();
+  }, []);
 
   // Usually query is done on backend with indexing solutions
   const filteredTasks = applyFilters(tasks, filters);

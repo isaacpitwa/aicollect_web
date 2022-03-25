@@ -20,8 +20,9 @@ import { ArrowRight as ArrowRightIcon } from '../../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
 import { Scrollbar } from '../../../scrollbar';
 
-export const TaskManagerListTable = (props) => {
+export const ScheduleStagingTable = (props) => {
   const {
+    cols,
     tasks,
     tasksCount,
     onPageChange,
@@ -94,94 +95,62 @@ export const TaskManagerListTable = (props) => {
         <Table sx={{ minWidth: 700 }}>
           <TableHead sx={{ visibility: enableBulkActions ? 'collapse' : 'visible' }}>
             <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAllTasks}
-                  indeterminate={selectedSomeTasks}
-                  onChange={handleSelectAllTasks}
-                />
-              </TableCell>
-              <TableCell>
-                Title
-              </TableCell>
-              <TableCell>
-                Task Type
-              </TableCell>
-              <TableCell>
-                Status
-              </TableCell>
-              <TableCell>
-                Assigned To
-              </TableCell>
-              <TableCell>
-                Priority
-              </TableCell>
-              <TableCell>
-                Start Date
-              </TableCell>
-              <TableCell>
-                Due Date
-              </TableCell>
-              <TableCell>
-                Rescheduled
-              </TableCell>
-              <TableCell>
-                Task Completed
-              </TableCell>
-              <TableCell align="right">
-                Actions
-              </TableCell>
+              {
+                cols.map((cell, idx) => (
+                  <TableCell key={idx}>{cell.title}</TableCell>
+                ))
+              }
             </TableRow>
           </TableHead>
           <TableBody>
-            {tasks.map((task) => {
-              const isTaskSelected = selectedTasks.includes(task.id);
+            {tasks.map((task, idx) => {
               // console.log(project)
 
               return (
                 <TableRow
                   hover
-                  key={task.id}
-                  selected={isTaskSelected}
+                  key={idx}
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isTaskSelected}
-                      onChange={(event) => handleSelectOneTask(event, task.id)}
-                      value={isTaskSelected}
-                    />
+                  <TableCell>
+                    <Typography>{task.Account}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography>{task.title}</Typography>
+                    {task["Event Type"]}
                   </TableCell>
                   <TableCell>
-                    {task.taskType}
+                    {task.Contact}
                   </TableCell>
                   <TableCell>
-                    {task.status}
+                    {task.Latitude}
                   </TableCell>
                   <TableCell>
-                    {task.createdBy.name}
+                    {task.Longitude}
                   </TableCell>
                   <TableCell>
-                    {task.priority}
+                    {task.Location}
                   </TableCell>
                   <TableCell>
-                    {moment(task.startDate).format('MM/DD/YYYY')}
+                    {moment(task["last visit"])}
                   </TableCell>
                   <TableCell>
-                    {moment(task.dueDate).format('MM/DD/YYYY')}
+                  {task["Gps Lock"]}
                   </TableCell>
                   <TableCell>
-                    {task.rescheduled ? 'Yes' : 'No'}
+                    {moment(task["Start  Date"]).format('DD/MM/YYY')}
                   </TableCell>
                   <TableCell>
-                    {task.completed ? task.dataCompleted : 'Not Completed'}
+                    {task.Day}
+                  </TableCell>
+                  <TableCell>
+                    {task.Recurring}
+                  </TableCell>
+                  <TableCell>
+                    {task.Agent}
                   </TableCell>
                   
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/projects/${projectId}/taskmanager/${task._id}/edit`}
+                      href={`/dashboard/projects/${projectId}/taskmanager/""/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -189,7 +158,7 @@ export const TaskManagerListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${projectId}/taskmanager/${task._id}`}
+                      href={`/dashboard/projects/${projectId}/taskmanager/''`}
                       passHref
                     >
                       <IconButton component="a">
@@ -216,9 +185,10 @@ export const TaskManagerListTable = (props) => {
   );
 };
 
-TaskManagerListTable.propTypes = {
-  projects: PropTypes.array.isRequired,
-  projectsCount: PropTypes.number.isRequired,
+ScheduleStagingTable.propTypes = {
+  cols: PropTypes.array.isRequired,
+  tasks: PropTypes.array.isRequired,
+  tasksCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,

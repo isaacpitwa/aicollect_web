@@ -125,14 +125,12 @@ export const ProjectListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((project) => {
+            {projects.map((project, idx) => {
               const isProjectSelected = selectedProjects.includes(project.id);
-              // console.log(project)
-
               return (
                 <TableRow
                   hover
-                  key={project.id}
+                  key={idx}
                   selected={isProjectSelected}
                 >
                   <TableCell padding="checkbox">
