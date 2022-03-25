@@ -41,6 +41,7 @@ const NumberField = (props) => {
         componentsData,
         addComponentToSection,
         updateFieldInSection,
+        addDependency,
         updateComponentsData
     } = useContext(FormContext)
 
@@ -56,7 +57,7 @@ const NumberField = (props) => {
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [conditional, setConditional] = useState(false)
+    const [conditional, setConditional] = useState(null)
     const [dependency, setDependency] = useState(fieldData?fieldData.dependency:null)
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
@@ -135,7 +136,7 @@ const NumberField = (props) => {
         }
     }
 
-    const addDependency = (e) => {
+    const addSubSectionId = (e) => {
         setDependency(e.target.value)
     }
 
@@ -161,6 +162,7 @@ const NumberField = (props) => {
 
         if(sectionId&&fieldLabel!=='') {
             addComponentToSection(newFieldObj)
+            addDependency(newFieldObj)
             setError(false)
             setErrorTag(false)
             setFieldLabel('')
@@ -195,6 +197,7 @@ const NumberField = (props) => {
         }
 
         updateFieldInSection(newField)
+        addDependency(newField)
         handleClose()
     }
 
@@ -307,9 +310,9 @@ const NumberField = (props) => {
                                         value={dependency}
                                         fullWidth
                                         size={'small'}
-                                        onChange={addDependency}
+                                        onChange={addSubSectionId}
                                     >
-                                        {allHiddenSubSections(fieldData.parentId, componentsData).map(option => (
+                                        {allHiddenSubSections(sectionId, componentsData).map(option => (
                                             <MenuItem value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
