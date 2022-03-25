@@ -51,6 +51,10 @@ class TasksApi {
       console.log(data);
     }
   }
+
+  // TODO: Work on task update
+  // TODO: Work on delete task
+  // TODO: Documentation
 };
 
 export const tasksApi = new TasksApi();

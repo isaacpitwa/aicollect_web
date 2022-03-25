@@ -32,12 +32,10 @@ import {
   useTheme
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';;
-// import XLSX from 'xlsx';
+import toast from 'react-hot-toast';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-// import { userApi } from '../../../../api/users-api';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
-// import { UserEditForm } from '../../../../components/dashboard/user/user-edit-form';
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { gtm } from '../../../../../lib/gtm';
 import { getInitials } from '../../../../../utils/get-initials';
@@ -47,40 +45,10 @@ import { tasksApi } from '../../../../../api/tasks-api';
 import { Duplicate as DuplicateIcon } from '../../../../../icons/duplicate';
 import { X as XIcon } from '../../../../../icons/x';
 import { ScheduleStagingTable } from '../../../../../components/dashboard/projectDetails/taskmanager/schedule-stage-table';
-import toast from 'react-hot-toast';
-
-const questionairesList = [
-  {
-    id: '673ndsid',
-    name: 'Nabbingo Farms Form'
-  },
-  {
-    id: '673ndsidslkfh',
-    name: 'Refugee Camp Forms'
-  },
-  {
-    id: '673ndjsdsid',
-    name: 'Sacco Management'
-  },
-]
-
-const teamMembers = [
-  {
-    userId: 1,
-    name: "Musoke Dan",
-    roles: "Standard User"
-  },
-  {
-    userId: 2,
-    name: "Hassan Kent",
-    roles: "Standard User"
-  },
-  {
-    userId: 3,
-    name: "Isaac Pitwa",
-    roles: "Standard User"
-  },
-]
+import { useAuth } from '../../../../../hooks/use-auth';
+// API
+import { projectsApi } from '../../../../../api/projects-api';
+import { FormsApi } from '../../../../../api/forms-api';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -109,6 +77,7 @@ const CreateTask = () => {
   const isMounted = useMounted();
   const router = useRouter();
   const theme = useTheme();
+  const { user } = useAuth();
   const [taskInformation, setTaskInformation] = useState({
     title: '',
     taskType: '',
@@ -119,12 +88,21 @@ const CreateTask = () => {
 
   const [questionaires, setQuestionaires] = useState([]);
   const [team, setTeam] = useState([]);
+  // Members to render in select Field
+  const [projectMembers, setProjectMembers] = useState([]);
+  // Questionaires to render in Select Field
+  const [questionairesList, setQuestionairesList] = useState([]);
   const [excelFile, setExcelFile] = useState(null);
   const [schedule, setSchedule] = useState([]);
   const [fileError, setFileError] = useState(null);
+  // Stepper
   const [activeStep, setActiveStep] = useState(0);
+
+  // Table columns from imported Excel file
   const [colDefs, setColDefs] = useState();
+  // Table rows from imported Excel file
   const [data, setData] = useState(null);
+  
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -149,7 +127,38 @@ const CreateTask = () => {
     },
   ];
 
-  const { userId } = router.query;
+  const { projectId } = router.query;
+
+  // Get project Team Members
+  const fetchProjectTeam = useCallback(async () => {
+    try {
+      const data = await projectsApi.fetchProjectDetails(projectId);
+      if (data) {
+        setProjectMembers(data.projectTeam);
+      }
+    } catch (error) {
+      
+    }
+  }, [setProjectMembers]);
+
+  // Get Project Questionaires
+  const fetchQuestionaires = useCallback(async () => {
+    try {
+      const data = await FormsApi.getAllProjectForms();
+      if (data) {
+        setQuestionairesList(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setQuestionairesList]);
+
+  useEffect(() => {
+    fetchProjectTeam();
+  }, []);
+  useEffect(() => {
+    fetchQuestionaires();
+  }, []);
 
   const handleChangeQuestionaires = (event) => {
     const {
@@ -184,6 +193,7 @@ const CreateTask = () => {
     rowsPerPage
   );
 
+  // Process Excel files on Upload;
   const onDropExcelFiles = useCallback((acceptedFiles,) => {
     setExcelFile(acceptedFiles[0]);
     const selectedFile = acceptedFiles[0];
@@ -246,23 +256,29 @@ const CreateTask = () => {
     setTaskInformation((prevState) => ({ ...prevState, [event.target.name]: event.target.value }));
   };
 
-  const handleChangeScheduleFile = (event) => {
-    event.preventDefault();
-    setSchedule(event.target.files[0]);
-  };
+  // const handleChangeScheduleFile = (event) => {
+  //   event.preventDefault();
+  //   setSchedule(event.target.files[0]);
+  // };
 
   const handleCreateTask = async () => {
     try {
       // Make call to task creation API
-      let schedule = [];
-      data.forEach((item) => {
-        schedule.push(item.id);
+      let questLst = [];
+      data && data.forEach((item) => {
+        questLst.push(item.field);
       });
       const task = {
         ...taskInformation,
-        questionaire: qnList,
+        questionaire: questionaires.map((item) => item._id),
         team,
-        schedule
+        schedule,
+        project: projectId,
+        createdBy: {
+          userId: user.id,
+          name: `${user.firstname} ${user.lastname}`,
+          roles: user.roles
+        }
       };
       const data = await tasksApi.createTask(task);
       if (data) {
@@ -425,7 +441,7 @@ const CreateTask = () => {
                                     )}
                                     MenuProps={MenuProps}
                                   >
-                                    {teamMembers.map((member, idx) => (
+                                    {projectMembers.map((member, idx) => (
                                       <MenuItem
                                         key={idx}
                                         value={member}
