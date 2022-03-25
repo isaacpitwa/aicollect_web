@@ -1,0 +1,1155 @@
+{
+    "_id": "61387c6d78c0807505727423",
+    "type": "form",
+    "tags": [],
+    "owner": "61376e2fa976805f15edc96e",
+        "components": [
+        {
+        "title": "Page 1",
+        "label": "Page 1",
+        "type": "panel",
+        "key": "page1",
+            "components": [
+                {
+                    "legend": "Consent",
+                    "key": "fieldSet",
+                    "type": "fieldset",
+                    "label": "Field Set",
+                    "input": false,
+                    "tableView": false,
+                    "components": [
+                        {
+                            "label": "Do you consent to be registered on this project?",
+                            "optionsLabelPosition": "right",
+                            "inline": true,
+                            "tableView": false,
+                            "values": [
+                                {
+                                "label": "Yes",
+                                "value": "yes",
+                                "shortcut": ""
+                                },
+                                {
+                                "label": "No",
+                                "value": "no",
+                                "shortcut": ""
+                                }
+                            ],
+                            "key": "doYouConsentToBeRegisteredOnThisProject",
+                            "type": "radio",
+                            "input": true
+                        }
+                    ]
+                },
+                {
+                    "legend": "Basic Information",
+                    "key": "fieldSet1",
+                    "conditional": {
+                        "show": true,
+                        "when": "doYouConsentToBeRegisteredOnThisProject",
+                        "eq": "yes"
+                    },
+                    "type": "fieldset",
+                    "label": "Basic Information",
+                    "input": false,
+                    "tableView": false,
+                    "components": [
+                    {
+                        "label": "Registration Date",
+                        "hideInputLabels": false,
+                        "inputsLabelPosition": "top",
+                        "useLocaleSettings": false,
+                        "tableView": false,
+                        "fields": {
+                            "day": {
+                                "type": "select",
+                                "hide": false
+                            },
+                            "month": {
+                                "hide": false
+                            },
+                            "year": {
+                                "type": "select",
+                                "hide": false,
+                                "minYear": 1950,
+                                "maxYear": 2026
+                            }
+                        },
+                        "dayFirst": true,
+                        "defaultValue": "00/00/0000",
+                        "key": "registrationDate",
+                        "type": "day",
+                        "input": true,
+                        "minYear": 1950,
+                        "maxYear": 2026
+                    },
+                    {
+                    "label": "Name",
+                    "tableView": true,
+                    "key": "name",
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "label": "District",
+                    "tableView": true,
+                    "data": {
+                    "values": [
+                    {
+                    "label": "Kampala",
+                    "value": "kampala"
+                    },
+                    {
+                    "label": "Mbale",
+                    "value": "mbale"
+                    },
+                    {
+                    "label": "Kayunga",
+                    "value": "kayunga"
+                    },
+                    {
+                    "label": "Sironko",
+                    "value": "sironko"
+                    }
+                    ]
+                    },
+                    "key": "district",
+                    "type": "select",
+                    "input": true,
+                    "searchThreshold": 0.3
+                    },
+                    {
+                    "label": "Identification Type?",
+                    "optionsLabelPosition": "right",
+                    "inline": false,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Driving permit",
+                    "value": "drivingPermit",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Village ID",
+                    "value": "villageId",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "National ID",
+                    "value": "nationalId",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "None",
+                    "value": "none",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "identificationType",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Enter ID No.",
+                    "placeholder": "Enter National ID Number",
+                    "tableView": true,
+                    "key": "enterIdNo",
+                    "conditional": {
+                    "show": true,
+                    "when": "identificationType",
+                    "eq": "nationalId"
+                    },
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "label": "Gender",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Female",
+                    "value": "female",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Male",
+                    "value": "male",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "gender",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Educational Level",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Degree",
+                    "value": "degree",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Diploma/certification",
+                    "value": "diplomaCertification",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "PHD",
+                    "value": "phd",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Secondary",
+                    "value": "secondary",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Primary",
+                    "value": "primary",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "None",
+                    "value": "none",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "educationalLevel",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Do you have a Bank Account?",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Yes",
+                    "value": "yes",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "No",
+                    "value": "no",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "doYouHaveABankAccount",
+                    "type": "radio",
+                    "input": true
+                    },
+                    {
+                    "label": "Enter Reasons",
+                    "optionsLabelPosition": "right",
+                    "tableView": false,
+                    "defaultValue": {
+                    "noSavings": false,
+                    "tooFar": false,
+                    "noInterest": false,
+                    "noLegalRequirements": false,
+                    "other": false
+                    },
+                    "values": [
+                    {
+                    "label": "No Savings",
+                    "value": "noSavings",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Too Far",
+                    "value": "tooFar",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "No Interest",
+                    "value": "noInterest",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "No legal requirements",
+                    "value": "noLegalRequirements",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Other",
+                    "value": "other",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "enterReasons",
+                    "conditional": {
+                    "show": true,
+                    "when": "doYouHaveABankAccount",
+                    "eq": "no"
+                    },
+                    "type": "selectboxes",
+                    "input": true,
+                    "inputType": "checkbox"
+                    },
+                    {
+                    "label": "Please specify",
+                    "tableView": true,
+                    "key": "pleaseSpecify",
+                    "conditional": {
+                    "show": true,
+                    "when": "enterReasons",
+                    "eq": "other"
+                    },
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "title": "Bank Account Information",
+                    "collapsible": false,
+                    "key": "bankAccountInformation",
+                    "conditional": {
+                    "show": true,
+                    "when": "doYouHaveABankAccount",
+                    "eq": "yes"
+                    },
+                    "type": "panel",
+                    "label": "Bank Account Information",
+                    "input": false,
+                    "tableView": false,
+                    "components": [
+                    {
+                    "label": "Select Bank",
+                    "tableView": true,
+                    "data": {
+                    "values": [
+                    {
+                    "label": "Bank of Africa",
+                    "value": "bankOfAfrica"
+                    },
+                    {
+                    "label": "Bank Of Baroda",
+                    "value": "bankOfBaroda"
+                    },
+                    {
+                    "label": "DTB Bank",
+                    "value": "dtbBank"
+                    },
+                    {
+                    "label": "Centenary Bank",
+                    "value": "centenaryBank"
+                    },
+                    {
+                    "label": "Equity Bank",
+                    "value": "equityBank"
+                    },
+                    {
+                    "label": "ABSA Bank",
+                    "value": "absaBank"
+                    },
+                    {
+                    "label": "Opportunity Bank",
+                    "value": "opportunityBank"
+                    }
+                    ]
+                    },
+                    "key": "selectBank",
+                    "type": "select",
+                    "input": true,
+                    "searchThreshold": 0.3
+                    },
+                    {
+                    "label": "Account Name",
+                    "tableView": true,
+                    "key": "accountName",
+                    "type": "textfield",
+                    "input": true
+                    },
+                    {
+                    "label": "Enter Account No.",
+                    "mask": false,
+                    "tableView": false,
+                    "delimiter": false,
+                    "requireDecimal": false,
+                    "inputFormat": "plain",
+                    "key": "enterAccountNo",
+                    "type": "number",
+                    "input": true
+                    }
+                    ]
+                    },
+                    {
+                    "label": "Marital Status?",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                    {
+                    "label": "Widowed",
+                    "value": "widowed",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Divorced",
+                    "value": "divorced",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Single",
+                    "value": "single",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Separated",
+                    "value": "separated",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Married",
+                    "value": "married",
+                    "shortcut": ""
+                    },
+                    {
+                    "label": "Never Married",
+                    "value": "neverMarried",
+                    "shortcut": ""
+                    }
+                    ],
+                    "key": "maritalStatus",
+                    "type": "radio",
+                    "input": true
+                    }
+                    ]
+                },
+            {
+            "legend": "Individual Member Details",
+            "key": "fieldSet3",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "yes"
+            },
+            "type": "fieldset",
+            "label": "Individual Member Details",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "How many adults do you have in the household?",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "key": "howManyAdultsDoYouHaveInTheHousehold",
+            "type": "number",
+            "input": true
+            },
+            {
+            "label": "How many children do you have in the household?",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "key": "howManyAdultsDoYouHaveInTheHousehold1",
+            "type": "number",
+            "input": true
+            },
+            {
+            "label": "Total Household size?",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "calculateValue": "value = data.howManyAdultsDoYouHaveInTheHousehold + data.howManyAdultsDoYouHaveInTheHousehold1;",
+            "key": "householdSize",
+            "type": "number",
+            "input": true
+            },
+            {
+            "title": "Next of Kin",
+            "collapsible": false,
+            "key": "nextOfKin",
+            "type": "panel",
+            "label": "Panel",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "Name",
+            "tableView": true,
+            "key": "name1",
+            "type": "textfield",
+            "input": true
+            },
+            {
+            "label": "Date of Birth",
+            "hideInputLabels": false,
+            "inputsLabelPosition": "top",
+            "useLocaleSettings": false,
+            "tableView": false,
+            "fields": {
+            "day": {
+            "hide": false
+            },
+            "month": {
+            "hide": false
+            },
+            "year": {
+            "hide": false
+            }
+            },
+            "key": "dateOfBirth",
+            "type": "day",
+            "input": true,
+            "defaultValue": "00/00/0000"
+            },
+            {
+            "label": "Gender",
+            "optionsLabelPosition": "right",
+            "inline": true,
+            "tableView": false,
+            "values": [
+            {
+            "label": "Female",
+            "value": "female",
+            "shortcut": ""
+            },
+            {
+            "label": "Male",
+            "value": "male",
+            "shortcut": ""
+            }
+            ],
+            "key": "gender1",
+            "type": "radio",
+            "input": true
+            },
+            {
+            "label": "Relationship with the farmer",
+            "optionsLabelPosition": "right",
+            "inline": true,
+            "tableView": false,
+            "values": [
+            {
+            "label": "Son",
+            "value": "son",
+            "shortcut": ""
+            },
+            {
+            "label": "Daughter",
+            "value": "daughter",
+            "shortcut": ""
+            },
+            {
+            "label": "Grandchild",
+            "value": "grandchild",
+            "shortcut": ""
+            },
+            {
+            "label": "Mother",
+            "value": "mother",
+            "shortcut": ""
+            },
+            {
+            "label": "Father",
+            "value": "father",
+            "shortcut": ""
+            },
+            {
+            "label": "Wife",
+            "value": "wife",
+            "shortcut": ""
+            },
+            {
+            "label": "Husband",
+            "value": "husband",
+            "shortcut": ""
+            }
+            ],
+            "key": "gender2",
+            "type": "radio",
+            "input": true
+            },
+            {
+            "label": "Education Level",
+            "optionsLabelPosition": "right",
+            "inline": true,
+            "tableView": false,
+            "values": [
+            {
+            "label": "PHD",
+            "value": "phd",
+            "shortcut": ""
+            },
+            {
+            "label": "Degree",
+            "value": "degree",
+            "shortcut": ""
+            },
+            {
+            "label": "Diploma/certificate",
+            "value": "diplomaCertificate",
+            "shortcut": ""
+            },
+            {
+            "label": "Secondary",
+            "value": "secondary",
+            "shortcut": ""
+            },
+            {
+            "label": "Primary",
+            "value": "primary",
+            "shortcut": ""
+            },
+            {
+            "label": "None",
+            "value": "none",
+            "shortcut": ""
+            }
+            ],
+            "key": "gender3",
+            "type": "radio",
+            "input": true
+            },
+            {
+            "label": "Identification Type",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+            {
+            "label": "National ID",
+            "value": "nationalId",
+            "shortcut": ""
+            },
+            {
+            "label": "Village ID",
+            "value": "villageId",
+            "shortcut": ""
+            },
+            {
+            "label": "Work ID",
+            "value": "workId",
+            "shortcut": ""
+            },
+            {
+            "label": "N/A",
+            "value": "nA",
+            "shortcut": ""
+            }
+            ],
+            "key": "gender4",
+            "type": "radio",
+            "input": true
+            },
+            {
+            "label": "Enter ID No.",
+            "tableView": true,
+            "key": "enterIdNo1",
+            "conditional": {
+            "show": true,
+            "when": "gender4",
+            "eq": "nationalId"
+            },
+            "type": "textfield",
+            "input": true
+            },
+            {
+            "label": "Do yo have a phone No?",
+            "optionsLabelPosition": "right",
+            "inline": true,
+            "tableView": false,
+            "values": [
+            {
+            "label": "Yes",
+            "value": "yes",
+            "shortcut": ""
+            },
+            {
+            "label": "No",
+            "value": "no",
+            "shortcut": ""
+            }
+            ],
+            "key": "doYoHaveAPhoneNo",
+            "type": "radio",
+            "input": true
+            },
+            {
+            "label": "Enter Phone Number",
+            "tableView": true,
+            "multiple": true,
+            "key": "enterPhoneNumber",
+            "conditional": {
+            "show": true,
+            "when": "doYoHaveAPhoneNo",
+            "eq": "yes"
+            },
+            "type": "phoneNumber",
+            "input": true
+            }
+            ]
+            }
+            ]
+            },
+            {
+            "legend": "Field Information",
+            "key": "fieldSet4",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "yes"
+            },
+            "type": "fieldset",
+            "label": "Field Information",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "How many fields do you have?",
+            "widget": "choicesjs",
+            "tableView": true,
+            "data": {
+            "values": [
+            {
+            "label": "1",
+            "value": "1"
+            },
+            {
+            "label": "2",
+            "value": "2"
+            },
+            {
+            "label": "3",
+            "value": "3"
+            },
+            {
+            "label": "4",
+            "value": "4"
+            },
+            {
+            "label": "5",
+            "value": "5"
+            },
+            {
+            "label": "6",
+            "value": "6"
+            },
+            {
+            "label": "7",
+            "value": "7"
+            },
+            {
+            "label": "8",
+            "value": "8"
+            },
+            {
+            "label": "9",
+            "value": "9"
+            },
+            {
+            "label": "10",
+            "value": "10"
+            }
+            ]
+            },
+            "key": "howManyFieldsDoYouHave",
+            "type": "select",
+            "input": true,
+            "searchThreshold": 0.3
+            }
+            ]
+            },
+            {
+            "legend": "Water",
+            "key": "fieldSet5",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "yes"
+            },
+            "type": "fieldset",
+            "label": "Water",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "Is water accessible for farming?",
+            "optionsLabelPosition": "right",
+            "inline": true,
+            "tableView": false,
+            "values": [
+            {
+            "label": "Yes",
+            "value": "yes",
+            "shortcut": ""
+            },
+            {
+            "label": "No",
+            "value": "no",
+            "shortcut": ""
+            }
+            ],
+            "key": "isWaterAccessibleForFarming",
+            "type": "radio",
+            "input": true
+            },
+            {
+            "label": "Does the farmer harvest rain water?",
+            "optionsLabelPosition": "right",
+            "inline": true,
+            "tableView": false,
+            "values": [
+            {
+            "label": "Yes",
+            "value": "yes",
+            "shortcut": ""
+            },
+            {
+            "label": "No",
+            "value": "no",
+            "shortcut": ""
+            }
+            ],
+            "key": "isWaterAccessibleForFarming1",
+            "type": "radio",
+            "input": true
+            }
+            ]
+            },
+            {
+            "legend": "Livestock Information",
+            "key": "fieldSet7",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "yes"
+            },
+            "type": "fieldset",
+            "label": "Water",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "Select Livestock",
+            "optionsLabelPosition": "right",
+            "tableView": false,
+            "values": [
+            {
+            "label": "Cows",
+            "value": "cows",
+            "shortcut": ""
+            },
+            {
+            "label": "Goats",
+            "value": "goats",
+            "shortcut": ""
+            },
+            {
+            "label": "Sheep",
+            "value": "sheep",
+            "shortcut": ""
+            },
+            {
+            "label": "Chicken",
+            "value": "chicken",
+            "shortcut": ""
+            }
+            ],
+            "key": "selectLivestock",
+            "type": "selectboxes",
+            "input": true,
+            "inputType": "checkbox"
+            },
+            {
+            "label": "Number of Cows",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "key": "numberOfCows",
+            "conditional": {
+            "show": true,
+            "when": "selectLivestock",
+            "eq": "cows"
+            },
+            "type": "number",
+            "input": true
+            },
+            {
+            "label": "Number of Goats",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "key": "numberOfCows1",
+            "conditional": {
+            "show": true,
+            "when": "selectLivestock",
+            "eq": "goats"
+            },
+            "type": "number",
+            "input": true
+            },
+            {
+            "label": "Number of Sheep",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "key": "numberOfCows2",
+            "conditional": {
+            "show": true,
+            "when": "selectLivestock",
+            "eq": "sheep"
+            },
+            "type": "number",
+            "input": true
+            },
+            {
+            "label": "Number of Chicken",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "key": "numberOfCows3",
+            "conditional": {
+            "show": true,
+            "when": "selectLivestock",
+            "eq": "chicken"
+            },
+            "type": "number",
+            "input": true
+            },
+            {
+            "label": "Total number of Livestock",
+            "mask": false,
+            "tableView": false,
+            "delimiter": false,
+            "requireDecimal": false,
+            "inputFormat": "plain",
+            "calculateValue": "value = data.numberOfCows + data.numberOfCows1 + data.numberOfCows2 + data.numberOfCows3;",
+            "key": "totalNumberOfLivestock",
+            "conditional": {
+            "show": true,
+            "when": "selectLivestock",
+            "eq": "cows"
+            },
+            "type": "number",
+            "input": true
+            }
+            ]
+            },
+            {
+            "legend": "Surveyors Notes",
+            "key": "fieldSet6",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "yes"
+            },
+            "type": "fieldset",
+            "label": "Surveyors Notes",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "Evaluate the farmer on the following",
+            "tableView": false,
+            "questions": [
+            {
+            "label": "Use of Chemical",
+            "value": "useOfChemical"
+            },
+            {
+            "label": "manure handling",
+            "value": "manureHandling"
+            },
+            {
+            "label": "Storage of farm tools",
+            "value": "storageOfFarmTools"
+            },
+            {
+            "label": "Farming practices",
+            "value": "farmingPractices"
+            },
+            {
+            "label": "General House Cleanliness",
+            "value": "generalHouseCleanliness"
+            }
+            ],
+            "values": [
+            {
+            "label": "Good",
+            "value": "good"
+            },
+            {
+            "label": "Average",
+            "value": "average"
+            },
+            {
+            "label": "poor",
+            "value": "poor"
+            }
+            ],
+            "key": "evaluateTheFarmerOnTheFollowing",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "yes"
+            },
+            "type": "survey",
+            "input": true
+            }
+            ]
+            },
+            {
+            "legend": "Non- Consent",
+            "key": "fieldSet2",
+            "conditional": {
+            "show": true,
+            "when": "doYouConsentToBeRegisteredOnThisProject",
+            "eq": "no"
+            },
+            "type": "fieldset",
+            "label": "Non- Consent",
+            "input": false,
+            "tableView": false,
+            "components": [
+            {
+            "label": "Comment",
+            "autoExpand": false,
+            "tableView": true,
+            "key": "comment",
+            "type": "textarea",
+            "input": true
+            }
+            ]
+            }
+        ],
+        "input": false,
+        "tableView": false
+        }
+    ],
+    "revisions": "current",
+    "_vid": 31,
+    "title": "Farmer Registrations",
+    "display": "form",
+    "access": [
+    {
+    "roles": [],
+    "type": "create_own"
+    },
+    {
+    "roles": [],
+    "type": "create_all"
+    },
+    {
+    "roles": [
+    "61376fced342b306c8622393"
+    ],
+    "type": "read_own"
+    },
+    {
+    "roles": [
+    "61376fced342b306c8622393",
+    "61376fcfd342b3e703622398",
+    "61376fcfd342b375a762239d"
+    ],
+    "type": "read_all"
+    },
+    {
+    "roles": [],
+    "type": "update_own"
+    },
+    {
+    "roles": [],
+    "type": "update_all"
+    },
+    {
+    "roles": [],
+    "type": "delete_own"
+    },
+    {
+    "roles": [],
+    "type": "delete_all"
+    },
+    {
+    "roles": [],
+    "type": "team_read"
+    },
+    {
+    "roles": [],
+    "type": "team_write"
+    },
+    {
+    "roles": [],
+    "type": "team_admin"
+    }
+    ],
+    "submissionAccess": [
+    {
+    "roles": [],
+    "type": "create_own"
+    },
+    {
+    "roles": [],
+    "type": "create_all"
+    },
+    {
+    "roles": [],
+    "type": "read_own"
+    },
+    {
+    "roles": [],
+    "type": "read_all"
+    },
+    {
+    "roles": [],
+    "type": "update_own"
+    },
+    {
+    "roles": [],
+    "type": "update_all"
+    },
+    {
+    "roles": [],
+    "type": "delete_own"
+    },
+    {
+    "roles": [],
+    "type": "delete_all"
+    },
+    {
+    "roles": [],
+    "type": "team_read"
+    },
+    {
+    "roles": [],
+    "type": "team_write"
+    },
+    {
+    "roles": [],
+    "type": "team_admin"
+    }
+    ],
+    "controller": "",
+    "properties": {},
+    "settings": {
+    "logs": "true"
+    },
+    "name": "farmerRegistrations",
+    "path": "farmerregistrations",
+    "project": "61376fced342b342f862238c",
+    "created": "2021-09-08T09:03:41.429Z",
+    "modified": "2021-12-26T11:58:13.620Z",
+    "machineName": "hkqxclwozbtbdnv:farmerRegistrations"
+    }

@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Button,
   Checkbox,
   IconButton,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -19,48 +16,48 @@ import {
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
-import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
+import moment from 'moment';
 
 export const ProjectListTable = (props) => {
   const {
-    customers,
-    customersCount,
+    projects,
+    projectsCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedProjects, setSelectedProjects] = useState([]);
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedCustomers.length) {
-        setSelectedCustomers([]);
+      if (selectedProjects.length) {
+        setSelectedProjects([]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customers]);
+    [projects]);
 
-  const handleSelectAllCustomers = (event) => {
-    setSelectedCustomers(event.target.checked
-      ? customers.map((customer) => customer.id)
+  const handleSelectAllProjects = (event) => {
+    setSelectedProjects(event.target.checked
+      ? projects.map((project) => project.id)
       : []);
   };
 
-  const handleSelectOneCustomer = (event, customerId) => {
-    if (!selectedCustomers.includes(customerId)) {
-      setSelectedCustomers((prevSelected) => [...prevSelected, customerId]);
+  const handleSelectOneProject = (event, projectId) => {
+    if (!selectedProjects.includes(projectId)) {
+      setSelectedProjects((prevSelected) => [...prevSelected, projectId]);
     } else {
-      setSelectedCustomers((prevSelected) => prevSelected.filter((id) => id !== customerId));
+      setSelectedProjects((prevSelected) => prevSelected.filter((id) => id !== projectId));
     }
   };
 
-  const enableBulkActions = selectedCustomers.length > 0;
-  const selectedSomeCustomers = selectedCustomers.length > 0
-    && selectedCustomers.length < customers.length;
-  const selectedAllCustomers = selectedCustomers.length === customers.length;
+  const enableBulkActions = selectedProjects.length > 0;
+  const selectedSomeProjects = selectedProjects.length > 0
+    && selectedProjects.length < projects.length;
+  const selectedAllProjects = selectedProjects.length === projects.length;
 
   return (
     <div {...other}>
@@ -73,9 +70,9 @@ export const ProjectListTable = (props) => {
         }}
       >
         <Checkbox
-          checked={selectedAllCustomers}
-          indeterminate={selectedSomeCustomers}
-          onChange={handleSelectAllCustomers}
+          checked={selectedAllProjects}
+          indeterminate={selectedSomeProjects}
+          onChange={handleSelectAllProjects}
         />
         <Button
           size="small"
@@ -96,9 +93,9 @@ export const ProjectListTable = (props) => {
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedAllCustomers}
-                  indeterminate={selectedSomeCustomers}
-                  onChange={handleSelectAllCustomers}
+                  checked={selectedAllProjects}
+                  indeterminate={selectedSomeProjects}
+                  onChange={handleSelectAllProjects}
                 />
               </TableCell>
               <TableCell>
@@ -128,76 +125,48 @@ export const ProjectListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((customer) => {
-              const isCustomerSelected = selectedCustomers.includes(customer.id);
+            {projects.map((project) => {
+              const isProjectSelected = selectedProjects.includes(project.id);
+              // console.log(project)
 
               return (
                 <TableRow
                   hover
-                  key={customer.id}
-                  selected={isCustomerSelected}
+                  key={project.id}
+                  selected={isProjectSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneCustomer(event, customer.id)}
-                      value={isCustomerSelected}
+                      checked={isProjectSelected}
+                      onChange={(event) => handleSelectOneProject(event, project.id)}
+                      value={isProjectSelected}
                     />
                   </TableCell>
                   <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex'
-                      }}
-                    >
-                      <Avatar
-                        src={customer.avatar}
-                        sx={{
-                          height: 42,
-                          width: 42
-                        }}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar>
-                      <Box sx={{ ml: 1 }}>
-                        <NextLink
-                          href="/dashboard/customers/1"
-                          passHref
-                        >
-                          <Link
-                            color="inherit"
-                            variant="subtitle2"
-                          >
-                            {customer.name}
-                          </Link>
-                        </NextLink>
-                        <Typography
-                          color="textSecondary"
-                          variant="body2"
-                        >
-                          {customer.email}
-                        </Typography>
-                      </Box>
-                    </Box>
+                    <Typography>{project.projectname}</Typography>
                   </TableCell>
                   <TableCell>
-                    {`${customer.city}, ${customer.state}, ${customer.country}`}
+                    {project.projectTeam.length}
                   </TableCell>
                   <TableCell>
-                    {customer.totalOrders}
+                    {project.createdBy.name}
                   </TableCell>
                   <TableCell>
-                    <Typography
-                      color="success.main"
-                      variant="subtitle2"
-                    >
-                      {numeral(customer.totalAmountSpent).format(`${customer.currency}0,0.00`)}
-                    </Typography>
+                    {0}
                   </TableCell>
+                  <TableCell>
+                   {moment(project.createdAt).format('MM/DD/YYYY')}
+                  </TableCell>
+                  <TableCell>
+                    {project.createdBy.name}
+                  </TableCell>
+                  <TableCell>
+                    {"In Progress"}
+                  </TableCell>
+                  
                   <TableCell align="right">
                     <NextLink
-                      href="/dashboard/customers/1/edit"
+                      href={`/dashboard/projects/${project._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -205,7 +174,7 @@ export const ProjectListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/customers/1"
+                      href={`/dashboard/projects/${project._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -221,7 +190,7 @@ export const ProjectListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={customersCount}
+        count={projectsCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -233,8 +202,8 @@ export const ProjectListTable = (props) => {
 };
 
 ProjectListTable.propTypes = {
-  customers: PropTypes.array.isRequired,
-  customersCount: PropTypes.number.isRequired,
+  projects: PropTypes.array.isRequired,
+  projectsCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,

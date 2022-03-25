@@ -75,7 +75,7 @@ const Overview = () => {
                   Good Morning
                 </Typography>
                 <Typography variant='caption'>
-                  Welcome back Stuart, We've missed you 🥰
+                  Welcome back Stuart, We&apos;ve missed you 🥰
                 </Typography>
               </Grid>
               <Grid

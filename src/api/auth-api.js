@@ -6,7 +6,7 @@ class AuthApi {
    * @returns {string} User token
    */
   async login({ email, password }) {
-    const response = await fetch('http://localhost:5000/api/v1/authService/login', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json'
@@ -21,20 +21,26 @@ class AuthApi {
   }
 
   async userProfile(accessToken) {
-    const response = await fetch('http://localhost:5000/api/v1/authService/check-user', {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/check-user`, {
       headers: {
         'Content-Type': 'Application/json',
         'Authorization': `Bearer ${accessToken}`
       }
     })
     const user = await response.json();
-    console.log(user);
-    return user.data;
+    if (user && user.status === 200) {
+      return user.data;
+    }
+    return null;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async completeUserProfileAfterEmailInvitation(userDetails) {
     // console.log("DETAILS", userDetails);
-      const response = await fetch('http://localhost:5000/api/v1/authService/complete-profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/complete-profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
@@ -47,6 +53,44 @@ class AuthApi {
       }
       console.log("DATA", data);
       return data.data
+  }
+
+  async createUserProfile(profileDetails) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/profiles/create-profile`, {
+        method: 'POST',
+        'headers': {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(profileDetails)
+      });
+      const data = await response.json();
+      if (data.status === 201) {
+        return data.data
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async createUserPassword(userDetails) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/setPassword`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(userDetails)
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

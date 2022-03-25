@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { authApi } from '../__fake-api__/auth-api';
 import { authenticationApi } from '../api/auth-api';
@@ -60,7 +61,7 @@ export const AuthContext = createContext({
 export const AuthProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const router = useRouter();
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -68,14 +69,26 @@ export const AuthProvider = (props) => {
 
         if (accessToken) {
           const user = await authenticationApi.userProfile(accessToken);
-          console.log(user);
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: true,
-              user
-            }
-          });
+          console.log('User DATA: \n', user);
+          if (user.firstname) {
+            dispatch({
+              type: 'INITIALIZE',
+              payload: {
+                isAuthenticated: true,
+                user
+              }
+            });
+            // router.reload()
+          } else {
+            dispatch({
+              type: 'INITIALIZE',
+              payload: {
+                isAuthenticated: false,
+                user: null
+              }
+            });
+          }
+          
         } else {
           dispatch({
             type: 'INITIALIZE',
@@ -106,7 +119,7 @@ export const AuthProvider = (props) => {
 
     // localStorage.setItem('accessToken', accessToken);
     const accessToken = await authenticationApi.login({ email, password });
-    const user = authenticationApi.userProfile;
+    const user = await authenticationApi.userProfile(accessToken);
     localStorage.setItem('accessToken', accessToken);
 
     dispatch({

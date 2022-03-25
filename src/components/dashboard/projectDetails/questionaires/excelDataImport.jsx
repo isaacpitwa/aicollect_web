@@ -1,4 +1,25 @@
-import { Dialog, Button, DialogContent, DialogTitle, DialogActions, styled, Card, CardHeader, CardContent, Typography, List, ListItem, ListItemText, Tooltip, IconButton, LinearProgress, Stack, ListItemIcon, colors } from '@mui/material';
+import {
+  Dialog,
+  Button,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  styled,
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Tooltip,
+  IconButton,
+  LinearProgress,
+  Stack,
+  ListItemIcon,
+  colors,
+} from '@mui/material';
+import NextLink from 'next/link';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Icon } from '@iconify/react';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -20,7 +41,7 @@ const FileDropZone = styled('div')(({ theme }) => ({
   }
 }));
 
-export default function ExcelDataImport({ open, handleClose, excelFile, setExcelFile, getRootProps, getInputProps, isDragActive }) {
+export default function ExcelDataImport({ open, handleClose, excelFile, setExcelFile, getRootProps, getInputProps, isDragActive, handleCreateUploadFormToDatabase }) {
 
   return (
     <Dialog
@@ -33,14 +54,18 @@ export default function ExcelDataImport({ open, handleClose, excelFile, setExcel
         <Card>
           <CardHeader title="Upload excel or csv files" />
           <CardContent>
+            <Typography variant="caption" mb={8}>
+              Please download template to compare with here. 
+              <NextLink href="#" passHref download> EXCEL TEMPLATE</NextLink>
+            </Typography>
             <FileDropZone {...getRootProps()}>
               <input
-                {...getInputProps()} 
+                {...getInputProps()}
                 required />
               <div>
                 <img
-                  src="/undraw_add_file_gvbb.jpg" 
-                  style={{ width: 130 }} 
+                  src="/undraw_add_file_gvbb.jpg"
+                  style={{ width: 130 }}
                   alt="Select file" />
               </div>
               {
@@ -89,10 +114,10 @@ export default function ExcelDataImport({ open, handleClose, excelFile, setExcel
       </DialogContent>
       <DialogActions>
         <Button
-          variant="contained" 
-          onClick={handleClose}
-          >
-            Upload
+          variant="contained"
+          onClick={handleCreateUploadFormToDatabase}
+        >
+          Upload
         </Button>
         <Button onClick={handleClose}>Cancel</Button>
       </DialogActions>

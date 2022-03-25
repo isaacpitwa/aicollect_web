@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import NextLink from "next/link";
 import {
-  Alert,
   Box,
   Button,
   FormHelperText,
@@ -12,6 +12,9 @@ import {
   OutlinedInput,
   IconButton,
   InputAdornment,
+  Stack,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -36,6 +39,7 @@ export const JWTLogin = (props) => {
     initialValues: {
       email: "",
       password: "",
+      remember: false,
       submit: null,
     },
     validationSchema: Yup.object({
@@ -44,6 +48,7 @@ export const JWTLogin = (props) => {
         .max(255)
         .required("Email is required"),
       password: Yup.string().max(255).required("Password is required"),
+      remember: Yup.bool()
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -80,20 +85,8 @@ export const JWTLogin = (props) => {
         type="email"
         value={formik.values.email}
       />
-      {/* <TextField
-        error={Boolean(formik.touched.password && formik.errors.password)}
-        fullWidth
-        helperText={formik.touched.password && formik.errors.password}
-        label="Password"
-        margin="normal"
-        name="password"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="password"
-        value={formik.values.password}
-      /> */}
 
-      <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
+      <FormControl variant="outlined" sx={{ mt: 2 }} fullWidth>
         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
         <OutlinedInput
           error={Boolean(formik.touched.password && formik.errors.password)}
@@ -112,20 +105,44 @@ export const JWTLogin = (props) => {
                 onClick={() => setShowPassword(!showPassword)}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
+                size="small"
               >
-                {showPassword ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+                {showPassword ? <VisibilityOffIcon fontSize="small" /> : <RemoveRedEyeIcon fontSize="small" />}
               </IconButton>
             </InputAdornment>
           }
           label="Password"
           fullWidth
         />
+        <Box sx={{ mt: 2 }}>
+          <FormHelperText error>{formik.errors.password}</FormHelperText>
+        </Box>
       </FormControl>
       {formik.errors.submit && (
         <Box sx={{ mt: 3 }}>
           <FormHelperText error>{formik.errors.submit}</FormHelperText>
         </Box>
       )}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ my: 2 }}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={formik.handleChange}
+              checked={formik.values.remember}
+            />
+          }
+          label="Remember me"
+        />
+
+        <NextLink href="#" variant="subtitle2">
+          Forgot Password.
+        </NextLink>
+      </Stack>
       <Box sx={{ mt: 2 }}>
         <Button
           disabled={formik.isSubmitting}
