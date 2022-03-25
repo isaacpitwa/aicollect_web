@@ -19,13 +19,14 @@ build_and_push:
   stage: build_and_push
 # only:
 #   - develop
+  #docker login registry.example.com -u <username> -p <token>
   script:
-    - docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
+    #- docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
+    - docker login $REGISTRY  -u $DOCKER_USER_ROCKSIDE -p $GITLAB_DEPLOYEMENT_TOKEN
     - docker build -t   --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
     - docker push $REGISTRY
 
-#5 
-
+#5
 deploy_staging:
   stage: deploy_staging
   tags: 
