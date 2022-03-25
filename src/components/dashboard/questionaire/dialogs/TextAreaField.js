@@ -122,22 +122,6 @@ const TextAreaField = (props) => {
         }
     }
 
-    const handleUpdate = () => {
-        let newField = {
-            id: id,
-            parentId: sectionId,
-            subParentId: subSectionId,
-            type: type,
-            value: value,
-            required: isRequired,
-            label: fieldLabel,
-            description: fieldDescription,
-            tooltip: tooltip
-        }        
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
-        handleClose()
-    }
-
     const addTextAreaField = () => {
 
         let newFieldObj = {
@@ -170,6 +154,22 @@ const TextAreaField = (props) => {
                 setErrorTag('Label')
             }
         }
+    }
+
+    const handleUpdate = () => {
+        let newField = {
+            id: id,
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: value,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip
+        }        
+        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+        handleClose()
     }
 
     const cancel = () => {

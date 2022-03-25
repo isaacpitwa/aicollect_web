@@ -114,9 +114,13 @@ export const FieldIndex = (fieldId, fieldsData) => {
 }
 
 export const allHiddenSubSections = (parentId, componentsData) => {
-    let sectionComponents = componentsData.find(comp => comp.id === parentId).components
-    let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.parentId === parentId)
-    return subSections
+    if(parentId){
+        let sectionComponents = componentsData.find(comp => comp.id === parentId).components
+        let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.parentId === parentId)
+        return subSections
+    } else {
+        return []
+    }
 }
 
 export const getDependantField = (allFields, fieldId) => {
