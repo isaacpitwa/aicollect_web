@@ -10,6 +10,7 @@ import {
   FormHelperText,
   MenuItem,
   InputLabel,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
@@ -239,9 +240,17 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           }
         </Grid>
         <Grid item md={12} sm={12} display="flex" justifyContent="space-between">
-          <Button variant="contained" onClick={handleCreateUser}>
-            Save User
-          </Button>
+          {
+            formik.isSubmitting ? (
+              <Button variant="contained" disabled>
+                <CircularProgress color="inherit" />
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={handleCreateUser}>
+                Save User
+              </Button>
+            )
+          }
           <Button onClick={handleClose}>Cancel</Button>
         </Grid>
       </Grid>

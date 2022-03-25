@@ -10,6 +10,7 @@ import { AccountTeamSettings } from '../../components/dashboard/account/account-
 import { AccountLogs } from '../../components/dashboard/account/account-logs';
 import { AccountSecuritySettings } from '../../components/dashboard/account/account-security-settings';
 import { gtm } from '../../lib/gtm';
+import { useAuth } from '../../hooks/use-auth';
 
 const tabs = [
   { label: 'General', value: 'general' },
@@ -20,6 +21,7 @@ const tabs = [
 ];
 
 const Account = () => {
+  const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState('general');
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const Account = () => {
     <>
       <Head>
         <title>
-          Dashboard: Account | Material Kit Pro
+          Dashboard: Account | AiCollect
         </title>
       </Head>
       <Box
@@ -66,11 +68,11 @@ const Account = () => {
             ))}
           </Tabs>
           <Divider sx={{ mb: 3 }} />
-          {currentTab === 'general' && <AccountGeneralSettings />}
-          {currentTab === 'billing' && <AccountBillingSettings />}
-          {currentTab === 'logs' && <AccountLogs />}
-          {currentTab === 'notifications' && <AccountNotificationsSettings />}
-          {currentTab === 'security' && <AccountSecuritySettings />}
+          {currentTab === 'general' && <AccountGeneralSettings user={user} />}
+          {currentTab === 'billing' && <AccountBillingSettings user={user} />}
+          {currentTab === 'logs' && <AccountLogs user={user} />}
+          {currentTab === 'notifications' && <AccountNotificationsSettings user={user} />}
+          {currentTab === 'security' && <AccountSecuritySettings user={user} />}
         </Container>
       </Box>
     </>

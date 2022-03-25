@@ -63,7 +63,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
     try {
       const formResponse = await FormsApi.createNewForm(metaData);
       console.log(formResponse);
-      if (formResponse.data) {
+      if (formResponse.data.name) {
         router.push(`/dashboard/projects/${router.query.projectId}/questionaire/${formResponse.data._id}/form`);
       }
     } catch (error) {

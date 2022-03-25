@@ -121,11 +121,11 @@ export const ProjectTeamMembersTable = (props) => {
           <TableBody>
             {projectMembers.map((customer) => {
               const isCustomerSelected = selectedMembers.includes(customer.id);
-
+              
               return (
                 <TableRow
                   hover
-                  key={customer.id}
+                  key={customer.userId}
                   selected={isCustomerSelected}
                 >
                   <TableCell padding="checkbox">
@@ -219,8 +219,8 @@ export const ProjectTeamMembersTable = (props) => {
 };
 
 ProjectTeamMembersTable.propTypes = {
-  customers: PropTypes.array.isRequired,
-  customersCount: PropTypes.number.isRequired,
+  projectMembers: PropTypes.array.isRequired,
+  projectMembersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,
