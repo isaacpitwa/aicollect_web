@@ -19,7 +19,7 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
-  before:
+  before_script:
     - docker info
 # only:
 #   - develop
