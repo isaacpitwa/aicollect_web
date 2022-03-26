@@ -1,8 +1,8 @@
-#image: gitlab/dind
-image: docker:latest
+image: gitlab/dind
 
-services:
-  - docker:dind
+#services:
+#  - docker:dind
+
 stages:
   - build_and_push
   - deploy_staging
