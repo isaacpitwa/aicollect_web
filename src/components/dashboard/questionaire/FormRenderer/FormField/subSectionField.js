@@ -108,7 +108,7 @@ const SubSectionField = (props) => {
                     style={{ padding: '10px' }}
                 >
                     {fieldData.components.map((componentData, index) => (
-                        <FormField fieldKey={index} fieldData={componentData} />
+                        <FormField key={index} fieldKey={index} fieldData={componentData} />
                     ))}
                 </Grid>
             </Grid>
@@ -148,7 +148,7 @@ const SubSectionField = (props) => {
                     style={{ padding: '10px' }}
                 >
                     {fieldData.components.map((componentData, index) => (
-                        <FormField fieldKey={index} fieldData={componentData} />
+                        <FormField key={index} fieldKey={index} fieldData={componentData} />
                     ))}
                 </Grid>
             </Grid>
@@ -185,7 +185,7 @@ const SubSectionField = (props) => {
                         style={{ padding: '10px' }}
                     >
                         {fieldData.components.map((componentData, index) => (
-                            <FormField fieldKey={index} fieldData={componentData} />
+                            <FormField key={index} fieldKey={index} fieldData={componentData} />
                         ))}
                     </Grid>
                 </Grid>

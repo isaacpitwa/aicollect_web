@@ -14,7 +14,7 @@ import { FormContext } from '../../context'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const imageField = (props) => {
+const ImageField = (props) => {
 
     const { editStatus } = useContext(FormContext);
 
@@ -48,4 +48,4 @@ const imageField = (props) => {
     )
 }
 
-export default imageField
+export default ImageField

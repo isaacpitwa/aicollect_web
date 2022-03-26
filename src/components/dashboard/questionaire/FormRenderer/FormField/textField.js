@@ -14,7 +14,7 @@ import TextField_ from '../../dialogs/TextField';
 import { DescriptionCard, FieldIndex } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
-const textField = (props) => {
+const TextFieldComp = (props) => {
 
     const { setFieldResponses, editStatus } = useContext(FormContext);
 
@@ -106,4 +106,4 @@ const textField = (props) => {
     )
 }
 
-export default textField
+export default TextFieldComp

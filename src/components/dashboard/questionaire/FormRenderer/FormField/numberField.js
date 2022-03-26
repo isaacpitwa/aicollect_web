@@ -17,7 +17,7 @@ import {
 } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const numberField = (props) => {
+const NumberFieldComp = (props) => {
 
     const {
         setError,
@@ -90,4 +90,4 @@ const numberField = (props) => {
     )
 }
 
-export default numberField
+export default NumberFieldComp

@@ -322,8 +322,8 @@ const SelectRadioField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'text').map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(componentsData, id, 'text').map((option, index) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>

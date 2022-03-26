@@ -252,8 +252,8 @@ const TextAreaField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, fieldData.id, 'text-area').map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(compsData, fieldData.id, 'text-area').map((option, index) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
