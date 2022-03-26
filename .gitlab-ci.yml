@@ -1,4 +1,5 @@
-image: gitlab/dind
+#image: gitlab/dind
+image: docker:latest
 
 services:
   - docker:dind
@@ -18,9 +19,12 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
+  before:
+    - docker info
 # only:
 #   - develop
   script:
+    - docker version
     - docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
     #- docker login $REGISTRY  -u $DOCKER_USER_ROCKSIDE -p $GITLAB_DEPLOYEMENT_TOKEN
     - docker build -t   --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
