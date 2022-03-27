@@ -20,11 +20,12 @@ build_and_push:
   stage: build_and_push
   before_script:
     - docker info
+    - docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
 # only:
 #   - develop
   script:
     - docker version
-    - docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
+   
     - docker build -t   --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
     - docker push $REGISTRY
 
