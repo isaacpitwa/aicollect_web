@@ -192,7 +192,7 @@ export const UserListTable = (props) => {
                     {customer.phone}
                   </TableCell>
                   <TableCell>
-                    {customer.status ? "Active" : "Not Active"}
+                    {customer.status}
                   </TableCell>
                   <TableCell>
                     <Typography

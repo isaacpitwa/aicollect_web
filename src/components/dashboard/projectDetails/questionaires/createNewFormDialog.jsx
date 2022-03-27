@@ -38,6 +38,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
 
   const handleAddRegionFields = () => {
     setRegionValues((prevState) => ([...prevState, { region: '', prefix: '' }]))
+    console.log(regionValues)
   };
 
   const handleChangeRegion = (i, e) => {
@@ -46,12 +47,8 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
   };
 
   const handleRemoveRegionField = (index) => {
-    let newRegionValues = regionValues;
-    console.log(newRegionValues)
-    newRegionValues.splice(index, 1);
-    console.log('2', newRegionValues);
-    setRegionValues(newRegionValues);
-    // console.log('clicked: ', newRegionValues)
+    console.log(index)
+    // setRegionValues((prevState) => ([...prevState].splice(index, 1)));
   };
 
   const handleChange = (event) => {
@@ -115,8 +112,8 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
 
         <Box sx={{ overflow: 'auto', maxHeight: 200 }}>
           {
-            checked && regionValues.map((field) => (
-              <Grid container display="flex" flexDirection="row" key={field}>
+            checked && regionValues.map((field, idx) => (
+              <Grid container display="flex" flexDirection="row" key={idx}>
                 <Grid item md={5}>
                   <TextField
                     autoFocus
@@ -142,7 +139,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
                   />
                 </Grid>
                 <Grid item md={2} mt={2}>
-                  <IconButton aria-label='delete' color='error' onClick={() => handleRemoveRegionField(field)}>
+                  <IconButton aria-label='delete' color='error' onClick={() => handleRemoveRegionField(idx)}>
                     <DeleteOutline fontSize='small' />
                   </IconButton>
                 </Grid>
