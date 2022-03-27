@@ -15,7 +15,7 @@ import SelectField from '../../dialogs/SelectField'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const selectField = (props) => {
+const SelectFieldComp = (props) => {
 
     const {
         setError,
@@ -70,8 +70,8 @@ const selectField = (props) => {
                 value={fieldData.options[0].label}
                 helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
             >
-                {fieldData.options.map(option => (
-                    <MenuItem value={option.label}>{option.label}</MenuItem>
+                {fieldData.options.map((option, index) => (
+                    <MenuItem key={index} value={option.label}>{option.label}</MenuItem>
                 ))}
             </TextField>
         </Grid>
@@ -79,4 +79,4 @@ const selectField = (props) => {
     )
 }
 
-export default selectField
+export default SelectFieldComp

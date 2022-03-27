@@ -6,14 +6,13 @@ import {
     Paper,
     Button,
     Grid,
-    Typography,
     Stack,
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    TextField
+    TextField,
+    Typography
 } from '@mui/material'
-import { Draggable } from "react-beautiful-dnd"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import SelectAllIcon from '@mui/icons-material/SelectAll'

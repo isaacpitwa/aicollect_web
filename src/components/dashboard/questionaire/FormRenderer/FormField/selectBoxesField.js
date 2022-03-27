@@ -14,7 +14,7 @@ import SelectBoxField from '../../dialogs/SelectBoxField'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const selectBoxesField = (props) => {
+const SelectBoxesField = (props) => {
 
     const {
         setError,
@@ -81,4 +81,4 @@ const selectBoxesField = (props) => {
     )
 }
 
-export default selectBoxesField
+export default SelectBoxesField

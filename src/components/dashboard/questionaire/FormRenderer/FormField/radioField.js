@@ -17,7 +17,7 @@ import SelectRadioField from '../../dialogs/SelectRadioField'
 import { DescriptionCard, FieldIndex } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const radioField = (props) => {
+const RadioField = (props) => {
 
     const {
         setError,
@@ -89,8 +89,8 @@ const radioField = (props) => {
                     value={radioValue}
                     onChange={handleRadio}
                 >
-                    {fieldData.radios.map(radio => (
-                        <FormControlLabel value={radio.label.toLowerCase()} control={<Radio />} label={radio.label} />
+                    {fieldData.radios.map((radio, index) => (
+                        <FormControlLabel key={index} value={radio.label.toLowerCase()} control={<Radio />} label={radio.label} />
                     ))}
                 </RadioGroup>
             </FormControl>
@@ -99,4 +99,4 @@ const radioField = (props) => {
     )
 }
 
-export default radioField
+export default RadioField

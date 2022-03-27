@@ -16,7 +16,7 @@ import {
 } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
-const textAreaField = (props) => {
+const TextAreaFieldComp = (props) => {
 
     const { editStatus } = useContext(FormContext);
 
@@ -75,4 +75,4 @@ const textAreaField = (props) => {
     )
 }
 
-export default textAreaField
+export default TextAreaFieldComp

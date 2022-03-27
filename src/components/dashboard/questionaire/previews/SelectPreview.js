@@ -15,7 +15,10 @@ const SelectPreview = (props) => {
 
     return (
         <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
-            <Typography style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }} size='small' >
+            <Typography
+                size='small'
+                style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }}
+            >
                 <strong>Preview</strong>
             </Typography>
             <Box
@@ -32,8 +35,8 @@ const SelectPreview = (props) => {
                 fullWidth
                 size={'small'}
             >
-                {options.map(option=>(
-                    <MenuItem value={option.optionLabel}>{option.optionLabel}</MenuItem>
+                {options.map((option, index)=>(
+                    <MenuItem key={index} value={option.optionLabel}>{option.optionLabel}</MenuItem>
                 ))}
             </Select>
             {fieldDescription!=''?

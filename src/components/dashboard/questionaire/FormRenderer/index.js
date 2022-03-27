@@ -28,8 +28,9 @@ const FormRenderer = (props) => {
     return (
         isLoaded ?
             <Grid container className={classes.form}>
-                {componentsData.map(componentData => (
+                {componentsData.map((componentData, index) => (
                     <SectionField
+                        key={index}
                         fieldData={componentData}
                         fieldResponses={fieldResponses}
                         editStatus={editStatus}
