@@ -22,7 +22,7 @@ build_and_push:
   #   - develop
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
-    - docker build  -t  --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
+    - docker build --build-arg env_file=$ENVIROMENT_FILE -t $REGISTRY .
     - docker push $REGISTRY
 
 #5 
