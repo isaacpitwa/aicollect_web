@@ -1,6 +1,6 @@
 FROM node:lts as dependencies
 #FROM node:14.6.0 as dependencies
-RUN cat /builds/new-aic-mvp2/web-app-react/aicollect-web-app\.env.example_temp
+RUN cat \.env.example_temp
 WORKDIR /aicollect-web-app
 COPY package.json package-lock.json ./
 COPY .env.example ./.env
