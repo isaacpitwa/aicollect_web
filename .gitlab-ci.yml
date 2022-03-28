@@ -18,11 +18,11 @@ variables:
 build_and_push:
   stage: build_and_push
   before_script:
-    - docker info
+    - echo "username- $DOCKER_USER , password -$DOCKER_USER_PASSWORD "
 # only:
 #   - develop
   script:
-    - docker login $REGISTRY  --username "$DOCKER_USER" --password "$DOCKER_USER_PASSWORD"
+    - docker login $REGISTRY  --username $DOCKER_USER --password $DOCKER_USER_PASSWORD
     - docker build -t   --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
     - docker push $REGISTRY
 
