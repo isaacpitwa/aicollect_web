@@ -1,0 +1,65 @@
+image: gitlab/dind
+
+services:
+  - docker:dind
+stages:
+  - build_and_push
+  - deploy_staging
+  - deploy_production
+
+#2
+variables:
+  #REGISTRY: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app"
+  REGISTRY: "registry.gitlab.com"
+  IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app:latest"
+
+# before_script:
+#   - npm test
+#4
+build_and_push:
+  stage: build_and_push
+# only:
+#   - develop
+  #docker login registry.example.com -u <username> -p <token>
+  script:
+    #- docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
+    - docker login $REGISTRY  -u $DOCKER_USER_ROCKSIDE -p $GITLAB_DEPLOYEMENT_TOKEN
+    - docker build -t   --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
+    - docker push $REGISTRY
+
+#5
+deploy_staging:
+  stage: deploy_staging
+  tags: 
+    - Deployment
+    - Staging
+  only:
+    - develop
+  script:
+    - chmod og= $SSHKEY
+    - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker pull  $IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker run  --env-file /home/rockside/secrets/.env -d -p 8001:3000 --restart always  --name aic_clientAPP  $IMAGE_NAME"
+  environment:
+    name: staging 
+    url: https://testclient.aicollectapp.com
+
+#6 
+
+deploy_production:
+  stage: deploy_production
+  tags: 
+    - Deployment
+    - Production
+  only:
+    - main
+  script:
+    - chmod og= $SSHKEY
+    - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker pull  $IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker run --env-file /home/rockside/secrets/.env -d -p 8001:3000 --restart always  --name aic_clientAPP  $IMAGE_NAME"
+  environment:
+    name: Production 
+    url: https://aicollectapp.com

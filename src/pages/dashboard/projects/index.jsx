@@ -21,7 +21,7 @@ import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
-
+import { useAuth } from '../../../hooks/use-auth';
 // Fetch Projects API
 import { projectsApi } from '../../../api/projects-api';
 
@@ -119,8 +119,11 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
 
 const ProjectList = (props) => {
   const queryRef = useRef(null);
-  const { data: projects, loading, handleFetchData } = props;
-  // const [projects, setProjects] = useState([]);
+  const { user } = useAuth();
+  console.log(user);
+  // const { data: projects, loading, handleFetchData } = props;
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
@@ -132,6 +135,31 @@ const ProjectList = (props) => {
     isProspect: null,
     isReturning: null
   });
+
+  const getUserProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        cliendId = user.clientId;
+      }
+      const data = await projectsApi.fetchProjects(clientId);
+      if (data) {
+        setProjects(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [
+    setProjects
+  ]);
+
+  useEffect(() => {
+    getUserProjects();
+  }, []);
 
   const handleOpenProjectDialog = () => {
     setOpenProjectDialog(true)
@@ -207,7 +235,7 @@ const ProjectList = (props) => {
               <CreateNewProjectDialog
                 open={openProjectDialog}
                 handleClose={handleCloseProjectDialog}
-                getProjects={handleFetchData}
+                getProjects={getUserProjects}
               />
             </Grid>
             <Box
@@ -304,9 +332,9 @@ const ProjectList = (props) => {
 };
 
 // In this case I do not need to pass the second argument 
-const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects, null)(ProjectList);
+// const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects, null)(ProjectList);
 
-ProjectsListWithLayout.getLayout = (page) => (
+ProjectList.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
@@ -314,4 +342,4 @@ ProjectsListWithLayout.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default ProjectsListWithLayout;
+export default ProjectList;

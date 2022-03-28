@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Grid, FormControl, FormLabel, TextField, Typography, Select, Button, MenuItem  } from "@mui/material";
 import toast from "react-hot-toast";
 
-const SendCustomerInvite = () => {
+import { userApi } from '../../../api/users-api';
+
+const SendCustomerInvite = ({getClientUsers, handleClose}) => {
   const [state, setState] = useState({
     email: '',
     roles: '',
     expiryDate: '',
-    status: 'Pending'
+    status: 'Pending',
+    phone: '083738235',
+    frontendUrl: 'http://localhost:3000'
   });
 
   const handleChange = (e) => {
@@ -17,19 +21,14 @@ const SendCustomerInvite = () => {
 
   const handleInviteNewUser = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/authService/send_invitation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'Application/json'
-        },
-        body: JSON.stringify(state)
-      });
-      const data = await response.json();
-      if (data.status === 200) {
+      const data = await userApi.inviteUserByEmail(state);
+      if (data) {
         toast.success('User has been successfully invited', { duration: 5000, position: 'top-right' });
+        getClientUsers();
+        handleClose();
       }
     } catch (error) {
-      console.log(error);
+      console.log('user error \n', error);
     }
   };
 

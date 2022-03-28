@@ -1,7 +1,14 @@
 class ProjectsApi {
-  async fetchProjects() {
+  async fetchProjects(clientId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
+      console.log('you pinged me');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/userProjects`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({ clientId })
+      });
       const data = await response.json();
       if (data && data.status === 200) {
         return data.data;

@@ -1,4 +1,17 @@
 class Forms {
+  async getAllProjectForms() {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms`);
+
+      const data = await response.json();
+      if (data.status === 200) {
+        return data.data;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async createNewForm(formMeta) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/create/newForm`, {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,7 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 import { FormsApi } from '../../../../api/forms-api';
-import { Grid, IconButton, Stack } from '@mui/material';
+import { CircularProgress, Grid, IconButton, Stack } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 
 export const CreateNewFormDialog = ({ open, handleClose, user }) => {
@@ -37,6 +38,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
 
   const handleAddRegionFields = () => {
     setRegionValues((prevState) => ([...prevState, { region: '', prefix: '' }]))
+    console.log(regionValues)
   };
 
   const handleChangeRegion = (i, e) => {
@@ -45,12 +47,8 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
   };
 
   const handleRemoveRegionField = (index) => {
-    let newRegionValues = regionValues;
-    console.log(newRegionValues)
-    newRegionValues.splice(index, 1);
-    console.log('2', newRegionValues);
-    setRegionValues(newRegionValues);
-    // console.log('clicked: ', newRegionValues)
+    console.log(index)
+    // setRegionValues((prevState) => ([...prevState].splice(index, 1)));
   };
 
   const handleChange = (event) => {
@@ -91,67 +89,72 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
           onChange={handleChange}
         />
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checked}
-              onChange={(event) => {
-                event.preventDefault();
-                setChecked(event.target.checked)
-              }}
-            />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={checked}
+                onChange={(event) => {
+                  event.preventDefault();
+                  setChecked(event.target.checked)
+                }}
+              />
+            }
+            label="Attach Regions"
+          />
+
+          {
+            checked && <Button variant="contained" size='small' onClick={handleAddRegionFields}>
+              Add region
+            </Button>
           }
-          label="Attach Regions"
-        />
-
-        {
-          checked && <Button variant="contained" size='small' onClick={handleAddRegionFields}>
-          Add region
-        </Button>
-        }
         </Stack>
-        
 
-        {
-          checked && regionValues.map((field) => (
-            <Grid container display="flex" flexDirection="row" key={field}>
-              <Grid item md={5}>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Region"
-                  variant="outlined"
-                  name="region"
-                  value={field.region}
-                  onChange={handleChangeRegion}
-                  size="small"
-                />
-              </Grid>
-              <Grid item md={5}>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Prefix"
-                  variant="outlined"
-                  name="region"
-                  value={field.region}
-                  onChange={handleChangeRegion}
-                  size="small"
-                />
-              </Grid>
-              <Grid item md={2} mt={2}>
-                <IconButton aria-label='delete' color='error' onClick={() => handleRemoveRegionField(field)}>
-                  <DeleteOutline fontSize='small' />
-                </IconButton>
-              </Grid>
-            </Grid>
 
-          ))
-        }
+        <Box sx={{ overflow: 'auto', maxHeight: 200 }}>
+          {
+            checked && regionValues.map((field, idx) => (
+              <Grid container display="flex" flexDirection="row" key={idx}>
+                <Grid item md={5}>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Region"
+                    variant="outlined"
+                    name="region"
+                    value={field.region}
+                    onChange={handleChangeRegion}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item md={5}>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Prefix"
+                    variant="outlined"
+                    name="region"
+                    value={field.region}
+                    onChange={handleChangeRegion}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item md={2} mt={2}>
+                  <IconButton aria-label='delete' color='error' onClick={() => handleRemoveRegionField(idx)}>
+                    <DeleteOutline fontSize='small' />
+                  </IconButton>
+                </Grid>
+
+              </Grid>
+
+            ))
+          }
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleCreateNewForm} variant="contained">Create Form</Button>
+        <Button onClick={handleCreateNewForm} disabled={loading} variant="contained">
+          {loading ? <CircularProgress size="small" /> : "Create Form"}
+        </Button>
       </DialogActions>
     </Dialog>
   );
