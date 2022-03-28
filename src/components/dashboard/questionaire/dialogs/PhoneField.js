@@ -16,6 +16,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Checkbox,
     TextField,
     Select,
     MenuItem,
@@ -31,6 +32,7 @@ import {
 import {
     FieldError,
 } from '../utils/ErrorCards';
+import GeneralTooltip from '../previews/GeneralTooltip';
 import PhoneFieldPreview from '../previews/PhoneFieldPreview'
 
 // This is the field for type=TextField
@@ -50,8 +52,8 @@ const PhoneField = (props) => {
     const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [type] = useState(fieldData ? fieldData.type : 'text')
-    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
+    const [type] = useState(fieldData ? fieldData.type : 'phone-number')
+    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : 'Phone Number')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
@@ -212,54 +214,128 @@ const PhoneField = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        style={{ padding: '20px' }}
+                    >
+                        <FieldError errorTag={errorTag}/>
                         <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'left',
-                            '& > *': {
-                            m: 0,
-                            },
-                        }}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'left',
+                                '& > *': {
+                                    m: 0,
+                                },
+                            }}
                         >
-                        <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                            <Button variant="contained" style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button disabled>Data</Button>
-                            <Button disabled>Validation</Button>
-                            <Button disabled>Conditional</Button>
-                            <Button disabled style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
-                        </ButtonGroup>
+                            <ButtonGroup
+                                variant="outlined"
+                                size='small'
+                                aria-label="outlined button group"
+                            >
+                                <Button
+                                    variant={buttonFocused == "display" ? "contained" : "outlined"}
+                                    onClick={handleDisplay}
+                                    style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
+                                <Button
+                                    variant={buttonFocused == "conditional" ? "contained" : "outlined"}
+                                    onClick={handleConditional}>Conditional</Button>
+                                <Button
+                                    variant={buttonFocused == "logic" ? "contained" : "outlined"}
+                                    onClick={handleLogic}
+                                    style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            </ButtonGroup>
                         </Box>
                         <Box
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            <TextField
-                                margin="dense"
-                                id="outlined-multiline-static"
-                                label="Description (Optional)"
-                                size="small"
-                                multiline
-                                rows={4}
-                                variant="outlined"
-                                fullWidth
-                                value={fieldDescription}
-                                onChange={handleDescription}
-                            />
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="tooltip"
-                                label="Tooltip (Optional)"
-                                type="text"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                                value={tooltip}
-                                onChange={handleTooltip}
-                            />
-
+                            {conditional ?
+                                <>
+                                    <Typography
+                                        style={{ fontSize: '18px', color: '#5048E5' }}
+                                    >
+                                        This component should Display:
+                                    </Typography>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={display}
+                                        fullWidth
+                                        size={'small'}
+                                        onChange={handleDiplayValue}
+                                    >
+                                        <MenuItem value={true}>True</MenuItem>
+                                        <MenuItem value={false}>False</MenuItem>
+                                    </Select>
+                                    <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
+                                        When the form component:
+                                    </Typography>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={when}
+                                        fullWidth
+                                        size={'small'}
+                                        onChange={handleWhen}
+                                    >
+                                        {allFormFields(componentsData, id, 'phone-number').map((option, index) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
+                                        Has the value:
+                                    </Typography>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="tooltip"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={compValue}
+                                        onChange={handleCompValue}
+                                    />
+                                </>
+                                :
+                                <>
+                                    <TextField
+                                        margin="dense"
+                                        id="outlined-multiline-static"
+                                        label="Description (Optional)"
+                                        size="small"
+                                        multiline
+                                        rows={4}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={fieldDescription}
+                                        onChange={handleDescription}
+                                    />
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="tooltip"
+                                        label="Tooltip (Optional)"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={tooltip}
+                                        onChange={handleTooltip}
+                                    />
+                                    <Typography style={{ color: '#5048E5' }}>
+                                        <Checkbox
+                                            size={'small'}
+                                            checked={isRequired}
+                                            onChange={handleIsRequired}
+                                        />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                    </Typography>
+                                </>
+                            }
                         </Box>
                     </Grid>
                     <PhoneFieldPreview

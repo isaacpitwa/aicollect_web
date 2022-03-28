@@ -28,6 +28,7 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk'
 import SmartButtonIcon from '@mui/icons-material/SmartButton'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import ImageIcon from '@mui/icons-material/Image'
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import PersonPinIcon from '@mui/icons-material/PersonPin'
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt'
 import MapIcon from '@mui/icons-material/Map'
@@ -417,6 +418,12 @@ const Questionaire = () => {
                                                 size="small"
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Image</Button>
+                                            <Button
+                                                startIcon={<DateRangeIcon />}
+                                                variant="contained"
+                                                size="small"
+                                                style={{ width: '100%', marginTop: '10px' }}
+                                            >Date</Button>
                                         </Grid>
                                         <Grid
                                             item
