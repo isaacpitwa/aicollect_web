@@ -32,6 +32,9 @@ import { gtm } from '../../../../../lib/gtm';
 import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
 import { convertToJSON } from '../../../../../utils/convert-excel-data-to-json';
 
+// API
+import { FormsApi } from '../../../../../api/forms-api';
+
 const tabs = [
   {
     label: 'All',
@@ -245,11 +248,9 @@ const QuestionaireList = () => {
 
   const getQuestionaires = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms`);
-
-      const data = await response.json();
-      if (isMounted() && data.status === 200) {
-        setQuestionaires(data.data);
+      const data = await FormsApi.getAllProjectForms();
+      if (isMounted() && data) {
+        setQuestionaires(data);
       }
     } catch (err) {
       console.error(err);
