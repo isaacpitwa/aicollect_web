@@ -4,6 +4,7 @@ RUN ls
 WORKDIR /aicollect-web-app
 ADD .env.example_temp /tmp/
 RUN cat /tmp/.env.example_temp
+RUN cd tmp && ls
 COPY package.json package-lock.json ./
 COPY .env.example ./.env
 RUN npm install -u --frozen-lockfile
@@ -11,6 +12,7 @@ RUN npm install -u --frozen-lockfile
 FROM node:lts as builder
 WORKDIR /aicollect-web-app
 COPY . .
+RUN cd tmp && ls
 COPY --from=dependencies /aicollect-web-app/node_modules ./node_modules
 COPY --from=dependencies /aicollect-web-app/.env.example ./.env
 RUN npm run build
