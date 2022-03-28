@@ -3,16 +3,16 @@ FROM node:lts as dependencies
 RUN ls
 WORKDIR /aicollect-web-app
 ADD .env.example_temp /tmp/
-RUN cat /tmp/.env.example_temp
+RUN cat .env.example_temp
 COPY package.json package-lock.json ./
-COPY /tmp/.env.example_temp ./.env
+COPY .env.example_temp ./.env
 RUN npm install -u --frozen-lockfile
 
 FROM node:lts as builder
 WORKDIR /aicollect-web-app
 COPY . .
 COPY --from=dependencies /aicollect-web-app/node_modules ./node_modules
-COPY --from=dependencies /tmp/.env.example_temp ./.env
+COPY --from=dependencies .env.example_temp ./.env
 RUN npm run build
 
 FROM node:lts as runner
@@ -24,7 +24,7 @@ COPY --from=builder /aicollect-web-app/public ./public
 COPY --from=builder /aicollect-web-app/.next ./.next
 COPY --from=builder /aicollect-web-app/node_modules ./node_modules
 COPY --from=builder /aicollect-web-app/package.json ./package.json
-COPY --from=builder /tmp/.env.example_temp ./.env
+COPY --from=builder .env.example_temp ./.env
 
 EXPOSE 3000
 CMD ["npm", "start"]
