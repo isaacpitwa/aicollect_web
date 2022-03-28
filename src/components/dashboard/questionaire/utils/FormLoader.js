@@ -12,7 +12,11 @@ function TypographyDemo(props) {
   return (
     <div>
       {variants.map((variant) => (
-        <Typography component="div" key={variant} variant={variant}>
+        <Typography
+          component="div"
+          key={variant}
+          variant={variant}
+        >
           {loading ? <Skeleton animation="wave" /> : variant}
         </Typography>
       ))}
@@ -26,7 +30,11 @@ TypographyDemo.propTypes = {
 
 export default function FormLoader() {
   return (
-    <Grid item xs={12} style={{ padding: '2%' }}>
+    <Grid
+      item
+      xs={12}
+      style={{ padding: '2%' }}
+    >
         <TypographyDemo loading />
     </Grid>
   );

@@ -18,16 +18,19 @@ const FormRenderer = (props) => {
 
     const { editStatus, handleFormUpdate } = props
 
-    useEffect(() => {
-    }, [isLoaded, componentsData])    
+    // useEffect(() => {
+    // }, [componentsData])
 
     const handleRemove = (fieldId) => {
         setComponentsData(componentsData.filter(section => section.id !== fieldId))
     }
 
     return (
-        isLoaded ?
-            <Grid container className={classes.form}>
+        isLoaded?
+            <Grid
+                container
+                className={classes.form}
+            >
                 {componentsData.map((componentData, index) => (
                     <SectionField
                         key={index}
@@ -46,7 +49,7 @@ const FormRenderer = (props) => {
                     ''
                 }
             </Grid>
-            : 
+        : 
             <FormLoader/>
     )
 }

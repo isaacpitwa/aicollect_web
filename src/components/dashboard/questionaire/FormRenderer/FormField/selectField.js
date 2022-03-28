@@ -38,6 +38,10 @@ const SelectFieldComp = (props) => {
         setSelectDialog(true)
     }
 
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
+
     const handleClose = () => {
         setSelectDialog(false)
     }
@@ -46,7 +50,13 @@ const SelectFieldComp = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section:classes.section2}>
+        <Grid
+            key={fieldData.id}
+            container
+            onMouseOver={()=>{setDisplay('visible')}}
+            onMouseOut={()=>{setDisplay('hidden')}}
+            className={editStatus?classes.section:classes.section2}
+        >
             {editStatus?
                 <>
                     <SelectField open={selectDialog} fieldData={fieldData} handleClose={handleClose} />
@@ -55,10 +65,13 @@ const SelectFieldComp = (props) => {
                             onClick={handleSelectField}
                             className={smallBtn.editBtn}
                         />
-                        <HighlightOffIcon className={smallBtn.deleteBtn} />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
                     </Typography>
                 </>
-        : '' }
+            : '' }
             <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
                 {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip}/>
             </Typography>

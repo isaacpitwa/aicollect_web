@@ -39,10 +39,12 @@ class Forms {
       });
       const data = await response.json();
       if (data && data.status === 200) {
+        console.log(data);
         return data.data;
       }
     } catch (error) {
-      console.log('failed to get form \n', error);
+      console.log(error)
+      return error;
     }
   }
 
