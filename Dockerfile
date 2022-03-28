@@ -1,6 +1,6 @@
 FROM node:lts as dependencies
 #FROM node:14.6.0 as dependencies
-ADD .env.example /tmp/
+ADD .env.example_temp /tmp/
 RUN cat /tmp/.env.example_temp
 WORKDIR /aicollect-web-app
 COPY package.json package-lock.json ./

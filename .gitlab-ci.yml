@@ -17,12 +17,14 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
-  before_script:  cat $ENVIROMENT_FILE > ${CI_PROJECT_DIR}\.env.example_temp
+  before_script:  
+    - cat $ENVIROMENT_FILE > ${CI_PROJECT_DIR}\.env.example_temp
+    - cat ${CI_PROJECT_DIR}\.env.example_temp
   # only:
   #   - develop
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
-    - docker build --build-arg env_file=$ENVIROMENT_FILE -t $REGISTRY .
+    - docker build --build-arg env_file=${CI_PROJECT_DIR}\.env.example_temp -t $REGISTRY .
     - docker push $REGISTRY
 
 #5 
