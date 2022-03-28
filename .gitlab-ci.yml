@@ -17,7 +17,7 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
-  before_script: export
+  before_script: echo "DOCKER_USER - $DOCKER_USER , password  - $DOCKER_USER_PASSWORD"
   # only:
   #   - develop
   script:
