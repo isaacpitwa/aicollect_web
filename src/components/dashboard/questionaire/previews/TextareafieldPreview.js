@@ -12,8 +12,16 @@ const TextareafieldPreview = (props) => {
     const { fieldLabel, fieldDescription, tooltip, isRequired } = props
 
     return (
-        <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
-            <Typography style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }} size='small' >
+        <Grid
+            item
+            xs={12}
+            md={6}
+            style={{ padding: '30px 20px' }}
+        >
+            <Typography
+                style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }}
+                size='small'
+            >
                 <strong>Preview</strong>
             </Typography>
             <Box
@@ -37,7 +45,9 @@ const TextareafieldPreview = (props) => {
                   }}
               />
                 {fieldDescription!=''?
-                    <Typography style={{ fontSize: '14px', color: '#5048e598' }}>
+                    <Typography
+                        style={{ fontSize: '14px', color: '#5048e598' }}
+                    >
                         <i>{fieldDescription}</i>
                     </Typography>
                 :

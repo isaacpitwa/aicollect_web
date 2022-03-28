@@ -88,10 +88,17 @@ const DragNDrop = (props) => {
 
 	return (
 		<Grid container>
-			<Grid item xs={12} style={{ display: "block" }}>
+			<Grid
+				item
+				xs={12}
+				style={{ display: "block" }}
+			>
 				<DragDropContext onDragEnd={onDragEnd}>
 					{state.map((el, ind) => (
-						<Droppable key={ind} droppableId={`${ind}`}>
+						<Droppable
+							key={ind}
+							droppableId={`${ind}`}
+						>
 							{(provided, snapshot) => (
 								<Grid
 									style={{ border: '3px #eee dotted', cursor: 'move', borderRadius: "5px" }}
@@ -130,7 +137,10 @@ const DragNDrop = (props) => {
 															md={12}
 															lg={12}
 														>
-															<Typography variant='h5' style={{ borderBottom: '1px #5048E5 solid', color: '#5048E5', fontWeight: '400' }}>
+															<Typography
+																variant='h5'
+																style={{ borderBottom: '1px #5048E5 solid', color: '#5048E5', fontWeight: '400' }}
+															>
 																{item.title}
 															</Typography>
 														</Grid>

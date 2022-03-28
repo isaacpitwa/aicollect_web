@@ -59,8 +59,10 @@ const SectionField = (props) => {
                 setSubSectionId(null)
             }
         }
-        console.log('Section ID: ', sectionId)
-        console.log('Sub Section ID: ', subSectionId)        
+    }
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
     }
 
     const handleClose = () => {

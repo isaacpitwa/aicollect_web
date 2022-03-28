@@ -59,7 +59,7 @@ const TextAreaField = (props) => {
 
     useEffect(() => {
         setCompsData(componentsData);
-    }, [compsData])
+    }, [componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
