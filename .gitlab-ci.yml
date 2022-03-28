@@ -17,6 +17,7 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
+  before_script: echo "ENVIROMENT_FILE content -$ENVIROMENT_FILE "
   # only:
   #   - develop
   script:
