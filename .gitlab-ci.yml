@@ -17,7 +17,7 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
-  before_script:  cat $ENVIROMENT_FILE
+  before_script:  cat $ENVIROMENT_FILE > ${CI_PROJECT_DIR}\.env.example
   # only:
   #   - develop
   script:

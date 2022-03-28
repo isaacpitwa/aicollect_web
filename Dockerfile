@@ -1,9 +1,11 @@
 FROM node:lts as dependencies
 #FROM node:14.6.0 as dependencies
-RUN cat $env_file
+ADD .env.example /tmp/
+RUN cat .env.example
 WORKDIR /aicollect-web-app
 COPY package.json package-lock.json ./
-COPY $env_file ./.env
+
+COPY .env.example ./.env
 RUN npm install -u --frozen-lockfile
 
 FROM node:lts as builder
