@@ -13,9 +13,8 @@ variables:
   IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app:latest"
 
 before_script:  
-  - cat $ENVIROMENT_FILE > ${CI_PROJECT_DIR}\.env.example_temp
-  - cat ${CI_PROJECT_DIR}\.env.example_temp
-  - echo "${CI_PROJECT_DIR}\.env.example_temp"
+  - cat $ENVIROMENT_FILE > .env.example_temp
+  - cat .env.example_temp
 # before_script:
 #   - npm test
 #4
