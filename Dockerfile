@@ -5,6 +5,7 @@ WORKDIR /aicollect-web-app
 ADD .env.example_temp /tmp/
 RUN cat /tmp/.env.example_temp
 COPY package.json package-lock.json ./
+ADD .env.example_temp /tmp/
 COPY /tmp/.env.example_temp ./.env
 RUN npm install -u --frozen-lockfile
 
