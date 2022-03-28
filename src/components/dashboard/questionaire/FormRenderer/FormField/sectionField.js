@@ -101,7 +101,7 @@ const SectionField = (props) => {
                     </Typography>
                     <DescriptionCard description={fieldData.description} helperText={true} />
                     {fieldData.components.map((componentData, index) => (
-                        <FormField fieldKey={index} fieldData={componentData}  fieldResponses={fieldResponses}/>
+                        <FormField key={index} fieldKey={index} fieldData={componentData}  fieldResponses={fieldResponses}/>
                     ))}
                 </Grid>
                 : ''
@@ -133,7 +133,7 @@ const SectionField = (props) => {
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={true} />
                 {fieldData.components.map((comp, index) => (
-                    <FormField fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
+                    <FormField key={index} fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
                 ))}
             </Grid>
     )

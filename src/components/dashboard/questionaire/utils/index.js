@@ -1,4 +1,7 @@
-import { Typography } from '@mui/material';
+import {
+    Typography
+} from '@mui/material'
+
 import FormStyles from '../styles/FormStyles'
 import InfoIcon from '@mui/icons-material/Info'
 

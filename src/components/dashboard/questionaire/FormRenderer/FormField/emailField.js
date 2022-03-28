@@ -13,7 +13,7 @@ import { FormContext } from '../../context'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const emailField = (props) => {
+const EmailField = (props) => {
 
     const { editStatus } = useContext(FormContext);
     
@@ -58,4 +58,4 @@ const emailField = (props) => {
     )
 }
 
-export default emailField
+export default EmailField

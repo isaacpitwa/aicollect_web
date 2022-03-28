@@ -15,7 +15,7 @@ import { FormContext } from '../../context'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const locationField = (props) => {
+const LocationField = (props) => {
 
     const { editStatus } = useContext(FormContext);
 
@@ -48,12 +48,12 @@ const locationField = (props) => {
                 }}
             >
                 <MenuItem disabled>Select Location</MenuItem>
-                {fieldData.values.map(option => (
-                    <MenuItem value={option.label}>{option.label}</MenuItem>
+                {fieldData.values.map((option, index) => (
+                    <MenuItem key={index} value={option.label}>{option.label}</MenuItem>
                 ))}
             </TextField>
         </Grid>
     )
 }
 
-export default locationField
+export default LocationField

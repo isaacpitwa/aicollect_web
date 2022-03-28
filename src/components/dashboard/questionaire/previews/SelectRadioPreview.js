@@ -16,7 +16,12 @@ const SelectRadioPreview = (props) => {
     const { fieldLabel, fieldDescription, tooltip, fieldValue, radios, isRequired } = props
 
     return (
-        <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+        <Grid
+            item
+            xs={12}
+            md={6}
+            style={{ padding: '30px 20px' }}
+        >
             <Typography style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }} size='small' >
                 <strong>Preview</strong>
             </Typography>
@@ -33,8 +38,13 @@ const SelectRadioPreview = (props) => {
                         name="controlled-radio-buttons-group"
                         value={fieldValue}
                     >
-                        {radios.map(radio=>(
-                            <FormControlLabel value={radio.id} control={<Radio />} label={radio.label}/>
+                        {radios.map((radio, index)=>(
+                            <FormControlLabel
+                                key={index}
+                                value={radio.id}
+                                control={<Radio />}
+                                label={radio.label}
+                            />
                         ))}
                     </RadioGroup>
                 </FormControl>

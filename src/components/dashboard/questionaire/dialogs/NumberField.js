@@ -162,7 +162,6 @@ const NumberField = (props) => {
 
         if(sectionId&&fieldLabel!=='') {
             addComponentToSection(newFieldObj)
-            addDependency(newFieldObj)
             setError(false)
             setErrorTag(false)
             setFieldLabel('')
@@ -197,7 +196,6 @@ const NumberField = (props) => {
         }
 
         updateFieldInSection(newField)
-        addDependency(newField)
         handleClose()
     }
 
@@ -280,8 +278,8 @@ const NumberField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData).map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(compsData).map((option, key) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ marginTop: '10px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}>
@@ -312,8 +310,8 @@ const NumberField = (props) => {
                                         size={'small'}
                                         onChange={addSubSectionId}
                                     >
-                                        {allHiddenSubSections(sectionId, componentsData).map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allHiddenSubSections(sectionId, componentsData).map((option, index) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                 </>                                        

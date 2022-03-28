@@ -6,8 +6,6 @@ import {
 	Typography
 } from '@mui/material'
 
-import SectionComps from '../fields/SectionComps'
-
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
@@ -55,7 +53,9 @@ const getListStyle = () => ({
 })
 
 const DragNDrop = (props) => {
+
 	const { componentsData } = props
+
 	const [state, setState] = useState([componentsData]);
 
 	useEffect(() => {
@@ -96,7 +96,6 @@ const DragNDrop = (props) => {
 								<Grid
 									style={{ border: '3px #eee dotted', cursor: 'move', borderRadius: "5px" }}
 									ref={provided.innerRef}
-									style={getListStyle(snapshot.isDraggingOver)}
 									{...provided.droppableProps}
 								>
 									<Typography fullWidth>
@@ -134,7 +133,6 @@ const DragNDrop = (props) => {
 															<Typography variant='h5' style={{ borderBottom: '1px #5048E5 solid', color: '#5048E5', fontWeight: '400' }}>
 																{item.title}
 															</Typography>
-															<SectionComps comps={item.components} />
 														</Grid>
 													</Grid>
 												</div>

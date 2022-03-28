@@ -15,7 +15,7 @@ import { FormContext } from '../../context'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const phoneNumberField = (props) => {
+const PhoneNumberField = (props) => {
 
     const { editStatus } = useContext(FormContext);
 
@@ -50,4 +50,4 @@ const phoneNumberField = (props) => {
     )
 }
 
-export default phoneNumberField
+export default PhoneNumberField
