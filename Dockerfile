@@ -3,7 +3,7 @@ FROM node:lts as dependencies
 RUN ls
 WORKDIR /aicollect-web-app
 ADD .env.example_temp /tmp/
-RUN cat .env.example_temp
+RUN cat /tmp/.env.example_temp
 COPY package.json package-lock.json ./
 COPY .env.example ./.env
 RUN npm install -u --frozen-lockfile
