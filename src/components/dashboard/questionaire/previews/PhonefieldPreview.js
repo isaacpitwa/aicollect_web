@@ -9,7 +9,7 @@ import MuiPhoneNumber from 'material-ui-phone-number'
 import 'react-phone-number-input/style.css'
 import GeneralTooltip from '../previews/GeneralTooltip'
 
-const PhoneFieldPreview = (props) => {
+const PhonefieldPreview = (props) => {
 
     const { defaultCountry, fieldDescription, tooltip } = props
 
@@ -64,5 +64,5 @@ const PhoneFieldPreview = (props) => {
     )
 }
 
-export default PhoneFieldPreview
+export default PhonefieldPreview
                     

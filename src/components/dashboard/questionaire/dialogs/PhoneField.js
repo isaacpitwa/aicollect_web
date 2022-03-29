@@ -33,7 +33,7 @@ import {
     FieldError,
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
-import PhoneFieldPreview from '../previews/PhoneFieldPreview';
+import PhonefieldPreview from '../previews/PhonefieldPreview';
 
 // This is the field for type=TextField
 const PhoneField = (props) => {
@@ -338,7 +338,7 @@ const PhoneField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <PhoneFieldPreview
+                    <PhonefieldPreview
                         defaultCountry={'ug'}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
