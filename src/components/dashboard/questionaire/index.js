@@ -57,7 +57,6 @@ import EmailField from './dialogs/EmailField'
 import PhoneField from './dialogs/PhoneField'
 
 import { FormContext } from './context'
-import DragNDrop from './dragNdrop'
 import FormRenderer from './FormRenderer'
 
 
@@ -102,7 +101,7 @@ const Questionaire = () => {
 
     useEffect(() => {
         setFormName(formData.name)
-    }, [ isLoaded])
+    }, [ isLoaded ])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
