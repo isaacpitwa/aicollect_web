@@ -15,13 +15,14 @@ variables:
 
 # before_script:
 #   - npm test
+
 #4
 build_and_push:
   stage: build_and_push
   before_script:  
     - cat $ENVIROMENT_FILE > .env.example_temp
-  # only:
-  #   - develop
+  only:
+    - develop
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
     - docker build -t $REGISTRY .
