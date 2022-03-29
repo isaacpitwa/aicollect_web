@@ -9,29 +9,35 @@ export const FormContext = createContext();
 
 const FormProvider = (props) => {
 
-    const { questionaireId } = props 
+    const { questionaireId } = props;
 
     const [isLoaded, setIsLoaded] = useState(false);
-    const [error, setError] = useState(false)
-    const [selectSection, setSelectSection] = useState(false)
-    const [sectionId, setSectionId] = useState(null)
-    const [subSectionId, setSubSectionId] = useState(null)
-    const [componentsData, setComponentsData] = useState([])
-    const [fieldResponses, setFieldResponses] = useState([])
-    const [formData, setFormData] = useState({})
-    const [sectionCreated, setSectionCreated] = useState(false)
-    const [formPreview, setFormPreview] = useState(false)
-    const [editStatus, setEditStatus] = useState(true)
-    const [dependantId, setDependantId] = useState("")
-    const [dependecyValue, setDependecyValue] = useState("")
+    const [error, setError] = useState(false);
+    const [selectSection, setSelectSection] = useState(false);
+    const [sectionId, setSectionId] = useState(null);
+    const [subSectionId, setSubSectionId] = useState(null);
+    const [componentsData, setComponentsData] = useState([]);
+    const [fieldResponses, setFieldResponses] = useState([]);
+    const [formData, setFormData] = useState({});
+    const [sectionCreated, setSectionCreated] = useState(false);
+    const [formPreview, setFormPreview] = useState(false);
+    const [editStatus, setEditStatus] = useState(true);
+    const [dependantId, setDependantId] = useState("");
+    const [dependecyValue, setDependecyValue] = useState("");
 
 
-    const getFormData = useCallback(async () => {
+    const getFormData = async () => {
         setIsLoaded(false)
-        let data = await FormsApi.getFormDetails(questionaireId);
-        data && getFormDetails(data)
+        try {
+            let data = await FormsApi.getFormDetails(questionaireId);
+            if (data) {
+                getFormDetails(data);
+            }
+        } catch (error) {
+            console.log('DEBUG error --> \n', error);
+        }
         setIsLoaded(true)
-    }, [])
+    }
 
     useEffect(() => {
         getFormData();
@@ -41,12 +47,7 @@ const FormProvider = (props) => {
         setComponentsData(data.formFields);
         setFormData(data);
         setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false)
-        setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}))
-
-    }
-
-    const getNumericFieldValues = () => {
-
+        setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}));
     }
 
     const addDependency = (fieldData) => {
@@ -145,6 +146,32 @@ const FormProvider = (props) => {
         getFormData(updatedForm.formId);
     }
 
+    const deleteFieldData = (fieldData) => {
+
+        let newFormFields = componentsData;
+
+        if(fieldData.type==='section') {
+            newFormFields.filter(field => field.id !== fieldData.id)
+        } else {
+            let section = componentsData.find(section => section.id === fieldData.parentId);
+            let sectionIndex = componentsData.findIndex(section => section.id === fieldData.parentId);
+            if(fieldData.subParentId) {
+                let subSection = section.components.find(subSection => subSection.id === fieldData.subParentId);
+                let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.subParentId);
+                subSection = subSection.components.filter(field => field.id !== fieldData.id);
+                section.components[subSectionIndex] = subSection;
+            } else {
+                section.components = section.components.filter(field => field.id !== fieldData.id);
+            }
+            newFormFields[sectionIndex] = section
+        }
+
+        setComponentsData(newFormFields)
+        addDependency(fieldData)
+        updateFormData() 
+
+    }
+
     const handleFormPreview = () => {
         setFormPreview(!formPreview)
         setEditStatus(!editStatus)
@@ -186,7 +213,8 @@ const FormProvider = (props) => {
                 dependantId,
                 setDependantId,
                 dependecyValue,
-                setDependecyValue
+                setDependecyValue,
+                deleteFieldData
             }}
         >
             {props.children}

@@ -17,21 +17,15 @@ import { FormContext } from '../../context'
 
 const FormField = (props) => {
 
-    const { formPreview, componentsData, fieldResponses } = useContext(FormContext)
+    const { fieldResponses } = useContext(FormContext)
 
     const { fieldKey, fieldData, editStatus } = props
-
-    const [refresh, setRefresh] = useState(false)
-
-    const fieldUpdated = () => {
-        setRefresh(true)
-    }
     
     switch (fieldData.type) {
         case 'sub-section':
             return <SubSectionField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'text':
-            return <TextField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus} fieldUpdated={fieldUpdated}/>
+            return <TextField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'text-area':
             return <TextAreaField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'number':

@@ -37,8 +37,11 @@ const TextAreaFieldComp = (props) => {
         setTextAreaFieldDialog(false)
     }
 
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
+
     const handleClose = () => {
-        // Dialog box closing method
         setTextAreaFieldDialog(false)
     }
 
@@ -54,7 +57,10 @@ const TextAreaFieldComp = (props) => {
                         onClick={handleTextAreaField}
                         className={smallBtn.editBtn}
                     />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                    <HighlightOffIcon
+                        onClick={deleteField}
+                        className={smallBtn.deleteBtn}
+                    />
                 </Typography>
             : '' }
             <TextField

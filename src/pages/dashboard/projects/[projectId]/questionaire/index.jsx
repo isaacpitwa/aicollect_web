@@ -334,7 +334,10 @@ const QuestionaireList = () => {
 
           </Box>
 
-          <Stack direction="row" mb={4}>
+          <Stack
+          direction="row"
+            mb={4}
+          >
             <Grid container spacing={3}>
               <Grid item md={3} sm={6} xs={12}>
                 <Card>

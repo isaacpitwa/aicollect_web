@@ -62,7 +62,10 @@ const SubSectionField = (props) => {
             }
         }
     }
-    
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }    
 
     const handleClose = () => {
         setSubSectionDialog(false)
@@ -94,6 +97,7 @@ const SubSectionField = (props) => {
                             className={smallBtn.editBtn}
                         />
                         <HighlightOffIcon
+                            onClick={deleteField}
                             className={smallBtn.deleteBtn}
                         />
                         </small>
@@ -134,6 +138,7 @@ const SubSectionField = (props) => {
                             className={smallBtn.editBtn}
                         />
                         <HighlightOffIcon
+                            onClick={deleteField}
                             className={smallBtn.deleteBtn}
                         />
                         </small>
@@ -171,6 +176,7 @@ const SubSectionField = (props) => {
                                 className={smallBtn.editBtn}
                             />
                             <HighlightOffIcon
+                                onClick={deleteField}
                                 className={smallBtn.deleteBtn}
                             />
                             </small>
