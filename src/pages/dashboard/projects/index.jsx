@@ -20,9 +20,14 @@ import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
-import { useMounted } from '../../../hooks/use-mounted';
 import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
-import toast from 'react-hot-toast';
+import { useAuth } from '../../../hooks/use-auth';
+// Fetch Projects API
+import { projectsApi } from '../../../api/projects-api';
+
+// Higher Order Componet
+import { WithFetchData } from '../../../hocs/with-fech-data';
+import { LoadingSkeleton } from '../../../components/dashboard/dashboard-wait-for-data-loader';
 
 const sortOptions = [
   {
@@ -46,7 +51,7 @@ const sortOptions = [
 const applyFilters = (customers, filters) => customers.filter((customer) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['projectname'];
 
     properties.forEach((property) => {
       if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -94,28 +99,31 @@ const applySort = (customers, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
   const stabilizedThis = customers.map((el, index) => [el, index]);
-  
+
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProjectList = () => {
-  const isMounted = useMounted();
+const ProjectList = (props) => {
   const queryRef = useRef(null);
+  const { user } = useAuth();
+  console.log(user);
+  // const { data: projects, loading, handleFetchData } = props;
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
@@ -127,6 +135,31 @@ const ProjectList = () => {
     isProspect: null,
     isReturning: null
   });
+
+  const getUserProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        cliendId = user.clientId;
+      }
+      const data = await projectsApi.fetchProjects(clientId);
+      if (data) {
+        setProjects(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [
+    setProjects
+  ]);
+
+  useEffect(() => {
+    getUserProjects();
+  }, []);
 
   const handleOpenProjectDialog = () => {
     setOpenProjectDialog(true)
@@ -159,28 +192,8 @@ const ProjectList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const getProjects = useCallback(async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects`);
-      const data = await response.json();
-      if (isMounted()) {
-        if (data?.status === 200) {
-          toast.success(data.message, { duration: 10000 });
-          setProjects(data.data);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Sorry, can not load projects right now, try again later', { duration: 10000 });
-    }
-  }, [isMounted]);
-
-  useEffect(() => {
-    getProjects();
-  }, []);
-
   // Usually query is done on backend with indexing solutions
-  const filteredProjects = applyFilters(projects, filters);
+  const filteredProjects = applyFilters(projects || [], filters);
   const sortedProjects = applySort(filteredProjects, sort);
   const paginatedProjects = applyPagination(sortedProjects, page, rowsPerPage);
 
@@ -222,7 +235,7 @@ const ProjectList = () => {
               <CreateNewProjectDialog
                 open={openProjectDialog}
                 handleClose={handleCloseProjectDialog}
-                getProjects={getProjects}
+                getProjects={getUserProjects}
               />
             </Grid>
             <Box
@@ -246,23 +259,6 @@ const ProjectList = () => {
             </Box>
           </Box>
           <Card>
-            {/* <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}`
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs> */}
             <Divider />
             <Box
               sx={{
@@ -314,20 +310,29 @@ const ProjectList = () => {
                 ))}
               </TextField>
             </Box>
-            <ProjectListTable
-              projects={paginatedProjects}
-              projectsCount={filteredProjects.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-            />
+            {
+              !loading ? (
+                <ProjectListTable
+                  projects={paginatedProjects}
+                  projectsCount={filteredProjects.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                />
+              ) : (
+                <LoadingSkeleton />
+              )
+            }
           </Card>
         </Container>
       </Box>
     </>
   );
 };
+
+// In this case I do not need to pass the second argument 
+// const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects, null)(ProjectList);
 
 ProjectList.getLayout = (page) => (
   <AuthGuard>

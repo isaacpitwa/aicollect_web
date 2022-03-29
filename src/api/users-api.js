@@ -80,6 +80,25 @@ class UserApi {
       console.error(error);
     }
   }
+
+  async inviteUserByEmail(user) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/create_user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(user)
+      });
+      const data = await response.json();
+      if (data && data.status === 200) {
+        return data.data;
+      }
+    } catch (error) {
+      console.log('user error \n', error);
+    }
+  }
 }
 
 export const userApi = new UserApi();

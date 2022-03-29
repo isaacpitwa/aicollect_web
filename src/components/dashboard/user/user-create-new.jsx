@@ -85,7 +85,7 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
           <TabPanel
             value={value}
             index={1}>
-            <SendCustomerInvite />
+            <SendCustomerInvite getClientUsers={getClientUsers} handleClose={handleClose} />
           </TabPanel>
           
         </Box>

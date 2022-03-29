@@ -14,11 +14,10 @@ import { getInitials } from '../../../../utils/get-initials';
 
 const UserEdit = () => {
   const isMounted = useMounted();
-  const [customer, setCustomer] = useState(null);
+  const [user, setUser] = useState(null);
   const router = useRouter();
-  const { customerId } = router.query;
+  const { userId } = router.query;
   // Log Id
-  console.log(customerId);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -26,15 +25,15 @@ const UserEdit = () => {
 
   const getCustomer = useCallback(async () => {
     try {
-      const data = await userApi.getUserDetails(customerId);
+      const data = await userApi.getUserDetails(userId);
 
       if (isMounted()) {
-        setCustomer(data);
+        setUser(data);
       }
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted, customerId]);
+  }, [isMounted, userId]);
 
   useEffect(() => {
       getCustomer();
@@ -42,7 +41,7 @@ const UserEdit = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
-  if (!customer) {
+  if (!user) {
     return null;
   }
 
@@ -93,21 +92,21 @@ const UserEdit = () => {
             }}
           >
             <Avatar
-              src={customer.avatar}
+              src={user.avatar}
               sx={{
                 height: 64,
                 mr: 2,
                 width: 64
               }}
             >
-              {getInitials(`${customer.firstname} ${customer.lastname}`)}
+              {getInitials(`${user.firstname} ${user.lastname}`)}
             </Avatar>
             <div>
               <Typography
                 noWrap
                 variant="h4"
               >
-                {customer.email}
+                {user.email}
               </Typography>
               <Box
                 sx={{
@@ -122,7 +121,7 @@ const UserEdit = () => {
                   user_id:
                 </Typography>
                 <Chip
-                  label={customer.id}
+                  label={user.id}
                   size="small"
                   sx={{ ml: 1 }}
                 />
@@ -130,7 +129,7 @@ const UserEdit = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <UserEditForm customer={customer} />
+            <UserEditForm customer={user} />
           </Box>
         </Container>
       </Box>

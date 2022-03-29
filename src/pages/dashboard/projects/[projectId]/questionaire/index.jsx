@@ -19,17 +19,21 @@ import { useDropzone } from 'react-dropzone';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import XLSX from 'xlsx';
+// import XLSX from 'xlsx';
 import toast from 'react-hot-toast';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
+import { CreateNewFormDialog } from '../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { useAuth } from '../../../../../hooks/use-auth';
 import { Search as SearchIcon } from '../../../../../icons/search';
 import { gtm } from '../../../../../lib/gtm';
 import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
 import { convertToJSON } from '../../../../../utils/convert-excel-data-to-json';
+
+// API
+import { FormsApi } from '../../../../../api/forms-api';
 
 const tabs = [
   {
@@ -152,6 +156,10 @@ const QuestionaireList = () => {
   const [excelFile, setExcelFile] = useState(null);
   const [colDefs, setColDefs] = useState();
   const [data, setData] = useState(null);
+  const [openCreateFormDialog, setOpenCreateFormDialog] = useState(false);
+
+  const handleOpenCreateFormDialog = () => setOpenCreateFormDialog(true);
+  const handleCloseCreateFormDialog = () => setOpenCreateFormDialog(false);
 
  
   /**
@@ -168,6 +176,7 @@ const QuestionaireList = () => {
     setQuestionaires((prevState) => ([...prevState].concat(questionaire)));
     const reader = new FileReader();
     reader.onload = (event) => {
+      const XLSX = require('xlsx');
       // Parse data
       const bstr = event.target.result;
       const workbook = XLSX.read(bstr, { type: 'binary' });
@@ -204,7 +213,7 @@ const QuestionaireList = () => {
       formFields: colDefs || []
     };
     try {
-      const response = await fetch('http://localhost:4000/api/v1/forms/create', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -239,11 +248,9 @@ const QuestionaireList = () => {
 
   const getQuestionaires = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/v1/forms');
-
-      const data = await response.json();
-      if (isMounted() && data.status === 200) {
-        setQuestionaires(data.data);
+      const data = await FormsApi.getAllProjectForms();
+      if (isMounted() && data) {
+        setQuestionaires(data);
       }
     } catch (err) {
       console.error(err);
@@ -327,7 +334,10 @@ const QuestionaireList = () => {
 
           </Box>
 
-          <Stack direction="row" mb={4}>
+          <Stack
+          direction="row"
+            mb={4}
+          >
             <Grid container spacing={3}>
               <Grid item md={3} sm={6} xs={12}>
                 <Card>
@@ -468,9 +478,15 @@ const QuestionaireList = () => {
                 startIcon={<AddCircleOutlineIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
+                onClick={handleOpenCreateFormDialog}
               >
                 Create New Form
               </Button>
+              <CreateNewFormDialog
+                open={openCreateFormDialog}
+                handleClose={handleCloseCreateFormDialog}
+                user={user}
+              />
               <TextField
                 label="Sort By"
                 name="sort"
