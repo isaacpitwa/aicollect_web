@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import formStyles from '../../styles/FormStyles'
 import { smallBtns } from '../../styles/FormStyles'
 import {
@@ -11,26 +11,73 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
+import ImageFieldDialog from '../../dialogs/ImageField';
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
 const ImageField = (props) => {
 
-    const { editStatus } = useContext(FormContext);
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        editStatus
+    } = useContext(FormContext);
 
-    const { fieldData } = props
+    const { fieldData, fieldResponses } = props;
 
     const [display, setDisplay] = useState('hidden');
+    const [value, setValue] = useState(fieldData.value?fieldData.value:'');
+    const [imageFieldDialog, setImageFieldDialog] = useState(false);
+    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
+
+    useEffect(() => {
+    }, [fieldResponses])
+
+    const handleFieldValue = (e) => {
+        setValue(e.target.value)
+        let newFieldResponses = fieldResponses
+        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
+        setFieldResponses(newFieldResponses)
+    }
+
+    const handleImageField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
+        setImageFieldDialog(true)
+    }
+
+    const handleClose = () => {
+        setImageFieldDialog(false)
+    }
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
 
     const classes = formStyles();
     const smallBtn = smallBtns();
 
     return (
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
+            <ImageFieldDialog
+                open={imageFieldDialog}
+                fieldData={fieldData}
+                handleClose={handleClose}
+            />
             {editStatus?
                 <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
-                    <EditIcon className={smallBtn.editBtn} />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                    <EditIcon
+                        onClick={handleImageField}
+                        className={smallBtn.editBtn}
+                    />
+                    <HighlightOffIcon
+                        onClick={deleteField}
+                        className={smallBtn.deleteBtn}
+                    />
                 </Typography>
             : '' }
             <TextField
@@ -38,6 +85,7 @@ const ImageField = (props) => {
                 type={'file'}
                 variant={'outlined'}
                 label={fieldData.label}
+                onChange={handleFieldValue}
                 helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                 InputProps={{
                     startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,

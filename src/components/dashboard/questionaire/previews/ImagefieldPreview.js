@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react'
 import {
     Box,
     Grid,
     Typography,
     TextField
 } from '@mui/material'
-import MuiPhoneNumber from 'material-ui-phone-number'
-import 'react-phone-number-input/style.css'
-import GeneralTooltip from '../previews/GeneralTooltip'
 
-const PhonefieldPreview = (props) => {
+import GeneralTooltip from './GeneralTooltip'
 
-    const { defaultCountry, fieldDescription, tooltip } = props
+const ImagefieldPreview = (props) => {
 
-    const [value, setValue] = useState('')
-
-    const handleOnChange = () => {
-        setValue()
-    }
-
+    const { fieldLabel, fieldDescription, tooltip, isRequired } = props
 
     return (
         <Grid
@@ -37,18 +29,20 @@ const PhonefieldPreview = (props) => {
                 component="form"
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
-                <MuiPhoneNumber
-                    fullWidth
-                    size={'small'}
-                    label={'Phone Number'}
-                    margin="dense"
-                    variant='outlined'
-                    defaultCountry={'ug'}
-                    onChange={setValue}
-                    InputProps={{
-                        endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                      }}
-                    />
+            <TextField
+                required={isRequired}
+                autoFocus
+                InputProps={{
+                  endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                }}
+                margin="dense"
+                id="label"
+                label={fieldLabel?fieldLabel:'Label'}
+                type="text"
+                size="small"
+                fullWidth
+                variant="outlined"
+            />
                 {fieldDescription!=''?
                     <Typography
                         style={{ fontSize: '14px', color: '#5048e598' }}
@@ -64,5 +58,5 @@ const PhonefieldPreview = (props) => {
     )
 }
 
-export default PhonefieldPreview
+export default ImagefieldPreview
                     
