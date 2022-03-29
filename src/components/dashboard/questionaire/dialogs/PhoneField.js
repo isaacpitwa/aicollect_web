@@ -33,7 +33,7 @@ import {
     FieldError,
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
-import PhoneFieldPreview from '../previews/PhoneFieldPreview'
+import PhoneFieldPreview from '../previews/PhoneFieldPreview';
 
 // This is the field for type=TextField
 const PhoneField = (props) => {
