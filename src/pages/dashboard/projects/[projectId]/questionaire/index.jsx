@@ -19,7 +19,7 @@ import { useDropzone } from 'react-dropzone';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import XLSX from 'xlsx';
+// import XLSX from 'xlsx';
 import toast from 'react-hot-toast';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
@@ -176,6 +176,7 @@ const QuestionaireList = () => {
     setQuestionaires((prevState) => ([...prevState].concat(questionaire)));
     const reader = new FileReader();
     reader.onload = (event) => {
+      const XLSX = require('xlsx');
       // Parse data
       const bstr = event.target.result;
       const workbook = XLSX.read(bstr, { type: 'binary' });
