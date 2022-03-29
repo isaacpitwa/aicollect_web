@@ -1,4 +1,4 @@
-image: gitlab/dind
+image: docker:latest
 
 services:
   - docker:dind
@@ -9,25 +9,27 @@ stages:
 
 #2
 variables:
-  #REGISTRY: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app"
-  REGISTRY: "registry.gitlab.com"
+  REGISTRY: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app"
   IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/web-app-react/aicollect-web-app:latest"
+
 
 # before_script:
 #   - npm test
+
 #4
 build_and_push:
   stage: build_and_push
-# only:
-#   - develop
-  #docker login registry.example.com -u <username> -p <token>
+  before_script:  
+    - cat $ENVIROMENT_FILE > .env.example_temp
+  only:
+    - develop
   script:
-    #- docker login $REGISTRY  -u $DOCKER_USER -p $DOCKER_USER_PASSWORD
-    - docker login $REGISTRY  -u $DOCKER_USER_ROCKSIDE -p $GITLAB_DEPLOYEMENT_TOKEN
-    - docker build -t   --build-arg env_file=$ENVIROMENT_FILE $REGISTRY .
+    - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
+    - docker build -t $REGISTRY .
     - docker push $REGISTRY
 
-#5
+#5 
+
 deploy_staging:
   stage: deploy_staging
   tags: 

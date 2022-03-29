@@ -20,7 +20,7 @@ import {
     TextField,
     Select,
     MenuItem,
-    InputLabel,
+    InputLabel, 
     FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -338,7 +338,7 @@ const PhoneField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <PhoneFieldPreview
+                    <PhonefieldPreview
                         defaultCountry={'ug'}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
