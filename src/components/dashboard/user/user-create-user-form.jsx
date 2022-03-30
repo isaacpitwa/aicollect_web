@@ -214,7 +214,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               <InputLabel>Role *</InputLabel>
               <Select type="date" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange} fullWidth>
                 <MenuItem value="Admin">Super Administrator</MenuItem>
-                <MenuItem value="Owner">Owner</MenuItem>
+                {/* <MenuItem value="Owner">Owner</MenuItem> */}
                 <MenuItem value="Data Manager">Data Manager</MenuItem>
                 <MenuItem value="Billing Manager">Billing Manager</MenuItem>
                 <MenuItem value="Standard user">Standard user</MenuItem>
