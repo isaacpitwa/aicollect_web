@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -140,6 +141,8 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
 const QuestionaireList = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
+  const router = useRouter();
+  const { projectId } = router.query;
   const { user } = useAuth();
   const [questionaires, setQuestionaires] = useState([]);
   const [currentTab, setCurrentTab] = useState('all');
@@ -248,14 +251,20 @@ const QuestionaireList = () => {
 
   const getQuestionaires = useCallback(async () => {
     try {
-      const data = await FormsApi.getAllProjectForms();
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        clientId = user.clientId;
+      }
+      const data = await FormsApi.getAllProjectForms(projectId, clientId);
       if (isMounted() && data) {
         setQuestionaires(data);
       }
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  }, [isMounted, setQuestionaires, user, projectId]);
 
   useEffect(() => {
       getQuestionaires();

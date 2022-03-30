@@ -1,7 +1,13 @@
 class Forms {
-  async getAllProjectForms() {
+  async getAllProjectForms(projectId, clientId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/getClientForms`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({ projectId, clientId })
+      });
 
       const data = await response.json();
       if (data.status === 200) {

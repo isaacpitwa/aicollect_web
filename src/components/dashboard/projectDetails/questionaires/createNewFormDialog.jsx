@@ -24,6 +24,8 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
       roles: user.roles,
       userId: user.id
     },
+    clientId: user.roles === "Owner" ? user.id : user.clientId,
+    projectId: router.query.projectId,
     formFields: [],
     version: 1
   });

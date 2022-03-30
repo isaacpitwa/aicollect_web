@@ -115,22 +115,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           flexDirection="row "
           justifyContent="space-between"
         >
+          
           <Grid item md={6} sm={12}>
-            <TextField
-              error={Boolean(formik.touched.password && formik.errors.password)}
-              helperText={Boolean(formik.touched.password && formik.errors.password)}
-              name="password"
-              type="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="Password *"
-              variant="standard"
-              disabled
-              fullWidth
-            />
-          </Grid>
-          <Grid item md={6} sm={12} marginLeft={3}>
             <TextField
               error={Boolean(formik.touched.email && formik.errors.email)}
               helperText={Boolean(formik.touched.email && formik.errors.email)}
@@ -143,32 +129,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               fullWidth
             />
           </Grid>
-        </Grid>
-        <Grid
-          item
-          md={12}
-          sm={12}
-          display="flex"
-          flexDirection="row "
-          justifyContent="space-between"
-        >
-          <Grid item md={6} sm={12}>
-            <FormControl fullWidth>
-              <FormLabel>Expiry Date *</FormLabel>
-              <TextField
-                type="date"
-                error={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-                helperText={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-                name="expiryDate"
-                value={formik.values.expiryDate}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                variant="standard"
-                fullWidth
-              />
-            </FormControl>
-          </Grid>
-          <Grid item md={6} sm={12} marginLeft={3} marginTop={3}>
+          <Grid item md={6} sm={12} marginLeft={3} >
             <FormControl fullWidth>
               <FormLabel> </FormLabel>
               <TextField
@@ -211,10 +172,26 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
         >
           <Grid item md={6} sm={12}>
             <FormControl fullWidth>
+              <FormLabel>Expiry Date *</FormLabel>
+              <TextField
+                type="date"
+                error={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
+                helperText={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
+                name="expiryDate"
+                value={formik.values.expiryDate}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                variant="standard"
+                fullWidth
+              />
+            </FormControl>
+          </Grid>
+          <Grid item md={6} sm={12} marginLeft={3} marginTop={1}>
+          <FormControl fullWidth>
               <InputLabel>Role *</InputLabel>
               <Select type="date" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange} fullWidth>
                 <MenuItem value="Admin">Super Administrator</MenuItem>
-                <MenuItem value="Owner">Owner</MenuItem>
+                {/* <MenuItem value="Owner">Owner</MenuItem> */}
                 <MenuItem value="Data Manager">Data Manager</MenuItem>
                 <MenuItem value="Billing Manager">Billing Manager</MenuItem>
                 <MenuItem value="Standard user">Standard user</MenuItem>
@@ -222,23 +199,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               </Select>
             </FormControl>
           </Grid>
-          {
-            formik.values.roles === "Standard user" && (
-              <Grid item md={6} sm={12} marginLeft={3}>
-                <FormControl fullWidth>
-                  <InputLabel>Supervisor *</InputLabel>
-                  <Select type="date" variant="standard" name="supervisor" value={formik.values.supervisor} onChange={formik.handleChange} hidden={formik.values.roles !== "Standard user"} fullWidth>
-                    {
-                      supervisors.map((user) => (
-                        <MenuItem key={user.id} value={`${user.email}`}>{`${user.firstname} ${user.lastname}`}</MenuItem>
-                      ))
-                    }
-                  </Select>
-                </FormControl>
-              </Grid>
-            )
-          }
         </Grid>
+        
         <Grid item md={12} sm={12} display="flex" justifyContent="space-between">
           {
             formik.isSubmitting ? (
