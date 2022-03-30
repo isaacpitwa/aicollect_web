@@ -80,17 +80,17 @@ const getSections = (t) => [
         path: "/dashboard/projects",
         icon: <AppsIcon fontSize="small" />
       },
-      {
-        title: t("Task Manager"),
-        path: "/dashboard/tasks",
-        icon: <AssignmentIcon fontSize="small" />,
-        children: [
-          {
-            title: t("Tasks"),
-            path: "/dashboard/tasks",
-          },
-        ],
-      },
+      // {
+      //   title: t("Task Manager"),
+      //   path: "/dashboard/tasks",
+      //   icon: <AssignmentIcon fontSize="small" />,
+      //   children: [
+      //     {
+      //       title: t("Tasks"),
+      //       path: "/dashboard/tasks",
+      //     },
+      //   ],
+      // },
       // {
       //   title: t('Products'),
       //   path: '/dashboard/products',
