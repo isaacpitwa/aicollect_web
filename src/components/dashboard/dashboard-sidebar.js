@@ -10,16 +10,16 @@ import {
   Drawer,
   Typography,
   useMediaQuery,
-  Chip
+  // Chip
 } from "@mui/material";
 import AppsIcon from '@mui/icons-material/Apps';
 // import LowPriorityIcon from '@mui/icons-material/LowPriority';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
-import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
+// import AssignmentIcon from '@mui/icons-material/Assignment';
+// import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
+// import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
 import { Home as HomeIcon } from "../../icons/home";
 import { Selector as SelectorIcon } from "../../icons/selector";
-import { Truck as TruckIcon } from '../../icons/truck';
+// import { Truck as TruckIcon } from '../../icons/truck';
 import { Users as UsersIcon } from "../../icons/users";
 import { Logo } from "../logo";
 import { Scrollbar } from "../scrollbar";
@@ -35,35 +35,35 @@ const getSections = (t) => [
         path: '/dashboard',
         icon: <HomeIcon fontSize="small" />
       },
-      {
-        title: t('Analytics'),
-        path: '/dashboard/analytics',
-        icon: <ChartBarIcon fontSize="small" />
-      },
-      {
-        title: t('Finance'),
-        path: '/dashboard/finance',
-        icon: <ChartPieIcon fontSize="small" />
-      },
-      {
-        title: t('Logistics'),
-        path: '/dashboard/logistics',
-        icon: <TruckIcon fontSize="small" />,
-        chip: <Chip
-          color="secondary"
-          label={(
-            <Typography
-              sx={{
-                fontSize: '10px',
-                fontWeight: '600'
-              }}
-            >
-              NEW
-            </Typography>
-          )}
-          size="small"
-        />
-      },
+      // {
+      //   title: t('Analytics'),
+      //   path: '/dashboard/analytics',
+      //   icon: <ChartBarIcon fontSize="small" />
+      // },
+      // {
+      //   title: t('Finance'),
+      //   path: '/dashboard/finance',
+      //   icon: <ChartPieIcon fontSize="small" />
+      // },
+      // {
+      //   title: t('Logistics'),
+      //   path: '/dashboard/logistics',
+      //   icon: <TruckIcon fontSize="small" />,
+      //   chip: <Chip
+      //     color="secondary"
+      //     label={(
+      //       <Typography
+      //         sx={{
+      //           fontSize: '10px',
+      //           fontWeight: '600'
+      //         }}
+      //       >
+      //         NEW
+      //       </Typography>
+      //     )}
+      //     size="small"
+      //   />
+      // },
       
     ]
   },
