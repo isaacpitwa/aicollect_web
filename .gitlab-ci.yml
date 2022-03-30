@@ -35,15 +35,15 @@ deploy_staging:
   # tags: 
   #   - Deployment
   #   - Staging
-  # only:
-  #   - develop
+  only:
+    - develop
   script:
     - chmod og= $SSHKEY
     - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
     - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
-    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker stop /aic_clientAPP || true && docker rm /aic_clientAPP || true"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker  container stop aic_clientAPP || true && docker container  rm aic_clientAPP || true"
     - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker pull  $IMAGE_NAME"
-    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker run -d -p 8001:3000  always  --rm --name aic_clientAPP  $IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker run -d -p 8001:3000 --restart always  --name aic_clientAPP  $IMAGE_NAME"
   environment:
     name: staging 
     url: https://testclient.aicollectapp.com
@@ -61,9 +61,9 @@ deploy_production:
     - chmod og= $SSHKEY
     - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
     - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
-    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker stop aic_clientAPP || true && docker rm aic_clientAPP || true"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker container stop aic_clientAPP || true && docker container rm aic_clientAPP || true"
     - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker pull  $IMAGE_NAME"
-    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker run -d -p 8001:3000  always  --name aic_clientAPP  --rm $IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker run -d -p 8001:3000 --restart always  --name aic_clientAPP  $IMAGE_NAME"
   environment:
     name: Production 
     url: https://aicollectapp.com
