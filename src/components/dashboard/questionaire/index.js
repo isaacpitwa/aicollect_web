@@ -55,6 +55,7 @@ import SelectField from './dialogs/SelectField'
 import SelectRadioField from './dialogs/SelectRadioField'
 import EmailField from './dialogs/EmailField'
 import PhoneField from './dialogs/PhoneField'
+import ImageField from './dialogs/ImageField'
 
 import { FormContext } from './context'
 import FormRenderer from './FormRenderer'
@@ -97,6 +98,7 @@ const Questionaire = () => {
     const [emailFieldDialog, setEmailFieldDialog] = useState(false)
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
+    const [imageDialog, setImageDialog] = useState(false)
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
@@ -151,6 +153,10 @@ const Questionaire = () => {
         setAreaMappingDialog(true)
     }
 
+    const handleImageField = () => {
+        setImageDialog(true)
+    }
+
     const saveFormChanges = () => {
         updateFormData()
     }
@@ -179,6 +185,7 @@ const Questionaire = () => {
         setSelectRadioDialog(false)
         setEmailFieldDialog(false)
         setPhoneFieldDialog(false)
+        setImageDialog(false)
     }
 
     const handleDragStart = () => {
@@ -229,6 +236,10 @@ const Questionaire = () => {
             />
             <PhoneField
                 open={phoneFieldDialog}
+                handleClose={handleClose} 
+            />
+            <ImageField
+                open={imageDialog}
                 handleClose={handleClose} 
             />
             <Grid
@@ -415,6 +426,7 @@ const Questionaire = () => {
                                                 startIcon={<ImageIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleImageField}
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Image</Button>
                                             <Button

@@ -48,7 +48,7 @@ const TextFieldComp = (props) => {
     }
 
     const deleteField = () => {
-        deleteFieldData(fieldData)        
+        deleteFieldData(fieldData)
     }
 
     const classes = formStyles();
