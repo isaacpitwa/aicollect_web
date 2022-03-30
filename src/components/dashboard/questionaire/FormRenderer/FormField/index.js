@@ -11,6 +11,7 @@ import EmailField from './emailField'
 import PhoneNumberField from './phoneNumberField'
 import ImageField from './imageField'
 import LocationField from './locationField'
+import DateField from './dateField'
 
 import AreaMappingField from './areaMappingField'
 import { FormContext } from '../../context'
@@ -44,6 +45,8 @@ const FormField = (props) => {
             return <ImageField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'location':
             return <LocationField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+        case 'date':
+            return <DateField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'area-mapping':
             return <AreaMappingField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
     }

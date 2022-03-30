@@ -2,26 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
-    Paper,
     Button,
     ButtonGroup,
     Grid,
-    Typography,
-    Stack,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
-    Checkbox,
     TextField,
+    Typography,
+    Checkbox,
     Select,
-    MenuItem,
-    InputLabel,
-    FormControl
+    MenuItem
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -33,10 +25,10 @@ import {
     FieldError,
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
-import PhonefieldPreview from '../previews/PhoneFieldPreview';
+import TextfieldPreview from '../previews/TextfieldPreview';
 
 // This is the field for type=TextField
-const PhoneField = (props) => {
+const LocationField = (props) => {
 
     const {
         setError,
@@ -48,12 +40,12 @@ const PhoneField = (props) => {
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
-    
+
     const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [type] = useState(fieldData ? fieldData.type : 'phone-number')
-    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : 'Phone Number')
+    const [type] = useState(fieldData ? fieldData.type : 'location')
+    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
@@ -62,6 +54,10 @@ const PhoneField = (props) => {
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+
+    useEffect(() => {
+
+    }, [componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -202,15 +198,19 @@ const PhoneField = (props) => {
             fullWidth={true}
             maxWidth={'lg'}
         >
-            <DialogTitle                
+            <DialogTitle
                 style={{
                     backgroundColor: '#5048E5',
                     color: 'white',
                     padding: '20px 40px'
                 }}
             >
-                Phone Number Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
+                Location Field Component
+                <CancelIcon
+                    color='error'
+                    style={{ float: 'right', cursor: 'pointer' }}
+                    onClick={handleClose}
+                />
             </DialogTitle>
             <DialogContent>
                 <Grid container>
@@ -282,7 +282,7 @@ const PhoneField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'phone-number').map((option, index) => (
+                                        {allFormFields(componentsData, fieldData.id, 'text').map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -303,6 +303,18 @@ const PhoneField = (props) => {
                                 </>
                                 :
                                 <>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="label"
+                                        label="Label"
+                                        type="text"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={fieldLabel}
+                                        onChange={handleLabel}
+                                    />
                                     <TextField
                                         margin="dense"
                                         id="outlined-multiline-static"
@@ -338,8 +350,8 @@ const PhoneField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <PhonefieldPreview
-                        defaultCountry={'ug'}
+                    <TextfieldPreview
+                        fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
@@ -373,4 +385,4 @@ const PhoneField = (props) => {
     )
 }
 
-export default PhoneField
+export default LocationField

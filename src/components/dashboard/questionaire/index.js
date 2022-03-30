@@ -56,6 +56,8 @@ import SelectRadioField from './dialogs/SelectRadioField'
 import EmailField from './dialogs/EmailField'
 import PhoneField from './dialogs/PhoneField'
 import ImageField from './dialogs/ImageField'
+import DateField from './dialogs/DateField'
+import LocationField from './dialogs/LocationField'
 
 import { FormContext } from './context'
 import FormRenderer from './FormRenderer'
@@ -99,11 +101,13 @@ const Questionaire = () => {
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [imageDialog, setImageDialog] = useState(false)
+    const [locationDialog, setLocationDialog] = useState(false)
+    const [dateDialog, setDateDialog] = useState(false)
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
         setFormName(formData.name)
-    }, [ isLoaded ])
+    }, [isLoaded])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
@@ -157,6 +161,14 @@ const Questionaire = () => {
         setImageDialog(true)
     }
 
+    const handleDateField = () => {
+        setDateDialog(true)        
+    }
+
+    const handleLocationField = () => {
+        setLocationDialog(true)
+    }
+
     const saveFormChanges = () => {
         updateFormData()
     }
@@ -186,6 +198,8 @@ const Questionaire = () => {
         setEmailFieldDialog(false)
         setPhoneFieldDialog(false)
         setImageDialog(false)
+        setDateDialog(false)
+        setLocationDialog(false)
     }
 
     const handleDragStart = () => {
@@ -240,6 +254,14 @@ const Questionaire = () => {
             />
             <ImageField
                 open={imageDialog}
+                handleClose={handleClose} 
+            />
+            <DateField
+                open={dateDialog}
+                handleClose={handleClose} 
+            />
+            <LocationField
+                open={locationDialog}
                 handleClose={handleClose} 
             />
             <Grid
@@ -433,6 +455,7 @@ const Questionaire = () => {
                                                 startIcon={<DateRangeIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleDateField}
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Date</Button>
                                         </Grid>
@@ -477,6 +500,7 @@ const Questionaire = () => {
                                                 startIcon={<AddLocationAltIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleLocationField}
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Location</Button>
                                         </Grid>
