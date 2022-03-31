@@ -19,9 +19,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import { FormContext } from '../context';
 import {
-    DescriptionCard,
     allFormFields,
-    findComponentIndex,
     allHiddenSubSections
 } from '../utils';
 import {
@@ -40,33 +38,32 @@ const NumberField = (props) => {
         subSectionId,
         componentsData,
         addComponentToSection,
+        updateFieldInSection,
+        addDependency,
         updateComponentsData
     } = useContext(FormContext)
 
-    const { open, createNumberField, fieldData, handleClose } = props
+    const { open, fieldData, handleClose } = props
     
     const [errorTag, setErrorTag] = useState(false)
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [parentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
-    const [type] = useState(fieldData ? fieldData.type : 'text')
+    const [type] = useState(fieldData ? fieldData.type : 'number')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
-    const [conditional, setConditional] = useState(false)
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
+    const [conditional, setConditional] = useState(null)
+    const [dependency, setDependency] = useState(fieldData?fieldData.dependency:null)
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
-    const [dependency, setDependency] = useState(false)
-    const [subSectionDisplay, setSubSectionDisplay] = useState('')
 
     useEffect(() => {
         setCompsData(componentsData);
-    }, [updateComponentsData])
+    }, [updateComponentsData, componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -92,26 +89,18 @@ const NumberField = (props) => {
 
     const handleDisplay = (e) => {
         setButtonFocused("display")
-        setConditional(false)
-        setDependency(false)
     }
 
     const handleConditional = (e) => {
         setButtonFocused("conditional")
-        setConditional(true)
-        setDependency(false)
     }
 
     const handleLogic = (e) => {
         setButtonFocused("logic")
-        setConditional(false)
-        setDependency(false)
     }
 
     const handleDependency = (e) => {
         setButtonFocused("dependency")
-        setDependency(true)
-        setConditional(false)
 
     }
 
@@ -127,10 +116,6 @@ const NumberField = (props) => {
         setCompValue(e.target.value)
     }
 
-    const handleSubSectionDisplay = (e) => {
-        setSubSectionDisplay(e.target.value)
-    }
-
     const conditionalLogic = () => {
         if(display!==''&&when!==''&&compValue!==''){
             return {
@@ -143,6 +128,9 @@ const NumberField = (props) => {
         }
     }
 
+    const addSubSectionId = (e) => {
+        setDependency(e.target.value)
+    }
 
     const addNumberField = () => {
 
@@ -180,23 +168,22 @@ const NumberField = (props) => {
     }
 
     const handleUpdate = () => {
+
         let newField = {
             id: id,
-            parentId: parentId,
-            subParentId: subParentId,
+            parentId: sectionId,
+            subParentId: subSectionId,
             type: type,
-            value: value,
+            value: fieldValue,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            conditional: {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()
-            }
+            dependency: dependency,
+            conditional: conditionalLogic()
         }
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+
+        updateFieldInSection(newField)
         handleClose()
     }
 
@@ -225,12 +212,25 @@ const NumberField = (props) => {
                 }}
             >
                 Number Field Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
+                <CancelIcon
+                    color='error'
+                    style={{ float: 'right', cursor: 'pointer' }}
+                    onClick={handleClose}
+                />
             </DialogTitle>
             <DialogContent>
-                <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
-                        <FieldError errorTag={errorTag}/>
+                <Grid
+                    container
+                >
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        style={{ padding: '20px' }}
+                    >
+                        <FieldError
+                            errorTag={errorTag}
+                        />
                         <Box
                             sx={{
                                 display: 'flex',
@@ -241,20 +241,40 @@ const NumberField = (props) => {
                                 },
                             }}
                         >
-                        <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                            <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                            <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional}>Conditional</Button>
-                            <Button variant={buttonFocused == "logic" ? "contained" : "outlined"} onClick={handleLogic}>Logic</Button>
-                            <Button variant={buttonFocused == "dependency" ? "contained" : "outlined"} onClick={handleDependency} style={{ borderRadius: '0px 8px 0px 0px' }}>Dependency</Button>
+                        <ButtonGroup
+                            variant="outlined"
+                            size='small'
+                            aria-label="outlined button group"
+                        >
+                            <Button
+                                variant={buttonFocused == "display" ? "contained" : "outlined"}
+                                onClick={handleDisplay}
+                                style={{ borderRadius: '8px 0px 0px 0px' }}
+                            >Display</Button>
+                            <Button
+                                variant={buttonFocused == "conditional" ? "contained" : "outlined"}
+                                onClick={handleConditional}
+                            >Conditional</Button>
+                            <Button
+                                variant={buttonFocused == "logic" ? "contained" : "outlined"}
+                                onClick={handleLogic}
+                            >Logic</Button>
+                            <Button
+                                variant={buttonFocused == "dependency" ? "contained" : "outlined"}
+                                onClick={handleDependency}
+                                style={{ borderRadius: '0px 8px 0px 0px' }}
+                            >Dependency</Button>
                         </ButtonGroup>
                         </Box>
                         <Box
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {conditional?
+                            {buttonFocused==="conditional"?
                                 <>
-                                    <Typography style={{ fontSize: '15px', color: '#5048E5' }}>
+                                    <Typography
+                                        style={{ fontSize: '15px', color: '#5048E5' }}
+                                    >
                                         This component should Display:
                                     </Typography>
                                     <Select
@@ -268,7 +288,9 @@ const NumberField = (props) => {
                                         <MenuItem value={true}>True</MenuItem>
                                         <MenuItem value={false}>False</MenuItem>
                                     </Select>
-                                    <Typography style={{ marginTop: '20px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}>
+                                    <Typography
+                                        style={{ marginTop: '20px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}
+                                    >
                                         When the form component:
                                     </Typography>
                                     <Select
@@ -279,11 +301,16 @@ const NumberField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData).map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(compsData).map((option, key) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={option.id}
+                                            >{option.label}</MenuItem>
                                         ))}
                                     </Select>
-                                    <Typography style={{ marginTop: '10px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}>
+                                    <Typography
+                                        style={{ marginTop: '10px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}
+                                    >
                                         Has the value:
                                     </Typography>
                                     <TextField
@@ -298,49 +325,28 @@ const NumberField = (props) => {
                                         onChange={handleCompValue}
                                     />
                                 </>
-                            :dependency?
+                            :buttonFocused==="dependency"?
                                 <>
-                                    <Typography style={{ fontSize: '15px', color: '#5048E5' }}>
+                                    <Typography
+                                        style={{ fontSize: '15px', color: '#5048E5' }}
+                                    >
                                         For Sub-Section:
                                     </Typography>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={subSectionId}
+                                        value={dependency}
                                         fullWidth
                                         size={'small'}
-                                        onChange={handleSubSectionId}
+                                        onChange={addSubSectionId}
                                     >
-                                        {allHiddenSubSections(fieldData.parentId, componentsData).map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allHiddenSubSections(sectionId, componentsData).map((option, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={option.id}
+                                            >{option.label}</MenuItem>
                                         ))}
                                     </Select>
-                                    <DescriptionCard description={'Only applies for hidden Sub-Sections'} helperText={true} />
-                                    <Typography style={{ marginTop: '20px', fontSize: '15px', color: '#5048E5' }}>
-                                        Display by field value:
-                                    </Typography>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={subSectionDisplay}
-                                        fullWidth
-                                        size={'small'}
-                                        onChange={handleSubSectionDisplay}
-                                    >
-                                        <MenuItem value={'hidden'}>True</MenuItem>
-                                        <MenuItem value={'visible'}>False</MenuItem>
-                                    </Select>
-                                    <Typography style={{ marginTop: '10px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}>
-                                        Offset Value:
-                                    </Typography>
-                                    <TextField
-                                        fullWidth
-                                        type={'number'}
-                                        variant={'outlined'}
-                                        value={value}
-                                        size={'small'}
-                                        onChange={handleFieldValue}
-                                    />
                                 </>                                        
                             :
                                 <>
@@ -384,20 +390,48 @@ const NumberField = (props) => {
                                         onChange={handleTooltip}
                                         style={{ marginTop: '25px' }}
                                     />
-                                    <Typography style={{ marginTop: '10px', color: '#5048E5' }}>
-                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked}/>Required<GeneralTooltip tipData={'A required field must be filled.'}/>
+                                    <Typography
+                                        style={{ marginTop: '10px', color: '#5048E5' }}
+                                    >
+                                        <Checkbox
+                                            size={'small'}
+                                            checked={isRequired}
+                                            onChange={handleChecked}
+                                        />Required<GeneralTooltip tipData={'A required field must be filled.'}/>
                                     </Typography>
                                 </>
                             }
                         </Box>
                     </Grid>
-                    <NumberfieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired}/>
+                    <NumberfieldPreview
+                        fieldLabel={fieldLabel}
+                        fieldDescription={fieldDescription}
+                        tooltip={tooltip}
+                        isRequired={isRequired}
+                    />
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={fieldData?handleUpdate:addNumberField} variant="outlined" size='small' color="success">{fieldData?"Save Changes":"Add Field"}</Button>
+                <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    style={{ padding: '30px' }}
+                    align='right'
+                >
+                    <Button
+                        onClick={cancel}
+                        variant="outlined"
+                        size='small'
+                        style={{ margin: '0px 20px' }}
+                        color="error"
+                    >Cancel</Button>
+                    <Button
+                        onClick={fieldData?handleUpdate:addNumberField}
+                        variant="outlined"
+                        size='small'
+                        color="success"
+                    >{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

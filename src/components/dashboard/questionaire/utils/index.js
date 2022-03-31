@@ -1,3 +1,7 @@
+import {
+    Typography
+} from '@mui/material'
+
 import FormStyles from '../styles/FormStyles'
 import InfoIcon from '@mui/icons-material/Info'
 
@@ -114,9 +118,13 @@ export const FieldIndex = (fieldId, fieldsData) => {
 }
 
 export const allHiddenSubSections = (parentId, componentsData) => {
-    let sectionComponents = componentsData.find(comp => comp.id === parentId).components
-    let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.display === 'hidden')
-    return subSections
+    if(parentId){
+        let sectionComponents = componentsData.find(comp => comp.id === parentId).components
+        let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.parentId === parentId)
+        return subSections
+    } else {
+        return []
+    }
 }
 
 export const getDependantField = (allFields, fieldId) => {

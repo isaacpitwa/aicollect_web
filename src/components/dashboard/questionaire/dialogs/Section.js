@@ -28,31 +28,27 @@ import SectionPreview from '../previews/SectionPreview'
 // This is the field for type=TextField
 const Section = (props) => {
 
-    const { componentsData, setComponentsData, setSectionCreated, addComponent, updateComponentsData } = useContext(FormContext)
+    const { setIsLoaded, componentsData, setComponentsData, setSectionCreated, updateSection, updateFormData } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : '')
-    const [parentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
     const [type] = useState(fieldData ? fieldData.type : 'section')
     const [value, setValue] = useState(fieldData ? fieldData.value : '')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
     const [dependency, setDependency] = useState(false)
     const [conditional, setConditional] = useState(false)
-    const [components] = useState(fieldData ? fieldData.components : [])
+    const [components, setComponents] = useState(fieldData ? fieldData.components : [])
     const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : '')
     const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
 
     useEffect(() => {
-        setCompsData(componentsData);
-    }, [compsData])
+    }, [componentsData])
 
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
@@ -88,13 +84,38 @@ const Section = (props) => {
         setCompValue(e.target.value)
     }
 
-    const createSection = () => {
+    const addSection = () => {
 
         const sectionData = {
             id: id?id:uuidv4(),
-            parentId: false,
-            subParentId: false,
-            required: isRequired,
+            type: 'section',
+            display: 'visible',
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            dependency: dependency,
+            conditional: conditional,
+            components: components
+        }
+        
+        let formFields = componentsData
+        formFields.push(sectionData)
+        setComponentsData(formFields)
+        setSectionCreated(true)
+        setFieldLabel('')
+        setFieldDescription('')
+        setTooltip('')
+        setDependency(false)
+        setConditional(false)
+        setComponents([])
+        handleClose()
+
+    }
+
+    const handleUpdate = () => {
+        let sectionData = {
+            id: id,
+            type: type,
             display: 'visible',
             type: 'section',
             label: fieldLabel,
@@ -105,34 +126,7 @@ const Section = (props) => {
             components: components
         }
 
-        // addComponent(sectionData)
-        let formFields = componentsData
-        formFields.push(sectionData)
-        setComponentsData(formFields)
-        setSectionCreated(true)
-        handleClose()
-
-    }
-
-    const handleUpdate = () => {
-        let sectionData = {
-            id: id,
-            parentId: parentId,
-            subParentId: subParentId,
-            type: type,
-            value: value,
-            required: isRequired,
-            label: fieldLabel,
-            description: fieldDescription,
-            tooltip: tooltip,
-            conditional: {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()
-            },
-            components: components
-        }
-        updateComponentsData(findComponentIndex(fieldData, compsData), sectionData)
+        updateSection(sectionData)
         handleClose()
     }
 
@@ -209,8 +203,8 @@ const Section = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, id, 'section').map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(compsData, id, 'section').map((option, index) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
@@ -271,13 +265,13 @@ const Section = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
+                    <SectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip}/>
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
                     <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={fieldData?handleUpdate:createSection} variant="outlined" size='small' color="success">Save</Button>
+                    <Button onClick={fieldData?handleUpdate:addSection} variant="outlined" size='small' color="success">Save</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

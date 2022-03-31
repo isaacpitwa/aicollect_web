@@ -11,27 +11,66 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
+import SelectField from '../../dialogs/SelectField'
 import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const selectField = (props) => {
+const SelectFieldComp = (props) => {
 
-    const { editStatus } = useContext(FormContext);
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        editStatus
+    } = useContext(FormContext);
 
     const { fieldData } = props;
 
+    const [selectDialog, setSelectDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
 
+    const handleSelectField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
+        setSelectDialog(true)
+    }
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
+
+    const handleClose = () => {
+        setSelectDialog(false)
+    }
+    
     const classes = formStyles();
     const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section:classes.section2}>
+        <Grid
+            key={fieldData.id}
+            container
+            onMouseOver={()=>{setDisplay('visible')}}
+            onMouseOut={()=>{setDisplay('hidden')}}
+            className={editStatus?classes.section:classes.section2}
+        >
             {editStatus?
-                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
-                    <EditIcon className={smallBtn.editBtn} />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
-                </Typography>
+                <>
+                    <SelectField open={selectDialog} fieldData={fieldData} handleClose={handleClose} />
+                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                        <EditIcon
+                            onClick={handleSelectField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                </>
             : '' }
             <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
                 {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip}/>
@@ -41,11 +80,11 @@ const selectField = (props) => {
                 select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={fieldData.values[0].label}
+                value={fieldData.options[0].label}
                 helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
             >
-                {fieldData.values.map(option => (
-                    <MenuItem value={option.label}>{option.label}</MenuItem>
+                {fieldData.options.map((option, index) => (
+                    <MenuItem key={index} value={option.label}>{option.label}</MenuItem>
                 ))}
             </TextField>
         </Grid>
@@ -53,4 +92,4 @@ const selectField = (props) => {
     )
 }
 
-export default selectField
+export default SelectFieldComp

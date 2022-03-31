@@ -16,7 +16,7 @@ import {
 } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
-const textAreaField = (props) => {
+const TextAreaFieldComp = (props) => {
 
     const { editStatus } = useContext(FormContext);
 
@@ -37,8 +37,11 @@ const textAreaField = (props) => {
         setTextAreaFieldDialog(false)
     }
 
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
+
     const handleClose = () => {
-        // Dialog box closing method
         setTextAreaFieldDialog(false)
     }
 
@@ -54,7 +57,10 @@ const textAreaField = (props) => {
                         onClick={handleTextAreaField}
                         className={smallBtn.editBtn}
                     />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                    <HighlightOffIcon
+                        onClick={deleteField}
+                        className={smallBtn.deleteBtn}
+                    />
                 </Typography>
             : '' }
             <TextField
@@ -75,4 +81,4 @@ const textAreaField = (props) => {
     )
 }
 
-export default textAreaField
+export default TextAreaFieldComp

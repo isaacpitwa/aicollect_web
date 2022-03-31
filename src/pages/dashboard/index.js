@@ -26,10 +26,11 @@ import { InformationCircleOutlined as InformationCircleOutlinedIcon } from '../.
 import { Reports as ReportsIcon } from '../../icons/reports';
 import { Users as UsersIcon } from '../../icons/users';
 import { gtm } from '../../lib/gtm';
+import { useAuth } from '../../hooks/use-auth';
 
 const Overview = () => {
   const [displayBanner, setDisplayBanner] = useState(true);
-
+  const { user } = useAuth();
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
@@ -75,7 +76,7 @@ const Overview = () => {
                   Good Morning
                 </Typography>
                 <Typography variant='caption'>
-                  Welcome back Stuart, We've missed you 🥰
+                  Welcome back {user?.firstname}, We&apos;ve missed you 🥰
                 </Typography>
               </Grid>
               <Grid

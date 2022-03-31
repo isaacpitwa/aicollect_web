@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Card, Container, Divider, Link, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Link, TextField, Typography } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 import { AuthBanner } from '../../components/authentication/auth-banner';
 import { AmplifyPasswordReset } from '../../components/authentication/amplify-password-reset';
@@ -30,7 +30,7 @@ const PasswordReset = () => {
     <>
       <Head>
         <title>
-          Password Reset | Material Kit Pro
+          Password Reset | AiCollect
         </title>
       </Head>
       <Box
@@ -42,7 +42,7 @@ const PasswordReset = () => {
           minHeight: '100vh'
         }}
       >
-        <AuthBanner />
+        {/* <AuthBanner /> */}
         <Container
           maxWidth="sm"
           sx={{
@@ -79,12 +79,8 @@ const PasswordReset = () => {
               color="textSecondary"
               variant="caption"
             >
-              The app authenticates via {platform}
+              Password reset Page
             </Typography>
-            <img
-              alt="Auth platform"
-              src={platformIcons[platform]}
-            />
           </Box>
           <Card
             elevation={16}
@@ -116,11 +112,13 @@ const PasswordReset = () => {
               </Typography>
               <Typography
                 color="textSecondary"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, mb: 4 }}
                 variant="body2"
               >
-                Reset your account password using your code
+                Please enter your email below to reset your password.
               </Typography>
+              <TextField label='Email Address' type='email' placeholder='Enter your email' fullWidth />
+              <Button variant='contained' style={{ marginTop: 15 }}>Send Password Reset</Button>
             </Box>
             <Box
               sx={{

@@ -14,11 +14,11 @@ import TextField_ from '../../dialogs/TextField';
 import { DescriptionCard, FieldIndex } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
-const textField = (props) => {
+const TextFieldComp = (props) => {
 
-    const { setFieldResponses, editStatus } = useContext(FormContext);
+    const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);
 
-    const { fieldKey, fieldData, fieldResponses, fieldUpdated } = props;
+    const { fieldKey, fieldData, fieldResponses } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [value, setValue] = useState(fieldData.value?fieldData.value:'');
@@ -45,26 +45,24 @@ const textField = (props) => {
 
     const handleClose = () => {
         setTextFieldDialog(false)
-        fieldUpdated()
+    }
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
     }
 
     const classes = formStyles();
     const smallBtn = smallBtns();
 
 
-    return (        
-        dependantField&&dependantField.value===fieldData.conditional.value?
-            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-                <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
-                {editStatus ?
-                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
-                        <EditIcon
-                            onClick={handleTextField}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon className={smallBtn.deleteBtn} />
-                    </Typography>
-                    : ''}
+    return (
+        dependantField&&dependantField.value===fieldData.conditional.value&&!editStatus?
+            <Grid
+                key={fieldKey}
+                style={{ display: 'block' }}
+                container
+                className={classes.section}
+            >
                 <TextField
                     required={fieldData.required}
                     fullWidth
@@ -77,18 +75,32 @@ const textField = (props) => {
                     }}
                 />
             </Grid>
-            : 
-            <Grid key={fieldKey} style={{ display: 'block' }} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-                <TextField_ open={textFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
-                {editStatus ?
-                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
-                        <EditIcon
-                            onClick={handleTextField}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon className={smallBtn.deleteBtn} />
-                    </Typography>
-                    : ''}
+        :
+            <Grid
+                key={fieldKey}
+                style={{ display: 'block' }}
+                container
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}
+                className={classes.section2}
+            >
+                <TextField_
+                    open={textFieldDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
+                <Typography
+                    style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'}
+                >
+                    <EditIcon
+                        onClick={handleTextField}
+                        className={smallBtn.editBtn}
+                    />
+                    <HighlightOffIcon
+                        onClick={deleteField}
+                        className={smallBtn.deleteBtn}
+                    />
+                </Typography>
                 <TextField
                     required={fieldData.required}
                     fullWidth
@@ -106,4 +118,4 @@ const textField = (props) => {
     )
 }
 
-export default textField
+export default TextFieldComp

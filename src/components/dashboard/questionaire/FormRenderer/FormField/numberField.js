@@ -17,9 +17,19 @@ import {
 } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
-const numberField = (props) => {
+const NumberFieldComp = (props) => {
 
-    const { fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        fieldResponses,
+        setFieldResponses,
+        editStatus,
+        setDependantId,
+        setDependecyValue
+    } = useContext(FormContext);
 
     const { fieldData, fieldUpdated } = props;
 
@@ -28,23 +38,24 @@ const numberField = (props) => {
     const [numberFieldDialog, setNumberFieldDialog] = useState(false)
 
     const handleNumberField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setNumberFieldDialog(true)
     }
 
     const handleFieldValue = (e) => {
         setValue(e.target.value)
-        let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: Number(e.target.value) }
-        setFieldResponses(newFieldResponses)
+        if(fieldData.dependency) {
+            setDependantId(fieldData.id)
+            setDependecyValue(e.target.value)
+        }
     }
 
-    const createNumberField = () => {
-        setNumberFieldDialog(false)
-    }
 
     const handleClose = () => {
         setNumberFieldDialog(false)
-        fieldUpdated()
     }
 
     const classes = formStyles();
@@ -52,7 +63,7 @@ const numberField = (props) => {
 
     return (
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-            <NumberField open={numberFieldDialog} createNumberField={createNumberField} fieldData={fieldData} handleClose={handleClose} />
+            <NumberField open={numberFieldDialog} fieldData={fieldData} handleClose={handleClose} />
             {editStatus?
                 <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
                     <EditIcon
@@ -79,4 +90,4 @@ const numberField = (props) => {
     )
 }
 
-export default numberField
+export default NumberFieldComp

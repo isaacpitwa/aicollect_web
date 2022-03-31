@@ -1,6 +1,8 @@
 import { createContext, useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { authApi } from '../__fake-api__/auth-api';
+import { authenticationApi } from '../api/auth-api';
 
 const initialState = {
   isAuthenticated: false,
@@ -59,22 +61,34 @@ export const AuthContext = createContext({
 export const AuthProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const router = useRouter();
   useEffect(() => {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
 
         if (accessToken) {
-          const user = await authApi.me(accessToken);
-
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: true,
-              user
-            }
-          });
+          const user = await authenticationApi.userProfile(accessToken);
+          console.log('User DATA: \n', user);
+          if (user.firstname) {
+            dispatch({
+              type: 'INITIALIZE',
+              payload: {
+                isAuthenticated: true,
+                user
+              }
+            });
+            // router.reload()
+          } else {
+            dispatch({
+              type: 'INITIALIZE',
+              payload: {
+                isAuthenticated: false,
+                user: null
+              }
+            });
+          }
+          
         } else {
           dispatch({
             type: 'INITIALIZE',
@@ -100,9 +114,12 @@ export const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-    const accessToken = await authApi.login({ email, password });
-    const user = await authApi.me(accessToken);
+    // const accessToken = await authApi.login({ email, password });
+    // const user = await authApi.me(accessToken);
 
+    // localStorage.setItem('accessToken', accessToken);
+    const accessToken = await authenticationApi.login({ email, password });
+    const user = await authenticationApi.userProfile(accessToken);
     localStorage.setItem('accessToken', accessToken);
 
     dispatch({
@@ -132,6 +149,30 @@ export const AuthProvider = (props) => {
     });
   };
 
+  const authenticateAfterEmailVerify = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    const user = await authenticationApi.userProfile(accessToken);
+    dispatch({
+      type: 'LOGIN',
+      payload: {
+        user
+      }
+    });
+
+  };
+
+  const completeUserProfile = async (userDetails) => {
+    // console.log(userDetails);
+    const accessToken = await authenticationApi.completeUserProfileAfterEmailInvitation(userDetails);
+    // const user = authenticationApi.userProfile;
+    if (accessToken) {
+      // localStorage.setItem('accessToken', accessToken);
+      dispatch({
+        type: 'COMPLETE_PROFILE',
+      });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -139,7 +180,9 @@ export const AuthProvider = (props) => {
         platform: 'JWT',
         login,
         logout,
-        register
+        register,
+        authenticateAfterEmailVerify,
+        completeUserProfile
       }}
     >
       {children}

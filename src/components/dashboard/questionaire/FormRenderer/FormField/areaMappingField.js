@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import formStyles from '../../styles/FormStyles'
 import { smallBtns } from '../../styles/FormStyles'
 import {
@@ -14,7 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { FormContext } from '../../context'
 import AreaMapImg from "./areaMap.jpeg"
 
-const areaMappingField = (props) => {
+const AreaMappingField = (props) => {
     
     const { editStatus } = useContext(FormContext);
 
@@ -41,7 +41,7 @@ const areaMappingField = (props) => {
                     Please walk around the boundary of the area to be mapped
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    GPS coordinates can only be collected when you're mobile
+                    GPS coordinates can only be collected when you&aposre mobile
                 </Typography>
                 <Button color={'primary'}>
                     Start Mapping
@@ -51,4 +51,4 @@ const areaMappingField = (props) => {
     )
 }
 
-export default areaMappingField;
+export default AreaMappingField;

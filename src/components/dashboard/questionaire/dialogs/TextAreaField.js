@@ -46,14 +46,12 @@ const TextAreaField = (props) => {
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [parentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId] = useState(fieldData ? fieldData.subParentId : false)
     const [type] = useState(fieldData ? fieldData.type : 'text-area')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
     const [conditional, setConditional] = useState(false)
     const [display, setDisplay] = useState('')
     const [when, setWhen] = useState('')
@@ -61,7 +59,7 @@ const TextAreaField = (props) => {
 
     useEffect(() => {
         setCompsData(componentsData);
-    }, [compsData])
+    }, [componentsData])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -124,22 +122,6 @@ const TextAreaField = (props) => {
         }
     }
 
-    const handleUpdate = () => {
-        let newField = {
-            id: id,
-            parentId: parentId,
-            subParentId: subParentId,
-            type: type,
-            value: value,
-            required: isRequired,
-            label: fieldLabel,
-            description: fieldDescription,
-            tooltip: tooltip
-        }        
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
-        handleClose()
-    }
-
     const addTextAreaField = () => {
 
         let newFieldObj = {
@@ -172,6 +154,22 @@ const TextAreaField = (props) => {
                 setErrorTag('Label')
             }
         }
+    }
+
+    const handleUpdate = () => {
+        let newField = {
+            id: id,
+            parentId: sectionId,
+            subParentId: subSectionId,
+            type: type,
+            value: value,
+            required: isRequired,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip
+        }        
+        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+        handleClose()
     }
 
     const cancel = () => {
@@ -254,8 +252,8 @@ const TextAreaField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, fieldData.id, 'text-area').map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(compsData, fieldData.id, 'text-area').map((option, index) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>

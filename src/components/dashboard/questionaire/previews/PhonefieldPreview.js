@@ -9,7 +9,7 @@ import MuiPhoneNumber from 'material-ui-phone-number'
 import 'react-phone-number-input/style.css'
 import GeneralTooltip from '../previews/GeneralTooltip'
 
-const PhoneFieldPreview = (props) => {
+const PhonefieldPreview = (props) => {
 
     const { defaultCountry, fieldDescription, tooltip } = props
 
@@ -21,8 +21,16 @@ const PhoneFieldPreview = (props) => {
 
 
     return (
-        <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
-            <Typography style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }} size='small' >
+        <Grid
+            item
+            xs={12}
+            md={6}
+            style={{ padding: '30px 20px' }}
+        >
+            <Typography
+                style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }}
+                size='small'
+            >
                 <strong>Preview</strong>
             </Typography>
             <Box
@@ -42,7 +50,9 @@ const PhoneFieldPreview = (props) => {
                       }}
                     />
                 {fieldDescription!=''?
-                    <Typography style={{ fontSize: '14px', color: '#5048e598' }}>
+                    <Typography
+                        style={{ fontSize: '14px', color: '#5048e598' }}
+                    >
                         <i>{fieldDescription}</i>
                     </Typography>
                 :
@@ -54,5 +64,5 @@ const PhoneFieldPreview = (props) => {
     )
 }
 
-export default PhoneFieldPreview
+export default PhonefieldPreview
                     

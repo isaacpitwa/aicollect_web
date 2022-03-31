@@ -16,7 +16,20 @@ import FormField from '../FormField'
 
 const SectionField = (props) => {
 
-    const { setSectionId, setSubSectionId, fieldResponses, setFieldResponses, editStatus } = useContext(FormContext);
+    const {
+        setError,
+        selectSection,
+        sectionId,
+        setSelectSection,
+        setSectionId,
+        subSectionId,
+        setSubSectionId,
+        componentsData,
+        setComponentsData,
+        fieldResponses,
+        setFieldResponses,
+        editStatus
+    } = useContext(FormContext);
 
     const { fieldData } = props
 
@@ -32,7 +45,23 @@ const SectionField = (props) => {
     }
 
     const getSectionId = () => {
-        setSectionId(fieldData.id)
+        if(editStatus){
+            if(sectionId===fieldData.id) {
+                setError(false)
+                setSelectSection(false)
+                setSectionId(null)
+                setSubSectionId(null)
+            } else {
+                setError(false)
+                setSelectSection(true)
+                setSectionId(fieldData.id)
+                setSubSectionId(null)
+            }
+        }
+    }
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
     }
 
     const handleClose = () => {
@@ -60,18 +89,22 @@ const SectionField = (props) => {
                                     onClick={handleSectionField}
                                     className={smallBtn.editBtn}
                                 />
-                                <HighlightOffIcon className={smallBtn.deleteBtn} />
+                                <HighlightOffIcon
+                                    onClick={() => {
+                                        setComponentsData(componentsData.filter(section => section.id !== fieldData.id))
+                                    }}
+                                    className={smallBtn.deleteBtn}
+                                />
                             </small>
                             : ''}
                     </Typography>
-                    <DescriptionCard description={fieldData.description} helperText={true} />
-                    {fieldData.components.map(componentData => (
-                        <FormField fieldData={componentData} />
+                    {fieldData.components.map((componentData, index) => (
+                        <FormField key={index} fieldKey={index} fieldData={componentData}  fieldResponses={fieldResponses}/>
                     ))}
                 </Grid>
                 : ''
             :
-            <Grid key={fieldData.id} container className={editStatus ? classes.section2 : classes.section}>
+            <Grid key={fieldData.id} container className={editStatus?fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3:classes.section2}>
                 <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
                     onMouseOver={() => { setDisplay('visible') }}
@@ -87,13 +120,18 @@ const SectionField = (props) => {
                                 onClick={handleSectionField}
                                 className={smallBtn.editBtn}
                             />
-                            <HighlightOffIcon className={smallBtn.deleteBtn} />
+                            <HighlightOffIcon
+                                className={smallBtn.deleteBtn}
+                                onClick={() => {
+                                    setComponentsData(componentsData.filter(section => section.id !== fieldData.id))
+                                }}
+                            />
                         </small>
                         : ''}
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={true} />
-                {fieldData.components.map(componentData => (
-                    <FormField fieldData={componentData} />
+                {fieldData.components.map((comp, index) => (
+                    <FormField key={index} fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
                 ))}
             </Grid>
     )

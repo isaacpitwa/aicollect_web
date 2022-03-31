@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import NextLink from 'next/link';
 import Head from "next/head";
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -13,16 +15,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import toast from "react-hot-toast";
 import { AuthGuard } from "../../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../../components/dashboard/dashboard-layout";
-import { ProjectListTable } from "../../../../components/dashboard/projectDetails/project-list-table";
+import { ProjectTeamMembersTable } from "../../../../components/dashboard/projectDetails/project-team-members-list-table";
 import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import { Trash as TrashIcon } from "../../../../icons/trash";
 import { Search as SearchIcon } from "../../../../icons/search";
 import { UserAdd as UserAddIcon } from "../../../../icons/user-add";
 import { gtm } from "../../../../lib/gtm";
 import AddTeamMember from "../../../../components/dashboard/projectDetails/project-addteam-member";
-import ProjectTaskManager from "../../../../components/dashboard/projectDetails/project-task-manager";
+// import ProjectTaskManager from "../../../../components/dashboard/projectDetails/project-task-manager";
 
 const sortOptions = [
   {
@@ -43,15 +46,15 @@ const sortOptions = [
   },
 ];
 
-const applyFilters = (customers, filters) =>
-  customers.filter((customer) => {
+const applyFilters = (projectMembers, filters) =>
+  projectMembers.filter((member) => {
     if (filters.query) {
       let queryMatched = false;
       const properties = ["email", "name"];
 
       properties.forEach((property) => {
         if (
-          customer[property].toLowerCase().includes(filters.query.toLowerCase())
+          member[property].toLowerCase().includes(filters.query.toLowerCase())
         ) {
           queryMatched = true;
         }
@@ -62,15 +65,15 @@ const applyFilters = (customers, filters) =>
       }
     }
 
-    if (filters.hasAcceptedMarketing && !customer.hasAcceptedMarketing) {
+    if (filters.hasAcceptedMarketing && !member.hasAcceptedMarketing) {
       return false;
     }
 
-    if (filters.isProspect && !customer.isProspect) {
+    if (filters.isProspect && !member.isProspect) {
       return false;
     }
 
-    if (filters.isReturning && !customer.isReturning) {
+    if (filters.isReturning && !member.isReturning) {
       return false;
     }
 
@@ -115,14 +118,16 @@ const applySort = (customers, sort) => {
 const applyPagination = (customers, page, rowsPerPage) =>
   customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const ProjectList = () => {
+const ProjectDetails = () => {
   const queryRef = useRef(null);
-  const [customers] = useState([]);
+  const [project, setProject] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
-  const [openTaskDialog, setOpenTaskDialog] = useState(false);
+  // const [openTaskDialog, setOpenTaskDialog] = useState(false);
+  const router = useRouter();
+  const { projectId } = router.query;
 
   const [filters, setFilters] = useState({
     query: "",
@@ -137,12 +142,12 @@ const ProjectList = () => {
   const handleCloseProjectDialog = () => {
     setOpenProjectDialog(false);
   };
-  const handleOpenTaskDialog = () => {
-    setOpenTaskDialog(true);
-  };
-  const handleCloseTaskDialog = () => {
-    setOpenTaskDialog(false);
-  };
+  // const handleOpenTaskDialog = () => {
+  //   setOpenTaskDialog(true);
+  // };
+  // const handleCloseTaskDialog = () => {
+  //   setOpenTaskDialog(false);
+  // };
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
@@ -165,18 +170,39 @@ const ProjectList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(customers, filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(
-    sortedCustomers,
+  const filteredTeamMembers = applyFilters(project?.projectTeam || [], filters);
+  const sortedTeamMembers = applySort(filteredTeamMembers, sort);
+  const paginatedTeamMembers = applyPagination(
+    sortedTeamMembers,
     page,
     rowsPerPage
   );
 
+  const getProjects = useCallback(async () => {
+    if (projectId) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/${projectId}`);
+        const data = await response.json();
+        console.log(data);
+        if (data?.status === 200) {
+          toast.success(data.message, { duration: 10000 });
+          setProject(data.data);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    getProjects();
+  }, [])
+
   return (
     <>
       <Head>
-        <title>Dashboard: Project List | AI Collect</title>
+        <title>Dashboard: Project Details | AiCollect</title>
       </Head>
       <Box
         component="main"
@@ -189,13 +215,13 @@ const ProjectList = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Project: XYZ</Typography>
+                <Typography variant="h4">Project: {project?.projectname}</Typography>
               </Grid>
               <Grid item>
                 <Button
                   startIcon={<TrashIcon fontSize="small" />}
                   variant="contained"
-                  
+
                 >
                   Delete Project
                 </Button>
@@ -203,67 +229,73 @@ const ProjectList = () => {
               <AddTeamMember
                 open={openProjectDialog}
                 handleClose={handleCloseProjectDialog}
+                projectId={projectId}
+                getProjects={getProjects}
               />
             </Grid>
           </Box>
 
           <Stack direction="row" mb={4}>
             <Grid container spacing={3}>
-              <Grid item md={3} sm={6} xs={12}>
-                <Card elevation={8}>
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "start",
-                      px: 3,
-                      py: 2
-                    }}
-                  >
-                    <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }}>
-                      <GroupAddRounded />
-                    </IconButton>
-                    <div>
-                      <Typography variant="body2">10</Typography>
-                      <Typography
-                        sx={{ mt: 1 }}
-                        color="textSecondary"
-                        variant="h8"
-                      >
-                        Registration
-                      </Typography>
-                    </div>
-                    {/* <LineChart /> */}
-                  </Box>
-                </Card>
+              <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
+                <NextLink href={`/dashboard/projects/${projectId}/questionaire`} passHref>
+                  <Card elevation={8}>
+                    <Box
+                      sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        justifyContent: "start",
+                        px: 3,
+                        py: 2
+                      }}
+                    >
+                      <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }}>
+                        <GroupAddRounded />
+                      </IconButton>
+                      <div>
+                        <Typography variant="body2">0</Typography>
+                        <Typography
+                          sx={{ mt: 1 }}
+                          color="textSecondary"
+                          variant="h8"
+                        >
+                          Registration
+                        </Typography>
+                      </div>
+                      {/* <LineChart /> */}
+                    </Box>
+                  </Card>
+                </NextLink>
               </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Card elevation={8}>
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "start",
-                      px: 3,
-                      py: 2,
-                    }}
-                  >
-                    <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
-                      <FactCheck  />
-                    </IconButton>
-                    <div>
-                      <Typography variant="body2">10</Typography>
-                      <Typography
-                        sx={{ mt: 1 }}
-                        color="textSecondary"
-                        variant="h8"
-                      >
-                        Inspection
-                      </Typography>
-                    </div>
-                    {/* <LineChart /> */}
-                  </Box>
-                </Card>
+              <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
+                <NextLink href="/dashboard/projects/43/questionaire" passHref>
+                  <Card elevation={8}>
+                    <Box
+                      sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        justifyContent: "start",
+                        px: 3,
+                        py: 2,
+                      }}
+                    >
+                      <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
+                        <FactCheck />
+                      </IconButton>
+                      <div>
+                        <Typography variant="body2">0</Typography>
+                        <Typography
+                          sx={{ mt: 1 }}
+                          color="textSecondary"
+                          variant="h8"
+                        >
+                          Inspection
+                        </Typography>
+                      </div>
+                      {/* <LineChart /> */}
+                    </Box>
+                  </Card>
+                </NextLink>
               </Grid>
             </Grid>
           </Stack>
@@ -300,13 +332,25 @@ const ProjectList = () => {
                   placeholder="Search Team Members"
                 />
               </Box>
-              <Button variant="contained" startIcon={<UserAddIcon fontSize="small" />} onClick={handleOpenProjectDialog}>Add Team Member</Button>
-              <Button startIcon={<AddTaskRounded fontSize="small" />} onClick={handleOpenTaskDialog}>Task Manager</Button>
-              <ProjectTaskManager open={openTaskDialog} handleClose={handleCloseTaskDialog} />
+              <Button
+                variant="contained"
+                startIcon={<UserAddIcon fontSize="small" />}
+                onClick={handleOpenProjectDialog}
+              >
+                Add Team Member
+              </Button>
+              <Button
+                startIcon={<AddTaskRounded fontSize="small" />}
+                onClick={() => {
+                  router.push(`/dashboard/projects/${projectId}/taskmanager`)
+                }}>
+                Task Manager
+              </Button>
+              
             </Box>
-            <ProjectListTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
+            <ProjectTeamMembersTable
+              projectMembers={paginatedTeamMembers}
+              projectMembersCount={filteredTeamMembers.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -319,10 +363,10 @@ const ProjectList = () => {
   );
 };
 
-ProjectList.getLayout = (page) => (
+ProjectDetails.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export default ProjectList;
+export default ProjectDetails;

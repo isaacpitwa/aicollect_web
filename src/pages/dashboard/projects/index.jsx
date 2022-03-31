@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import {
   Box,
@@ -9,7 +9,7 @@ import {
   Grid,
   InputAdornment,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
@@ -21,6 +21,13 @@ import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import CreateNewProjectDialog from '../../../components/dashboard/project/project-create-new';
+import { useAuth } from '../../../hooks/use-auth';
+// Fetch Projects API
+import { projectsApi } from '../../../api/projects-api';
+
+// Higher Order Componet
+import { WithFetchData } from '../../../hocs/with-fech-data';
+import { LoadingSkeleton } from '../../../components/dashboard/dashboard-wait-for-data-loader';
 
 const sortOptions = [
   {
@@ -32,11 +39,11 @@ const sortOptions = [
     value: 'updatedAt|asc'
   },
   {
-    label: 'Total orders (highest)',
+    label: 'Total Questionaires (highest)',
     value: 'orders|desc'
   },
   {
-    label: 'Total orders (lowest)',
+    label: 'Total Members (lowest)',
     value: 'orders|asc'
   }
 ];
@@ -44,7 +51,7 @@ const sortOptions = [
 const applyFilters = (customers, filters) => customers.filter((customer) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['projectname'];
 
     properties.forEach((property) => {
       if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -92,39 +99,67 @@ const applySort = (customers, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
   const stabilizedThis = customers.map((el, index) => [el, index]);
-  
+
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProjectList = () => {
+const ProjectList = (props) => {
   const queryRef = useRef(null);
-  const [customers] = useState([]);
+  const { user } = useAuth();
+  console.log(user);
+  // const { data: projects, loading, handleFetchData } = props;
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
 
-  
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
     isProspect: null,
     isReturning: null
   });
+
+  const getUserProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        cliendId = user.clientId;
+      }
+      const data = await projectsApi.fetchProjects(clientId);
+      if (data) {
+        setProjects(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [
+    setProjects
+  ]);
+
+  useEffect(() => {
+    getUserProjects();
+  }, []);
 
   const handleOpenProjectDialog = () => {
     setOpenProjectDialog(true)
@@ -158,15 +193,15 @@ const ProjectList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(customers, filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
+  const filteredProjects = applyFilters(projects || [], filters);
+  const sortedProjects = applySort(filteredProjects, sort);
+  const paginatedProjects = applyPagination(sortedProjects, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Project List | AI Collect
+          Dashboard: Project List | AiCollect
         </title>
       </Head>
       <Box
@@ -197,7 +232,11 @@ const ProjectList = () => {
                   Add Project
                 </Button>
               </Grid>
-              <CreateNewProjectDialog open={openProjectDialog} handleClose={handleCloseProjectDialog} />
+              <CreateNewProjectDialog
+                open={openProjectDialog}
+                handleClose={handleCloseProjectDialog}
+                getProjects={getUserProjects}
+              />
             </Grid>
             <Box
               sx={{
@@ -220,23 +259,6 @@ const ProjectList = () => {
             </Box>
           </Box>
           <Card>
-            {/* <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs> */}
             <Divider />
             <Box
               sx={{
@@ -288,20 +310,29 @@ const ProjectList = () => {
                 ))}
               </TextField>
             </Box>
-            <ProjectListTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-            />
+            {
+              !loading ? (
+                <ProjectListTable
+                  projects={paginatedProjects}
+                  projectsCount={filteredProjects.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                />
+              ) : (
+                <LoadingSkeleton />
+              )
+            }
           </Card>
         </Container>
       </Box>
     </>
   );
 };
+
+// In this case I do not need to pass the second argument 
+// const ProjectsListWithLayout = WithFetchData(projectsApi.fetchProjects, null)(ProjectList);
 
 ProjectList.getLayout = (page) => (
   <AuthGuard>

@@ -36,18 +36,14 @@ const SubSection = (props) => {
     const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [parentId, setParentId] = useState(fieldData ? fieldData.parentId : false)
-    const [subParentId, setSubParentId] = useState(fieldData ? fieldData.subParentId : false)
-    const [type, setType] = useState(fieldData ? fieldData.type : '')
-    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [type, setType] = useState(fieldData ? fieldData.type : 'sub-section' )
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : '')
-    const [dependency, setDependency] = useState(false)
-    const [conditional, setConditional] = useState(false)
+    const [dependency, setDependency] = useState(null)
+    const [conditional, setConditional] = useState(null)
     const [components] = useState(fieldData ? fieldData.components : [])
-    const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : '')
+    const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : 'visible')
     const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
 
@@ -98,10 +94,8 @@ const SubSection = (props) => {
         const newSubSection = {
             id: uuidv4(),
             parentId: sectionId,
-            subParentId: false,
-            required: isRequired,
-            display: 'visible',
-            type: 'sub-section',
+            display: display,
+            type: type,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
@@ -198,8 +192,8 @@ const SubSection = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, id, 'section').map(option => (
-                                            <MenuItem value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(compsData, id, 'section').map((option, key) => (
+                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
@@ -260,7 +254,7 @@ const SubSection = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SubSectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
+                    <SubSectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip}/>
                 </Grid>
             </DialogContent>
             <DialogActions>

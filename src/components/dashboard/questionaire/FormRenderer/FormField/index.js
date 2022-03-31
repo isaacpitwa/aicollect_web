@@ -11,27 +11,22 @@ import EmailField from './emailField'
 import PhoneNumberField from './phoneNumberField'
 import ImageField from './imageField'
 import LocationField from './locationField'
+import DateField from './dateField'
 
 import AreaMappingField from './areaMappingField'
 import { FormContext } from '../../context'
 
 const FormField = (props) => {
 
-    const { formPreview, componentsData, fieldResponses } = useContext(FormContext)
+    const { fieldResponses } = useContext(FormContext)
 
     const { fieldKey, fieldData, editStatus } = props
-
-    const [refresh, setRefresh] = useState(false)
-
-    const fieldUpdated = () => {
-        setRefresh(true)
-    }
     
     switch (fieldData.type) {
         case 'sub-section':
             return <SubSectionField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'text':
-            return <TextField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus} fieldUpdated={fieldUpdated}/>
+            return <TextField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'text-area':
             return <TextAreaField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'number':
@@ -50,6 +45,8 @@ const FormField = (props) => {
             return <ImageField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'location':
             return <LocationField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+        case 'date':
+            return <DateField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
         case 'area-mapping':
             return <AreaMappingField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
     }
