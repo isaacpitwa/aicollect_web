@@ -25,10 +25,10 @@ import {
     FieldError,
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
-import LocationfieldPreview from '../previews/LocationfieldPreview';
+import AreaMappingPreview from '../previews/AreaMappingPreview';
 
 // This is the field for type=TextField
-const LocationField = (props) => {
+const AreaMappingField = (props) => {
 
     const {
         setError,
@@ -44,7 +44,7 @@ const LocationField = (props) => {
     const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [type] = useState(fieldData ? fieldData.type : 'location')
+    const [type] = useState(fieldData ? fieldData.type : 'area-mapping')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [gpsValues] = useState(null)
@@ -121,7 +121,7 @@ const LocationField = (props) => {
         }
     }
 
-    const addLocationField = () => {
+    const addAreaMappingField = () => {
 
         let newFieldObj = {
             id: id,
@@ -207,7 +207,7 @@ const LocationField = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Location Field Component
+                Area Mapping Field Component
                 <CancelIcon
                     color='error'
                     style={{ float: 'right', cursor: 'pointer' }}
@@ -352,9 +352,9 @@ const LocationField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <LocationfieldPreview
-                        label={fieldLabel}
-                        description={fieldDescription}
+                    <AreaMappingPreview
+                        fieldLabel={fieldLabel}
+                        fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
                     />
@@ -376,7 +376,7 @@ const LocationField = (props) => {
                         color="error"
                     >Cancel</Button>
                     <Button
-                        onClick={fieldData?handleUpdate:addLocationField}
+                        onClick={fieldData?handleUpdate:addAreaMappingField}
                         variant="outlined"
                         size='small'
                         color="success"
@@ -387,4 +387,4 @@ const LocationField = (props) => {
     )
 }
 
-export default LocationField
+export default AreaMappingField

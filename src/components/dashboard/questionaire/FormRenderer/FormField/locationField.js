@@ -1,14 +1,4 @@
 import { useState, useContext, useEffect, useCallback } from 'react'
-
-// GPS/GeoLocation libraries
-import { compose, withProps } from "recompose";
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker
-} from "react-google-maps";
-
 import formStyles from '../../styles/FormStyles'
 import { smallBtns } from '../../styles/FormStyles'
 import {
@@ -30,36 +20,11 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import LocationFieldDialog from '../../dialogs/LocationField';
-import { DescriptionCard } from '../../utils';
+import {
+    DescriptionCard,
+    CurrentLocation
+} from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
-
-
-
-export const CurrentLocation = compose(
-	withProps({
-	  googleMapURL:
-		`https://maps.googleapis.com/maps/api/js?key=AIzaSyC6AHCMOU6Uiew2mDrT0zlByh5u2SDiZic&libraries=geometry,drawing,places`,
-		loadingElement: <div style={{ height: `100%` }} />,
-		containerElement: <div style={{ height: `150px` }} />,
-		mapElement: <div style={{ height: `100%`, borderRadius: '8px' }} />
-	}),
-	withScriptjs,
-	withGoogleMap
-  )(props => {
-
-	const { isMarkerShown, coordinates } = props
-
-	return (
-		<GoogleMap
-			defaultZoom={10}
-			defaultCenter={{ lat: coordinates.lat, lng: coordinates.lng }}
-		>
-		{isMarkerShown && (
-			<Marker position={{ lat: coordinates.lat, lng: coordinates.lng }} />
-		)}
-		</GoogleMap>
-	)
-});
 
 const LocationField = (props) => {
 
@@ -81,11 +46,11 @@ const LocationField = (props) => {
     const [value, setValue] = useState(fieldData?fieldData.value:'');
     const [gpsValues, setGpsValues] = useState(null)
     const [locationFieldDialog, setLocationFieldDialog] = useState(false);
-    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
+    const [dependantField] = useState(fieldData&&fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
 
 	useEffect(() => {
 		getlocation()
-	}, [])
+	}, [fieldData])
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const  getlocation = async () => {
@@ -190,31 +155,47 @@ const LocationField = (props) => {
 				container
 				onMouseOver={() => { setDisplay('visible') }}
 				onMouseOut={() => { setDisplay('hidden') }}
-				className={classes.section}
+				className={editStatus?classes.section:classes.section2}
 			>
 				<LocationFieldDialog
 					open={locationFieldDialog}
 					fieldData={fieldData}
 					handleClose={handleClose} 
 				/>
-				<Typography
-					style={{ width: '100%', paddingBottom: '2px', visibility: display }}
-					align={'right'}
-				>
-					<EditIcon
-						onClick={handleLocationField}
-						className={smallBtn.editBtn}
-					/>
-					<HighlightOffIcon
-						onClick={() => {
-							deleteFieldData(fieldData)
-						}}
-						className={smallBtn.deleteBtn}
-					/>
-				</Typography>
+                {editStatus?
+                    <Typography
+                        style={{ width: '100%', paddingBottom: '2px', visibility: display }}
+                        align={'right'}
+                    >
+                        <EditIcon
+                            onClick={handleLocationField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={() => {
+                                deleteFieldData(fieldData)
+                            }}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                : "" }
 				<InputLabel htmlFor="outlined-adornment-password">
 					{label}<GeneralTooltip tipData={fieldData.tooltip}/>
 				</InputLabel>
+				<Typography
+					style={{ width: '100%', padding: '5px 0px' }}
+				>
+					{loadMap?
+						gpsValues?
+                            <CurrentLocation
+                                coordinates={gpsValues.coordinates}
+                                isMarkerShown={true}
+                            />
+						: ""
+					: 
+						<Typography>Location GPS Loading...</Typography>
+					}
+				</Typography>
 				<OutlinedInput
 					id="outlined-adornment-password"
 					type='text'
@@ -240,23 +221,6 @@ const LocationField = (props) => {
                 <FormHelperText id="outlined-weight-helper-text">
                     <DescriptionCard description={fieldData.description} helperText={true}/>
                 </FormHelperText>
-				<Typography
-					style={{ width: '100%', paddingTop: '5px' }}
-				>
-					{loadMap?
-						gpsValues?
-                            <>
-                                <small>Current Location</small>
-                                <CurrentLocation
-                                    isMarkerShown={true}
-                                    coordinates={gpsValues.coordinates}
-                                />
-                            </>
-						: ""
-					: 
-						<Typography>Location GPS Loading...</Typography>
-					}
-				</Typography>
 			</Grid>
 	);
 }

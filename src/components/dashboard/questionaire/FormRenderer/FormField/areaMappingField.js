@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import Image from 'next/image'
 import formStyles from '../../styles/FormStyles'
 import { smallBtns } from '../../styles/FormStyles'
 import {
@@ -12,7 +13,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
-import AreaMapImg from "./areaMap.jpeg"
+import AreaMappingImg from '../../../../../../public/static/form/area-mapping.jpg';
 
 const AreaMappingField = (props) => {
     
@@ -33,17 +34,35 @@ const AreaMappingField = (props) => {
                     <HighlightOffIcon className={smallBtn.deleteBtn} />
                 </Typography>
             : '' }
-            <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
-                <img src={AreaMapImg} style={{ width: '100%' }} />
+            <Grid
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                lg={6}
+                xl={6}
+                style={{ padding: '0px 10px' }}
+            >
+                    <Image
+                        src={AreaMappingImg}
+                        alt="Area Mapping Image"
+                        style={{
+                            width: '100%',
+                            borderRadius: '8px',
+                        }}
+                    />
             </Grid>
-            <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                <Typography variant="h6">
+            <Grid item xs={12} sm={12} md={4} lg={6} xl={6}>
+                <Typography variant="h5">
                     Please walk around the boundary of the area to be mapped
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     GPS coordinates can only be collected when you&aposre mobile
                 </Typography>
-                <Button color={'primary'}>
+                <Button
+                    variant="contained"
+                    color={'primary'}
+                >
                     Start Mapping
                 </Button>
             </Grid>

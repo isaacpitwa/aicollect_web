@@ -58,6 +58,7 @@ import PhoneField from './dialogs/PhoneField'
 import ImageField from './dialogs/ImageField'
 import DateField from './dialogs/DateField'
 import LocationField from './dialogs/LocationField'
+import AreaMappingField from './dialogs/AreaMappingField'
 
 import { FormContext } from './context'
 import FormRenderer from './FormRenderer'
@@ -99,9 +100,9 @@ const Questionaire = () => {
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
     const [emailFieldDialog, setEmailFieldDialog] = useState(false)
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
-    const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [imageDialog, setImageDialog] = useState(false)
     const [locationDialog, setLocationDialog] = useState(false)
+    const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [dateDialog, setDateDialog] = useState(false)
     const [open, setOpen] = useState(false)
 
@@ -153,10 +154,6 @@ const Questionaire = () => {
         setPhoneFieldDialog(true)
     }
 
-    const handleAreaMapping = () => {
-        setAreaMappingDialog(true)
-    }
-
     const handleImageField = () => {
         setImageDialog(true)
     }
@@ -167,6 +164,10 @@ const Questionaire = () => {
 
     const handleLocationField = () => {
         setLocationDialog(true)
+    }
+
+    const handleAreaMappingField = () => {
+        setAreaMappingDialog(true)
     }
 
     const saveFormChanges = () => {
@@ -200,6 +201,7 @@ const Questionaire = () => {
         setImageDialog(false)
         setDateDialog(false)
         setLocationDialog(false)
+        setAreaMappingDialog(false)
     }
 
     const handleDragStart = () => {
@@ -262,6 +264,10 @@ const Questionaire = () => {
             />
             <LocationField
                 open={locationDialog}
+                handleClose={handleClose} 
+            />
+            <AreaMappingField
+                open={areaMappingDialog}
                 handleClose={handleClose} 
             />
             <Grid
@@ -532,6 +538,7 @@ const Questionaire = () => {
                                                 startIcon={<MapIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleAreaMappingField}
                                                 style={{ width: '100%' }}
                                             >Area Mapping</Button>
                                             <Button

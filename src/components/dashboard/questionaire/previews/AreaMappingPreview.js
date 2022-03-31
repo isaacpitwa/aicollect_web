@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import {
     Box,
     Grid,
@@ -6,6 +7,10 @@ import {
     TextField
 } from '@mui/material'
 
+import AreaMappingImg from '../../../../../public/static/form/area-mapping.jpg';
+import {
+    DescriptionCard,
+} from '../utils';
 import GeneralTooltip from './GeneralTooltip'
 
 const TextfieldPreview = (props) => {
@@ -29,29 +34,31 @@ const TextfieldPreview = (props) => {
                 component="form"
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
-            <TextField
-                required
-                autoFocus
-                InputProps={{
-                  endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                }}
-                margin="dense"
-                id="label"
-                label={fieldLabel?fieldLabel:'Label'}
-                type="text"
-                size="small"
-                fullWidth
-                variant="outlined"
-            />
+                <Typography
+                    style={{ fontSize: '18px', color: '#5048E5' }}
+                >
+                    {fieldLabel}<GeneralTooltip tipData={tooltip}/>
+                </Typography>
+                <Box
+                    style={{
+                        height: '120px',
+                        width: "100%",
+                        borderRadius: '8px',
+                        overflow: "hidden",
+                    }}
+                    align='center'
+                >
+                    <Image
+                        src={AreaMappingImg}
+                        alt="Area Mapping Image"
+                    />
+                </Box>
                 {fieldDescription!=''?
-                    <Typography
-                        style={{ fontSize: '14px', color: '#5048e598' }}
-                    >
-                        <i>{fieldDescription}</i>
-                    </Typography>
+                    <DescriptionCard description={fieldDescription} helperText={true}/>
                 :
                     ''
                 }
+                
             </Box>
         </Grid>
 

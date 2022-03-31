@@ -1,3 +1,11 @@
+import { compose, withProps } from "recompose";
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker
+} from "react-google-maps";
+
 import {
     Typography
 } from '@mui/material'
@@ -26,11 +34,43 @@ export const DescriptionCard = (props) => {
     )
 }
 
-// 
+/**
+ * @function CurrentLocation
+ * @desc This component displays a Google map of the current location using coordinates provided
+ * @arg {Object} coordinates - The entire form object with all the components/form fields.
+ * @arg {Boolean} isMarkerShown - The id of the form field using this method.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const CurrentLocation = compose(
+	withProps({
+	  googleMapURL:
+		`https://maps.googleapis.com/maps/api/js?key=AIzaSyC6AHCMOU6Uiew2mDrT0zlByh5u2SDiZic&libraries=geometry,drawing,places`,
+		loadingElement: <div style={{ height: `100%` }} />,
+		containerElement: <div style={{ height: `150px` }} />,
+		mapElement: <div style={{ height: `100%`, borderRadius: '8px' }} />
+	}),
+	withScriptjs,
+	withGoogleMap
+  )(props => {
+
+	const { coordinates, isMarkerShown } = props
+
+	return (
+		<GoogleMap
+			defaultZoom={10}
+			defaultCenter={{ lat: coordinates.lat, lng: coordinates.lng }}
+		>
+		{isMarkerShown && (
+			<Marker position={{ lat: coordinates.lat, lng: coordinates.lng }} />
+		)}
+		</GoogleMap>
+	)
+});
+
 /**
  * @function allFormFields
  * @desc This function gets all form fields excluding sections and sub-sections
- * @desc A Universal method for fetching all form field elements.
  * @arg {Object} data - The entire form object with all the components/form fields.
  * @arg {Number} fieldId - The id of the form field using this method.
  * @arg {String} fieldType - The type of form field using this method.
