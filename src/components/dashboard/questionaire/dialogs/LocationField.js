@@ -47,10 +47,11 @@ const LocationField = (props) => {
     const [type] = useState(fieldData ? fieldData.type : 'location')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
+    const [gpsValues] = useState(null)
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [conditional, setConditional] = useState(false)
+    const [conditional, setConditional] = useState(null)
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
@@ -120,7 +121,7 @@ const LocationField = (props) => {
         }
     }
 
-    const addTextField = () => {
+    const addLocationField = () => {
 
         let newFieldObj = {
             id: id,
@@ -128,6 +129,7 @@ const LocationField = (props) => {
             subParentId: subSectionId,
             type: type,
             value: fieldValue,
+            gpsValues: gpsValues,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
@@ -374,7 +376,7 @@ const LocationField = (props) => {
                         color="error"
                     >Cancel</Button>
                     <Button
-                        onClick={fieldData?handleUpdate:addTextField}
+                        onClick={fieldData?handleUpdate:addLocationField}
                         variant="outlined"
                         size='small'
                         color="success"
