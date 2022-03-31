@@ -17,6 +17,24 @@ class Forms {
       console.error(err);
     }
   }
+  async getModuleForms(projectId, clientId, module) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/getModuleForms`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({ projectId, clientId, module })
+      });
+
+      const data = await response.json();
+      if (data.status === 200) {
+        return data.data;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   async createNewForm(formMeta) {
     try {
