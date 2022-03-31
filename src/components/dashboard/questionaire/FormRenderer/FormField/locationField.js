@@ -213,7 +213,7 @@ const LocationField = (props) => {
 					/>
 				</Typography>
 				<InputLabel htmlFor="outlined-adornment-password">
-					{label}
+					{label}<GeneralTooltip tipData={fieldData.tooltip}/>
 				</InputLabel>
 				<OutlinedInput
 					id="outlined-adornment-password"
@@ -237,6 +237,9 @@ const LocationField = (props) => {
 					</InputAdornment>
 					}
 				/>
+                <FormHelperText id="outlined-weight-helper-text">
+                    <DescriptionCard description={fieldData.description} helperText={true}/>
+                </FormHelperText>
 				<Typography
 					style={{ width: '100%', paddingTop: '5px' }}
 				>
