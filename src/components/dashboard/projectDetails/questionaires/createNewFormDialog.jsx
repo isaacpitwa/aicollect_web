@@ -17,6 +17,7 @@ import { DeleteOutline } from '@mui/icons-material';
 
 export const CreateNewFormDialog = ({ open, handleClose, user }) => {
   const router = useRouter();
+  const { module } = router.query;
   const [metaData, setMetaData] = React.useState({
     name: '',
     createdBy: {
@@ -24,8 +25,11 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
       roles: user.roles,
       userId: user.id
     },
+    clientId: user.roles === "Owner" ? user.id : user.clientId,
+    projectId: router.query.projectId,
     formFields: [],
-    version: 1
+    version: 1,
+    module: module 
   });
   const [checked, setChecked] = React.useState(false);
   const [regionValues, setRegionValues] = React.useState([
@@ -41,14 +45,16 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
     console.log(regionValues)
   };
 
-  const handleChangeRegion = (i, e) => {
-    e.preventDefault();
-    regionValues[i][e.target.name] = e.target.value;
+  const handleChangeRegion = (index, e) => {
+    const values = [...regionValues];
+    values[index][e.target.name] = e.target.value;
+    setRegionValues(values);
   };
 
   const handleRemoveRegionField = (index) => {
-    console.log(index)
-    // setRegionValues((prevState) => ([...prevState].splice(index, 1)));
+    const values = [...regionValues];
+    values.splice(index, 1);
+    setRegionValues(values);
   };
 
   const handleChange = (event) => {
@@ -122,7 +128,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
                     variant="outlined"
                     name="region"
                     value={field.region}
-                    onChange={handleChangeRegion}
+                    onChange={(event) => handleChangeRegion(idx, event)}
                     size="small"
                   />
                 </Grid>
@@ -132,9 +138,9 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
                     margin="dense"
                     label="Prefix"
                     variant="outlined"
-                    name="region"
-                    value={field.region}
-                    onChange={handleChangeRegion}
+                    name="prefix"
+                    value={field.prefix}
+                    onChange={(event) => handleChangeRegion(idx, event)}
                     size="small"
                   />
                 </Grid>
