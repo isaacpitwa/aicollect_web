@@ -71,9 +71,10 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
               <Tab
                 label="Create User"
                 {...a11yProps(0)} />
-              <Tab
+              {/* TODO: UNCOMMENT TO ADD INVITE USER THROUGH EMAIL */}
+              {/* <Tab
                 label="By Invite"
-                {...a11yProps(1)} />
+                {...a11yProps(1)} /> */}
             </Tabs>
           </Box>
           <TabPanel
@@ -82,11 +83,12 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
             >
             <CreateUserForm supervisors={supervisors} handleClose={handleClose} getClientUsers={getClientUsers} />
           </TabPanel>
-          <TabPanel
+          
+          {/* <TabPanel
             value={value}
             index={1}>
             <SendCustomerInvite getClientUsers={getClientUsers} handleClose={handleClose} />
-          </TabPanel>
+          </TabPanel> */}
           
         </Box>
       </DialogContent>

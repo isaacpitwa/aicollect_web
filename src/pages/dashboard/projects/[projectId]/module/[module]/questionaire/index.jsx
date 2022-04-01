@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -15,25 +16,26 @@ import {
   Stack,
   IconButton
 } from '@mui/material';
+import NextLink from 'next/link';
 import { useDropzone } from 'react-dropzone';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 // import XLSX from 'xlsx';
 import toast from 'react-hot-toast';
-import { AuthGuard } from '../../../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
-import { QuestionaireListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
-import { CreateNewFormDialog } from '../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
-import { useMounted } from '../../../../../hooks/use-mounted';
-import { useAuth } from '../../../../../hooks/use-auth';
-import { Search as SearchIcon } from '../../../../../icons/search';
-import { gtm } from '../../../../../lib/gtm';
-import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
-import { convertToJSON } from '../../../../../utils/convert-excel-data-to-json';
+import { AuthGuard } from '../../../../../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../../../../../components/dashboard/dashboard-layout';
+import { QuestionaireListTable } from '../../../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
+import { CreateNewFormDialog } from '../../../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
+import { useMounted } from '../../../../../../../hooks/use-mounted';
+import { useAuth } from '../../../../../../../hooks/use-auth';
+import { Search as SearchIcon } from '../../../../../../../icons/search';
+import { gtm } from '../../../../../../../lib/gtm';
+import ExcelDataImport from '../../../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
+import { convertToJSON } from '../../../../../../../utils/convert-excel-data-to-json';
 
 // API
-import { FormsApi } from '../../../../../api/forms-api';
+import { FormsApi } from '../../../../../../../api/forms-api';
 
 const tabs = [
   {
@@ -140,6 +142,8 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
 const QuestionaireList = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
+  const router = useRouter();
+  const { projectId, module } = router.query;
   const { user } = useAuth();
   const [questionaires, setQuestionaires] = useState([]);
   const [currentTab, setCurrentTab] = useState('all');
@@ -248,14 +252,20 @@ const QuestionaireList = () => {
 
   const getQuestionaires = useCallback(async () => {
     try {
-      const data = await FormsApi.getAllProjectForms();
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        clientId = user.clientId;
+      }
+      const data = await FormsApi.getModuleForms(projectId, clientId, module);
       if (isMounted() && data) {
         setQuestionaires(data);
       }
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  }, [isMounted, setQuestionaires, user, projectId, module]);
 
   useEffect(() => {
       getQuestionaires();
@@ -338,9 +348,10 @@ const QuestionaireList = () => {
           direction="row"
             mb={4}
           >
-            <Grid container spacing={3}>
-              <Grid item md={3} sm={6} xs={12}>
-                <Card>
+            <Grid container spacing={3} >
+              <Grid item md={3} sm={6} xs={12} >
+              <NextLink href={`/dashboard/projects/${projectId}/module/registration/questionaire`} passHref>
+                <Card sx={{ backgroundColor: module === 'registration' ? '#e0dcdc' : null, cursor: "pointer" }}>
                   <Box
                     sx={{
                       alignItems: "center",
@@ -366,9 +377,11 @@ const QuestionaireList = () => {
                     {/* <LineChart /> */}
                   </Box>
                 </Card>
+                </NextLink>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                <Card>
+              <NextLink href={`/dashboard/projects/${projectId}/module/inspection/questionaire`} passHref>
+                <Card sx={{ backgroundColor: module === 'inspection' ? '#e0dcdc' : null, cursor: "pointer" }}>
                   <Box
                     sx={{
                       alignItems: "center",
@@ -394,6 +407,7 @@ const QuestionaireList = () => {
                     {/* <LineChart /> */}
                   </Box>
                 </Card>
+                </NextLink>
               </Grid>
             </Grid>
           </Stack>

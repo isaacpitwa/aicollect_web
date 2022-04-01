@@ -3,7 +3,6 @@ FROM node:lts as dependencies
 RUN ls
 WORKDIR /aicollect-web-app
 ADD .env.example_temp .
-RUN cat .env.example_temp
 COPY package.json package-lock.json ./
 
 
