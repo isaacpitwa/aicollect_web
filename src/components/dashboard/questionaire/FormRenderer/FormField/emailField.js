@@ -59,7 +59,7 @@ const EmailFieldComp = (props) => {
                 className={classes.section}
             >
                 <TextField
-                    error={!error||fieldValue!==''}
+                    error={!error&&fieldValue!==''}
                     fullWidth
                     type={'email'}
                     variant={'outlined'}
@@ -102,13 +102,14 @@ const EmailFieldComp = (props) => {
                     </Typography>
                 : ''}
                 <TextField
-                    error={!error||fieldValue!==''}
+                    required={fieldData.required}
                     fullWidth
                     type={'email'}
                     variant={'outlined'}
                     label={fieldData.label}
                     value={fieldValue}
                     onChange={handlEmail}
+                    error={!error&&fieldValue!==''}
                     helperText={!error&&fieldValue!==''?'Invalid Email Format':<DescriptionCard description={fieldData.description} helperText={true}/>}
                     style={formStyles.textfield}
                     InputProps={{

@@ -14,9 +14,9 @@ import GeneralTooltip from './GeneralTooltip'
 
 const DatefieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired } = props
+    const { fieldLabel, fieldValue, fieldDescription, tooltip, isRequired } = props
     
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState(fieldValue);
 
     return (
         <Grid
@@ -39,7 +39,6 @@ const DatefieldPreview = (props) => {
 					<DesktopDatePicker
 						label={fieldLabel}
 						value={value}
-						minDate={new Date('2017-01-01')}
                         onChange={(newValue) => {
                           setValue(newValue);
                         }}

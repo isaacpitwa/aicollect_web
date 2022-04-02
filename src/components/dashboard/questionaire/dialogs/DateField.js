@@ -46,7 +46,7 @@ const DateField = (props) => {
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
     const [type] = useState(fieldData ? fieldData.type : 'date')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
-    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
+    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : new Date().toLocaleDateString())
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
@@ -352,6 +352,7 @@ const DateField = (props) => {
                     </Grid>
                     <DatefieldPreview
                         fieldLabel={fieldLabel}
+                        fieldValue={fieldValue}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}

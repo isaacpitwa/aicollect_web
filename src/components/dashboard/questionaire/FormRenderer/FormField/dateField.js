@@ -25,7 +25,7 @@ const DatefieldComp = (props) => {
     const { fieldKey, fieldData, fieldResponses } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [dateValue, setDateValue] = useState(fieldData.value?fieldData.value:new Date('2017-01-01'));
+    const [dateValue, setDateValue] = useState(fieldData.value?fieldData.value:new Date().toLocaleDateString());
     const [dateFieldDialog, setDateFieldDialog] = useState(false);
     const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
 

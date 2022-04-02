@@ -20,23 +20,32 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormContext } from '../context'
 import {
     allFormFields,
-    findComponentIndex,
 } from '../utils';
-
+import {
+    FieldError,
+} from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import SubSectionPreview from '../previews/SubSectionPreview'
 
 // This is the field for type=TextField
 const SubSection = (props) => {
 
-    const { sectionId, subSectionId, componentsData, addComponentToSection, updateComponentsData } = useContext(FormContext)
+    const {
+        setError,
+        sectionId,
+        subSectionId,
+        componentsData,
+        addComponentToSection,
+        updateFieldInSection,
+    } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
     const [compsData, setCompsData] = useState([]);
+    const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
-    const [id, setId] = useState(fieldData ? fieldData.id : '')
-    const [type, setType] = useState(fieldData ? fieldData.type : 'sub-section' )
+    const [id] = useState(fieldData ? fieldData.id : '')
+    const [type] = useState(fieldData ? fieldData.type : 'sub-section' )
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
@@ -48,7 +57,7 @@ const SubSection = (props) => {
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
 
     useEffect(() => {
-        setCompsData(componentsData);
+
     }, [componentsData])
 
     const handleLabel = (e) => {
@@ -88,6 +97,18 @@ const SubSection = (props) => {
     const handleCompValue = (e) => {
         setCompValue(e.target.value)
     }
+
+    const conditionalLogic = () => {
+        if(display!==''&&when!==''&&compValue!==''){
+            return {
+                display: display,
+                when: when,
+                value: compValue.toLowerCase()                
+            }
+        } else {
+            return false
+        }
+    }
     
     const addSubSection = () => {
 
@@ -100,22 +121,27 @@ const SubSection = (props) => {
             description: fieldDescription,
             tooltip: tooltip,
             dependency: dependency,
-            conditional: conditional,
+            conditional: conditionalLogic(),
             components: components
         }
 
-        // newSectionObj.components.push(newSubSection)
-
-        // setComponentsData(componentsData => [...section])
-
-        // newSectionObj = sectionObj.components.push(newSubSection)
-        
-        // updateComponentsData(findComponentIndex(sectionObj, componentsData), newSubSection)
-
-        addComponentToSection(newSubSection)
-
-        handleClose()
-
+        if(sectionId&&fieldLabel!=='') {
+            addComponentToSection(newSubSection)
+            setError(false)
+            setErrorTag(false)
+            setFieldLabel('')
+            setFieldDescription('')
+            setTooltip('')
+            setButtonFocused('Display')
+            setDependency(null)
+            setConditional(null)
+            handleClose()
+        } else {
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+        }
     }
 
     const cancel = () => {
@@ -145,7 +171,13 @@ const SubSection = (props) => {
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        style={{ padding: '20px' }}
+                    >
+                        <FieldError errorTag={errorTag}/>
                         <Box
                         sx={{
                             display: 'flex',
@@ -192,7 +224,7 @@ const SubSection = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, id, 'section').map((option, key) => (
+                                        {allFormFields(componentsData, id, 'section').map((option, key) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>

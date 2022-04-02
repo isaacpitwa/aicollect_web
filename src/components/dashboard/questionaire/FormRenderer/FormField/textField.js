@@ -56,7 +56,7 @@ const TextFieldComp = (props) => {
 
 
     return (
-        dependantField&&dependantField.value===fieldData.conditional.value&&!editStatus?
+        dependantField&&dependantField.value===fieldData.conditional.value?
             <Grid
                 key={fieldKey}
                 style={{ display: 'block' }}
@@ -82,7 +82,7 @@ const TextFieldComp = (props) => {
                 container
                 onMouseOver={() => { setDisplay('visible') }}
                 onMouseOut={() => { setDisplay('hidden') }}
-                className={classes.section2}
+                className={editStatus?classes.section:classes.section2}
             >
                 <TextField_
                     open={textFieldDialog}

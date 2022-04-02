@@ -50,7 +50,7 @@ const TextField_ = (props) => {
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [conditional, setConditional] = useState(false)
+    const [conditional, setConditional] = useState(null)
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
@@ -144,7 +144,7 @@ const TextField_ = (props) => {
             setTooltip('')
             setIsRequired(false)
             setButtonFocused('Display')
-            setConditional(false)
+            setConditional(null)
             handleClose()
         } else {
             setError(true)
