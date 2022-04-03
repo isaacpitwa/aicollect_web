@@ -22,7 +22,8 @@ const ImageField = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        editStatus
+        editStatus,
+        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData, fieldResponses } = props;

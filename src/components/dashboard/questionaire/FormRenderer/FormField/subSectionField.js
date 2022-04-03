@@ -30,7 +30,8 @@ const SubSectionField = (props) => {
         fieldResponses,
         editStatus,
         dependantId,
-        dependecyValue
+        dependecyValue,
+        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props
@@ -40,10 +41,6 @@ const SubSectionField = (props) => {
     const [dependency] = useState(fieldData?fieldData.dependency:null);
     const [display, setDisplay] = useState('hidden');
     const [numericFieldValue, setNumericFieldValue] = useState(0);
-
-    useEffect(() => {
-        setFieldStyles(subSectionId===fieldData.id?2:0)
-    }, [setSectionId, subSectionId, fieldResponses, editStatus, dependecyValue])
 
     const handleSubSection = () => {
         setSubSectionDialog(true)
@@ -74,13 +71,21 @@ const SubSectionField = (props) => {
     const classes = formStyles();
     const smallBtn = smallBtns();
 
+    const sectionStyle = () => {
+        if(subSectionId===fieldData.id) {
+            return classes.subSection2
+        } else {
+            return classes.subSection
+        }
+    };
+
     return (
         fieldData.display==='visible'?
             <Grid
                 key={fieldData.id}
                 container
                 onClick={getSectionIDs}
-                className={editStatus?fieldStyles===2?classes.subSection2:classes.subSection:classes.subSection3}
+                className={editStatus?sectionStyle():classes.subSection3}
             >
                 <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography

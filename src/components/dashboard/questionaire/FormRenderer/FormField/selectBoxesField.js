@@ -21,7 +21,8 @@ const SelectBoxesField = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        editStatus
+        editStatus,
+        deleteFieldData
     } = useContext(FormContext);
 
     const { fieldData } = props
@@ -36,6 +37,10 @@ const SelectBoxesField = (props) => {
         setSectionId(fieldData.parentId)
         setSubSectionId(fieldData.subParentId)
         setSelectBoxDialog(true)
+    }
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
     }
 
     const handleClose = () => {
@@ -55,7 +60,10 @@ const SelectBoxesField = (props) => {
                             onClick={handleSelectBoxField}
                             className={smallBtn.editBtn}
                         />
-                        <HighlightOffIcon className={smallBtn.deleteBtn} />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
                     </Typography>
                 </>
             : '' }

@@ -33,7 +33,8 @@ const LocationField = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        editStatus
+        editStatus,
+		deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props;
@@ -172,9 +173,7 @@ const LocationField = (props) => {
                             className={smallBtn.editBtn}
                         />
                         <HighlightOffIcon
-                            onClick={() => {
-                                deleteFieldData(fieldData)
-                            }}
+                            onClick={deleteField}
                             className={smallBtn.deleteBtn}
                         />
                     </Typography>

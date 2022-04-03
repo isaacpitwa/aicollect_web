@@ -26,7 +26,8 @@ const RadioField = (props) => {
         setFieldResponses,
         setSectionId,
         setSubSectionId,
-        editStatus
+        editStatus,
+        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props
@@ -60,6 +61,10 @@ const RadioField = (props) => {
         )
     }
 
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
+
     const handleClose = () => {
         setSelectRadioDialog(false)
     }
@@ -77,7 +82,10 @@ const RadioField = (props) => {
                             onClick={handleSelectRadioField}
                             className={smallBtn.editBtn}
                         />
-                        <HighlightOffIcon className={smallBtn.deleteBtn} />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
                     </Typography>
                 </>
         : '' }

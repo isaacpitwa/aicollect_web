@@ -150,9 +150,10 @@ const FormProvider = (props) => {
 
         let newFormFields = componentsData;
 
+        let section = newFormFields.find(section => section.id === fieldData.parentId);
+        let sectionIndex = newFormFields.findIndex(section => section.id === fieldData.parentId);
+
         try {
-            let section = newFormFields.find(section => section.id === fieldData.parentId);
-            let sectionIndex = newFormFields.findIndex(section => section.id === fieldData.parentId);
             if(fieldData.subParentId) {
                 let subSection = section.components.find(subSection => subSection.id === fieldData.subParentId);
                 let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.subParentId);
@@ -167,8 +168,7 @@ const FormProvider = (props) => {
         }
 
         setComponentsData(newFormFields)
-        addDependency(fieldData)
-        updateFormData() 
+        updateFormData()
 
     }
 

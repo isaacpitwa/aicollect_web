@@ -28,7 +28,8 @@ const NumberFieldComp = (props) => {
         setFieldResponses,
         editStatus,
         setDependantId,
-        setDependecyValue
+        setDependecyValue,
+        deleteFieldData
     } = useContext(FormContext);
 
     const { fieldData, fieldUpdated } = props;
@@ -53,6 +54,9 @@ const NumberFieldComp = (props) => {
         }
     }
 
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
 
     const handleClose = () => {
         setNumberFieldDialog(false)
@@ -70,7 +74,10 @@ const NumberFieldComp = (props) => {
                         onClick={handleNumberField}
                         className={smallBtn.editBtn}
                     />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                    <HighlightOffIcon
+                        onClick={deleteField}
+                        className={smallBtn.deleteBtn}
+                    />
                 </Typography>
             : '' }
             <TextField

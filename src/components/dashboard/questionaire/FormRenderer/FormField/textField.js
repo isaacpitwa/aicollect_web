@@ -16,7 +16,11 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
 
 const TextFieldComp = (props) => {
 
-    const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);
+    const {
+        setFieldResponses,
+        editStatus,
+        deleteFieldData,
+    } = useContext(FormContext);
 
     const { fieldKey, fieldData, fieldResponses } = props;
 
@@ -43,12 +47,12 @@ const TextFieldComp = (props) => {
         setTextFieldDialog(false)
     }
 
-    const handleClose = () => {
-        setTextFieldDialog(false)
-    }
-
     const deleteField = () => {
         deleteFieldData(fieldData)
+    }
+
+    const handleClose = () => {
+        setTextFieldDialog(false)
     }
 
     const classes = formStyles();

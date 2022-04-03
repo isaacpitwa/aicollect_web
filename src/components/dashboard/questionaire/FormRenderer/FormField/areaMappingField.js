@@ -16,12 +16,23 @@ import { FormContext } from '../../context'
 import AreaMappingImg from '../../../../../../public/static/form/area-mapping.jpg';
 
 const AreaMappingField = (props) => {
-    
-    const { editStatus } = useContext(FormContext);
+
+    const {
+        setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        editStatus,
+		deleteFieldData,
+    } = useContext(FormContext);
 
     const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
+
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    };
 
     const classes = formStyles();
     const smallBtn = smallBtns();
@@ -31,7 +42,10 @@ const AreaMappingField = (props) => {
             {editStatus?
                 <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
                     <EditIcon className={smallBtn.editBtn} />
-                    <HighlightOffIcon className={smallBtn.deleteBtn} />
+                    <HighlightOffIcon
+                        onClick={deleteField}
+                        className={smallBtn.deleteBtn}
+                    />
                 </Typography>
             : '' }
             <Grid
