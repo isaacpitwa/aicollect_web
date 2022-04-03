@@ -71,7 +71,6 @@ const DatefieldComp = (props) => {
 					<DesktopDatePicker
 						label={fieldData.label}
 						value={dateValue}
-						minDate={new Date('2017-01-01')}
 						onChange={(newValue) => {
 							setDateValue(newValue);
 						}}
@@ -108,7 +107,7 @@ const DatefieldComp = (props) => {
 					<DesktopDatePicker
 						label={fieldData.label}
 						value={dateValue}
-						minDate={new Date('2017-01-01')}
+                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
 						onChange={(newValue) => {
 							setDateValue(newValue);
 						}}

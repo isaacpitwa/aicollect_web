@@ -150,11 +150,9 @@ const FormProvider = (props) => {
 
         let newFormFields = componentsData;
 
-        if(fieldData.type==='section') {
-            newFormFields.filter(field => field.id !== fieldData.id)
-        } else {
-            let section = componentsData.find(section => section.id === fieldData.parentId);
-            let sectionIndex = componentsData.findIndex(section => section.id === fieldData.parentId);
+        try {
+            let section = newFormFields.find(section => section.id === fieldData.parentId);
+            let sectionIndex = newFormFields.findIndex(section => section.id === fieldData.parentId);
             if(fieldData.subParentId) {
                 let subSection = section.components.find(subSection => subSection.id === fieldData.subParentId);
                 let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.subParentId);
@@ -164,6 +162,8 @@ const FormProvider = (props) => {
                 section.components = section.components.filter(field => field.id !== fieldData.id);
             }
             newFormFields[sectionIndex] = section
+        } catch (error) {
+            console.log('DEBUG ERROR: ', error)
         }
 
         setComponentsData(newFormFields)

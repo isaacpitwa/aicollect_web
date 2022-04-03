@@ -22,6 +22,8 @@ const RadioField = (props) => {
     const {
         setError,
         setSelectSection,
+        fieldResponses,
+        setFieldResponses,
         setSectionId,
         setSubSectionId,
         editStatus
@@ -42,6 +44,7 @@ const RadioField = (props) => {
         let newFieldResponses = fieldResponses
         newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
         setFieldResponses(newFieldResponses)
+        console.log('FIELD VALUES: ', newFieldResponses)
     }
 
     const RadioOption = (valueSelected) => {
