@@ -27,6 +27,10 @@ const RadioField = (props) => {
         setSectionId,
         setSubSectionId,
         editStatus,
+        setConditionalId,
+        setConditionalValue,
+        formFieldValues,
+        setFormFieldValues,
         deleteFieldData,
     } = useContext(FormContext);
 
@@ -42,10 +46,17 @@ const RadioField = (props) => {
 
     const handleRadio = (e) => {
         setRadioValue(e.target.value)
-        let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
-        setFieldResponses(newFieldResponses)
-        console.log('FIELD VALUES: ', newFieldResponses)
+        // let allFields = formFieldValues
+        // if(allFields.find(field => field.id===fieldData.id)) {
+        //     let fieldIndex = allFields.findIndex(field => field.id===fieldData.id)
+        //     allFields[fieldIndex] = { id: fieldData.id, value: e.target.value }
+        // } else {
+        //     allFields.push({ id: fieldData.id, value: e.target.value })
+        // }
+        // setFormFieldValues(allFields)
+
+        setConditionalId(fieldData.id)
+        setConditionalValue(e.target.value)
     }
 
     const RadioOption = (valueSelected) => {

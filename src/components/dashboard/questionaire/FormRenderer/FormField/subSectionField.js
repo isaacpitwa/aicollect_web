@@ -31,6 +31,10 @@ const SubSectionField = (props) => {
         editStatus,
         dependantId,
         dependecyValue,
+        conditionalId,
+        conditionalValue,
+        formFieldValues,
+        setFormFieldValues,
         deleteFieldData,
     } = useContext(FormContext);
 
@@ -39,8 +43,13 @@ const SubSectionField = (props) => {
     const [fieldStyles, setFieldStyles] = useState(0)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
     const [dependency] = useState(fieldData?fieldData.dependency:null);
+    const [conditional, setConditional] = useState(false);
     const [display, setDisplay] = useState('hidden');
     const [numericFieldValue, setNumericFieldValue] = useState(0);
+
+    useEffect(()=>{
+        setConditional()
+    }, [setFormFieldValues])
 
     const handleSubSection = () => {
         setSubSectionDialog(true)
@@ -60,7 +69,21 @@ const SubSectionField = (props) => {
         }
     }
 
+    const getConditionalValue = (dependeeData) => {
+        let dependee = "";
+        try {
+            if(fieldData.conditional) {
+                dependee = dependeeData.find(field => field.id===fieldData.conditional.when&&field.value===fieldData.conditional.value)
+                return dependee?true:false
+            }
+        } catch (error) {
+            return false
+        }
+    }
+
     const deleteField = () => {
+        setSectionId(null)
+        setSubSectionId(null)
         deleteFieldData(fieldData)
     }    
 
@@ -126,7 +149,7 @@ const SubSectionField = (props) => {
                 key={fieldData.id}
                 container
                 onClick={getSectionIDs}
-                className={editStatus?fieldStyles===2?classes.subSection2:classes.subSection:classes.subSection3}
+                className={editStatus?sectionStyle():classes.subSection3}
             >
                 <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
                 <Typography
@@ -167,7 +190,7 @@ const SubSectionField = (props) => {
                 <Grid
                     key={index}
                     container
-                    className={classes.subSection2}
+                    className={classes.subSection3}
                 >
                     <Typography
                         className={classes.subSectionLabel}
@@ -201,6 +224,44 @@ const SubSectionField = (props) => {
                     </Grid>
                 </Grid>
             ))
+        : fieldData.conditional&&fieldData.conditional.when===conditionalId&&fieldData.conditional.value===conditionalValue&&!editStatus?
+            <Grid
+                container
+                className={classes.subSection3}
+            >
+                <Typography
+                    onMouseOver={() => { setDisplay('visible'); } }
+                    onMouseOut={() => { setDisplay('hidden'); } }
+                    className={classes.subSectionLabel}
+                    variant='h5'
+                >
+                    {fieldData.label}{fieldData.tooltip !== '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                    {editStatus?
+                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
+                            <EditIcon
+                                onClick={handleSubSection}
+                                className={smallBtn.editBtn}
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                            />
+                        </small>
+                    :
+                        ""
+                    }
+                </Typography>
+                <DescriptionCard description={fieldData.description} helperText={true} />
+                <Grid
+                    item
+                    sm={12}
+                    style={{ padding: '10px' }}
+                >
+                    {fieldData.components.map((componentData, index) => (
+                        <FormField key={index} fieldKey={index} fieldData={componentData} />
+                    ))}
+                </Grid>
+            </Grid>
         : ""
     )
 }

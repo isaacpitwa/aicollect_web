@@ -93,31 +93,33 @@ const TextFieldComp = (props) => {
                     fieldData={fieldData}
                     handleClose={handleClose}
                 />
-                <Typography
-                    style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'}
-                >
-                    <EditIcon
-                        onClick={handleTextField}
-                        className={smallBtn.editBtn}
+                {editStatus?
+                    <Typography
+                        style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'}
+                    >
+                        <EditIcon
+                            onClick={handleTextField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                    : ""}
+                    <TextField
+                        required={fieldData.required}
+                        fullWidth
+                        type={'text'}
+                        variant={'outlined'}
+                        label={fieldData.label}
+                        value={value}
+                        onChange={handleFieldValue}
+                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                        InputProps={{
+                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                        }}
                     />
-                    <HighlightOffIcon
-                        onClick={deleteField}
-                        className={smallBtn.deleteBtn}
-                    />
-                </Typography>
-                <TextField
-                    required={fieldData.required}
-                    fullWidth
-                    type={'text'}
-                    variant={'outlined'}
-                    label={fieldData.label}
-                    value={value}
-                    onChange={handleFieldValue}
-                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                    InputProps={{
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                    }}
-                />
             </Grid>
     )
 }

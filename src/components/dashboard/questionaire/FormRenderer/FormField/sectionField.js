@@ -109,36 +109,36 @@ const SectionField = (props) => {
                         <FormField key={index} fieldKey={index} fieldData={componentData}  fieldResponses={fieldResponses}/>
                     ))}
                 </Grid>
-                : ''
+                : ""
             :
-            <Grid key={fieldData.id} container className={editStatus?sectionStyle():classes.section2}>
-                <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
-                <Typography
-                    onClick={getSectionId}
-                    onMouseOver={() => { setDisplay('visible') }}
-                    onMouseOut={() => { setDisplay('hidden') }}
-                    className={classes.sectionLabel}
-                    variant='h5'
-                >
-                    {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                    {editStatus ?
-                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                            <EditIcon
-                                onClick={handleSectionField}
-                                className={smallBtn.editBtn}
-                            />
-                            <HighlightOffIcon
-                                onClick={deleteField}
-                                className={smallBtn.deleteBtn}
-                            />
-                        </small>
-                        : ''}
-                </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
-                {fieldData.components.map((comp, index) => (
-                    <FormField key={index} fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
-                ))}
-            </Grid>
+                <Grid key={fieldData.id} container className={editStatus?sectionStyle():classes.section2}>
+                    <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
+                    <Typography
+                        onClick={getSectionId}
+                        onMouseOver={() => { setDisplay('visible') }}
+                        onMouseOut={() => { setDisplay('hidden') }}
+                        className={classes.sectionLabel}
+                        variant='h5'
+                    >
+                        {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                        {editStatus ?
+                            <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
+                                <EditIcon
+                                    onClick={handleSectionField}
+                                    className={smallBtn.editBtn}
+                                />
+                                <HighlightOffIcon
+                                    onClick={deleteField}
+                                    className={smallBtn.deleteBtn}
+                                />
+                            </small>
+                            : ''}
+                    </Typography>
+                    <DescriptionCard description={fieldData.description} helperText={true} />
+                    {fieldData.components.map((comp, index) => (
+                        <FormField key={index} fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
+                    ))}
+                </Grid>
     )
 }
 

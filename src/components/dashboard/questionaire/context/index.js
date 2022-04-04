@@ -24,6 +24,9 @@ const FormProvider = (props) => {
     const [editStatus, setEditStatus] = useState(true);
     const [dependantId, setDependantId] = useState("");
     const [dependecyValue, setDependecyValue] = useState("");
+    const [conditionalId, setConditionalId] = useState("");
+    const [conditionalValue, setConditionalValue] = useState("");
+    const [formFieldValues, setFormFieldValues] = useState([]);
 
 
     const getFormData = async () => {
@@ -162,7 +165,9 @@ const FormProvider = (props) => {
             } else {
                 section.components = section.components.filter(field => field.id !== fieldData.id);
             }
-            newFormFields[sectionIndex] = section
+
+            newFormFields[sectionIndex] = section;
+
         } catch (error) {
             console.log('DEBUG ERROR: ', error)
         }
@@ -214,6 +219,12 @@ const FormProvider = (props) => {
                 setDependantId,
                 dependecyValue,
                 setDependecyValue,
+                conditionalId,
+                setConditionalId,
+                conditionalValue,
+                setConditionalValue,
+                formFieldValues,
+                setFormFieldValues,
                 deleteFieldData
             }}
         >

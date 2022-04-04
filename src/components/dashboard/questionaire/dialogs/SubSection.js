@@ -52,7 +52,7 @@ const SubSection = (props) => {
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [dependency, setDependency] = useState(null)
     const [conditional, setConditional] = useState(null)
-    const [components] = useState(fieldData ? fieldData.components : [])
+    const [components, setComponents] = useState(fieldData ? fieldData.components : [])
     const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : 'visible')
     const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
@@ -107,7 +107,7 @@ const SubSection = (props) => {
                 value: compValue.toLowerCase()                
             }
         } else {
-            return false
+            return null
         }
     }
     
@@ -116,7 +116,7 @@ const SubSection = (props) => {
         const newSubSection = {
             id: uuidv4(),
             parentId: sectionId,
-            display: display,
+            display: conditionalLogic()?'hidden':display,
             type: type,
             label: fieldLabel,
             description: fieldDescription,
@@ -136,6 +136,7 @@ const SubSection = (props) => {
             setButtonFocused('Display')
             setDependency(null)
             setConditional(null)
+            setComponents([])
             handleClose()
         } else {
             setError(true)
@@ -225,7 +226,7 @@ const SubSection = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'section').map((option, key) => (
+                                        {allFormFields(componentsData, id, 'section').map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
