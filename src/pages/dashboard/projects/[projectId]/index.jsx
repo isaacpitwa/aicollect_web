@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import NextLink from 'next/link';
 import Head from "next/head";
 import { useRouter } from 'next/router';
 import {
@@ -19,13 +18,15 @@ import toast from "react-hot-toast";
 import { AuthGuard } from "../../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../../components/dashboard/dashboard-layout";
 import { ProjectTeamMembersTable } from "../../../../components/dashboard/projectDetails/project-team-members-list-table";
-import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
+import { AddTaskRounded } from '@mui/icons-material';
 import { Trash as TrashIcon } from "../../../../icons/trash";
 import { Search as SearchIcon } from "../../../../icons/search";
 import { UserAdd as UserAddIcon } from "../../../../icons/user-add";
 import { gtm } from "../../../../lib/gtm";
 import AddTeamMember from "../../../../components/dashboard/projectDetails/project-addteam-member";
-// import ProjectTaskManager from "../../../../components/dashboard/projectDetails/project-task-manager";
+import { sectorApi } from '../../../../api/sectors-api';
+import { useAuth } from '../../../../hooks/use-auth';
+import { ModuleCard } from "../../../../components/dashboard/projectDetails/module-card";
 
 const sortOptions = [
   {
@@ -115,17 +116,18 @@ const applySort = (customers, sort) => {
   return stabilizedThis.map((el) => el[0]);
 };
 
-const applyPagination = (customers, page, rowsPerPage) =>
-  customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+const applyPagination = (projects, page, rowsPerPage) =>
+  projects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const ProjectDetails = () => {
   const queryRef = useRef(null);
+  const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
-  // const [openTaskDialog, setOpenTaskDialog] = useState(false);
+  const [modules, setModules] = useState([]);
   const router = useRouter();
   const { projectId } = router.query;
 
@@ -142,12 +144,6 @@ const ProjectDetails = () => {
   const handleCloseProjectDialog = () => {
     setOpenProjectDialog(false);
   };
-  // const handleOpenTaskDialog = () => {
-  //   setOpenTaskDialog(true);
-  // };
-  // const handleCloseTaskDialog = () => {
-  //   setOpenTaskDialog(false);
-  // };
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
@@ -193,11 +189,31 @@ const ProjectDetails = () => {
         toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
       }
     }
-  }, []);
+  }, [setProject, projectId]);
+
+  const getSectorModules = useCallback(async () => {
+    try {
+      // TODO: Find sectorID
+      const { Profile: { sector } } = user;
+      console.log('sector', sector);
+      const data = await sectorApi.getSectorModules(sector);
+      if (data) {
+        console.log(data);
+        setModules(data);
+      }
+    } catch (error) {
+      toast.error('Could not load modules', { duration: 6000 });
+      console.log(error);
+    }
+  }, [setModules, user]);
 
   useEffect(() => {
     getProjects();
   }, [])
+
+  useEffect(() => {
+    getSectorModules();
+  }, []);
 
   return (
     <>
@@ -236,67 +252,15 @@ const ProjectDetails = () => {
           </Box>
 
           <Stack direction="row" mb={4}>
-            <Grid container spacing={3}>
-              <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
-                <NextLink href={`/dashboard/projects/${projectId}/module/registration/questionaire`} passHref>
-                  <Card elevation={8}>
-                    <Box
-                      sx={{
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "start",
-                        px: 3,
-                        py: 2
-                      }}
-                    >
-                      <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }}>
-                        <GroupAddRounded />
-                      </IconButton>
-                      <div>
-                        <Typography variant="body2">0</Typography>
-                        <Typography
-                          sx={{ mt: 1 }}
-                          color="textSecondary"
-                          variant="h8"
-                        >
-                          Registration
-                        </Typography>
-                      </div>
-                      {/* <LineChart /> */}
-                    </Box>
-                  </Card>
-                </NextLink>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
-                <NextLink href={`/dashboard/projects/${projectId}/module/inspection/questionaire`} passHref>
-                  <Card elevation={8}>
-                    <Box
-                      sx={{
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "start",
-                        px: 3,
-                        py: 2,
-                      }}
-                    >
-                      <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
-                        <FactCheck />
-                      </IconButton>
-                      <div>
-                        <Typography variant="body2">0</Typography>
-                        <Typography
-                          sx={{ mt: 1 }}
-                          color="textSecondary"
-                          variant="h8"
-                        >
-                          Inspection
-                        </Typography>
-                      </div>
-                      {/* <LineChart /> */}
-                    </Box>
-                  </Card>
-                </NextLink>
-              </Grid>
+            <Grid container flex flexDirection="row" spacing={3}>
+
+              {
+                modules.map((module) => (
+                  <ModuleCard projectId={projectId} module={module} key={module.id} />
+
+                ))
+              }
+
             </Grid>
           </Stack>
           <Card>
@@ -346,7 +310,7 @@ const ProjectDetails = () => {
                 }}>
                 Task Manager
               </Button>
-              
+
             </Box>
             <ProjectTeamMembersTable
               projectMembers={paginatedTeamMembers}
