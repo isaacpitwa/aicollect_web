@@ -131,8 +131,8 @@ const Section = (props) => {
     }
 
     const cancel = () => {
-        setsectionLabel('')
-        setSectionDescription('')
+        setFieldLabel('')
+        setFieldDescription('')
         setTooltip('')
         handleClose()
     }

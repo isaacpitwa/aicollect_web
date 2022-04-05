@@ -145,6 +145,24 @@ const SubSection = (props) => {
             }
         }
     }
+    
+    const updateSubSection = () => {
+        const updatedField = {
+            id: fieldData.id,
+            parentId: fieldData.parentId,
+            display: conditionalLogic()?'hidden':display,
+            type: fieldData.type,
+            label: fieldLabel,
+            description: fieldDescription,
+            tooltip: tooltip,
+            dependency: dependency,
+            conditional: conditionalLogic(),
+            components: components,
+        }
+
+        updateFieldInSection(updatedField)
+        handleClose()
+    }
 
     const cancel = () => {
         setFieldLabel('')
@@ -293,8 +311,19 @@ const SubSection = (props) => {
             </DialogContent>
             <DialogActions>
                 <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={addSubSection} variant="outlined" size='small' color="primary">Add Sub Section</Button>
+                    <Button
+                        onClick={cancel}
+                        variant="outlined"
+                        size='small'
+                        style={{ margin: '0px 20px' }}
+                        color="error"
+                    >Cancel</Button>
+                    <Button
+                        onClick={fieldData?updateSubSection:addSubSection}
+                        variant="outlined"
+                        size='small'
+                        color="success"
+                    >{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
