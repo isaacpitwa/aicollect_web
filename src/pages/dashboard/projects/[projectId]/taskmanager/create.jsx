@@ -34,6 +34,7 @@ import {
 import { useDropzone } from 'react-dropzone';;
 import toast from 'react-hot-toast';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { useMounted } from '../../../../../hooks/use-mounted';
@@ -436,7 +437,12 @@ const CreateTask = () => {
                                         {selected.map((value, idx) => (
                                           <Chip
                                             key={idx}
-                                            label={value.name} />
+                                            label={value.name}
+                                            // onMouseDown
+                                            onDelete={() => {
+                                              selected.splice(idx, 1);
+                                            }}
+                                           />
                                         ))}
                                       </Box>
                                     )}

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
 import PropTypes from 'prop-types';
 import {
@@ -15,17 +15,34 @@ import {
 import { getContacts } from '../../slices/chat';
 import { useDispatch, useSelector } from '../../store';
 import { StatusIndicator } from '../status-indicator';
+import { userApi } from '../../api/users-api';
 
 export const ContactsPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const dispatch = useDispatch();
-  const { contacts } = useSelector((state) => state.chat);
+  const [contacts, setContacts] = useState([]);
+  // const { contacts } = useSelector((state) => state.chat);
+
+  const getTeam = useCallback(async () => {
+    try {
+      const data = await userApi.getUsers();
+      if (data) {
+        setContacts(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setContacts]);
 
   useEffect(() => {
       dispatch(getContacts());
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
+
+  useEffect(() => {
+    getTeam();
+  }, []);
 
   return (
     <Popover
@@ -45,12 +62,12 @@ export const ContactsPopover = (props) => {
       transitionDuration={0}
       {...other}>
       <Typography variant="h6">
-        Contacts
+        Team
       </Typography>
       <Box sx={{ mt: 2 }}>
         <List disablePadding>
-          {contacts.allIds.map((contactId) => {
-            const contact = contacts.byId[contactId];
+          {contacts.map((contact) => {
+            // const contact = contacts.byId[contact];
 
             return (
               <ListItem
@@ -59,7 +76,7 @@ export const ContactsPopover = (props) => {
               >
                 <ListItemAvatar>
                   <Avatar
-                    src={contact.avatar}
+                    src={contact.Profile?.profileImage || 'N/A'}
                     sx={{ cursor: 'pointer' }}
                   />
                 </ListItemAvatar>
@@ -73,7 +90,7 @@ export const ContactsPopover = (props) => {
                       underline="none"
                       variant="subtitle2"
                     >
-                      {contact.name}
+                      {`${contact.firstname} ${contact.lastname}`}
                     </Link>
                   )}
                 />
@@ -90,7 +107,7 @@ export const ContactsPopover = (props) => {
                       noWrap
                       variant="caption"
                     >
-                      {formatDistanceToNowStrict(contact.lastActivity)}
+                      1 hr
                       {' '}
                       ago
                     </Typography>

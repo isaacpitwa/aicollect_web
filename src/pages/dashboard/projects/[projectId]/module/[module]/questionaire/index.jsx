@@ -522,7 +522,7 @@ const QuestionaireList = () => {
             </Box>
             <QuestionaireListTable
               questionaires={paginatedCustomers}
-              questionairessCount={filteredCustomers.length}
+              questionairesCount={filteredCustomers.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
