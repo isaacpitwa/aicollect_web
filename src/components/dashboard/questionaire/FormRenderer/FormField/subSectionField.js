@@ -47,10 +47,6 @@ const SubSectionField = (props) => {
     const [display, setDisplay] = useState('hidden');
     const [numericFieldValue, setNumericFieldValue] = useState(0);
 
-    useEffect(()=>{
-        setConditional()
-    }, [setFormFieldValues])
-
     const handleSubSection = () => {
         setSubSectionDialog(true)
     }
@@ -110,14 +106,18 @@ const SubSectionField = (props) => {
                 onClick={getSectionIDs}
                 className={editStatus?sectionStyle():classes.subSection3}
             >
-                <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
+                <SubSection
+                    open={subSectionDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }
                     onMouseOut={() => { setDisplay('hidden'); } }
                     className={classes.subSectionLabel}
                     variant='h5'
                 >
-                    {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                    {fieldData.label}{fieldData.tooltip!==''? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
                     {editStatus?
                         <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
                         <EditIcon
@@ -140,18 +140,21 @@ const SubSectionField = (props) => {
                     style={{ padding: '10px' }}
                 >
                     {fieldData.components.map((componentData, index) => (
-                        <FormField key={index} fieldKey={index} fieldData={componentData} />
+                        <FormField key={index} fieldData={componentData} />
                     ))}
                 </Grid>
             </Grid>
         : fieldData.display==='hidden'&&editStatus?
             <Grid
-                key={fieldData.id}
                 container
                 onClick={getSectionIDs}
                 className={editStatus?sectionStyle():classes.subSection3}
             >
-                <SubSection open={subSectionDialog} fieldData={fieldData} handleClose={handleClose} />
+                <SubSection
+                    open={subSectionDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }
                     onMouseOut={() => { setDisplay('hidden'); } }

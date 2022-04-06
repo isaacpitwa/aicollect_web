@@ -24,7 +24,6 @@ import {
 import {
     FieldError,
 } from '../utils/ErrorCards';
-import GeneralTooltip from '../previews/GeneralTooltip';
 import SubSectionPreview from '../previews/SubSectionPreview'
 
 // This is the field for type=TextField
@@ -47,19 +46,15 @@ const SubSection = (props) => {
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : '')
     const [type] = useState(fieldData ? fieldData.type : 'sub-section' )
+    const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : 'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [dependency, setDependency] = useState(null)
     const [conditional, setConditional] = useState(null)
     const [components, setComponents] = useState(fieldData ? fieldData.components : [])
-    const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : 'visible')
     const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
-
-    useEffect(() => {
-
-    }, [componentsData])
 
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
@@ -100,9 +95,8 @@ const SubSection = (props) => {
     }
 
     const conditionalLogic = () => {
-        if(display!==''&&when!==''&&compValue!==''){
+        if(when!==''&&compValue!==''){
             return {
-                display: display,
                 when: when,
                 value: compValue.toLowerCase()                
             }
@@ -219,20 +213,6 @@ const SubSection = (props) => {
                         >
                             {conditional ?
                                 <>
-                                    <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                                        This component should Display:
-                                    </Typography>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={display}
-                                        fullWidth
-                                        size={'small'}
-                                        onChange={handleDiplayValue}
-                                    >
-                                        <MenuItem value={true}>True</MenuItem>
-                                        <MenuItem value={false}>False</MenuItem>
-                                    </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:
                                     </Typography>
@@ -306,11 +286,21 @@ const SubSection = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SubSectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip}/>
+                    <SubSectionPreview
+                        sectionLabel={fieldLabel}
+                        sectionDescription={fieldDescription}
+                        tooltip={tooltip}
+                    />
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
+                <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    style={{ padding: '30px' }}
+                    align='right'
+                >
                     <Button
                         onClick={cancel}
                         variant="outlined"
@@ -323,7 +313,7 @@ const SubSection = (props) => {
                         variant="outlined"
                         size='small'
                         color="success"
-                    >{fieldData?"Save Changes":"Add Field"}</Button>
+                    >{fieldData?"Save Changes":"Add Sub-Section"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

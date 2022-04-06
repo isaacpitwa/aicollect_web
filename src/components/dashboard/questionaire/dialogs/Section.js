@@ -20,36 +20,41 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormContext } from '../context'
 import {
     allFormFields,
-    findComponentIndex,
 } from '../utils';
-import GeneralTooltip from '../previews/GeneralTooltip';
+import {
+    FieldError,
+} from '../utils/ErrorCards';
 import SectionPreview from '../previews/SectionPreview'
 
 // This is the field for type=TextField
 const Section = (props) => {
 
-    const { setIsLoaded, componentsData, setComponentsData, setSectionCreated, updateSection, updateFormData } = useContext(FormContext)
+    const {
+        setError,
+        componentsData,
+        setComponentsData,
+        setSectionCreated,
+        updateSection,
+        updateFormData
+    } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
     const [compsData, setCompsData] = useState([]);
+    const [errorTag, setErrorTag] = useState(false)
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : '')
     const [type] = useState(fieldData ? fieldData.type : 'section')
-    const [value, setValue] = useState(fieldData ? fieldData.value : '')
+    const [display, setDisplay] = useState(fieldData&&fieldData.conditional?'hidden':'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [dependency, setDependency] = useState(false)
-    const [conditional, setConditional] = useState(false)
+    const [dependency, setDependency] = useState(null)
+    const [conditional, setConditional] = useState(null)
     const [components, setComponents] = useState(fieldData ? fieldData.components : [])
-    const [display, setDisplay] = useState(fieldData && fieldData.conditional ? fieldData.conditional.display : '')
     const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
     const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
-
-    useEffect(() => {
-    }, [componentsData])
-
+    
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
     }
@@ -72,10 +77,6 @@ const Section = (props) => {
         setConditional(true)
     }
 
-    const handleDiplayValue = (e) => {
-        setDisplay(e.target.value)
-    }
-
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -84,45 +85,66 @@ const Section = (props) => {
         setCompValue(e.target.value)
     }
 
+    const conditionalLogic = () => {
+        if(when!==''&&compValue!==''){
+            return {
+                when: when,
+                value: compValue.toLowerCase()                
+            }
+        } else {
+            return null
+        }
+    }
+
+    const removeConditional = () => {
+        setWhen("")
+        setCompValue("")
+    }
+
     const addSection = () => {
 
         const sectionData = {
             id: uuidv4(),
             type: 'section',
-            display: 'visible',
+            display: conditionalLogic()?'hidden':display,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
             dependency: dependency,
-            conditional: conditional,
+            conditional: conditionalLogic(),
             components: components
         }
         
-        let formFields = componentsData
-        formFields.push(sectionData)
-        setComponentsData(formFields)
-        setSectionCreated(true)
-        setFieldLabel('')
-        setFieldDescription('')
-        setTooltip('')
-        setDependency(false)
-        setConditional(false)
-        setComponents([])
-        handleClose()
-
+        if(fieldLabel!=='') {
+            let formFields = componentsData
+            formFields.push(sectionData)
+            setComponentsData(formFields)
+            setSectionCreated(true)
+            setFieldLabel('')
+            setFieldDescription('')
+            setTooltip('')
+            setDependency(false)
+            setConditional(false)
+            setComponents([])
+            handleClose()
+        } else {
+            setError(true)
+            if(fieldLabel===''){
+                setErrorTag('Label')
+            }
+        }
     }
 
-    const handleUpdate = () => {
+    const UpdateSection = () => {
         let sectionData = {
             id: id,
             type: type,
-            display: 'visible',
-            type: 'section',
+            display: conditionalLogic()?'hidden':display,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
             dependency: dependency,
-            conditional: conditional,
+            conditional: conditionalLogic(),
             components: components
         }
 
@@ -152,11 +174,21 @@ const Section = (props) => {
                 }}
             >
                 Section Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose} />
+                <CancelIcon
+                    color='error'
+                    style={{ float: 'right', cursor: 'pointer' }}
+                    onClick={handleClose}
+                />
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '30px 20px' }}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        style={{ padding: '30px 20px' }}
+                    >
+                        <FieldError fieldType={"section"} errorTag={errorTag}/>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -167,9 +199,21 @@ const Section = (props) => {
                                 },
                             }}
                         >
-                            <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                                <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                                <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional} style={{ borderRadius: '0px 8px 0px 0px' }}>Conditional</Button>
+                            <ButtonGroup
+                                variant="outlined"
+                                size='small'
+                                aria-label="outlined button group"
+                            >
+                                <Button
+                                    variant={buttonFocused == "display" ? "contained" : "outlined"}
+                                    onClick={handleDisplay}
+                                    style={{ borderRadius: '8px 0px 0px 0px' }}
+                                >Display</Button>
+                                <Button
+                                    variant={buttonFocused == "conditional" ? "contained" : "outlined"}
+                                    onClick={handleConditional}
+                                    style={{ borderRadius: '0px 8px 0px 0px' }}
+                                >Conditional</Button>
                             </ButtonGroup>
                         </Box>
                         <Box
@@ -178,20 +222,6 @@ const Section = (props) => {
                         >
                             {conditional ?
                                 <>
-                                    <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                                        This component should Display:
-                                    </Typography>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={display}
-                                        fullWidth
-                                        size={'small'}
-                                        onChange={handleDiplayValue}
-                                    >
-                                        <MenuItem value={true}>True</MenuItem>
-                                        <MenuItem value={false}>False</MenuItem>
-                                    </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:
                                     </Typography>
@@ -203,7 +233,7 @@ const Section = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(compsData, id, 'section').map((option, index) => (
+                                        {allFormFields(componentsData, id, 'section').map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -221,6 +251,20 @@ const Section = (props) => {
                                         value={compValue}
                                         onChange={handleCompValue}
                                     />
+                                     <Typography
+                                        style={{ paddingTop: '10px' }}
+                                     >
+                                        <Button
+                                            disabled={when||compValue?false:true}
+                                            variant='outlined'
+                                            size='small'
+                                            color='error'
+                                            onClick={removeConditional}
+                                        >
+                                            Remove Conditional
+                                        </Button>
+
+                                     </Typography>
                                 </>
                                 :
                                 <>
@@ -265,13 +309,34 @@ const Section = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SectionPreview sectionLabel={fieldLabel} sectionDescription={fieldDescription} tooltip={tooltip}/>
+                    <SectionPreview
+                        sectionLabel={fieldLabel}
+                        sectionDescription={fieldDescription}
+                        tooltip={tooltip}
+                    />
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={fieldData?handleUpdate:addSection} variant="outlined" size='small' color="success">Save</Button>
+                <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    style={{ padding: '30px' }}
+                    align='right'
+                >
+                    <Button
+                        onClick={cancel}
+                        variant="outlined"
+                        size='small'
+                        style={{ margin: '0px 20px' }}
+                        color="error"
+                    >Cancel</Button>
+                    <Button
+                        onClick={fieldData?UpdateSection:addSection}
+                        variant="outlined"
+                        size='small'
+                        color="success"
+                    >{fieldData?"Save Changes":"Add Section"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

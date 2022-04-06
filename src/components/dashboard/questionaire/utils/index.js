@@ -84,15 +84,18 @@ export const allFormFields = (data, fieldId=null, fieldType=null) => {
 
     if(fieldType === 'section'){
         data.forEach((item) => {
-            item.components.forEach((comp) => {
-                if(comp.parentId !== fieldId){
-                    if (comp.type === 'sub-section') {
-                        allFields.push(...comp.components)
-                    } else {
-                        allFields.push(comp);
-                    }
-                }
-            });
+            if(item.id!==fieldId) {
+                allFields.push(...item.components.filter(field=>field.type!=="sub-section"))
+            }
+            // item.components.forEach((comp) => {
+            //     if(comp.parentId !== fieldId){
+            //         if (comp.type !== 'sub-section') {
+            //             allFields.push(...comp.components)
+            //         } else {
+            //             allFields.push(comp);
+            //         }
+            //     }
+            // });
         });
     } else {
         if(data){

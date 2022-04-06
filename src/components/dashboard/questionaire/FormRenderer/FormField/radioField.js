@@ -14,7 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import SelectRadioField from '../../dialogs/SelectRadioField'
-import { DescriptionCard, FieldIndex } from '../../utils'
+import { DescriptionCard } from '../../utils'
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
 const RadioField = (props) => {
@@ -37,7 +37,7 @@ const RadioField = (props) => {
     const { fieldData } = props
 
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
-    const [radioValue, setRadioValue] = useState(false)
+    const [radioValue, setRadioValue] = useState(fieldData.value)
     const [display, setDisplay] = useState('hidden');
 
     const handleSelectRadioField = () => {
@@ -46,30 +46,6 @@ const RadioField = (props) => {
 
     const handleRadio = (e) => {
         setRadioValue(e.target.value)
-        // let allFields = formFieldValues
-        // if(allFields.find(field => field.id===fieldData.id)) {
-        //     let fieldIndex = allFields.findIndex(field => field.id===fieldData.id)
-        //     allFields[fieldIndex] = { id: fieldData.id, value: e.target.value }
-        // } else {
-        //     allFields.push({ id: fieldData.id, value: e.target.value })
-        // }
-        // setFormFieldValues(allFields)
-
-        setConditionalId(fieldData.id)
-        setConditionalValue(e.target.value)
-    }
-
-    const RadioOption = (valueSelected) => {
-
-        return (
-            <Radio
-                checked={radioValue === `${valueSelected}`}
-                onChange={handleRadio}
-                value={valueSelected}
-                name="radio-buttons"
-                inputProps={{ 'aria-label': `${valueSelected}` }}
-            />
-        )
     }
 
     const deleteField = () => {
@@ -84,7 +60,12 @@ const RadioField = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
+        <Grid 
+            container
+            onMouseOver={() => { setDisplay('visible') }}
+            onMouseOut={() => { setDisplay('hidden') }}
+            className={editStatus ? classes.section : classes.section2}
+        >
             {editStatus?
                 <>
                     <SelectRadioField open={selectRadioDialog} fieldData={fieldData} handleClose={handleClose} />
@@ -99,7 +80,7 @@ const RadioField = (props) => {
                         />
                     </Typography>
                 </>
-        : '' }
+            : '' }
             <Typography style={{ width: '100%', fontSize: '18px', color: '#5048E5' }}>
                 {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
             </Typography>
@@ -112,7 +93,16 @@ const RadioField = (props) => {
                     onChange={handleRadio}
                 >
                     {fieldData.radios.map((radio, index) => (
-                        <FormControlLabel key={index} value={radio.label.toLowerCase()} control={<Radio />} label={radio.label} />
+                        <FormControlLabel
+                            key={index}
+                            value={radio.label}
+                            control={<Radio size={"small"}/>}
+                            label={radio.label}
+                            onClick={()=>{
+                                setConditionalId(fieldData.id)
+                                setConditionalValue(radio.label.toLowerCase())
+                            }}
+                        />
                     ))}
                 </RadioGroup>
             </FormControl>

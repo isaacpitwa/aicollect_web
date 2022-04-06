@@ -11,7 +11,7 @@ export const FieldError = (props) => {
 
     const { error, selectSection } = useContext(FormContext)
 
-    const { errorTag } = props
+    const { fieldType, errorTag } = props
 
     useEffect(() => {
 
@@ -23,6 +23,7 @@ export const FieldError = (props) => {
             style={{ paddingBottom: '20px' }}
         >
             {!selectSection&&!error?
+                fieldType?"":
                 <Alert severity="warning">
                     <AlertTitle>Warning</AlertTitle>
                     You have not selected a <strong>Section</strong> or <strong>Sub-Section</strong> to place this field in.
