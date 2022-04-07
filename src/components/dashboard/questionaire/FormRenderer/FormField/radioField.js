@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import formStyles from '../../styles/FormStyles'
 import { smallBtns } from '../../styles/FormStyles'
 import {
@@ -45,7 +45,12 @@ const RadioField = (props) => {
     }
 
     const handleRadio = (e) => {
-        setRadioValue(e.target.value)
+        setConditionalId(fieldData.id);
+        setConditionalValue(e.target.value.toLowerCase());
+        setRadioValue(e.target.value);
+    }
+
+    const addFieldValue = () => {
     }
 
     const deleteField = () => {
@@ -96,12 +101,8 @@ const RadioField = (props) => {
                         <FormControlLabel
                             key={index}
                             value={radio.label}
-                            control={<Radio size={"small"}/>}
                             label={radio.label}
-                            onClick={()=>{
-                                setConditionalId(fieldData.id)
-                                setConditionalValue(radio.label.toLowerCase())
-                            }}
+                            control={<Radio size={"small"}/>}
                         />
                     ))}
                 </RadioGroup>

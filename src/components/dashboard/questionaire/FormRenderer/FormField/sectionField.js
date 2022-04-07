@@ -18,6 +18,8 @@ const SectionField = (props) => {
 
     const {
         setError,
+        conditionalId,
+        conditionalValue,
         selectSection,
         sectionId,
         setSelectSection,
@@ -30,8 +32,6 @@ const SectionField = (props) => {
         editStatus,
         dependantId,
         dependecyValue,
-        conditionalId,
-        conditionalValue,
         deleteFieldData,
     } = useContext(FormContext);
 
@@ -84,18 +84,20 @@ const SectionField = (props) => {
         return fieldData.conditional&&fieldData.conditional.when===conditionalId&&fieldData.conditional.value===conditionalValue&&!editStatus?true:false
     }
 
-    const FieldDisplay = () => {
+    const fieldDisplay = () => {
 
         return (
             <Grid
                 container
                 className={editStatus?sectionStyle():classes.section2}
             >
-                <Section
-                    open={sectionDialog}
-                    fieldData={fieldData}
-                    handleClose={handleClose}
-                />
+                {editStatus?
+                    <Section
+                        open={sectionDialog}
+                        fieldData={fieldData}
+                        handleClose={handleClose}
+                    />
+                : "" }
                 <Typography
                     onMouseOver={() => { setDisplay('visible') }}
                     onMouseOut={() => { setDisplay('hidden') }}
@@ -127,15 +129,15 @@ const SectionField = (props) => {
 
     return (
         fieldData.display==='visible'?
-            <FieldDisplay />
+            fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
-            <FieldDisplay />
+            fieldDisplay()
         : fieldData.dependency===dependantId&&dependecyValue>0?
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
-                <FieldDisplay key={index} />
+            fieldDisplay()
             ))
         : conditionalDisplay()?
-            <FieldDisplay />
+            fieldDisplay()
         : ""
     )
 }

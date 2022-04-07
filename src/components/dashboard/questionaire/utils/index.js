@@ -45,7 +45,7 @@ export const DescriptionCard = (props) => {
  export const CurrentLocation = compose(
 	withProps({
 	  googleMapURL:
-		`https://maps.googleapis.com/maps/api/js?key=AIzaSyC6AHCMOU6Uiew2mDrT0zlByh5u2SDiZic&libraries=geometry,drawing,places`,
+		`https://maps.googleapis.com/maps/api/js?key=AIzaSyCt86FQK_WYrNu6SN0yoB6YRh_CzNaypGI&libraries=geometry,drawing,places`,
 		loadingElement: <div style={{ height: `100%` }} />,
 		containerElement: <div style={{ height: `150px` }} />,
 		mapElement: <div style={{ height: `100%`, borderRadius: '8px' }} />
