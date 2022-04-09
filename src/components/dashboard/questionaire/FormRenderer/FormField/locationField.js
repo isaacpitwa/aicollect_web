@@ -47,7 +47,6 @@ const LocationField = (props) => {
     const [value, setValue] = useState(fieldData?fieldData.value:'');
     const [gpsValues, setGpsValues] = useState(null)
     const [locationFieldDialog, setLocationFieldDialog] = useState(false);
-    const [dependantField] = useState(fieldData&&fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
 
 	useEffect(() => {
 		getlocation()
@@ -134,93 +133,76 @@ const LocationField = (props) => {
     const smallBtn = smallBtns();
 	
 	return (
-        dependantField&&dependantField.value===fieldData.conditional.value&&!editStatus?
-			<Grid
-				style={{ display: 'block' }}
-				container
-				className={classes.section}
-			>
-				{/* <InputBase
-					sx={{ ml: 1, flex: 1 }}
-					placeholder="Search Google Maps"
-					inputProps={{ 'aria-label': 'search google maps' }}
-				/>
-				<Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-				<IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
-					<AddLocationAltIcon />
-				</IconButton> */}
-			</Grid>
-		:
-			<Grid
-				style={{ display: 'block' }}
-				container
-				onMouseOver={() => { setDisplay('visible') }}
-				onMouseOut={() => { setDisplay('hidden') }}
-				className={editStatus?classes.section:classes.section2}
-			>
-				<LocationFieldDialog
-					open={locationFieldDialog}
-					fieldData={fieldData}
-					handleClose={handleClose} 
-				/>
-                {editStatus?
-                    <Typography
-                        style={{ width: '100%', paddingBottom: '2px', visibility: display }}
-                        align={'right'}
-                    >
-                        <EditIcon
-                            onClick={handleLocationField}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon
-                            onClick={deleteField}
-                            className={smallBtn.deleteBtn}
-                        />
-                    </Typography>
-                : "" }
-				<InputLabel htmlFor="outlined-adornment-password">
-					{label}<GeneralTooltip tipData={fieldData.tooltip}/>
-				</InputLabel>
+		<Grid
+			style={{ display: 'block' }}
+			container
+			onMouseOver={() => { setDisplay('visible') }}
+			onMouseOut={() => { setDisplay('hidden') }}
+			className={editStatus?classes.section:classes.section2}
+		>
+			<LocationFieldDialog
+				open={locationFieldDialog}
+				fieldData={fieldData}
+				handleClose={handleClose} 
+			/>
+			{editStatus?
 				<Typography
-					style={{ width: '100%', padding: '5px 0px' }}
+					style={{ width: '100%', paddingTop: '5px', visibility: display }}
+					align={'right'}
 				>
-					{loadMap?
-						gpsValues?
-                            <CurrentLocation
-                                coordinates={gpsValues.coordinates}
-                                isMarkerShown={true}
-                            />
-						: ""
-					: 
-						<Typography>Location GPS Loading...</Typography>
-					}
+					<EditIcon
+						onClick={handleLocationField}
+						className={smallBtn.editBtn}
+					/>
+					<HighlightOffIcon
+						onClick={deleteField}
+						className={smallBtn.deleteBtn}
+					/>
 				</Typography>
-				<OutlinedInput
-					id="outlined-adornment-password"
-					type='text'
-					value={
-                        gpsValues?
-                            `GPS Coordinates: [ Latitude = ${gpsValues.coordinates.lat}, Longititude = ${gpsValues.coordinates.lng} ]`
-                        : 'No GPS Coordinates added.'
-                    }
-					style={{ width: '100%' }}
-					endAdornment={
-					<InputAdornment position="end">
-						<IconButton
-                            aria-label="toggle password visibility"
-							onClick={addLocation}
-                            edge="end"
-                            style={{ fontSize: '14px' }}
-						>
-							<AddLocationAltIcon /> Add Location
-						</IconButton>
-					</InputAdornment>
-					}
-				/>
-                <FormHelperText id="outlined-weight-helper-text">
-                    <DescriptionCard description={fieldData.description} helperText={true}/>
-                </FormHelperText>
-			</Grid>
+			: "" }
+            <Typography style={{ width: '100%', fontSize: '18px', color: '#5048E5' }}>
+                {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
+            </Typography>
+			<Typography
+				style={{ width: '100%', padding: '5px 0px' }}
+			>
+				{loadMap?
+					gpsValues?
+						<CurrentLocation
+							coordinates={gpsValues.coordinates}
+							isMarkerShown={true}
+						/>
+					: ""
+				: 
+					<Typography>Location GPS Loading...</Typography>
+				}
+			</Typography>
+			<OutlinedInput
+				id="outlined-adornment-password"
+				type='text'
+				value={
+					gpsValues?
+						`GPS Coordinates: [ Latitude = ${gpsValues.coordinates.lat}, Longititude = ${gpsValues.coordinates.lng} ]`
+					: 'No GPS Coordinates added.'
+				}
+				style={{ width: '100%' }}
+				endAdornment={
+				<InputAdornment position="end">
+					<IconButton
+						aria-label="toggle password visibility"
+						onClick={addLocation}
+						edge="end"
+						style={{ fontSize: '14px' }}
+					>
+						<AddLocationAltIcon /> Add Location
+					</IconButton>
+				</InputAdornment>
+				}
+			/>
+			<FormHelperText id="outlined-weight-helper-text">
+				<DescriptionCard description={fieldData.description} helperText={true}/>
+			</FormHelperText>
+		</Grid>
 	);
 }
 

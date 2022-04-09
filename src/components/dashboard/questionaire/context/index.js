@@ -68,6 +68,10 @@ const FormProvider = (props) => {
         }
     }
 
+    const conditionalDisplay = (field) => {
+        return field.conditional&&field.conditional.when===conditionalId&&field.conditional.value===conditionalValue&&!editStatus?true:false
+    };
+
     const updateComponentsData = (fieldIndex, newFieldData) => {
 
         let newComponentsData = componentsData;
@@ -223,9 +227,10 @@ const FormProvider = (props) => {
                 setConditionalId,
                 conditionalValue,
                 setConditionalValue,
+                conditionalDisplay,
                 formFieldValues,
                 setFormFieldValues,
-                deleteFieldData
+                deleteFieldData,
             }}
         >
             {props.children}

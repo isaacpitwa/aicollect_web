@@ -24,18 +24,16 @@ const NumberFieldComp = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        fieldResponses,
-        setFieldResponses,
         editStatus,
         setDependantId,
         setDependecyValue,
         deleteFieldData
     } = useContext(FormContext);
 
-    const { fieldData, fieldUpdated } = props;
+    const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [value, setValue] = useState('');
+    const [fieldValue, setFieldValue] = useState('');
     const [numberFieldDialog, setNumberFieldDialog] = useState(false)
 
     const handleNumberField = () => {
@@ -47,7 +45,7 @@ const NumberFieldComp = (props) => {
     }
 
     const handleFieldValue = (e) => {
-        setValue(e.target.value)
+        setFieldValue(e.target.value)
         if(fieldData.dependency) {
             setDependantId(fieldData.id)
             setDependecyValue(e.target.value)
@@ -69,7 +67,10 @@ const NumberFieldComp = (props) => {
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
             <NumberField open={numberFieldDialog} fieldData={fieldData} handleClose={handleClose} />
             {editStatus?
-                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                <Typography
+                    style={{ width: '100%', paddingTop: '5px', visibility: display }}
+                    align={'right'}
+                >
                     <EditIcon
                         onClick={handleNumberField}
                         className={smallBtn.editBtn}
@@ -79,13 +80,13 @@ const NumberFieldComp = (props) => {
                         className={smallBtn.deleteBtn}
                     />
                 </Typography>
-            : '' }
+            : "" }
             <TextField
                 fullWidth
                 type={'number'}
                 variant={'outlined'}
                 label={fieldData.label}
-                value={value}
+                value={fieldValue}
                 onChange={handleFieldValue}
                 helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
                 style={formStyles.textfield}

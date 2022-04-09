@@ -61,7 +61,10 @@ const SelectFieldComp = (props) => {
             {editStatus?
                 <>
                     <SelectField open={selectDialog} fieldData={fieldData} handleClose={handleClose} />
-                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <Typography
+						style={{ width: '100%', paddingTop: '5px', visibility: display }}
+						align={'right'}
+                    >
                         <EditIcon
                             onClick={handleSelectField}
                             className={smallBtn.editBtn}

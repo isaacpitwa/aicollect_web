@@ -18,28 +18,22 @@ const SectionField = (props) => {
 
     const {
         setError,
-        conditionalId,
-        conditionalValue,
-        selectSection,
+        conditionalDisplay,
         sectionId,
         setSelectSection,
         setSectionId,
-        subSectionId,
         setSubSectionId,
         componentsData,
         setComponentsData,
-        fieldResponses,
         editStatus,
         dependantId,
         dependecyValue,
-        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props
 
-    const [fieldStyles, setFieldStyles] = useState(0)
-    const [sectionDialog, setSectionDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
+    const [sectionDialog, setSectionDialog] = useState(false)
 
     const handleSectionField = () => {
         setSectionDialog(true)
@@ -63,33 +57,34 @@ const SectionField = (props) => {
 
     const deleteField = () => {
         setComponentsData(componentsData.filter(section => section.id !== fieldData.id));
-    }
+    };
 
     const handleClose = () => {
         setSectionDialog(false)
-    }
+    };
 
     const smallBtn = smallBtns();
     let classes = formStyles();
 
     const sectionStyle = () => {
-        if(sectionId===fieldData.id) {
-            return classes.section3
+        if(editStatus) {
+            if(sectionId===fieldData.id) {
+                return classes.section3
+            } else {
+                return classes.section
+            }
         } else {
-            return classes.section
+            return classes.section2
         }
     };
 
-    const conditionalDisplay = () => {
-        return fieldData.conditional&&fieldData.conditional.when===conditionalId&&fieldData.conditional.value===conditionalValue&&!editStatus?true:false
-    }
-
-    const fieldDisplay = () => {
+    const fieldDisplay = (key) => {
 
         return (
             <Grid
+                key={key}
                 container
-                className={editStatus?sectionStyle():classes.section2}
+                className={sectionStyle()}
             >
                 {editStatus?
                     <Section
@@ -103,11 +98,12 @@ const SectionField = (props) => {
                     onMouseOut={() => { setDisplay('hidden') }}
                     onClick={getSectionId}
                     className={classes.sectionLabel}
-                    variant='h5'
                 >
-                    {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                    {fieldData.label}{fieldData.tooltip!==''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
                     {editStatus ?
-                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
+                        <small
+                            style={{ float: 'right', visibility: display, paddingTop: '5px' }}
+                        >
                             <EditIcon
                                 onClick={handleSectionField}
                                 className={smallBtn.editBtn}
@@ -117,11 +113,11 @@ const SectionField = (props) => {
                                 className={smallBtn.deleteBtn}
                             />
                         </small>
-                        : ''}
+                        : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={true} />
-                {fieldData.components.map((comp, index) => (
-                    <FormField key={index} fieldData={comp} />
+                {fieldData.components.map((field, index) => (
+                    <FormField key={index} fieldData={field} />
                 ))}
             </Grid>          
         )
@@ -134,9 +130,9 @@ const SectionField = (props) => {
             fieldDisplay()
         : fieldData.dependency===dependantId&&dependecyValue>0?
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
-            fieldDisplay()
+                fieldDisplay(index)
             ))
-        : conditionalDisplay()?
+        : conditionalDisplay(fieldData)?
             fieldDisplay()
         : ""
     )

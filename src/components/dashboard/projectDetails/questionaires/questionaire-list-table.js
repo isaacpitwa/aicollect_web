@@ -149,7 +149,7 @@ export const QuestionaireListTable = (props) => {
                     >
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}`}
+                          href={`/dashboard/projects/${router.query.projectId}/module/registration/questionaire/${questionaire._id}`}
                           passHref
                         >
                           <Link

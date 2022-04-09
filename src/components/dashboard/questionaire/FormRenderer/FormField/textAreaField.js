@@ -56,7 +56,10 @@ const TextAreaFieldComp = (props) => {
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
             <TextAreaField open={textAreaFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
             {editStatus?
-                <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                <Typography
+                    style={{ width: '100%', paddingTop: '5px', visibility: display }}
+                    align={'right'}
+                >
                     <EditIcon
                         onClick={handleTextAreaField}
                         className={smallBtn.editBtn}

@@ -36,9 +36,9 @@ const RadioField = (props) => {
 
     const { fieldData } = props
 
-    const [selectRadioDialog, setSelectRadioDialog] = useState(false)
-    const [radioValue, setRadioValue] = useState(fieldData.value)
     const [display, setDisplay] = useState('hidden');
+    const [radioValue, setRadioValue] = useState(fieldData.value)
+    const [selectRadioDialog, setSelectRadioDialog] = useState(false)
 
     const handleSelectRadioField = () => {
         setSelectRadioDialog(true)
@@ -74,7 +74,10 @@ const RadioField = (props) => {
             {editStatus?
                 <>
                     <SelectRadioField open={selectRadioDialog} fieldData={fieldData} handleClose={handleClose} />
-                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <Typography
+						style={{ width: '100%', paddingTop: '5px', visibility: display }}
+						align={'right'}
+                    >
                         <EditIcon
                             onClick={handleSelectRadioField}
                             className={smallBtn.editBtn}

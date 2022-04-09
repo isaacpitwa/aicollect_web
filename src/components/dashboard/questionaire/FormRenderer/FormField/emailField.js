@@ -88,7 +88,7 @@ const EmailFieldComp = (props) => {
                 />
                 {editStatus ?
                     <Typography
-                        style={{ width: '100%', paddingBottom: '2px', visibility: display }}
+                        style={{ width: '100%', paddingTop: '5px', visibility: display }}
                         align={'right'}
                     >
                         <EditIcon

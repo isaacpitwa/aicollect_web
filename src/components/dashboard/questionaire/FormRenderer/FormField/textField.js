@@ -17,6 +17,12 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
 const TextFieldComp = (props) => {
 
     const {
+        setError,
+        setSelectSection,
+        subSectionId,
+        setSectionId,
+        setSubSectionId,
+        conditionalDisplay,
         setFieldResponses,
         editStatus,
         deleteFieldData,
@@ -25,77 +31,60 @@ const TextFieldComp = (props) => {
     const { fieldKey, fieldData, fieldResponses } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [value, setValue] = useState(fieldData.value?fieldData.value:'');
+    const [fieldValue, setFieldValue] = useState('');
     const [textFieldDialog, setTextFieldDialog] = useState(false);
-    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
-
-    useEffect(() => {
-    }, [fieldResponses])
-
-    const handleFieldValue = (e) => {
-        setValue(e.target.value)
-        let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
-        setFieldResponses(newFieldResponses)
-    }
 
     const handleTextField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setTextFieldDialog(true)
-    }
+    };
 
-    const createTextField = () => {
-        setTextFieldDialog(false)
-    }
+    const handleFieldValue = (e) => {
+        setFieldValue(e.target.value)
+        // let newFieldResponses = fieldResponses
+        // newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
+        // setFieldResponses(newFieldResponses)
+    };
 
     const deleteField = () => {
         deleteFieldData(fieldData)
-    }
+    };
 
     const handleClose = () => {
         setTextFieldDialog(false)
-    }
+    };
 
     const classes = formStyles();
     const smallBtn = smallBtns();
 
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
 
-    return (
-        dependantField&&dependantField.value===fieldData.conditional.value?
+    const fieldDisplay = () => {
+
+        return (
             <Grid
-                key={fieldKey}
-                style={{ display: 'block' }}
-                container
-                className={classes.section}
-            >
-                <TextField
-                    required={fieldData.required}
-                    fullWidth
-                    type={'text'}
-                    variant={'outlined'}
-                    label={fieldData.label}
-                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                    InputProps={{
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                    }}
-                />
-            </Grid>
-        :
-            <Grid
-                key={fieldKey}
-                style={{ display: 'block' }}
                 container
                 onMouseOver={() => { setDisplay('visible') }}
                 onMouseOut={() => { setDisplay('hidden') }}
-                className={editStatus?classes.section:classes.section2}
+                className={fieldStyle()}
+                style={{ display: 'block' }}
             >
-                <TextField_
-                    open={textFieldDialog}
-                    fieldData={fieldData}
-                    handleClose={handleClose}
-                />
+                {editStatus?
+                    <TextField_
+                        open={textFieldDialog}
+                        fieldData={fieldData}
+                        handleClose={handleClose}
+                    />
+                : "" }
                 {editStatus?
                     <Typography
-                        style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'}
+                        style={{ width: '100%', paddingTop: '5px', visibility: display }}
+                        align={'right'}
                     >
                         <EditIcon
                             onClick={handleTextField}
@@ -113,7 +102,7 @@ const TextFieldComp = (props) => {
                         type={'text'}
                         variant={'outlined'}
                         label={fieldData.label}
-                        value={value}
+                        value={fieldValue}
                         onChange={handleFieldValue}
                         helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                         InputProps={{
@@ -121,6 +110,17 @@ const TextFieldComp = (props) => {
                         }}
                     />
             </Grid>
+        )
+    }
+
+    return (
+        fieldData.display==='visible'?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : ""
     )
 }
 

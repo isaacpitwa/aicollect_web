@@ -78,37 +78,32 @@ export const DescriptionCard = (props) => {
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
-export const allFormFields = (data, fieldId=null, fieldType=null) => {
+export const allFormFields = (data, fieldData=null) => {
 
     let allFields = [];
 
-    if(fieldType === 'section'){
-        data.forEach((item) => {
-            if(item.id!==fieldId) {
-                allFields.push(...item.components.filter(field=>field.type!=="sub-section"))
-            }
-            // item.components.forEach((comp) => {
-            //     if(comp.parentId !== fieldId){
-            //         if (comp.type !== 'sub-section') {
-            //             allFields.push(...comp.components)
-            //         } else {
-            //             allFields.push(comp);
-            //         }
-            //     }
-            // });
+    if(fieldData.type==='section'){
+        data.filter(item=>item.id!==fieldData.id).forEach((item) => {
+            allFields.push(...item.components.filter(field=>field.type!=="sub-section"))
         });
     } else {
-        if(data){
-            data.map((item) => {
-                item.components.forEach((comp) => {
-                    if (comp.type === 'sub-section') {
-                        allFields.push(...comp.components)
-                    } else {
-                        allFields.push(comp);
-                    }
-                });
-            });
+        if(fieldData.subParentId) {
+            let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
+            allFields = subSection.components.filter(field=>field.id!==fieldData.id)
+        } else {
+            allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.type!=="sub-section"&&field.id!==fieldData.id)
         }
+        // if(data){
+        //     data.map((item) => {
+        //         item.components.forEach((comp) => {
+        //             if (comp.type === 'sub-section') {
+        //                 allFields.push(...comp.components)
+        //             } else {
+        //                 allFields.push(comp);
+        //             }
+        //         });
+        //     });
+        // }
     }
 
     return allFields
@@ -173,4 +168,15 @@ export const allHiddenSubSections = (parentId, componentsData) => {
 export const getDependantField = (allFields, fieldId) => {
     let dependantField = allFields.find(field => field.id === fieldId)
     return dependantField
+}
+
+export const conditionalLogic = (data) => {
+    if(data.when!==''&&data.value!==''){
+        return {
+            when: data.when,
+            value: data.value.toLowerCase()                
+        }
+    } else {
+        return null
+    }
 }
