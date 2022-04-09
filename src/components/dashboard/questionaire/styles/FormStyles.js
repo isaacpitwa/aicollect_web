@@ -6,15 +6,13 @@ const formStyles = makeStyles({
     form: {
         padding: '1%',
     },
-    sectionLabel: {
+    formFields: {
+        background: '#448AFF',
+        color: 'white',
+        padding: '10px',
         width: '100%',
-        color: '#5048E5',
-        fontWeight: '400',
-        height: '35px',
-        borderBottom: '2px #5048E5 solid',
-        marginBottom: '5px',
-        cursor: 'pointer',
-
+        textAlign: 'center',
+        marginTop: '20px'
     },
     section: {
         width: '100%',
@@ -75,7 +73,7 @@ const formStyles = makeStyles({
         fontWeight: '400',
         borderBottom: '2px #5048E5 solid',
         marginBottom: '10px',
-        fontSize: '35px',
+        fontSize: '30px',
         fontWeight: '500'
     },
     subSection: {

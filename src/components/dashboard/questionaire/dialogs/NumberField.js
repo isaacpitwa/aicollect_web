@@ -47,7 +47,7 @@ const NumberField = (props) => {
     
     const [errorTag, setErrorTag] = useState(false)
     const [panelType, setPanelType] = useState('display')
-    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [id] = useState(fieldData?fieldData.id:'')
     const [type] = useState(fieldData ? fieldData.type : 'number')
     const [display, setDisplay] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
@@ -63,10 +63,6 @@ const NumberField = (props) => {
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
     }
-
-    // const handleFieldValue = (e) => {
-    //     setFieldValue(e.target.value)
-    // }
 
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
@@ -97,16 +93,17 @@ const NumberField = (props) => {
 
     }
 
-    const handleDiplayValue = (e) => {
-        setDisplay(e.target.value)
-    }
-
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
 
     const handleValue = (e) => {
         setValue(e.target.value)
+    }
+
+    const removeConditional = () => {
+        setWhen(conditional?fieldData.conditional.when:'')
+        setValue(conditional?fieldData.conditional.value:'')
     }
 
     const conditionalData = conditionalLogic({
@@ -158,7 +155,7 @@ const NumberField = (props) => {
 
     const handleUpdate = () => {
 
-        let newField = {
+        let numberFieldData = {
             id: id,
             parentId: fieldData.parentId,
             subParentId: fieldData.subParentId,
@@ -173,7 +170,7 @@ const NumberField = (props) => {
             conditional: conditionalData,
         }
 
-        updateFieldInSection(newField)
+        updateFieldInSection(numberFieldData)
         handleClose()
     }
 
@@ -305,7 +302,7 @@ const NumberField = (props) => {
                                         size="small"
                                         fullWidth
                                         variant="outlined"
-                                        value={compValue}
+                                        value={value}
                                         onChange={handleValue}
                                     />
                                 </>

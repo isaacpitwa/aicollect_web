@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import TextField_ from '../../dialogs/TextField';
-import { DescriptionCard, FieldIndex } from '../../utils';
+import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
 const TextFieldComp = (props) => {
@@ -19,16 +19,14 @@ const TextFieldComp = (props) => {
     const {
         setError,
         setSelectSection,
-        subSectionId,
         setSectionId,
         setSubSectionId,
         conditionalDisplay,
-        setFieldResponses,
         editStatus,
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldKey, fieldData, fieldResponses } = props;
+    const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');

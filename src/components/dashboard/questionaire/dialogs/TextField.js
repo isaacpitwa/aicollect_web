@@ -61,10 +61,6 @@ const TextField_ = (props) => {
         setFieldLabel(event.target.value);
     }
 
-    // const handleFieldValue = (e) => {
-    //     setFieldValue(e.target.value)
-    // }
-
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
     };

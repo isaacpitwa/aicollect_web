@@ -11,10 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import NumberField from '../../dialogs/NumberField';
-import {
-    DescriptionCard,
-    FieldIndex,
-} from '../../utils';
+import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip'
 
 const NumberFieldComp = (props) => {
@@ -24,6 +21,7 @@ const NumberFieldComp = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
+        conditionalDisplay,
         editStatus,
         setDependantId,
         setDependecyValue,
@@ -63,38 +61,68 @@ const NumberFieldComp = (props) => {
     const classes = formStyles();
     const smallBtn = smallBtns();
 
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
+
+    const fieldDisplay = () => {
+
+        return (
+            <Grid
+                container
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}
+                className={fieldStyle()}
+                style={{ display: 'block' }}
+            >
+                {editStatus?
+                    <NumberField
+                        open={numberFieldDialog}
+                        fieldData={fieldData}
+                        handleClose={handleClose}
+                    />
+                : "" }
+                {editStatus?
+                    <Typography
+                        style={{ width: '100%', paddingTop: '5px', visibility: display }}
+                        align={'right'}
+                    >
+                        <EditIcon
+                            onClick={handleNumberField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                    : ""}
+                    <TextField
+                        required={fieldData.required}
+                        fullWidth
+                        type={'number'}
+                        variant={'outlined'}
+                        label={fieldData.label}
+                        value={fieldValue}
+                        onChange={handleFieldValue}
+                        helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
+                        style={formStyles.textfield}
+                        InputProps={{
+                            endAdornment: <GeneralTooltip tipData={fieldData.tooltip} />
+                        }}
+                    />
+            </Grid>
+        )
+    }
+
     return (
-        <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-            <NumberField open={numberFieldDialog} fieldData={fieldData} handleClose={handleClose} />
-            {editStatus?
-                <Typography
-                    style={{ width: '100%', paddingTop: '5px', visibility: display }}
-                    align={'right'}
-                >
-                    <EditIcon
-                        onClick={handleNumberField}
-                        className={smallBtn.editBtn}
-                    />
-                    <HighlightOffIcon
-                        onClick={deleteField}
-                        className={smallBtn.deleteBtn}
-                    />
-                </Typography>
-            : "" }
-            <TextField
-                fullWidth
-                type={'number'}
-                variant={'outlined'}
-                label={fieldData.label}
-                value={fieldValue}
-                onChange={handleFieldValue}
-                helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
-                style={formStyles.textfield}
-                InputProps={{
-                    endAdornment: <GeneralTooltip tipData={fieldData.tooltip} />
-                }}
-            />
-        </Grid>
+        fieldData.display==='visible'?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : ""
     )
 }
 
