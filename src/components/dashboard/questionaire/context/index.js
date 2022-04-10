@@ -54,16 +54,24 @@ const FormProvider = (props) => {
     }
 
     const addDependency = (fieldData) => {
-        if(fieldData.type==="number"&&fieldData.dependency) {
-            let newComponentsData = componentsData;
-            let section = newComponentsData.find(section => section.id === fieldData.parentId);
-            let sectionIndex = newComponentsData.findIndex(section => section.id === fieldData.parentId);
-            let subSection = section.components.find(subSection => subSection.id === fieldData.dependency);
-            let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.dependency);
-            subSection.display = 'hidden';
-            subSection.dependency = fieldData.id
-            section.components[subSectionIndex] = subSection;
-            newComponentsData[sectionIndex] = section;
+        let newComponentsData = componentsData;
+        let section = newComponentsData.find(section => section.id === fieldData.parentId);
+        let sectionIndex = newComponentsData.findIndex(section => section.id === fieldData.parentId);
+        if(fieldData.dependency) {
+            if(fieldData.dependency.type==="section") {
+                section = newComponentsData.find(section=>section.id===fieldData.dependency.id);
+                sectionIndex = newComponentsData.findIndex(section=>section.id===fieldData.dependency.id);
+                section.display = 'hidden';
+                section.dependency = fieldData.id
+                newComponentsData[sectionIndex] = section;
+            } else {
+                let dependantField = section.components.find(field=>field.id===fieldData.dependency.id);
+                let dependantFieldIndex = section.components.findIndex(field=>field.id===fieldData.dependency.id);
+                dependantField.display = 'hidden';
+                dependantField.dependency = fieldData.id
+                section.components[dependantFieldIndex] = dependantField;
+                newComponentsData[sectionIndex] = section;
+            }    
             setComponentsData(newComponentsData);
         }
     }
@@ -127,22 +135,11 @@ const FormProvider = (props) => {
             let fieldIndex = section.components.findIndex(field => field.id === fieldData.id);
             section.components[fieldIndex] = fieldData;
         }
+
         newFormFields[sectionIndex] = section
-
         setComponentsData(newFormFields)
-        addDependency(fieldData)
+        if(fieldData.type==="number") addDependency(fieldData)
         updateFormData()        
-    }
-
-    const updateSection = (sectionData) => {
-
-        let newFormFields = componentsData;
-        let sectionIndex = componentsData.findIndex(section => section.id === sectionData.id);
-        newFormFields[sectionIndex] = sectionData
-
-        setComponentsData(newFormFields)
-
-        updateFormData()
     }
 
     const updateFormData = async () => {
@@ -210,7 +207,6 @@ const FormProvider = (props) => {
                 setComponentsData,
                 fieldResponses,
                 setFieldResponses,
-                updateSection,
                 updateComponentsData,
                 addComponentToSection,
                 updateFieldInSection,

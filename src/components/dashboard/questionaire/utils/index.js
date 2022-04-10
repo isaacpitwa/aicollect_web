@@ -157,14 +157,10 @@ export const FieldIndex = (fieldId, fieldsData) => {
     return fieldIndex
 }
 
-export const allHiddenSubSections = (parentId, componentsData) => {
-    if(parentId){
-        let sectionComponents = componentsData.find(comp => comp.id === parentId).components
-        let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.parentId === parentId)
-        return subSections
-    } else {
-        return []
-    }
+export const getSectionsSubSections = (parentId, componentsData) => {
+    let sections = componentsData.filter(section=>section.id!==parentId)
+    let subSections = componentsData.find(section=>section.id===parentId).components.filter(field=>field.type==='sub-section');
+    return sections.concat(subSections)
 }
 
 export const getDependantField = (allFields, fieldId) => {

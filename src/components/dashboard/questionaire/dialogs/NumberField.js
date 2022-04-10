@@ -21,7 +21,7 @@ import { FormContext } from '../context';
 import {
     allFormFields,
     conditionalLogic,
-    allHiddenSubSections
+    getSectionsSubSections
 } from '../utils';
 import {
     FieldError,
@@ -48,6 +48,8 @@ const NumberField = (props) => {
     const [errorTag, setErrorTag] = useState(false)
     const [panelType, setPanelType] = useState('display')
     const [id] = useState(fieldData?fieldData.id:'')
+    const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
+    const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
     const [type] = useState(fieldData ? fieldData.type : 'number')
     const [display, setDisplay] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
@@ -55,10 +57,10 @@ const NumberField = (props) => {
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
     const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency.id:null)
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -93,6 +95,20 @@ const NumberField = (props) => {
 
     }
 
+    const handleDependency = (e) => {
+        setDependency(e.target.value)
+    }
+
+    const getDependantField = () => {
+        try {
+            let field = getSectionsSubSections(parentId, componentsData).find(field=>field.id===dependency)
+            if(field) return { type: field.type, id: field.id }
+
+        } catch (err) {
+            return null
+        }
+    }
+
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -111,16 +127,14 @@ const NumberField = (props) => {
         value: value
     })
 
-    const addSubSectionId = (e) => {
-        setDependency(e.target.value)
-    }
+    const dependencyData = getDependantField()
 
     const addNumberField = () => {
 
         let newFieldObj = {
             id: uuidv4(),
-            parentId: sectionId,
-            subParentId: subSectionId,
+            parentId: parentId,
+            subParentId: subParentId,
             type: type,
             display: conditionalData?'hidden':display,
             label: fieldLabel,
@@ -128,8 +142,8 @@ const NumberField = (props) => {
             description: fieldDescription,
             tooltip: tooltip,
             required: isRequired,
-            dependency: dependency,
             conditional: conditionalData,
+            dependency: dependencyData,
         }
 
         if(sectionId&&fieldLabel!=='') {
@@ -141,8 +155,8 @@ const NumberField = (props) => {
             setFieldDescription('')
             setTooltip('')
             setIsRequired(false)
-            setDependency(null)
             setConditional(null)
+            setDependency(null)
             removeConditional()
             handleClose()
         } else {
@@ -157,8 +171,8 @@ const NumberField = (props) => {
 
         let numberFieldData = {
             id: id,
-            parentId: fieldData.parentId,
-            subParentId: fieldData.subParentId,
+            parentId: parentId,
+            subParentId: subParentId,
             type: type,
             display: conditionalData?'hidden':display,
             label: fieldLabel,
@@ -166,8 +180,8 @@ const NumberField = (props) => {
             description: fieldDescription,
             tooltip: tooltip,
             required: isRequired,
-            dependency: dependency,
             conditional: conditionalData,
+            dependency: dependencyData,
         }
 
         updateFieldInSection(numberFieldData)
@@ -311,7 +325,7 @@ const NumberField = (props) => {
                                     <Typography
                                         style={{ fontSize: '15px', color: '#5048E5' }}
                                     >
-                                        For Sub-Section:
+                                        For Section/Sub-Section:
                                     </Typography>
                                     <Select
                                         labelId="demo-simple-select-label"
@@ -319,13 +333,15 @@ const NumberField = (props) => {
                                         value={dependency}
                                         fullWidth
                                         size={'small'}
-                                        onChange={addSubSectionId}
+                                        onChange={handleDependency}
                                     >
-                                        {allHiddenSubSections(sectionId, componentsData).map((option, index) => (
+                                        {getSectionsSubSections(sectionId, componentsData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}
-                                            >{option.label}</MenuItem>
+                                            >
+                                                {option.label} ={'>'} <small>[{option.type}]</small>
+                                            </MenuItem>
                                         ))}
                                     </Select>
                                 </>                                        

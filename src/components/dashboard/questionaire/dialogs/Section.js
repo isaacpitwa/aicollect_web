@@ -35,7 +35,7 @@ const Section = (props) => {
         componentsData,
         setComponentsData,
         setSectionCreated,
-        updateSection,
+        updateFormData,
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
@@ -141,7 +141,11 @@ const Section = (props) => {
             components: components
         }
 
-        updateSection(sectionData)
+        let newFormFields = componentsData;
+        let sectionIndex = componentsData.findIndex(section => section.id === fieldData.id);
+        newFormFields[sectionIndex] = sectionData
+        setComponentsData(newFormFields)
+        updateFormData()
         handleClose()
     }
 
