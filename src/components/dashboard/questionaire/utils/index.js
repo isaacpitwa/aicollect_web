@@ -14,6 +14,15 @@ import FormStyles from '../styles/FormStyles'
 import InfoIcon from '@mui/icons-material/Info'
 
 // This is a description component for displaying descriptions of form fields
+
+/**
+ * @function DescriptionCard
+ * @desc This is a description component for displaying descriptions of form fields
+ * @arg {Object} description - The description property from a field object.
+ * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 export const DescriptionCard = (props) => {
 
     const Styles = FormStyles.sectionStyles
@@ -21,12 +30,17 @@ export const DescriptionCard = (props) => {
     const { description, helperText } = props
 
     return (
-        description ?
-            helperText ?
-                <span><InfoIcon style={{ fontSize: '24px', marginBottom: '-7px' }} /> {description}</span>
-                :
-                <Typography style={{ marginLeft: '20px' }}>
-                    <i><InfoIcon style={{ fontSize: '22px', marginBottom: '-7px', color: '#5F768A' }} /> {description}</i>
+        description?
+            helperText?
+                <span>
+                    <InfoIcon
+                        style={{ fontSize: '24px', marginBottom: '-7px' }}
+                    />
+                    {description}
+                </span>
+            :
+                <Typography>
+                    <i style={{ fontSize: '15px' }}><InfoIcon style={{ fontSize: '22px', marginBottom: '-7px', color: '#5F768A' }} /> {description}</i>
                 </Typography>
             :
             ''
@@ -70,11 +84,10 @@ export const DescriptionCard = (props) => {
 
 /**
  * @function allFormFields
- * @desc This function gets all form fields excluding sections and sub-sections
+ * @desc This function only gets all form fields in which the field using it exists.
  * @arg {Object} data - The entire form object with all the components/form fields.
- * @arg {Number} fieldId - The id of the form field using this method.
- * @arg {String} fieldType - The type of form field using this method.
- * @returns {Object} - An array of all form field elements except the Section and Sub-Section
+ * @arg {Object} fieldData - The id of the form field using this method.
+ * @returns {Array} - An array of form fields
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
@@ -93,17 +106,6 @@ export const allFormFields = (data, fieldData=null) => {
         } else {
             allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.type!=="sub-section"&&field.id!==fieldData.id)
         }
-        // if(data){
-        //     data.map((item) => {
-        //         item.components.forEach((comp) => {
-        //             if (comp.type === 'sub-section') {
-        //                 allFields.push(...comp.components)
-        //             } else {
-        //                 allFields.push(comp);
-        //             }
-        //         });
-        //     });
-        // }
     }
 
     return allFields

@@ -75,7 +75,8 @@ const RadioField = (props) => {
                 <>
                     <SelectRadioField open={selectRadioDialog} fieldData={fieldData} handleClose={handleClose} />
                     <Typography
-						style={{ width: '100%', paddingTop: '5px', visibility: display }}
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
 						align={'right'}
                     >
                         <EditIcon

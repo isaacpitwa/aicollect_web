@@ -36,7 +36,6 @@ const Section = (props) => {
         setComponentsData,
         setSectionCreated,
         updateSection,
-        updateFormData
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props

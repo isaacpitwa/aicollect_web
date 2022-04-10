@@ -41,7 +41,8 @@ const AreaMappingField = (props) => {
         <Grid key={fieldData.id} container onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section:classes.section2}>
             {editStatus?
                 <Typography
-                    style={{ width: '100%', paddingTop: '5px', visibility: display }}
+                    className={smallBtn.fieldBtns}
+                    style={{ visibility: display }}
                     align={'right'}
                 >
                 <EditIcon className={smallBtn.editBtn} />

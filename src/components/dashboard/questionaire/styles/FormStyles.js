@@ -42,7 +42,7 @@ const formStyles = makeStyles({
         color: '#5F768A',
         fontSize: '12px',
     },
-    section3: {
+    section3: { 
         width: '100%',
         backgroundColor: '#5048e519',
         border: '1px #5048E5 solid',
@@ -69,47 +69,59 @@ const formStyles = makeStyles({
         width: '102%',
         height: '50px',
         padding: '0px 1%',
-        color: '#5048E5',
-        fontWeight: '400',
         borderBottom: '2px #5048E5 solid',
         marginBottom: '10px',
+        color: '#5048E5',
         fontSize: '30px',
         fontWeight: '500'
     },
     subSection: {
         border: '1px #5048e537 solid',
         borderRadius: '5px',
+        overflow: 'hidden',
         minHeight: '50px',
         margin: '5px 0px',
+        padding: '10px 1%',
+        paddingTop: '0px',
         cursor: 'move',
         '&:hover': {
             backgroundColor: '#5048e519',
         }
     },
     subSection2: {
+        width: '100%',
+        border: '1px #5048e537 solid',
+        borderRadius: '5px',
+        overflow: 'hidden',
+        minHeight: '50px',
+        margin: '5px 0px',
+        padding: '10px 1%',
+        paddingTop: '0px',
+        cursor: 'cursor',
+    },
+    subSection3: {
+        width: '100%',
         backgroundColor: '#5048e519',
         border: '1px #5048E5 solid',
         borderRadius: '5px',
+        overflow: 'hidden',
         minHeight: '50px',
         margin: '5px 0px',
+        padding: '10px 1%',
+        paddingTop: '0px',
         cursor: 'move',
     },
-    subSection3: {
-        border: '1px #5048e537 solid',
-        borderRadius: '5px',
-        minHeight: '50px',
-        margin: '5px 0px',
-        cursor: 'cursor',
-    },
     subSectionLabel: {
-        width: '100%',
+        margin: '0px -1% 0px -1.5%',
+        width: '102.5%',
+        padding: '0px 1%',
         color: '#5048E5',
         backgroundColor: '#5048e537',
-        fontWeight: '400',
         borderBottom: '2px #5048E5 solid',
         marginBottom: '5px',
-        padding: '0px 10px',
         paddingTop: '5px',
+        fontSize: '22px',
+        fontWeight: '500',
     }
 });
 
@@ -128,6 +140,14 @@ export const subSectionStyles = makeStyles({
 });
 
 export const smallBtns = makeStyles({
+    sectionBtns: {
+        float: 'right',
+        paddingTop: '5px',
+    },
+    fieldBtns: {
+        width: '100%',
+        paddingTop: '5px',
+    },
     editBtn: {
         color: 'blue',
         width: '20px',

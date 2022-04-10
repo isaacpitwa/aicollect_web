@@ -64,7 +64,7 @@ const SectionField = (props) => {
     };
 
     const smallBtn = smallBtns();
-    let classes = formStyles();
+    const classes = formStyles();
 
     const sectionStyle = () => {
         if(editStatus) {
@@ -102,7 +102,8 @@ const SectionField = (props) => {
                     {fieldData.label}{fieldData.tooltip!==''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
                     {editStatus ?
                         <small
-                            style={{ float: 'right', visibility: display, paddingTop: '5px' }}
+                            className={smallBtn.sectionBtns}
+                            style={{ visibility: display }}
                         >
                             <EditIcon
                                 onClick={handleSectionField}
@@ -115,7 +116,7 @@ const SectionField = (props) => {
                         </small>
                         : "" }
                 </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
+                <DescriptionCard description={fieldData.description} helperText={false} />
                 {fieldData.components.map((field, index) => (
                     <FormField key={index} fieldData={field} />
                 ))}

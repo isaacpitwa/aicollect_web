@@ -68,12 +68,12 @@ const SubSectionField = (props) => {
     const subSectionStyle = () => {
         if(editStatus) {
             if(subSectionId===fieldData.id) {
-                return classes.subSection2
+                return classes.subSection3
             } else {
                 return classes.subSection
             }
         } else {
-            return classes.subSection3
+            return classes.subSection2
         }
     };
 
@@ -97,12 +97,12 @@ const SubSectionField = (props) => {
                     onMouseOver={() => { setDisplay('visible'); } }
                     onMouseOut={() => { setDisplay('hidden'); } }
                     className={classes.subSectionLabel}
-                    variant='h5'
                 >                    
                     {fieldData.label}{fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
                     {editStatus?
                         <small
-                            style={{ float: 'right', visibility: display, paddingTop: '5px' }}
+                            className={smallBtn.sectionBtns}
+                            style={{ visibility: display }}
                         >
                             <EditIcon
                                 onClick={handleSubSection}
@@ -115,16 +115,10 @@ const SubSectionField = (props) => {
                         </small>
                     : "" }
                 </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
-                <Grid
-                    item
-                    sm={12}
-                    style={{ padding: '10px' }}
-                >
-                    {fieldData.components.map((field, index) => (
-                        <FormField key={index} fieldData={field} />
-                    ))}
-                </Grid>
+                <DescriptionCard description={fieldData.description} helperText={false} />
+                {fieldData.components.map((field, index) => (
+                    <FormField key={index} fieldData={field} />
+                ))}
             </Grid>        
         )
     }

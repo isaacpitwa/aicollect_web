@@ -33,11 +33,9 @@ const SubSection = (props) => {
     const {
         setError,
         sectionId,
-        subSectionId,
         componentsData,
         addComponentToSection,
         updateFieldInSection,
-        deleteFieldData,
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
