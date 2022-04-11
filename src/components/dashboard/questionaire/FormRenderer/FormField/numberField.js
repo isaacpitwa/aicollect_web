@@ -1,19 +1,27 @@
-import { useState, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
+import { FormContext } from '../../context';
 import NumberField from '../../dialogs/NumberField';
 import { DescriptionCard } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function NumberFieldComp
+ * @desc This is the Number Field component, it is the Number field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Number field.
+ * @returns {Component} - Returns a Number field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const NumberFieldComp = (props) => {
 
     const {

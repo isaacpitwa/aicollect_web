@@ -1,20 +1,28 @@
-import React, { useState, useContext } from 'react'
-import Image from 'next/image'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import React, { useState, useContext } from 'react';
+import Image from 'next/image';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Card,
     Grid,
     Button,
     TextField,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
+import { FormContext } from '../../context';
 import AreaMappingImg from '../../../../../../public/static/form/area-mapping.jpg';
 
+/**
+ * @function AreaMappingField
+ * @desc This is the Area Mapping Field component, it is the Area Mapping field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Area Mapping field.
+ * @returns {Component} - Returns a Area Mapping field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const AreaMappingField = (props) => {
 
     const {

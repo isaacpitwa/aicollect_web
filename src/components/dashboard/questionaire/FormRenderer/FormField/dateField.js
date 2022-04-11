@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext, useEffect } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,6 +18,14 @@ import DateField from '../../dialogs/DateField';
 import { DescriptionCard, FieldIndex } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function DatefieldComp
+ * @desc This is the Date Field component, it is the Date field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Date field.
+ * @returns {Component} - Returns a Date field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const DatefieldComp = (props) => {
 
     const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);

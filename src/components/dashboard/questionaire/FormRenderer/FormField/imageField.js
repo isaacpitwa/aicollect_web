@@ -1,20 +1,28 @@
-import { useState, useContext, useEffect } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext, useEffect } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
     Typography
-} from "@mui/material"
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
+} from "@mui/material";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
+import { FormContext } from '../../context';
 import ImageFieldDialog from '../../dialogs/ImageField';
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function ImageField
+ * @desc This is the Image Field component, it is the Image field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Image field.
+ * @returns {Component} - Returns a Image field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const ImageField = (props) => {
 
     const {

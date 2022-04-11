@@ -8,18 +8,17 @@ import {
 
 import {
     Typography
-} from '@mui/material'
+} from '@mui/material';
 
-import FormStyles from '../styles/FormStyles'
-import InfoIcon from '@mui/icons-material/Info'
-
-// This is a description component for displaying descriptions of form fields
+import FormStyles from '../styles/FormStyles';
+import InfoIcon from '@mui/icons-material/Info';
 
 /**
  * @function DescriptionCard
- * @desc This is a description component for displaying descriptions of form fields
- * @arg {Object} description - The description property from a field object.
- * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property
+ * @desc This is a description component for displaying descriptions of form fields.
+ * @arg {String} description - The description property from a field object.
+ * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property.
+ * @returns {Component} - Returns a description JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
@@ -53,6 +52,7 @@ export const DescriptionCard = (props) => {
  * @desc This component displays a Google map of the current location using coordinates provided
  * @arg {Object} coordinates - The entire form object with all the components/form fields.
  * @arg {Boolean} isMarkerShown - The id of the form field using this method.
+ * @returns {Component} - Returns a Google Map JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
@@ -87,7 +87,7 @@ export const DescriptionCard = (props) => {
  * @desc This function only gets all form fields in which the field using it exists.
  * @arg {Object} data - The entire form object with all the components/form fields.
  * @arg {Object} fieldData - The id of the form field using this method.
- * @returns {Array} - An array of form fields
+ * @returns {Array} - Returns an array of form fields
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
@@ -97,14 +97,14 @@ export const allFormFields = (data, fieldData=null) => {
 
     if(fieldData.type==='section'){
         data.filter(item=>item.id!==fieldData.id).forEach((item) => {
-            allFields.push(...item.components.filter(field=>field.type!=="sub-section"))
+            allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
         });
     } else {
         if(fieldData.subParentId) {
             let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
-            allFields = subSection.components.filter(field=>field.id!==fieldData.id)
+            allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
         } else {
-            allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.type!=="sub-section"&&field.id!==fieldData.id)
+            allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
         }
     }
 

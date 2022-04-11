@@ -1,19 +1,27 @@
-import { useState, useEffect, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useEffect, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import SubSection from '../../dialogs/SubSection'
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
-import FormField from '../FormField'
+import { FormContext } from '../../context';
+import SubSection from '../../dialogs/SubSection';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
+import FormField from '../FormField';
 
+/**
+ * @function SubSectionField
+ * @desc This is the Sub-Section Field component, it is the Sub-Section field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Sub-Section field.
+ * @returns {Component} - Returns a Sub-Section field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SubSectionField = (props) => {
 
     const {
@@ -86,18 +94,18 @@ const SubSectionField = (props) => {
                 onClick={getSectionIds}
                 className={subSectionStyle()}
             >
-                {editStatus?
-                    <SubSection
-                        open={subSectionDialog}
-                        fieldData={fieldData}
-                        handleClose={handleClose}
-                    />
-                : "" }
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }
                     onMouseOut={() => { setDisplay('hidden'); } }
                     className={classes.subSectionLabel}
-                >                    
+                >
+                    {editStatus?
+                        <SubSection
+                            open={subSectionDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
+                    : "" }
                     {fieldData.label}{fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
                     {editStatus?
                         <small
@@ -125,9 +133,9 @@ const SubSectionField = (props) => {
 
     return (
         fieldData.display==='visible'?
-            fieldDisplay()
+            fieldDisplay(fieldData.id)
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
+            fieldDisplay(fieldData.id)
         : fieldData.dependency===dependantId&&dependecyValue>0?
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
                 fieldDisplay(index)

@@ -1,6 +1,6 @@
-import { useContext, useState, useEffect } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useContext, useState } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     Typography,
@@ -8,29 +8,34 @@ import {
     RadioGroup,
     FormControlLabel,
     Radio
-} from '@mui/material'
+} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import SelectRadioField from '../../dialogs/SelectRadioField'
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import { FormContext } from '../../context';
+import SelectRadioField from '../../dialogs/SelectRadioField';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function RadioField
+ * @desc This is the Radio Field component, it is the Radio field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Radio field.
+ * @returns {Component} - Returns a Radio field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const RadioField = (props) => {
 
     const {
         setError,
+        editStatus,
         setSelectSection,
-        fieldResponses,
-        setFieldResponses,
         setSectionId,
         setSubSectionId,
-        editStatus,
+        conditionalDisplay,
         setConditionalId,
         setConditionalValue,
-        formFieldValues,
-        setFormFieldValues,
         deleteFieldData,
     } = useContext(FormContext);
 
@@ -41,6 +46,10 @@ const RadioField = (props) => {
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
 
     const handleSelectRadioField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setSelectRadioDialog(true)
     }
 
@@ -48,9 +57,6 @@ const RadioField = (props) => {
         setConditionalId(fieldData.id);
         setConditionalValue(e.target.value.toLowerCase());
         setRadioValue(e.target.value);
-    }
-
-    const addFieldValue = () => {
     }
 
     const deleteField = () => {
@@ -64,21 +70,31 @@ const RadioField = (props) => {
     const classes = formStyles();
     const smallBtn = smallBtns();
 
-    return (
-        <Grid 
-            container
-            onMouseOver={() => { setDisplay('visible') }}
-            onMouseOut={() => { setDisplay('hidden') }}
-            className={editStatus ? classes.section : classes.section2}
-        >
-            {editStatus?
-                <>
-                    <SelectRadioField open={selectRadioDialog} fieldData={fieldData} handleClose={handleClose} />
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
+
+    const fieldDisplay = (key) => {
+
+        return (
+            <Grid
+                key={key}
+                container
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}
+                className={fieldStyle()}
+            >
+                {editStatus?
                     <Typography
                         className={smallBtn.fieldBtns}
                         style={{ visibility: display }}
-						align={'right'}
+                        align={'right'}
                     >
+                        <SelectRadioField
+                            open={selectRadioDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
                         <EditIcon
                             onClick={handleSelectRadioField}
                             className={smallBtn.editBtn}
@@ -88,31 +104,40 @@ const RadioField = (props) => {
                             className={smallBtn.deleteBtn}
                         />
                     </Typography>
-                </>
-            : '' }
-            <Typography style={{ width: '100%', fontSize: '18px', color: '#5048E5' }}>
-                {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
-            </Typography>
-            <DescriptionCard description={fieldData.description} helperText={true}/>
-            <FormControl style={{ width: '100%' }}>
-                <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={radioValue}
-                    onChange={handleRadio}
-                >
-                    {fieldData.radios.map((radio, index) => (
-                        <FormControlLabel
-                            key={index}
-                            value={radio.label}
-                            label={radio.label}
-                            control={<Radio size={"small"}/>}
-                        />
-                    ))}
-                </RadioGroup>
-            </FormControl>
-        </Grid>
+                : '' }
+                <Typography style={{ width: '100%', fontSize: '18px', color: '#5048E5' }}>
+                    {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
+                </Typography>
+                <DescriptionCard description={fieldData.description} helperText={false}/>
+                <FormControl style={{ width: '100%' }}>
+                    <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        value={radioValue}
+                        onChange={handleRadio}
+                    >
+                        {fieldData.radios.map((radio, index) => (
+                            <FormControlLabel
+                                key={index}
+                                value={radio.label}
+                                label={radio.label}
+                                control={<Radio size={"small"}/>}
+                            />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
+            </Grid>       
+        )
+    }
 
+    return (
+        !fieldData.display||fieldData.display==='visible'?
+            fieldDisplay(fieldData.id)
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay(fieldData.id)
+        : conditionalDisplay(fieldData)?
+            fieldDisplay(fieldData.id)
+        : ""
     )
 }
 

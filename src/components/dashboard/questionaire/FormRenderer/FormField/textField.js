@@ -14,15 +14,23 @@ import TextField_ from '../../dialogs/TextField';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function TextFieldComp
+ * @desc This is the Text Field component, it is the Text field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Text field.
+ * @returns {Component} - Returns a Text field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const TextFieldComp = (props) => {
 
     const {
         setError,
+        editStatus,
         setSelectSection,
         setSectionId,
         setSubSectionId,
         conditionalDisplay,
-        editStatus,
         deleteFieldData,
     } = useContext(FormContext);
 
@@ -42,9 +50,6 @@ const TextFieldComp = (props) => {
 
     const handleFieldValue = (e) => {
         setFieldValue(e.target.value)
-        // let newFieldResponses = fieldResponses
-        // newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
-        // setFieldResponses(newFieldResponses)
     };
 
     const deleteField = () => {
@@ -72,18 +77,16 @@ const TextFieldComp = (props) => {
                 style={{ display: 'block' }}
             >
                 {editStatus?
-                    <TextField_
-                        open={textFieldDialog}
-                        fieldData={fieldData}
-                        handleClose={handleClose}
-                    />
-                : "" }
-                {editStatus?
                     <Typography
                         className={smallBtn.fieldBtns}
                         style={{ visibility: display }}
                         align={'right'}
                     >
+                        <TextField_
+                            open={textFieldDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
                         <EditIcon
                             onClick={handleTextField}
                             className={smallBtn.editBtn}
@@ -93,26 +96,26 @@ const TextFieldComp = (props) => {
                             className={smallBtn.deleteBtn}
                         />
                     </Typography>
-                    : ""}
-                    <TextField
-                        required={fieldData.required}
-                        fullWidth
-                        type={'text'}
-                        variant={'outlined'}
-                        label={fieldData.label}
-                        value={fieldValue}
-                        onChange={handleFieldValue}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                        InputProps={{
-                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                        }}
-                    />
+                : ""}
+                <TextField
+                    required={fieldData.required}
+                    fullWidth
+                    type={'text'}
+                    variant={'outlined'}
+                    label={fieldData.label}
+                    value={fieldValue}
+                    onChange={handleFieldValue}
+                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                    InputProps={{
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                    }}
+                />
             </Grid>
         )
     }
 
     return (
-        fieldData.display==='visible'?
+        !fieldData.display||fieldData.display==='visible'?
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
             fieldDisplay()

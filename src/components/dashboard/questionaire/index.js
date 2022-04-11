@@ -220,54 +220,67 @@ const Questionaire = () => {
             />
             <SubSection
                 open={subSectionDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <TextField_
                 open={textFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <TextAreaField
                 open={textAreaFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <NumberField
                 open={numberFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <SelectBoxField
                 open={selectBoxDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <SelectField
                 open={selectDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <SelectRadioField
                 open={selectRadioDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <EmailField
                 open={emailFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <PhoneField
                 open={phoneFieldDialog}
+                fieldData={false}
                 handleClose={handleClose} 
             />
             <ImageField
                 open={imageDialog}
+                fieldData={false}
                 handleClose={handleClose} 
             />
             <DateField
                 open={dateDialog}
+                fieldData={false}
                 handleClose={handleClose} 
             />
             <LocationField
                 open={locationDialog}
+                fieldData={false}
                 handleClose={handleClose} 
             />
             <AreaMappingField
                 open={areaMappingDialog}
+                fieldData={false}
                 handleClose={handleClose} 
             />
             <Grid

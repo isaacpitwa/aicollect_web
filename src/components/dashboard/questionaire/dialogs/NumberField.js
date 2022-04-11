@@ -133,8 +133,8 @@ const NumberField = (props) => {
 
         let newFieldObj = {
             id: uuidv4(),
-            parentId: parentId,
-            subParentId: subParentId,
+            parentId: sectionId,
+            subParentId: subSectionId,
             type: type,
             display: conditionalData?'hidden':display,
             label: fieldLabel,

@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useEffect, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -16,6 +16,14 @@ import {
 } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function TextAreaFieldComp
+ * @desc This is the Text Area Field component, it is the Text Area field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Text Area field.
+ * @returns {Component} - Returns a Text Area field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const TextAreaFieldComp = (props) => {
 
     const {

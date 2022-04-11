@@ -1,19 +1,27 @@
-import { useState, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import EmailField from '../../dialogs/EmailField'
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import { FormContext } from '../../context';
+import EmailField from '../../dialogs/EmailField';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function EmailFieldComp
+ * @desc This is the Email Field component, it is the Email field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Email field.
+ * @returns {Component} - Returns a Email field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const EmailFieldComp = (props) => {
 
     const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);

@@ -99,20 +99,20 @@ const FormProvider = (props) => {
         setComponentsData(newComponentsData)
     }
 
-    const addComponentToSection = (compData) => {
+    const addComponentToSection = (field) => {
         
         let newComponentsData = componentsData;
-        let newSection = newComponentsData.find(section => section.id === compData.parentId);
-        let sectionIndex = newComponentsData.findIndex(section => section.id === compData.parentId);
+        let newSection = newComponentsData.find(section=>section.id===field.parentId);
+        let sectionIndex = newComponentsData.findIndex(section => section.id === field.parentId);
 
-        if(compData.subParentId) {
-            let newSubSection = newSection.components.find(subSec => subSec.id === compData.subParentId)
-            let subSectionIndex = newSection.components.findIndex(subSec => subSec.id === compData.subParentId)
-            newSubSection.components.push(compData)
+        if(field.subParentId) {
+            let newSubSection = newSection.components.find(subSec => subSec.id === field.subParentId)
+            let subSectionIndex = newSection.components.findIndex(subSec => subSec.id === field.subParentId)
+            newSubSection.components.push(field)
             newSection.components[subSectionIndex] = newSubSection
             newComponentsData[sectionIndex] = newSection
         } else {
-            newSection.components.push(compData)
+            newSection.components.push(field)
             newComponentsData[sectionIndex] = newSection
         }
 

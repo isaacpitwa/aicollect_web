@@ -1,19 +1,27 @@
-import { useState, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     Typography,
     Checkbox
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import SelectBoxField from '../../dialogs/SelectBoxField'
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import { FormContext } from '../../context';
+import SelectBoxField from '../../dialogs/SelectBoxField';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function SelectBoxesField
+ * @desc This is the Select Checkbox Field component, it is the Select Checkbox field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Select Checkbox field.
+ * @returns {Component} - Returns a Select Checkbox field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SelectBoxesField = (props) => {
 
     const {

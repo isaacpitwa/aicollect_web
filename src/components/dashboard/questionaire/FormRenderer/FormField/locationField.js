@@ -26,6 +26,14 @@ import {
 } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function LocationField
+ * @desc This is the Location Field component, it is the location field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the location field.
+ * @returns {Component} - Returns a Location field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const LocationField = (props) => {
 
     const {

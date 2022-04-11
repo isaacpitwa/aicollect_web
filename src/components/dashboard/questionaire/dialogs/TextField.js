@@ -44,9 +44,11 @@ const TextField_ = (props) => {
 
     const [errorTag, setErrorTag] = useState(false)
     const [panelType, setPanelType] = useState('display')
-    const [id] = useState(fieldData ? fieldData.id : '')
+    const [id] = useState(fieldData?fieldData.id:'')
+    const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
+    const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
     const [type] = useState(fieldData ? fieldData.type : 'text')
-    const [display, setDisplay] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
+    const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
@@ -145,8 +147,8 @@ const TextField_ = (props) => {
 
         let textFieldData = {
             id: id,
-            parentId: fieldData.parentId,
-            subParentId: fieldData.subParentId,
+            parentId: parentId,
+            subParentId: subParentId,
             type: type,
             display: conditionalData?'hidden':display,
             label: fieldLabel,
@@ -179,8 +181,8 @@ const TextField_ = (props) => {
 
     const newFieldData = fieldData?fieldData:{
         id: id,
-        parentId: sectionId,
-        subParentId: subSectionId,
+        parentId: parentId,
+        subParentId: subParentId,
         type: type
     }
 
@@ -239,6 +241,7 @@ const TextField_ = (props) => {
                                     onClick={conditionalPanel}
                                 >Conditional</Button>
                                 <Button
+                                    disabled
                                     variant={panelType == "logic" ? "contained" : "outlined"}
                                     onClick={logicPanel}
                                     style={{ borderRadius: '0px 8px 0px 0px' }}

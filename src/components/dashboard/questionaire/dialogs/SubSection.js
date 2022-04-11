@@ -41,7 +41,7 @@ const SubSection = (props) => {
     const { open, fieldData, handleClose } = props
 
     const [errorTag, setErrorTag] = useState(false)
-    const [panelType, setpanelType] = useState('display')
+    const [panelType, setPanelType] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : '')
     const [type] = useState(fieldData ? fieldData.type : 'sub-section' )
     const [display] = useState(fieldData?fieldData.display:'visible')
@@ -67,12 +67,12 @@ const SubSection = (props) => {
     }
 
     const displayPanel = (e) => {
-        setpanelType("display")
+        setPanelType("display")
         setConditional(false)
     }
 
     const conditionalPanel = (e) => {
-        setpanelType("conditional")
+        setPanelType("conditional")
         setConditional(true)
     }
 
