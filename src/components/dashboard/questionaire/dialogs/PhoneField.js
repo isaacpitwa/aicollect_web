@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
@@ -36,7 +36,7 @@ import GeneralTooltip from '../previews/GeneralTooltip';
 import PhonefieldPreview from '../previews/PhoneFieldPreview';
 
 // This is the field for type=TextField
-const PhoneField = (props) => {
+const PhoneField_ = (props) => {
 
     const {
         setError,
@@ -373,4 +373,4 @@ const PhoneField = (props) => {
     )
 }
 
-export default PhoneField
+export default PhoneField_
