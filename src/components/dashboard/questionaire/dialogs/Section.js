@@ -20,6 +20,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormContext } from '../context'
 import {
     allFormFields,
+    conditionalLogic
 } from '../utils';
 import {
     FieldError,
@@ -34,26 +35,24 @@ const Section = (props) => {
         componentsData,
         setComponentsData,
         setSectionCreated,
-        updateSection,
-        updateFormData
+        updateFormData,
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
-    const [compsData, setCompsData] = useState([]);
     const [errorTag, setErrorTag] = useState(false)
-    const [buttonFocused, setButtonFocused] = useState('display')
-    const [id] = useState(fieldData ? fieldData.id : '')
-    const [type] = useState(fieldData ? fieldData.type : 'section')
-    const [display, setDisplay] = useState(fieldData&&fieldData.conditional?'hidden':'visible')
-    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
-    const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
-    const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [dependency, setDependency] = useState(null)
-    const [conditional, setConditional] = useState(null)
-    const [components, setComponents] = useState(fieldData ? fieldData.components : [])
-    const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
-    const [compValue, setCompValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
+    const [panelType, setPanelType] = useState('display')
+    const [id] = useState(fieldData?fieldData.id:'')
+    const [type] = useState(fieldData?fieldData.type:'section')
+    const [display] = useState(fieldData?fieldData.display:'visible')
+    const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
+    const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
+    const [tooltip, setTooltip] = useState(fieldData?fieldData.tooltip:'')
+    const [dependency, setDependency] = useState(fieldData?fieldData.dependency:null)
+    const [conditional, setConditional] = useState(fieldData?fieldData.conditional:null)
+    const [components, setComponents] = useState(fieldData?fieldData.components:[])
+    const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
+    const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
     
     const handleLabel = (e) => {
         setFieldLabel(e.target.value)
@@ -67,51 +66,43 @@ const Section = (props) => {
         setTooltip(e.target.value)
     }
 
-    const handleDisplay = (e) => {
-        setButtonFocused("display")
-        setConditional(false)
+    const displayPanel = (e) => {
+        setPanelType("display")
     }
 
-    const handleConditional = (e) => {
-        setButtonFocused("conditional")
-        setConditional(true)
+    const conditionalPanel = (e) => {
+        setPanelType("conditional")
     }
 
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
 
-    const handleCompValue = (e) => {
-        setCompValue(e.target.value)
-    }
-
-    const conditionalLogic = () => {
-        if(when!==''&&compValue!==''){
-            return {
-                when: when,
-                value: compValue.toLowerCase()                
-            }
-        } else {
-            return null
-        }
+    const handleValue = (e) => {
+        setValue(e.target.value)
     }
 
     const removeConditional = () => {
-        setWhen("")
-        setCompValue("")
+        setWhen('')
+        setValue('')
     }
+
+    const conditionalData = conditionalLogic({
+        when: when,
+        value: value
+    })
 
     const addSection = () => {
 
         const sectionData = {
             id: uuidv4(),
             type: 'section',
-            display: conditionalLogic()?'hidden':display,
+            display: conditionalData?'hidden':display,
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
             dependency: dependency,
-            conditional: conditionalLogic(),
+            conditional: conditionalData,
             components: components
         }
         
@@ -120,12 +111,14 @@ const Section = (props) => {
             formFields.push(sectionData)
             setComponentsData(formFields)
             setSectionCreated(true)
+            setPanelType('display')
             setFieldLabel('')
             setFieldDescription('')
             setTooltip('')
-            setDependency(false)
-            setConditional(false)
+            setDependency(null)
+            setConditional(null)
             setComponents([])
+            removeConditional()
             handleClose()
         } else {
             setError(true)
@@ -139,23 +132,33 @@ const Section = (props) => {
         let sectionData = {
             id: id,
             type: type,
-            display: conditionalLogic()?'hidden':display,
+            display: conditionalData?'hidden':'visible',
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
             dependency: dependency,
-            conditional: conditionalLogic(),
+            conditional: conditionalData,
             components: components
         }
 
-        updateSection(sectionData)
+        let newFormFields = componentsData;
+        let sectionIndex = componentsData.findIndex(section => section.id === fieldData.id);
+        newFormFields[sectionIndex] = sectionData
+        setComponentsData(newFormFields)
+        updateFormData()
         handleClose()
     }
 
     const cancel = () => {
-        setFieldLabel('')
-        setFieldDescription('')
-        setTooltip('')
+        setError(false)
+        setErrorTag(false)
+        setPanelType('display')
+        setFieldLabel(fieldData?fieldData.label:'')
+        setFieldDescription(fieldData?fieldData.description:'')
+        setTooltip(fieldData?fieldData.tooltip:'')
+        setDependency(null)
+        removeConditional()
+        setComponents([])
         handleClose()
     }
 
@@ -205,13 +208,13 @@ const Section = (props) => {
                                 aria-label="outlined button group"
                             >
                                 <Button
-                                    variant={buttonFocused == "display" ? "contained" : "outlined"}
-                                    onClick={handleDisplay}
+                                    variant={panelType == "display" ? "contained" : "outlined"}
+                                    onClick={displayPanel}
                                     style={{ borderRadius: '8px 0px 0px 0px' }}
                                 >Display</Button>
                                 <Button
-                                    variant={buttonFocused == "conditional" ? "contained" : "outlined"}
-                                    onClick={handleConditional}
+                                    variant={panelType == "conditional" ? "contained" : "outlined"}
+                                    onClick={conditionalPanel}
                                     style={{ borderRadius: '0px 8px 0px 0px' }}
                                 >Conditional</Button>
                             </ButtonGroup>
@@ -220,7 +223,7 @@ const Section = (props) => {
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {conditional ?
+                            {panelType==='conditional'?
                                 <>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:
@@ -233,7 +236,7 @@ const Section = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'section').map((option, index) => (
+                                        {allFormFields(componentsData, fieldData?fieldData:{ id: id, type: type }).map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -248,14 +251,14 @@ const Section = (props) => {
                                         size="small"
                                         fullWidth
                                         variant="outlined"
-                                        value={compValue}
-                                        onChange={handleCompValue}
+                                        value={value}
+                                        onChange={handleValue}
                                     />
                                      <Typography
                                         style={{ paddingTop: '10px' }}
                                      >
                                         <Button
-                                            disabled={when||compValue?false:true}
+                                            disabled={when||value?false:true}
                                             variant='outlined'
                                             size='small'
                                             color='error'
@@ -266,7 +269,7 @@ const Section = (props) => {
 
                                      </Typography>
                                 </>
-                                :
+                            :
                                 <>
                                     <TextField
                                         required

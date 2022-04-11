@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
+import NextLink from 'next/link';
 import {
   Box,
   Button,
@@ -16,8 +17,6 @@ import {
 import { AuthGuard } from '../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../components/dashboard/dashboard-layout';
 import { OverviewBanner } from '../../components/dashboard/overview/overview-banner';
-import { OverviewInbox } from '../../components/dashboard/overview/overview-inbox';
-import { OverviewLatestTransactions } from '../../components/dashboard/overview/overview-latest-transactions';
 import { OverviewTotalBalance } from '../../components/dashboard/overview/overview-total-balance';
 import { OverviewTotalTransactions } from '../../components/dashboard/overview/overview-total-transactions';
 import { ArrowRight as ArrowRightIcon } from '../../icons/arrow-right';
@@ -143,20 +142,6 @@ const Overview = () => {
             </Grid>
             <Grid
               item
-              md={8}
-              xs={12}
-            >
-              <OverviewLatestTransactions />
-            </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
-              <OverviewInbox />
-            </Grid>
-            <Grid
-              item
               md={6}
               xs={12}
             >
@@ -221,32 +206,34 @@ const Overview = () => {
                       sx={{ pl: 1 }}
                       variant="subtitle2"
                     >
-                      Contacts
+                      Projects
                     </Typography>
                   </Box>
                   <Typography
                     sx={{ mt: 2 }}
                     variant="h6"
                   >
-                    Contacts allow you to manage your company contracts
+                    Projects allow you to create your Projects
                   </Typography>
                   <Typography
                     color="textSecondary"
                     variant="body2"
                   >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Manage all your data collection projects from this section, assign team to tasks,
+                    create questonaires and many more!
                   </Typography>
                 </CardContent>
                 <Divider />
                 <CardActions>
+                  <NextLink href='/dashboard/projects'>
                   <Button
                     endIcon={<ArrowRightIcon fontSize="small" />}
                     size="small"
                     variant="outlined"
                   >
-                    My Contacts
+                    My Projects
                   </Button>
+                  </NextLink>
                 </CardActions>
               </Card>
             </Grid>

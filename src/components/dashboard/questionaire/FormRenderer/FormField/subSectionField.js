@@ -1,57 +1,52 @@
-import { useState, useEffect, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useEffect, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import {
-    DescriptionCard,
-    allFormFields,
-    getDependantField
-} from '../../utils'
+import { FormContext } from '../../context';
+import SubSection from '../../dialogs/SubSection';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
+import FormField from '../FormField';
 
-import SubSection from '../../dialogs/SubSection'
-import GeneralTooltip from '../../previews/GeneralTooltip'
-import FormField from '../FormField'
-
+/**
+ * @function SubSectionField
+ * @desc This is the Sub-Section Field component, it is the Sub-Section field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Sub-Section field.
+ * @returns {Component} - Returns a Sub-Section field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SubSectionField = (props) => {
 
     const {
         setError,
+        conditionalDisplay,
         setSelectSection,
         setSectionId,
         subSectionId,
         setSubSectionId,
-        fieldResponses,
         editStatus,
         dependantId,
         dependecyValue,
-        conditionalId,
-        conditionalValue,
-        formFieldValues,
-        setFormFieldValues,
         deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props
 
-    const [fieldStyles, setFieldStyles] = useState(0)
-    const [subSectionDialog, setSubSectionDialog] = useState(false)
-    const [dependency] = useState(fieldData?fieldData.dependency:null);
-    const [conditional, setConditional] = useState(false);
     const [display, setDisplay] = useState('hidden');
-    const [numericFieldValue, setNumericFieldValue] = useState(0);
+    const [subSectionDialog, setSubSectionDialog] = useState(false)
 
     const handleSubSection = () => {
         setSubSectionDialog(true)
     }
 
-    const getSectionIDs = () => {
+    const getSectionIds = () => {
         if(editStatus){
             if(subSectionId===fieldData.id) {
                 setError(false)
@@ -63,208 +58,90 @@ const SubSectionField = (props) => {
                 setSubSectionId(fieldData.id)
             }
         }
-    }
-
-    const getConditionalValue = (dependeeData) => {
-        let dependee = "";
-        try {
-            if(fieldData.conditional) {
-                dependee = dependeeData.find(field => field.id===fieldData.conditional.when&&field.value===fieldData.conditional.value)
-                return dependee?true:false
-            }
-        } catch (error) {
-            return false
-        }
-    }
+    };
 
     const deleteField = () => {
         setSectionId(null)
         setSubSectionId(null)
         deleteFieldData(fieldData)
-    }    
+    };   
 
     const handleClose = () => {
         setSubSectionDialog(false)
-    }
+    };
     
     const classes = formStyles();
     const smallBtn = smallBtns();
 
-    const sectionStyle = () => {
-        if(subSectionId===fieldData.id) {
-            return classes.subSection2
+    const subSectionStyle = () => {
+        if(editStatus) {
+            if(subSectionId===fieldData.id) {
+                return classes.subSection3
+            } else {
+                return classes.subSection
+            }
         } else {
-            return classes.subSection
+            return classes.subSection2
         }
     };
 
+    const fieldDisplay = (key) => {
+
+        return (
+            <Grid
+                key={key}
+                container
+                onClick={getSectionIds}
+                className={subSectionStyle()}
+            >
+                <Typography
+                    onMouseOver={() => { setDisplay('visible'); } }
+                    onMouseOut={() => { setDisplay('hidden'); } }
+                    className={classes.subSectionLabel}
+                >
+                    {editStatus?
+                        <SubSection
+                            open={subSectionDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
+                    : "" }
+                    {fieldData.label}{fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
+                    {editStatus?
+                        <small
+                            className={smallBtn.sectionBtns}
+                            style={{ visibility: display }}
+                        >
+                            <EditIcon
+                                onClick={handleSubSection}
+                                className={smallBtn.editBtn}
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                            />
+                        </small>
+                    : "" }
+                </Typography>
+                <DescriptionCard description={fieldData.description} helperText={false} />
+                {fieldData.components.map((field, index) => (
+                    <FormField key={index} fieldData={field} />
+                ))}
+            </Grid>        
+        )
+    }
+
     return (
         fieldData.display==='visible'?
-            <Grid
-                key={fieldData.id}
-                container
-                onClick={getSectionIDs}
-                className={editStatus?sectionStyle():classes.subSection3}
-            >
-                <SubSection
-                    open={subSectionDialog}
-                    fieldData={fieldData}
-                    handleClose={handleClose}
-                />
-                <Typography
-                    onMouseOver={() => { setDisplay('visible'); } }
-                    onMouseOut={() => { setDisplay('hidden'); } }
-                    className={classes.subSectionLabel}
-                    variant='h5'
-                >
-                    {fieldData.label}{fieldData.tooltip!==''? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                    {editStatus?
-                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                        <EditIcon
-                            onClick={handleSubSection}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon
-                            onClick={deleteField}
-                            className={smallBtn.deleteBtn}
-                        />
-                        </small>
-                    :
-                        ""
-                    }
-                </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
-                <Grid
-                    item
-                    sm={12}
-                    style={{ padding: '10px' }}
-                >
-                    {fieldData.components.map((componentData, index) => (
-                        <FormField key={index} fieldData={componentData} />
-                    ))}
-                </Grid>
-            </Grid>
+            fieldDisplay(fieldData.id)
         : fieldData.display==='hidden'&&editStatus?
-            <Grid
-                container
-                onClick={getSectionIDs}
-                className={editStatus?sectionStyle():classes.subSection3}
-            >
-                <SubSection
-                    open={subSectionDialog}
-                    fieldData={fieldData}
-                    handleClose={handleClose}
-                />
-                <Typography
-                    onMouseOver={() => { setDisplay('visible'); } }
-                    onMouseOut={() => { setDisplay('hidden'); } }
-                    className={classes.subSectionLabel}
-                    variant='h5'
-                >                    
-                    {fieldData.label} {fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                    {editStatus?
-                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                        <EditIcon
-                            onClick={handleSubSection}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon
-                            onClick={deleteField}
-                            className={smallBtn.deleteBtn}
-                        />
-                        </small>
-                    :
-                        ""
-                    }
-                </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
-                <Grid
-                    item
-                    sm={12}
-                    style={{ padding: '10px' }}
-                >
-                    {fieldData.components.map((componentData, index) => (
-                        <FormField key={index} fieldKey={index} fieldData={componentData} />
-                    ))}
-                </Grid>
-            </Grid>
+            fieldDisplay(fieldData.id)
         : fieldData.dependency===dependantId&&dependecyValue>0?
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
-                <Grid
-                    key={index}
-                    container
-                    className={classes.subSection3}
-                >
-                    <Typography
-                        className={classes.subSectionLabel}
-                        variant='h5'
-                    >
-                        {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                        {editStatus?
-                            <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                            <EditIcon
-                                onClick={handleSubSection}
-                                className={smallBtn.editBtn}
-                            />
-                            <HighlightOffIcon
-                                onClick={deleteField}
-                                className={smallBtn.deleteBtn}
-                            />
-                            </small>
-                        :
-                            ""
-                        }
-                    </Typography>
-                    <DescriptionCard description={fieldData.description} helperText={true} />
-                    <Grid
-                        item
-                        sm={12}
-                        style={{ padding: '10px' }}
-                    >
-                        {fieldData.components.map((componentData, index) => (
-                            <FormField key={index} fieldKey={index} fieldData={componentData} />
-                        ))}
-                    </Grid>
-                </Grid>
+                fieldDisplay(index)
             ))
-        : fieldData.conditional&&fieldData.conditional.when===conditionalId&&fieldData.conditional.value===conditionalValue&&!editStatus?
-            <Grid
-                container
-                className={classes.subSection3}
-            >
-                <Typography
-                    onMouseOver={() => { setDisplay('visible'); } }
-                    onMouseOut={() => { setDisplay('hidden'); } }
-                    className={classes.subSectionLabel}
-                    variant='h5'
-                >
-                    {fieldData.label}{fieldData.tooltip !== '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                    {editStatus?
-                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                            <EditIcon
-                                onClick={handleSubSection}
-                                className={smallBtn.editBtn}
-                            />
-                            <HighlightOffIcon
-                                onClick={deleteField}
-                                className={smallBtn.deleteBtn}
-                            />
-                        </small>
-                    :
-                        ""
-                    }
-                </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
-                <Grid
-                    item
-                    sm={12}
-                    style={{ padding: '10px' }}
-                >
-                    {fieldData.components.map((componentData, index) => (
-                        <FormField key={index} fieldKey={index} fieldData={componentData} />
-                    ))}
-                </Grid>
-            </Grid>
+        : conditionalDisplay(fieldData)?
+            fieldDisplay()
         : ""
     )
 }

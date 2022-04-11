@@ -16,17 +16,13 @@ import {
   Stack,
   IconButton
 } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { customerApi } from '../../../../../../__fake-api__/customer-api';
-import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
-import { QuestionaireDetailsTable } from '../../../../../../components/dashboard/projectDetails/questionairesDetails/questionaire-list-table';
-import { useMounted } from '../../../../../../hooks/use-mounted';
-import { Plus as PlusIcon } from '../../../../../../icons/plus';
-import { Search as SearchIcon } from '../../../../../../icons/search';
-import { gtm } from '../../../../../../lib/gtm';
+import { AuthGuard } from '../../../../../../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../../../../../../components/dashboard/dashboard-layout';
+import { QuestionaireDetailsTable } from '../../../../../../../../components/dashboard/projectDetails/questionairesDetails/questionaire-list-table';
+import { useMounted } from '../../../../../../../../hooks/use-mounted';
+import { Search as SearchIcon } from '../../../../../../../../icons/search';
+import { gtm } from '../../../../../../../../lib/gtm';
 
 const tabs = [
   {
