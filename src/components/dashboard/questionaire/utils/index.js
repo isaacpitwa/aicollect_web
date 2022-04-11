@@ -1,10 +1,5 @@
 import { compose, withProps } from "recompose";
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker
-} from "react-google-maps";
+import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 
 import {
     Typography
@@ -56,31 +51,31 @@ export const DescriptionCard = (props) => {
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
- export const CurrentLocation = compose(
-	withProps({
-	  googleMapURL:
-		`https://maps.googleapis.com/maps/api/js?key=AIzaSyCt86FQK_WYrNu6SN0yoB6YRh_CzNaypGI&libraries=geometry,drawing,places`,
-		loadingElement: <div style={{ height: `100%` }} />,
-		containerElement: <div style={{ height: `150px` }} />,
-		mapElement: <div style={{ height: `100%`, borderRadius: '8px' }} />
-	}),
-	withScriptjs,
-	withGoogleMap
-  )(props => {
+ export const CurrentLocation = (props) => {
 
 	const { coordinates, isMarkerShown } = props
 
+    const containerStyle = {
+        width: '100%',
+        height: '150px'
+    };
+
 	return (
-		<GoogleMap
-			defaultZoom={10}
-			defaultCenter={{ lat: coordinates.lat, lng: coordinates.lng }}
-		>
-		{isMarkerShown && (
-			<Marker position={{ lat: coordinates.lat, lng: coordinates.lng }} />
-		)}
-		</GoogleMap>
+        <LoadScript
+            googleMapsApiKey="AIzaSyCt86FQK_WYrNu6SN0yoB6YRh_CzNaypGI"
+        >      
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={{ lat: coordinates.lat, lng: coordinates.lng }}
+                zoom={10}
+            >
+                {isMarkerShown && (
+                    <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }} />
+                )}
+            </GoogleMap>
+        </LoadScript>
 	)
-});
+};
 
 /**
  * @function allFormFields

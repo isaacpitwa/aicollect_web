@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { v4 as uuidv4 } from 'uuid'
+import dialogStyles from '../styles/FormStyles';
+import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
     Checkbox,
@@ -239,6 +240,8 @@ const SelectField = (props) => {
         subParentId: subParentId,
         type: type
     }
+    
+    const classes = dialogStyles();
 
     return (
         <Dialog
@@ -247,19 +250,24 @@ const SelectField = (props) => {
             fullWidth={true}
             maxWidth={'lg'}
         >
-            <DialogTitle                
-                style={{
-                    backgroundColor: '#5048E5',
-                    color: 'white',
-                    padding: '20px 40px'
-                }}
+            <DialogTitle
+                className={classes.title}
             >
                 Select Field Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
+                <CancelIcon
+                    color='error'
+                    className={classes.cancelBtn}
+                    onClick={handleClose}
+                />
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        className={classes.content}
+                    >
                         <FieldError errorTag={errorTag}/>
                             <Box
                             sx={{
@@ -437,7 +445,11 @@ const SelectField = (props) => {
                                         onChange={handleTooltip}
                                     />
                                     <Typography style={{ color: '#5048E5' }}>
-                                        <Checkbox size={'small'} checked={isRequired} onChange={handleIsRequired}/>Required<GeneralTooltip tipData={'A required field must be filled.'}/>
+                                        <Checkbox
+                                            size={'small'}
+                                            checked={isRequired}
+                                            onChange={handleIsRequired}
+                                        />Required<GeneralTooltip tipData={'A required field must be filled.'}/>
                                     </Typography>
                                 </>
                             }

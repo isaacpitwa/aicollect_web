@@ -27,7 +27,6 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
 const TextAreaFieldComp = (props) => {
 
     const {
-        setFieldResponses,
         editStatus,
         deleteFieldData 
     } = useContext(FormContext);

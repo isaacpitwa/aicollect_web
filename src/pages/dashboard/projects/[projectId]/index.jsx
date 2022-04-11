@@ -238,8 +238,8 @@ const ProjectDetails = () => {
           <Stack direction="row" mb={4}>
             <Grid container spacing={3}>
               <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
-                {/* <NextLink href={`/dashboard/projects/${projectId}/module/registration/questionaire`} passHref> */}
-                <NextLink href={`/dashboard/projects/${projectId}/questionaire`} passHref>
+                <NextLink href={`/dashboard/projects/${projectId}/module/registration/questionaire`} passHref>
+                {/* <NextLink href={`/dashboard/projects/${projectId}/questionaire`} passHref> */}
                   <Card elevation={8}>
                     <Box
                       sx={{

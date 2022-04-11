@@ -176,4 +176,19 @@ export const smallBtns = makeStyles({
     }
 });
 
+export const dialogStyles = makeStyles({
+    title: {
+        backgroundColor: '#5048E5',
+        color: 'white',
+        padding: '20px 40px',
+    },
+    cancelBtn: {
+        float: 'right',
+        cursor: 'pointer'
+    },
+    content: {
+        padding: '20px'
+    }
+});
+
 export default formStyles
