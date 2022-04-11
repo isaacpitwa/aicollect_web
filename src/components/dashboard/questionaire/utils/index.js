@@ -1,4 +1,3 @@
-import { compose, withProps } from "recompose";
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 
 import {
