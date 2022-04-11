@@ -105,7 +105,7 @@ export const OverviewTotalTransactions = (props) => {
     <Card {...props}>
       <CardHeader
         subheader={format(new Date(), 'MMM yyyy')}
-        title="Total Transactions"
+        title="Total Data Collections"
       />
       <Divider />
       <Scrollbar>

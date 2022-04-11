@@ -36,6 +36,7 @@ import { convertToJSON } from '../../../../../../../utils/convert-excel-data-to-
 
 // API
 import { FormsApi } from '../../../../../../../api/forms-api';
+import { projectsApi } from '../../../../../../../api/projects-api';
 
 const tabs = [
   {
@@ -145,6 +146,7 @@ const QuestionaireList = () => {
   const router = useRouter();
   const { projectId, module } = router.query;
   const { user } = useAuth();
+  const [project, setProject] = useState(null);
   const [questionaires, setQuestionaires] = useState([]);
   const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
@@ -267,11 +269,26 @@ const QuestionaireList = () => {
     }
   }, [isMounted, setQuestionaires, user, projectId, module]);
 
+  const fetchProjectDetails = useCallback(async () => {
+    try {
+      const data = await projectsApi.fetchProjectDetails(projectId);
+      if (data) {
+        setProject(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setProject, projectId]);
+
   useEffect(() => {
       getQuestionaires();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
+
+  useEffect(() => {
+    fetchProjectDetails();
+  }, []);
 
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
@@ -337,7 +354,7 @@ const QuestionaireList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Project XYZ - Questionaires
+                  {project && project.projectname} - Questionaires
                 </Typography>
               </Grid>
             </Grid>
@@ -522,7 +539,7 @@ const QuestionaireList = () => {
             </Box>
             <QuestionaireListTable
               questionaires={paginatedCustomers}
-              questionairessCount={filteredCustomers.length}
+              questionairesCount={filteredCustomers.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}

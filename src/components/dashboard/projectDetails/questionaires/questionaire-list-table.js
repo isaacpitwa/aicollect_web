@@ -33,36 +33,36 @@ export const QuestionaireListTable = (props) => {
     rowsPerPage,
     ...other
   } = props;
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedQuestionaires, setSelectedQuestionaires] = useState([]);
   const router = useRouter();
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedCustomers.length) {
-        setSelectedCustomers([]);
+      if (selectedQuestionaires.length) {
+        setSelectedQuestionaires([]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionaires]);
 
-  const handleSelectAllCustomers = (event) => {
-    setSelectedCustomers(event.target.checked
+  const handleSelectAllQuestionaires = (event) => {
+    setSelectedQuestionaires(event.target.checked
       ? questionaires.map((customer) => customer.id)
       : []);
   };
 
-  const handleSelectOneCustomer = (event, customerId) => {
-    if (!selectedCustomers.includes(customerId)) {
-      setSelectedCustomers((prevSelected) => [...prevSelected, customerId]);
+  const handleSelectOneQuestionaire = (event, questioanireId) => {
+    if (!selectedQuestionaires.includes(questioanireId)) {
+      setSelectedQuestionaires((prevSelected) => [...prevSelected, questioanireId]);
     } else {
-      setSelectedCustomers((prevSelected) => prevSelected.filter((id) => id !== customerId));
+      setSelectedQuestionaires((prevSelected) => prevSelected.filter((id) => id !== questioanireId));
     }
   };
 
-  const enableBulkActions = selectedCustomers.length > 0;
-  const selectedSomeCustomers = selectedCustomers.length > 0
-    && selectedCustomers.length < questionaires.length;
-  const selectedAllCustomers = selectedCustomers.length === questionaires.length;
+  const enableBulkActions = selectedQuestionaires.length > 0;
+  const selectedSomeQuestionaires = selectedQuestionaires.length > 0
+    && selectedQuestionaires.length < questionaires.length;
+  const selectedAllQuestionaires = selectedQuestionaires.length === questionaires.length;
 
   return (
     <div {...other}>
@@ -75,9 +75,9 @@ export const QuestionaireListTable = (props) => {
         }}
       >
         <Checkbox
-          checked={selectedAllCustomers}
-          indeterminate={selectedSomeCustomers}
-          onChange={handleSelectAllCustomers}
+          checked={selectedAllQuestionaires}
+          indeterminate={selectedSomeQuestionaires}
+          onChange={handleSelectAllQuestionaires}
         />
         <Button
           size="small"
@@ -98,9 +98,9 @@ export const QuestionaireListTable = (props) => {
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedAllCustomers}
-                  indeterminate={selectedSomeCustomers}
-                  onChange={handleSelectAllCustomers}
+                  checked={selectedAllQuestionaires}
+                  indeterminate={selectedSomeQuestionaires}
+                  onChange={handleSelectAllQuestionaires}
                 />
               </TableCell>
               <TableCell>
@@ -125,19 +125,19 @@ export const QuestionaireListTable = (props) => {
           </TableHead>
           <TableBody>
             {questionaires.map((questionaire) => {
-              const isCustomerSelected = selectedCustomers.includes(questionaire.id);
+              const isQuestionaireSelected = selectedQuestionaires.includes(questionaire.id);
 
               return (
                 <TableRow
                   hover
                   key={questionaire.id}
-                  selected={isCustomerSelected}
+                  selected={isQuestionaireSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneCustomer(event, questionaire.id)}
-                      value={isCustomerSelected}
+                      checked={isQuestionaireSelected}
+                      onChange={(event) => handleSelectOneQuestionaire(event, questionaire.id)}
+                      value={isQuestionaireSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -149,7 +149,11 @@ export const QuestionaireListTable = (props) => {
                     >
                       <Box sx={{ ml: 1 }}>
                         <NextLink
+<<<<<<< HEAD
                           href={`/dashboard/projects/${router.query.projectId}/module/registration/questionaire/${questionaire._id}`}
+=======
+                          href={`/dashboard/projects/${router.query.projectId}/module/${questionaire.module}questionaire/${questionaire._id}`}
+>>>>>>> 41ee2450498f9c037015be889a8d84217ff56e54
                           passHref
                         >
                           <Link
