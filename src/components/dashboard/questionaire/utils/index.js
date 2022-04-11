@@ -1,19 +1,21 @@
-import { compose, withProps } from "recompose";
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker
-} from "react-google-maps";
+import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 
 import {
     Typography
-} from '@mui/material'
+} from '@mui/material';
 
-import FormStyles from '../styles/FormStyles'
-import InfoIcon from '@mui/icons-material/Info'
+import FormStyles from '../styles/FormStyles';
+import InfoIcon from '@mui/icons-material/Info';
 
-// This is a description component for displaying descriptions of form fields
+/**
+ * @function DescriptionCard
+ * @desc This is a description component for displaying descriptions of form fields.
+ * @arg {String} description - The description property from a field object.
+ * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property.
+ * @returns {Component} - Returns a description JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 export const DescriptionCard = (props) => {
 
     const Styles = FormStyles.sectionStyles
@@ -21,12 +23,17 @@ export const DescriptionCard = (props) => {
     const { description, helperText } = props
 
     return (
-        description ?
-            helperText ?
-                <span><InfoIcon style={{ fontSize: '24px', marginBottom: '-7px' }} /> {description}</span>
-                :
-                <Typography style={{ marginLeft: '20px' }}>
-                    <i><InfoIcon style={{ fontSize: '22px', marginBottom: '-7px', color: '#5F768A' }} /> {description}</i>
+        description?
+            helperText?
+                <span>
+                    <InfoIcon
+                        style={{ fontSize: '24px', marginBottom: '-7px' }}
+                    />
+                    {description}
+                </span>
+            :
+                <Typography>
+                    <i style={{ fontSize: '15px' }}><InfoIcon style={{ fontSize: '22px', marginBottom: '-7px', color: '#5F768A' }} /> {description}</i>
                 </Typography>
             :
             ''
@@ -39,75 +46,59 @@ export const DescriptionCard = (props) => {
  * @desc This component displays a Google map of the current location using coordinates provided
  * @arg {Object} coordinates - The entire form object with all the components/form fields.
  * @arg {Boolean} isMarkerShown - The id of the form field using this method.
+ * @returns {Component} - Returns a Google Map JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
- export const CurrentLocation = compose(
-	withProps({
-	  googleMapURL:
-		`https://maps.googleapis.com/maps/api/js?key=AIzaSyCt86FQK_WYrNu6SN0yoB6YRh_CzNaypGI&libraries=geometry,drawing,places`,
-		loadingElement: <div style={{ height: `100%` }} />,
-		containerElement: <div style={{ height: `150px` }} />,
-		mapElement: <div style={{ height: `100%`, borderRadius: '8px' }} />
-	}),
-	withScriptjs,
-	withGoogleMap
-  )(props => {
+ export const CurrentLocation = (props) => {
 
 	const { coordinates, isMarkerShown } = props
 
+    const containerStyle = {
+        width: '100%',
+        height: '150px'
+    };
+
 	return (
-		<GoogleMap
-			defaultZoom={10}
-			defaultCenter={{ lat: coordinates.lat, lng: coordinates.lng }}
-		>
-		{isMarkerShown && (
-			<Marker position={{ lat: coordinates.lat, lng: coordinates.lng }} />
-		)}
-		</GoogleMap>
+        <LoadScript
+            googleMapsApiKey="AIzaSyCt86FQK_WYrNu6SN0yoB6YRh_CzNaypGI"
+        >      
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={{ lat: coordinates.lat, lng: coordinates.lng }}
+                zoom={10}
+            >
+                {isMarkerShown && (
+                    <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }} />
+                )}
+            </GoogleMap>
+        </LoadScript>
 	)
-});
+};
 
 /**
  * @function allFormFields
- * @desc This function gets all form fields excluding sections and sub-sections
+ * @desc This function only gets all form fields in which the field using it exists.
  * @arg {Object} data - The entire form object with all the components/form fields.
- * @arg {Number} fieldId - The id of the form field using this method.
- * @arg {String} fieldType - The type of form field using this method.
- * @returns {Object} - An array of all form field elements except the Section and Sub-Section
+ * @arg {Object} fieldData - The id of the form field using this method.
+ * @returns {Array} - Returns an array of form fields
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
-export const allFormFields = (data, fieldId=null, fieldType=null) => {
+export const allFormFields = (data, fieldData=null) => {
 
     let allFields = [];
 
-    if(fieldType === 'section'){
-        data.forEach((item) => {
-            if(item.id!==fieldId) {
-                allFields.push(...item.components.filter(field=>field.type!=="sub-section"))
-            }
-            // item.components.forEach((comp) => {
-            //     if(comp.parentId !== fieldId){
-            //         if (comp.type !== 'sub-section') {
-            //             allFields.push(...comp.components)
-            //         } else {
-            //             allFields.push(comp);
-            //         }
-            //     }
-            // });
+    if(fieldData.type==='section'){
+        data.filter(item=>item.id!==fieldData.id).forEach((item) => {
+            allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
         });
     } else {
-        if(data){
-            data.map((item) => {
-                item.components.forEach((comp) => {
-                    if (comp.type === 'sub-section') {
-                        allFields.push(...comp.components)
-                    } else {
-                        allFields.push(comp);
-                    }
-                });
-            });
+        if(fieldData.subParentId) {
+            let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
+            allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+        } else {
+            allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
         }
     }
 
@@ -160,17 +151,24 @@ export const FieldIndex = (fieldId, fieldsData) => {
     return fieldIndex
 }
 
-export const allHiddenSubSections = (parentId, componentsData) => {
-    if(parentId){
-        let sectionComponents = componentsData.find(comp => comp.id === parentId).components
-        let subSections = sectionComponents.filter(field => field.type === 'sub-section' && field.parentId === parentId)
-        return subSections
-    } else {
-        return []
-    }
+export const getSectionsSubSections = (parentId, componentsData) => {
+    let sections = componentsData.filter(section=>section.id!==parentId)
+    let subSections = componentsData.find(section=>section.id===parentId).components.filter(field=>field.type==='sub-section');
+    return sections.concat(subSections)
 }
 
 export const getDependantField = (allFields, fieldId) => {
     let dependantField = allFields.find(field => field.id === fieldId)
     return dependantField
+}
+
+export const conditionalLogic = (data) => {
+    if(data.when!==''&&data.value!==''){
+        return {
+            when: data.when,
+            value: data.value.toLowerCase()                
+        }
+    } else {
+        return null
+    }
 }

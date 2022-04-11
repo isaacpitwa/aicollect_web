@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -15,12 +14,14 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
+  Tooltip
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
+import { Trash } from '../../../icons/trash';
 
 export const ProjectTeamMembersTable = (props) => {
   const {
@@ -36,16 +37,16 @@ export const ProjectTeamMembersTable = (props) => {
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedMembers.length) {
-        setSelectedMembers([]);
-      }
-    },
+    if (selectedMembers.length) {
+      setSelectedMembers([]);
+    }
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [projectMembers]);
 
   const handleSelectAllMembers = (event) => {
     setSelectedMembers(event.target.checked
-      ? projectMembers.map((customer) => customer.id)
+      ? projectMembers.map((customer) => customer.userId)
       : []);
   };
 
@@ -81,13 +82,7 @@ export const ProjectTeamMembersTable = (props) => {
           size="small"
           sx={{ ml: 2 }}
         >
-          Delete
-        </Button>
-        <Button
-          size="small"
-          sx={{ ml: 2 }}
-        >
-          Edit
+          Remove From Project
         </Button>
       </Box>
       <Scrollbar>
@@ -120,8 +115,8 @@ export const ProjectTeamMembersTable = (props) => {
           </TableHead>
           <TableBody>
             {projectMembers.map((customer) => {
-              const isCustomerSelected = selectedMembers.includes(customer.id);
-              
+              const isCustomerSelected = selectedMembers.includes(customer.userId);
+
               return (
                 <TableRow
                   hover
@@ -131,7 +126,7 @@ export const ProjectTeamMembersTable = (props) => {
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneMember(event, customer.id)}
+                      onChange={(event) => handleSelectOneMember(event, customer.userId)}
                       value={isCustomerSelected}
                     />
                   </TableCell>
@@ -153,7 +148,7 @@ export const ProjectTeamMembersTable = (props) => {
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/customers/1"
+                          href={`/dashboard/users/${customer.userId}`}
                           passHref
                         >
                           <Link
@@ -182,8 +177,14 @@ export const ProjectTeamMembersTable = (props) => {
                     {customer.createdAt}
                   </TableCell>
                   <TableCell align="right">
+                    <Tooltip title="Remove User From Team">
+                      <IconButton>
+                        <Trash fontSize='small' />
+                      </IconButton>
+                    </Tooltip>
+
                     <NextLink
-                      href="/dashboard/customers/1/edit"
+                      href={`/dashboard/users/${customer.userId}/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -191,13 +192,14 @@ export const ProjectTeamMembersTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/customers/1"
+                      href={`/dashboard/users/${customer.userId}`}
                       passHref
                     >
                       <IconButton component="a">
                         <ArrowRightIcon fontSize="small" />
                       </IconButton>
                     </NextLink>
+
                   </TableCell>
                 </TableRow>
               );

@@ -1,5 +1,3 @@
-import { useEffect, useState, useContext } from 'react'
-import SectionField from './sectionField'
 import SubSectionField from './subSectionField'
 import TextField from './textField'
 import TextAreaField from './textAreaField'
@@ -12,13 +10,9 @@ import PhoneNumberField from './phoneNumberField'
 import ImageField from './imageField'
 import LocationField from './locationField'
 import DateField from './dateField'
-
 import AreaMappingField from './areaMappingField'
-import { FormContext } from '../../context'
 
 const FormField = (props) => {
-
-    const { fieldResponses } = useContext(FormContext)
 
     const { fieldData } = props
     

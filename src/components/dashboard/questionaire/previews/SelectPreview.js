@@ -11,7 +11,7 @@ import GeneralTooltip from '../previews/GeneralTooltip'
 
 const SelectPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, options, isRequired } = props
+    const { fieldLabel, fieldValue, options, fieldDescription, tooltip, isRequired } = props
 
     return (
         <Grid
@@ -40,15 +40,15 @@ const SelectPreview = (props) => {
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={options[0].optionLabel}
+                value={options[0]?options[0].optionLabel:fieldValue}
                 fullWidth
                 size={'small'}
             >
                 {options.map((option, index)=>(
                     <MenuItem
                         key={index}
-                        value={option.optionLabel}
-                    >{option.optionLabel}</MenuItem>
+                        value={option.label}
+                    >{option.label}</MenuItem>
                 ))}
             </Select>
             {fieldDescription!=''?

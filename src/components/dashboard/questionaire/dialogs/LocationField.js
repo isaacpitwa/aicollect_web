@@ -117,7 +117,7 @@ const LocationField = (props) => {
                 value: compValue.toLowerCase()                
             }
         } else {
-            return false
+            return null
         }
     }
 
@@ -168,11 +168,7 @@ const LocationField = (props) => {
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            conditional: {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()
-            }
+            conditional: conditionalLogic()
         }
 
         updateFieldInSection(newField)

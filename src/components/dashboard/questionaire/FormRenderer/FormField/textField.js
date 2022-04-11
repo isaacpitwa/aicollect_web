@@ -11,92 +11,82 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import TextField_ from '../../dialogs/TextField';
-import { DescriptionCard, FieldIndex } from '../../utils';
+import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function TextFieldComp
+ * @desc This is the Text Field component, it is the Text field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Text field.
+ * @returns {Component} - Returns a Text field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const TextFieldComp = (props) => {
 
     const {
-        setFieldResponses,
+        setError,
         editStatus,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        conditionalDisplay,
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldKey, fieldData, fieldResponses } = props;
+    const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [value, setValue] = useState(fieldData.value?fieldData.value:'');
+    const [fieldValue, setFieldValue] = useState('');
     const [textFieldDialog, setTextFieldDialog] = useState(false);
-    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
-
-    useEffect(() => {
-    }, [fieldResponses])
-
-    const handleFieldValue = (e) => {
-        setValue(e.target.value)
-        let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
-        setFieldResponses(newFieldResponses)
-    }
 
     const handleTextField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setTextFieldDialog(true)
-    }
+    };
 
-    const createTextField = () => {
-        setTextFieldDialog(false)
-    }
+    const handleFieldValue = (e) => {
+        setFieldValue(e.target.value)
+    };
 
     const deleteField = () => {
         deleteFieldData(fieldData)
-    }
+    };
 
     const handleClose = () => {
         setTextFieldDialog(false)
-    }
+    };
 
     const classes = formStyles();
     const smallBtn = smallBtns();
 
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
 
-    return (
-        dependantField&&dependantField.value===fieldData.conditional.value?
+    const fieldDisplay = () => {
+        return (
             <Grid
-                key={fieldKey}
-                style={{ display: 'block' }}
-                container
-                className={classes.section}
-            >
-                <TextField
-                    required={fieldData.required}
-                    fullWidth
-                    type={'text'}
-                    variant={'outlined'}
-                    label={fieldData.label}
-                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                    InputProps={{
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                    }}
-                />
-            </Grid>
-        :
-            <Grid
-                key={fieldKey}
-                style={{ display: 'block' }}
                 container
                 onMouseOver={() => { setDisplay('visible') }}
                 onMouseOut={() => { setDisplay('hidden') }}
-                className={editStatus?classes.section:classes.section2}
+                className={fieldStyle()}
+                style={{ display: 'block' }}
             >
-                <TextField_
-                    open={textFieldDialog}
-                    fieldData={fieldData}
-                    handleClose={handleClose}
-                />
                 {editStatus?
                     <Typography
-                        style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'}
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
+                        align={'right'}
                     >
+                        <TextField_
+                            open={textFieldDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
                         <EditIcon
                             onClick={handleTextField}
                             className={smallBtn.editBtn}
@@ -106,21 +96,32 @@ const TextFieldComp = (props) => {
                             className={smallBtn.deleteBtn}
                         />
                     </Typography>
-                    : ""}
-                    <TextField
-                        required={fieldData.required}
-                        fullWidth
-                        type={'text'}
-                        variant={'outlined'}
-                        label={fieldData.label}
-                        value={value}
-                        onChange={handleFieldValue}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                        InputProps={{
-                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                        }}
-                    />
+                : ""}
+                <TextField
+                    required={fieldData.required}
+                    fullWidth
+                    type={'text'}
+                    variant={'outlined'}
+                    label={fieldData.label}
+                    value={fieldValue}
+                    onChange={handleFieldValue}
+                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                    InputProps={{
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                    }}
+                />
             </Grid>
+        )
+    }
+
+    return (
+        !fieldData.display||fieldData.display==='visible'?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : ""
     )
 }
 

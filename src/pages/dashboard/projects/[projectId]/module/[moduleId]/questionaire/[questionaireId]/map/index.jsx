@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 import Map from "react-map-gl";
 
-import { AuthGuard } from "../../../../../../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../../../../../../components/dashboard/dashboard-layout";
-import { gtm } from "../../../../../../../lib/gtm";
+import { AuthGuard } from "../../../../../../../../../components/authentication/auth-guard";
+import { DashboardLayout } from "../../../../../../../../../components/dashboard/dashboard-layout";
+import { gtm } from "../../../../../../../../../lib/gtm";
 
 const TaskMapArea = () => {
   useEffect(() => {
