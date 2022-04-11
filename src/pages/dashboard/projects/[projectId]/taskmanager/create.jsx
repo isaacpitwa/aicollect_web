@@ -29,10 +29,11 @@ import {
   ListItemText,
   Chip,
   OutlinedInput,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';;
 import toast from 'react-hot-toast';
+import _without from 'lodash/without';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
@@ -110,21 +111,16 @@ const CreateTask = () => {
   const steps = [
     {
       label: 'Task Information',
-      description: `For each ad campaign that you create, you can control how much
-                you're willing to spend on clicks and conversions, which networks
-                and geographical locations you want your ads to show on, and more.`,
+      description: `Task basic information`,
     },
     {
       label: activeStep === 1 && taskInformation.taskType === 'registration' ? "Add Team Member" : "Upload Schedule",
       description:
-        'An ad group contains one or more ads which target a shared set of keywords.',
+        'More information.',
     },
     {
       label: 'Assign Questionaire',
-      description: `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`,
+      description: `Add questionaires to the tasks.`,
     },
   ];
 
@@ -140,19 +136,25 @@ const CreateTask = () => {
     } catch (error) {
       
     }
-  }, [setProjectMembers]);
+  }, [setProjectMembers, projectId]);
 
   // Get Project Questionaires
   const fetchQuestionaires = useCallback(async () => {
     try {
-      const data = await FormsApi.getAllProjectForms();
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        clientId = user.clientId;
+      }
+      const data = await FormsApi.getAllProjectForms(projectId, clientId);
       if (data) {
         setQuestionairesList(data);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [setQuestionairesList]);
+  }, [setQuestionairesList, projectId, user]);
 
   useEffect(() => {
     fetchProjectTeam();
@@ -178,6 +180,11 @@ const CreateTask = () => {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+  };
+
+  const handleDeleteUserFromTask = (event, value) => {
+    event.preventDefault();
+    setTeam((current) => _without(current, value));
   };
 
   const handlePageChange = (event, newPage) => {
@@ -299,7 +306,7 @@ const CreateTask = () => {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({ onDrop: onDropExcelFiles, accept: '.xlsx,.csv,.xls', maxFiles: 1, })
-
+  // console.log(team)
   return (
     <>
       <Head>
@@ -438,9 +445,8 @@ const CreateTask = () => {
                                           <Chip
                                             key={idx}
                                             label={value.name}
-                                            // onMouseDown
                                             onDelete={() => {
-                                              selected.splice(idx, 1);
+                                              setTeam((prevState) => prevState.filter((item) => item.name !== value.name))
                                             }}
                                            />
                                         ))}
