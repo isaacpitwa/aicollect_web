@@ -57,7 +57,7 @@ export const DescriptionCard = (props) => {
 
     const containerStyle = {
         width: '100%',
-        height: '150px'
+        height: '200px'
     };
 
 	return (
@@ -106,52 +106,6 @@ export const allFormFields = (data, fieldData=null) => {
     return allFields
 }
 
-// This function gets the index of a form field from the form data set
-export const findComponentIndex = (newFieldData, componentsData) => {
-
-    let compIndex = null;
-    let sectionField = {};
-    let sectionComponents = []
-
-    if (newFieldData.parentId && newFieldData.subParentId) {
-        sectionComponents = componentsData.find(comp => comp.id === newFieldData.parentId).components;
-        subSectionComponents = sectionComponents.find(comp => comp.id === newFieldData.subParentId).components;
-        compIndex = subSectionComponents.findIndex(comp => comp.id === newFieldData.id)
-    } else if (newFieldData.parentId && !newFieldData.subParentId) {
-        sectionField = componentsData.find(comp => comp.id === newFieldData.parentId);
-        sectionComponents = sectionField.components
-        compIndex = sectionComponents.findIndex(comp => comp.id === newFieldData.id)
-    } else {
-        compIndex = componentsData.findIndex(comp => comp.id === newFieldData.id)
-    }
-
-    return compIndex
-}
-
-// This function edits a form field by it's index
-export const editField = (componentsData, fieldIndex, newFieldData) => {
-    
-    let newComponentsData = componentsData;
-    
-    if (newFieldData.parentId && newFieldData.subParentId) {
-        let sectionIndex = newComponentsData.components.findIndex(comp => comp.id === newFieldData.parentId);
-        let sectionFieldComponents = newComponentsData.find(comp => comp.id === newFieldData.parentId).components;
-        let subSectionIndex = sectionFieldComponents.findIndex(comp => comp.id === newFieldData.subParentId);
-        newComponentsData[sectionIndex].components[subSectionIndex].components[fieldIndex] = newFieldData;
-    } else if (newFieldData.parentId && !newFieldData.subParentId) {
-        let sectionIndex = newComponentsData.findIndex(comp => comp.id === newFieldData.parentId);
-        newComponentsData[sectionIndex].components[fieldIndex] = newFieldData;
-    } else {
-        newComponentsData[fieldIndex] = newFieldData;
-    }
-    return newComponentsData
-}
-
-export const FieldIndex = (fieldId, fieldsData) => {
-    let fieldIndex = fieldsData.findIndex(comp => comp.fieldId === fieldId)
-    return fieldIndex
-}
-
 /**
  * @function getSectionsSubSections
  * @desc This method gets EITHER all Sub-Sections in the same Section with the field using it OR all form Sections except the section the field using it exists.
@@ -172,6 +126,16 @@ export const getDependantField = (allFields, fieldId) => {
     return dependantField
 }
 
+/**
+ * @function conditionalLogic
+ * @desc This method is used to capture conditional diplay values.
+ * @arg {Object} data - All form fields.
+ * @arg {String} data.when - The id of the dependant field.
+ * @arg {String} data.value - The value only which entered will the dependant field display.
+ * @returns {Object} An array of Sections and Sub-sections.
+ * @author Atama Zack <atama.zack@gmail.com>.
+ * @version 1.0.0
+ */
 export const conditionalLogic = (data) => {
     if(data.when!==''&&data.value!==''){
         return {
@@ -181,4 +145,26 @@ export const conditionalLogic = (data) => {
     } else {
         return null
     }
+}
+
+// This function gets the index of a form field from the form data set
+export const findComponentIndex = (newFieldData, componentsData) => {
+
+    let compIndex = null;
+    let sectionField = {};
+    let sectionComponents = []
+
+    if (newFieldData.parentId && newFieldData.subParentId) {
+        sectionComponents = componentsData.find(comp => comp.id === newFieldData.parentId).components;
+        subSectionComponents = sectionComponents.find(comp => comp.id === newFieldData.subParentId).components;
+        compIndex = subSectionComponents.findIndex(comp => comp.id === newFieldData.id)
+    } else if (newFieldData.parentId && !newFieldData.subParentId) {
+        sectionField = componentsData.find(comp => comp.id === newFieldData.parentId);
+        sectionComponents = sectionField.components
+        compIndex = sectionComponents.findIndex(comp => comp.id === newFieldData.id)
+    } else {
+        compIndex = componentsData.findIndex(comp => comp.id === newFieldData.id)
+    }
+
+    return compIndex
 }

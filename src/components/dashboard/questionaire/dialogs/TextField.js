@@ -185,8 +185,6 @@ const TextField_ = (props) => {
         subParentId: subParentId,
         type: type
     };
-    
-    const classes = dialogStyles();
 
     const DialogModes = () => {
 

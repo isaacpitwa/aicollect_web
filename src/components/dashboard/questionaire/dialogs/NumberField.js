@@ -60,7 +60,7 @@ const NumberField = (props) => {
     const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
-    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency.id:null)
+    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -127,6 +127,10 @@ const NumberField = (props) => {
         value: value
     })
 
+    const removeDependency = () => {
+        setDependency(null)
+    }
+
     const dependencyData = getDependantField()
 
     const addNumberField = () => {
@@ -143,7 +147,7 @@ const NumberField = (props) => {
             tooltip: tooltip,
             required: isRequired,
             conditional: conditionalData,
-            dependency: dependencyData,
+            dependency: dependency,
         }
 
         if(sectionId&&fieldLabel!=='') {
@@ -181,7 +185,7 @@ const NumberField = (props) => {
             tooltip: tooltip,
             required: isRequired,
             conditional: conditionalData,
-            dependency: dependencyData,
+            dependency: dependency,
         }
 
         updateFieldInSection(numberFieldData)
