@@ -1,4 +1,8 @@
 import React, { useState, useContext } from 'react';
+import {
+    dialogStyles,
+    modeBtnStyles
+} from '../styles/FormStyles';
 import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
@@ -20,16 +24,16 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormContext } from '../context';
 import {
     allFormFields,
-    conditionalLogic
+    conditionalLogic,
+    getSectionsSubSections
 } from '../utils';
 import {
     FieldError,
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
-import TextfieldPreview from '../previews/TextfieldPreview';
+import FieldPreview from '../previews';
 
-// This is the field for type=TextField
-const TextField_ = (props) => {
+const FieldDialog = (props) => {
 
     const {
         setError,
@@ -40,24 +44,25 @@ const TextField_ = (props) => {
         updateFieldInSection,
     } = useContext(FormContext)
 
-    const { open, fieldData, handleClose } = props
+    const { open, dialogType, fieldData, handleClose } = props;
 
     const [errorTag, setErrorTag] = useState(false)
     const [panelType, setPanelType] = useState('display')
     const [id] = useState(fieldData?fieldData.id:'')
     const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
     const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
-    const [type] = useState(fieldData ? fieldData.type : 'text')
+    const [type] = useState(fieldData?fieldData.type:dialogType)
     const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
-    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
-    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
-    const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
-    const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
-    const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
-    const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
-    const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+    const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
+    const [fieldValue, setFieldValue] = useState(fieldData?fieldData.value:'')
+    const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
+    const [tooltip, setTooltip] = useState(fieldData?fieldData.tooltip:'')
+    const [isRequired, setIsRequired] = useState(fieldData?fieldData.required:false)
+    const [conditional, setConditional] = useState(fieldData?fieldData.conditional:null)
+    const [logic, setLogic] = useState(null)
+    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency.id:null)
+    const [when, setWhen] = useState(fieldData?fieldData.conditional.when:'')
+    const [value, setValue] = useState(fieldData?fieldData.conditional.value:'')
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -75,6 +80,10 @@ const TextField_ = (props) => {
         setIsRequired(!isRequired)
     }
 
+    const handleDependency = (e) => {
+        setDependency(getDependantField(e.target.value))
+    }
+
     const displayPanel = (e) => {
         setPanelType("display")
     }
@@ -83,8 +92,14 @@ const TextField_ = (props) => {
         setPanelType("conditional")
     }
 
+    // To be used later
     const logicPanel = (e) => {
         setPanelType("logic")
+    }
+
+    const dependencyPanel = (e) => {
+        setPanelType("dependency")
+
     }
 
     const handleWhen = (e) => {
@@ -103,7 +118,17 @@ const TextField_ = (props) => {
     const conditionalData = conditionalLogic({
         when: when,
         value: value
-    })
+    });
+
+    const getDependantField = (fieldId) => {
+        try {
+            let field = getSectionsSubSections(parentId, componentsData).find(field=>field.id===fieldId)
+            if(field) return { type: field.type, id: field.id }
+
+        } catch (err) {
+            return null
+        }
+    }
 
     const addTextField = () => {
 
@@ -118,8 +143,9 @@ const TextField_ = (props) => {
             description: fieldDescription,
             tooltip: tooltip,
             required: isRequired,
-            dependency: dependency,
             conditional: conditionalData,
+            logic: logic,
+            dependency: dependantId?dependantId:null,
         }
 
         if(sectionId&&fieldLabel!=='') {
@@ -185,8 +211,9 @@ const TextField_ = (props) => {
         subParentId: subParentId,
         type: type
     };
-    
-    const classes = dialogStyles();
+
+    const mainClass = dialogStyles();
+    const modeBtnClass = modeBtnStyles();
 
     const DialogModes = () => {
 
@@ -199,7 +226,7 @@ const TextField_ = (props) => {
                 <Button
                     variant={panelType==="display"?"contained":"outlined"}
                     onClick={displayPanel}
-                    style={{ borderRadius: '8px 0px 0px 0px' }}
+                    className={modeBtnClass.startBtn}
                 >Display</Button>
                 <Button
                     variant={panelType==="conditional"?"contained":"outlined"}
@@ -209,8 +236,13 @@ const TextField_ = (props) => {
                     disabled
                     variant={panelType==="logic"?"contained":"outlined"}
                     onClick={logicPanel}
-                    style={{ borderRadius: '0px 8px 0px 0px' }}
                 >Logic</Button>
+                <Button
+                    disabled={dialogType==='number'?true:false}
+                    variant={panelType == "dependency" ? "contained" : "outlined"}
+                    onClick={dependencyPanel}
+                    className={modeBtnClass.endBtn}
+                >Dependency</Button>
             </ButtonGroup>            
         )
     }
@@ -293,6 +325,31 @@ const TextField_ = (props) => {
                                         onChange={handleValue}
                                     />
                                 </>
+                            :panelType==="dependency"?
+                                <>
+                                    <Typography
+                                        style={{ fontSize: '15px', color: '#5048E5' }}
+                                    >
+                                        For Section/Sub-Section:
+                                    </Typography>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={dependency}
+                                        fullWidth
+                                        size={'small'}
+                                        onChange={handleDependency}
+                                    >
+                                        {getSectionsSubSections(sectionId, componentsData).map((option, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={option.id}
+                                            >
+                                                {option.label} ={'>'} <small>[{option.type}]</small>
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </>  
                             :
                                 <>
                                     <TextField
@@ -342,7 +399,7 @@ const TextField_ = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <TextfieldPreview
+                    <FieldPreview
                         fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
@@ -377,4 +434,4 @@ const TextField_ = (props) => {
     )
 }
 
-export default TextField_
+export default FieldDialog

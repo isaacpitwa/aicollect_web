@@ -3,10 +3,19 @@ import React, { useState, useEffect, createContext, useCallback } from "react";
 import { FormsApi } from '../../../../api/forms-api'
 import {
     allFormFields,
+    getSectionsSubSections
 } from '../utils';
 
+// Initialization of the Form Context
 export const FormContext = createContext();
 
+/**
+ * @function FormProvider
+ * @desc This is the Form Context Provider
+ * @arg {String} questionaireId - The Questionaire/Form Id
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const FormProvider = (props) => {
 
     const { questionaireId } = props;
@@ -55,24 +64,25 @@ const FormProvider = (props) => {
 
     const addDependency = (fieldData) => {
         let newComponentsData = componentsData;
-        let section = newComponentsData.find(section => section.id === fieldData.parentId);
-        let sectionIndex = newComponentsData.findIndex(section => section.id === fieldData.parentId);
-        if(fieldData.dependency) {
-            if(fieldData.dependency.type==="section") {
-                section = newComponentsData.find(section=>section.id===fieldData.dependency.id);
-                sectionIndex = newComponentsData.findIndex(section=>section.id===fieldData.dependency.id);
-                section.display = 'hidden';
-                section.dependency = fieldData.id
-                newComponentsData[sectionIndex] = section;
+        let dependantField = {};
+        let dependantFieldIndex = "";
+        try {
+            dependantField = getSectionsSubSections(parentId, componentsData).find(field=>field.id===dependency)
+            dependantField.display = "hidden";
+            dependantField.dependency = fieldData.id
+            if(dependantField.type==="section") {
+                dependantFieldIndex = newComponentsData.findIndex(section=>section.id===dependantField.id);
+                newComponentsData[dependantFieldIndex] = dependantField;
             } else {
-                let dependantField = section.components.find(field=>field.id===fieldData.dependency.id);
-                let dependantFieldIndex = section.components.findIndex(field=>field.id===fieldData.dependency.id);
-                dependantField.display = 'hidden';
-                dependantField.dependency = fieldData.id
+                let section = newComponentsData.find(section=>section.id===dependantField.parentId);
+                let sectionIndex = newComponentsData.findIndex(section=>section.id===dependantField.parentId);
+                dependantFieldIndex = section.components.findIndex(field=>field.id===dependantField.id)
                 section.components[dependantFieldIndex] = dependantField;
                 newComponentsData[sectionIndex] = section;
-            }    
-            setComponentsData(newComponentsData);
+            }
+            if(setComponentsData(newComponentsData)) return true
+        } catch (error) {
+            return false
         }
     }
 
@@ -154,17 +164,17 @@ const FormProvider = (props) => {
 
         let newFormFields = componentsData;
 
-        let section = newFormFields.find(section => section.id === fieldData.parentId);
-        let sectionIndex = newFormFields.findIndex(section => section.id === fieldData.parentId);
+        let section = newFormFields.find(section=>section.id===fieldData.parentId);
+        let sectionIndex = newFormFields.findIndex(section=>section.id===fieldData.parentId);
 
         try {
             if(fieldData.subParentId) {
-                let subSection = section.components.find(subSection => subSection.id === fieldData.subParentId);
-                let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.subParentId);
-                subSection = subSection.components.filter(field => field.id !== fieldData.id);
+                let subSection = section.components.find(subSection=subSection.id===fieldData.subParentId);
+                let subSectionIndex = section.components.findIndex(subSection=>subSection.id===fieldData.subParentId);
+                subSection = subSection.components.filter(field=>field.id!==fieldData.id);
                 section.components[subSectionIndex] = subSection;
             } else {
-                section.components = section.components.filter(field => field.id !== fieldData.id);
+                section.components = section.components.filter(field=>field.id!==fieldData.id);
             }
 
             newFormFields[sectionIndex] = section;
@@ -174,7 +184,7 @@ const FormProvider = (props) => {
         }
 
         setComponentsData(newFormFields)
-        updateFormData()
+        // updateFormData()
 
     }
 

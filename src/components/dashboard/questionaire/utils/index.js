@@ -44,9 +44,10 @@ export const DescriptionCard = (props) => {
 /**
  * @function CurrentLocation
  * @desc This component displays a Google map of the current location using coordinates provided
- * @arg {Object} coordinates - The entire form object with all the components/form fields.
- * @arg {Boolean} isMarkerShown - The id of the form field using this method.
- * @returns {Component} - Returns a Google Map JSX component.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {Object} props.coordinates - The entire form object with all the components/form fields.
+ * @arg {Boolean} props.isMarkerShown - The id of the form field using this method.
+ * @returns {Component} A Google Map JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
@@ -151,6 +152,15 @@ export const FieldIndex = (fieldId, fieldsData) => {
     return fieldIndex
 }
 
+/**
+ * @function getSectionsSubSections
+ * @desc This method gets EITHER all Sub-Sections in the same Section with the field using it OR all form Sections except the section the field using it exists.
+ * @arg {String} parentId - The id of the section in which the field exists
+ * @arg {Object} componentsData - All form fields.
+ * @returns {Array} An array of sections and sub-sections.
+ * @author Atama Zack <atama.zack@gmail.com>.
+ * @version 1.0.0
+ */
 export const getSectionsSubSections = (parentId, componentsData) => {
     let sections = componentsData.filter(section=>section.id!==parentId)
     let subSections = componentsData.find(section=>section.id===parentId).components.filter(field=>field.type==='sub-section');

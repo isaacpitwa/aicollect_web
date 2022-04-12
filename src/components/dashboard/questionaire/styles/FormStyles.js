@@ -188,7 +188,21 @@ export const dialogStyles = makeStyles({
     },
     content: {
         padding: '20px'
-    }
+    },
+    form: {
+        padding: '20px',
+        border: '1px #5048E5 solid',
+        borderRadius: '0px 8px 8px 8px',
+        marginTop: '-1px',
+    },
 });
 
+export const modeBtnStyles = makeStyles({
+    startBtn: {
+        borderRadius: '8px 0px 0px 0px'
+    },
+    endBtn: {
+        borderRadius: '0px 8px 0px 0px'
+    }
+});
 export default formStyles
