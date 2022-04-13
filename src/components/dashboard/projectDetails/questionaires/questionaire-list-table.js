@@ -149,7 +149,7 @@ export const QuestionaireListTable = (props) => {
                     >
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href={`/dashboard/projects/${router.query.projectId}/module/${questionaire.module}questionaire/${questionaire._id}`}
+                          href={`/dashboard/projects/${router.query.projectId}/module/${router.query.module}/questionaire/${questionaire._id}`}
                           passHref
                         >
                           <Link
@@ -186,7 +186,7 @@ export const QuestionaireListTable = (props) => {
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}/form`}
+                      href={`/dashboard/projects/${router.query.projectId}/module/${router.query.module}/questionaire/${questionaire._id}/form`}
                       passHref
                     >
                       <IconButton component="a">
@@ -194,7 +194,7 @@ export const QuestionaireListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}`}
+                      href={`/dashboard/projects/${router.query.projectId}/module/${router.query.module}/questionaire/${questionaire._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -202,7 +202,7 @@ export const QuestionaireListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}`}
+                      href={`/dashboard/projects/${router.query.projectId}/module/${router.query.module}/questionaire/${questionaire._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -210,7 +210,7 @@ export const QuestionaireListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/customers/1"
+                      href="/dashboard/projects/${router.query.projectId}/module/${router.query.module}/questionaire/${questionaire._id}"
                       passHref
                     >
                       <IconButton component="a">

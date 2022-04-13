@@ -1,5 +1,5 @@
 import {
-  Avatar,
+  // Avatar,
   Box,
   Button,
   Grid,
@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import MuiPhoneNumber from 'material-ui-phone-number';
+// import MuiPhoneNumber from 'material-ui-phone-number';
 import * as Yup from "yup";
 import { userApi } from '../../../api/users-api';
 import { useAuth } from '../../../hooks/use-auth';
-import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
+// import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 
 // TODO: Refactor Function to reduce Cognitive Complexity
 const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
