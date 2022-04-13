@@ -86,44 +86,51 @@ export const DescriptionCard = (props) => {
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
-export const allFormFields = (data, fieldData=null) => {
+export const allFormFields = (data, fieldData) => {
 
     let allFields = [];
-
-    if(fieldData.type==='section'){
-        data.filter(item=>item.id!==fieldData.id).forEach((item) => {
-            allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
-        });
-    } else {
-        if(fieldData.subParentId) {
-            let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
-            allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+    if(fieldData) {
+        if(fieldData.type==='section'){
+            data.filter(item=>item.id!==fieldData.id).forEach((item) => {
+                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
+            });
         } else {
-            allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+            if(fieldData.subParentId) {
+                let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
+                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+            } else {
+                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+            }
         }
     }
-
     return allFields
 }
 
 /**
  * @function getSectionsSubSections
- * @desc This method gets EITHER all Sub-Sections in the same Section with the field using it OR all form Sections except the section the field using it exists.
- * @arg {String} parentId - The id of the section in which the field exists
+ * @desc This method gets all form Sections except the Section in which the field using the method exists and all Sub-Sections within the same Section as the field that uses the method.
+ * @arg {Object} field - The field properties of the field using the method.
  * @arg {Object} componentsData - All form fields.
  * @returns {Array} An array of sections and sub-sections.
  * @author Atama Zack <atama.zack@gmail.com>.
  * @version 1.0.0
  */
-export const getSectionsSubSections = (parentId, componentsData) => {
-    let sections = componentsData.filter(section=>section.id!==parentId)
-    let subSections = componentsData.find(section=>section.id===parentId).components.filter(field=>field.type==='sub-section');
-    return sections.concat(subSections)
-}
-
-export const getDependantField = (allFields, fieldId) => {
-    let dependantField = allFields.find(field => field.id === fieldId)
-    return dependantField
+export const getSectionsSubSections = (field, componentsData) => {
+    let sectionSubsection = []
+    let sections = []
+    let subSections = []
+    if(field) {
+        sections = componentsData.filter(section=>section.id!==field.parentId);
+        if(sections) sectionSubsection.push(...sections);
+        if(field.subParentId) {
+            sections = componentsData.find(section=>section.id===field.parentId);
+            subSections = sections.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
+            if(subSections) sectionSubsection.push(...subSections);
+        }
+        return sectionSubsection;
+    } else {
+        return []
+    }
 }
 
 /**
@@ -145,26 +152,4 @@ export const conditionalLogic = (data) => {
     } else {
         return null
     }
-}
-
-// This function gets the index of a form field from the form data set
-export const findComponentIndex = (newFieldData, componentsData) => {
-
-    let compIndex = null;
-    let sectionField = {};
-    let sectionComponents = []
-
-    if (newFieldData.parentId && newFieldData.subParentId) {
-        sectionComponents = componentsData.find(comp => comp.id === newFieldData.parentId).components;
-        subSectionComponents = sectionComponents.find(comp => comp.id === newFieldData.subParentId).components;
-        compIndex = subSectionComponents.findIndex(comp => comp.id === newFieldData.id)
-    } else if (newFieldData.parentId && !newFieldData.subParentId) {
-        sectionField = componentsData.find(comp => comp.id === newFieldData.parentId);
-        sectionComponents = sectionField.components
-        compIndex = sectionComponents.findIndex(comp => comp.id === newFieldData.id)
-    } else {
-        compIndex = componentsData.findIndex(comp => comp.id === newFieldData.id)
-    }
-
-    return compIndex
 }

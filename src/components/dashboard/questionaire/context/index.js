@@ -4,7 +4,6 @@ import { FormsApi } from '../../../../api/forms-api'
 import {
     allFormFields,
     getSectionsSubSections,
-    deleteField
 } from '../utils';
 
 // Initialization of the Form Context
@@ -12,8 +11,10 @@ export const FormContext = createContext();
 
 /**
  * @function FormProvider
- * @desc This is the Form Context Provider
- * @arg {String} questionaireId - The Questionaire/Form Id
+ * @desc This is the Form Context Provider component that manages the overall state of the form being built.
+ * @arg {Object} props - The properties passed to the form provider.
+ * @arg {String} props.questionaireId - The form Id, passed through props.
+ * @returns {Component} The Form Provider component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
@@ -113,6 +114,14 @@ const FormProvider = (props) => {
         setComponentsData(newComponentsData)
     }
 
+    /**
+     * @function addComponentToSection
+     * @desc This method adds a field to the form being built.
+     * @arg {Object} field - A field Object containing all field properties.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const addComponentToSection = (field) => {
         
         let newComponentsData = componentsData;
@@ -131,10 +140,19 @@ const FormProvider = (props) => {
         }
 
         setComponentsData(newComponentsData)
+        if(field&&field.type==="number"&&field.dependency) addDependency(field);
 
     }
 
-    const updateFieldInSection = async (fieldData) => {
+    /**
+     * @function updateFieldInSection
+     * @desc This method edits a particular field that exists in the form being built.
+     * @arg {Object} fieldData - A field Object containing all field properties.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
+    const updateFieldInSection = (fieldData) => {
 
         let newFormFields = componentsData;
         let section = componentsData.find(section => section.id === fieldData.parentId);
@@ -153,7 +171,7 @@ const FormProvider = (props) => {
         newFormFields[sectionIndex] = section
         setComponentsData(newFormFields)
         if(fieldData.type==="number"&&fieldData.dependency) addDependency(fieldData);
-        updateFormData()        
+        updateFormData()
     }
 
     const updateFormData = async () => {
@@ -165,7 +183,7 @@ const FormProvider = (props) => {
     }
 
     /**
-     * @function deleteField
+     * @function deleteFieldData
      * @desc This method is used to delete any form fields expect a section.
      * @arg {Object} fieldData - The field to be deleted.
      * @returns {Void} Nothing is returned.

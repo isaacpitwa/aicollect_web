@@ -1,5 +1,8 @@
 import React, { useState, useContext } from 'react';
-import dialogStyles from '../styles/FormStyles';
+import {
+    dialogStyles,
+    modeBtnStyles
+} from '../styles/FormStyles';
 import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
@@ -35,7 +38,17 @@ import {
 import GeneralTooltip from '../previews/GeneralTooltip';
 import SelectPreview from '../previews/SelectPreview';
 
-// This is the field for type=TextField
+/**
+ * @function SelectField
+ * @desc This is the Select field dialog component
+ * @arg {Object} props - The properties passed to the select field dialog.
+ * @arg {Boolean} props.open - The form Id, passed through props.
+ * @arg {Object} props.fieldData - The form Id, passed through props.
+ * @arg {Object} props.handleClose - The form Id, passed through props.
+ * @returns {Component} The Select field dialog component
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SelectField = (props) => {
 
     const {
@@ -233,13 +246,6 @@ const SelectField = (props) => {
         removeConditional()
         handleClose()
     }
-
-    const newFieldData = fieldData?fieldData:{
-        id: id,
-        parentId: parentId,
-        subParentId: subParentId,
-        type: type
-    }
     
     const classes = dialogStyles();
 
@@ -318,7 +324,7 @@ const SelectField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, newFieldData).map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}

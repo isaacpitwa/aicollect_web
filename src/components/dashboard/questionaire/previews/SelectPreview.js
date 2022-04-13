@@ -1,14 +1,28 @@
-import React from 'react'
+import React from 'react';
 import {
     Box,
     Grid,
     Typography,
     MenuItem,
     Select
-} from '@mui/material'
+} from '@mui/material';
 
-import GeneralTooltip from '../previews/GeneralTooltip'
+import GeneralTooltip from '../previews/GeneralTooltip';
 
+/**
+ * @function SelectPreview
+ * @desc This is the Select field preview component
+ * @arg {Object} props - The properties passed to the select field preview.
+ * @arg {String} props.fieldLabel - The field label passed through props.
+ * @arg {String} props.fieldValue - The field value passed through props.
+ * @arg {Object} props.options - The field options passed through props.
+ * @arg {String} props.fieldDescription - The field description passed through props.
+ * @arg {String} props.tooltip - The field passed tooltip through props.
+ * @arg {Boolean} props.isRequired - The field required passed through props.
+ * @returns {Component} The Select field preview component
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SelectPreview = (props) => {
 
     const { fieldLabel, fieldValue, options, fieldDescription, tooltip, isRequired } = props

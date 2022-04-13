@@ -55,6 +55,7 @@ const FieldDialog = (props) => {
     const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
     const [fieldValue, setFieldValue] = useState(fieldData?fieldData.value:'')
+    const [options, setOptions] = useState(fieldData?fieldData.options:[{id: uuidv4(),label:'',value:''}])
     const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
     const [tooltip, setTooltip] = useState(fieldData?fieldData.tooltip:'')
     const [isRequired, setIsRequired] = useState(fieldData?fieldData.required:false)
@@ -66,6 +67,16 @@ const FieldDialog = (props) => {
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
+    }
+
+    const addOption = () => {
+        let optionId = uuidv4()
+        let data = {
+            'id': optionId,
+            'label': '',
+            'value': ''
+        }
+        setOptions(options => [...options, data])
     }
 
     const handleDescription = (event) => {
@@ -108,6 +119,16 @@ const FieldDialog = (props) => {
 
     const handleValue = (e) => {
         setValue(e.target.value)
+    }
+
+    const optionsLabelStatus = () => {
+        let status = true
+        options.map((option) => {
+            if(option.label==='') {
+                status = false
+            }
+        })
+        return status
     }
 
     const removeConditional = () => {
@@ -205,13 +226,6 @@ const FieldDialog = (props) => {
         handleClose()
     };
 
-    const newFieldData = fieldData?fieldData:{
-        id: id,
-        parentId: parentId,
-        subParentId: subParentId,
-        type: type
-    };
-
     const mainClass = dialogStyles();
     const modeBtnClass = modeBtnStyles();
 
@@ -306,7 +320,7 @@ const FieldDialog = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, newFieldData).map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>

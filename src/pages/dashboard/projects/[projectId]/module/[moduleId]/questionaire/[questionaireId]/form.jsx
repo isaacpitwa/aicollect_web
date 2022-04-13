@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Head from "next/head";
 import { Box, Container } from "@mui/material";
 import { useRouter } from "next/router";

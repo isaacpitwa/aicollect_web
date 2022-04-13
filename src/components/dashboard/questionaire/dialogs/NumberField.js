@@ -39,8 +39,6 @@ const NumberField = (props) => {
         componentsData,
         addComponentToSection,
         updateFieldInSection,
-        addDependency,
-        updateComponentsData
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
@@ -99,16 +97,6 @@ const NumberField = (props) => {
         setDependency(e.target.value)
     }
 
-    const getDependantField = () => {
-        try {
-            let field = getSectionsSubSections(parentId, componentsData).find(field=>field.id===dependency)
-            if(field) return { type: field.type, id: field.id }
-
-        } catch (err) {
-            return null
-        }
-    }
-
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -130,8 +118,6 @@ const NumberField = (props) => {
     const removeDependency = () => {
         setDependency(null)
     }
-
-    const dependencyData = getDependantField()
 
     const addNumberField = () => {
 
@@ -203,13 +189,6 @@ const NumberField = (props) => {
         setIsRequired(!isRequired)
         setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
         handleClose()
-    }
-
-    const newFieldData = fieldData?fieldData:{
-        id: id,
-        parentId: sectionId,
-        subParentId: subSectionId,
-        type: type
     }
 
     return (
@@ -300,7 +279,7 @@ const NumberField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, newFieldData).map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}
@@ -339,7 +318,7 @@ const NumberField = (props) => {
                                         size={'small'}
                                         onChange={handleDependency}
                                     >
-                                        {getSectionsSubSections(sectionId, componentsData).map((option, index) => (
+                                        {getSectionsSubSections(fieldData, componentsData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}
@@ -348,6 +327,19 @@ const NumberField = (props) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                     <Typography
+                                        style={{ paddingTop: '10px' }}
+                                     >
+                                        <Button
+                                            disabled={dependency?false:true}
+                                            variant='outlined'
+                                            size='small'
+                                            color='error'
+                                            onClick={removeDependency}
+                                        >
+                                            Remove Dependency
+                                        </Button>
+                                     </Typography>
                                 </>                                        
                             :
                                 <>

@@ -179,13 +179,6 @@ const TextField_ = (props) => {
         handleClose()
     };
 
-    const newFieldData = fieldData?fieldData:{
-        id: id,
-        parentId: parentId,
-        subParentId: subParentId,
-        type: type
-    };
-
     const DialogModes = () => {
 
         return (
@@ -272,7 +265,7 @@ const TextField_ = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, newFieldData).map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
