@@ -282,7 +282,7 @@ const ImageField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'image').map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}

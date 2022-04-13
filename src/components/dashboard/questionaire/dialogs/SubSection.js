@@ -231,7 +231,7 @@ const SubSection = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, fieldData?fieldData:{ id: id, type: type }).map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>

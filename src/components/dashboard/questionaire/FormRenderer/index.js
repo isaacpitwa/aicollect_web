@@ -28,10 +28,10 @@ const FormRenderer = (props) => {
                 container
                 className={classes.form}
             >
-                {componentsData.map((componentData, index) => (
+                {componentsData.map((fieldData, index) => (
                     <SectionField
                         key={index}
-                        fieldData={componentData}
+                        fieldData={fieldData}
                         fieldResponses={fieldResponses}
                         editStatus={editStatus}
                         handleFormUpdate={handleFormUpdate}

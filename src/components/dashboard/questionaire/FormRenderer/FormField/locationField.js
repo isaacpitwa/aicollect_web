@@ -48,17 +48,13 @@ const LocationField = (props) => {
     const { fieldData } = props;
 
 
-    const [loadMap, setLoadMap] = useState(false);
+    const [loadMap, setLoadMap] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
     const [display, setDisplay] = useState('hidden');
     const [label] = useState(fieldData?fieldData.label:'');
     const [value, setValue] = useState(fieldData?fieldData.value:'');
     const [gpsValues, setGpsValues] = useState(null)
     const [locationFieldDialog, setLocationFieldDialog] = useState(false);
-
-	useEffect(() => {
-		getlocation()
-	}, [fieldData])
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const  getlocation = async () => {

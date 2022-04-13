@@ -246,13 +246,6 @@ const SelectRadioField = (props) => {
         )
     }
 
-    const newFieldData = fieldData?fieldData:{
-        id: id,
-        parentId: parentId,
-        subParentId: subParentId,
-        type: type
-    }
-
     return (
         <Dialog
             open={open}
@@ -323,7 +316,7 @@ const SelectRadioField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, newFieldData).map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}

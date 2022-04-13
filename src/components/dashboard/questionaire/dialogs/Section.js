@@ -266,7 +266,6 @@ const Section = (props) => {
                                         >
                                             Remove Conditional
                                         </Button>
-
                                      </Typography>
                                 </>
                             :
