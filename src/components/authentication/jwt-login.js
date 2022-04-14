@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -21,11 +22,6 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
-import { useState } from "react";
-
-// Demo Account
-// email: 'demo@devias.io',
-// password: 'Password123!',
 
 export const JWTLogin = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -90,7 +86,7 @@ export const JWTLogin = (props) => {
         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
         <OutlinedInput
           error={Boolean(formik.touched.password && formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
+          // helperText={formik.touched.password && formik.errors.password}
           id="outlined-adornment-password"
           type={showPassword ? "text" : "password"}
           name="password"

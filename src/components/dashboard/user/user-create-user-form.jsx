@@ -1,5 +1,5 @@
 import {
-  Avatar,
+  // Avatar,
   Box,
   Button,
   Grid,
@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import MuiPhoneNumber from 'material-ui-phone-number';
+// import MuiPhoneNumber from 'material-ui-phone-number';
 import * as Yup from "yup";
 import { userApi } from '../../../api/users-api';
 import { useAuth } from '../../../hooks/use-auth';
-import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
+// import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 
 // TODO: Refactor Function to reduce Cognitive Complexity
 const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
@@ -81,8 +81,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
         >
           <Grid item md={6} sm={12}>
             <TextField
-              error={Boolean(formik.touched.firstname && formik.errors.firstname)}
-              helperText={Boolean(formik.touched.firstname && formik.errors.firstname)}
+              error={formik.touched.firstname && formik.errors.firstname}
+              helperText={formik.touched.firstname && formik.errors.firstname}
               name="firstname"
               value={formik.values.firstname}
               onChange={formik.handleChange}
@@ -95,8 +95,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3}>
             <TextField
-              error={Boolean(formik.touched.lastname && formik.errors.lastname)}
-              helperText={Boolean(formik.touched.lastname && formik.errors.lastname)}
+              error={formik.touched.lastname && formik.errors.lastname}
+              helperText={formik.touched.lastname && formik.errors.lastname}
               name="lastname"
               value={formik.values.lastname}
               onChange={formik.handleChange}
@@ -118,8 +118,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           
           <Grid item md={6} sm={12}>
             <TextField
-              error={Boolean(formik.touched.email && formik.errors.email)}
-              helperText={Boolean(formik.touched.email && formik.errors.email)}
+              error={formik.touched.email && formik.errors.email}
+              helperText={formik.touched.email && formik.errors.email}
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -133,7 +133,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
             <FormControl fullWidth>
               <FormLabel> </FormLabel>
               <TextField
-                error={Boolean(formik.touched.phone && formik.errors.phone)}
+                error={formik.touched.phone && formik.errors.phone}
                 helperText={formik.touched.phone && formik.errors.phone}
                 placeholder="Phone *"
                 name="phone"
@@ -175,8 +175,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               <FormLabel>Expiry Date *</FormLabel>
               <TextField
                 type="date"
-                error={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
-                helperText={Boolean(formik.touched.expiryDate && formik.errors.expiryDate)}
+                error={formik.touched.expiryDate && formik.errors.expiryDate}
+                helperText={formik.touched.expiryDate && formik.errors.expiryDate}
                 name="expiryDate"
                 value={formik.values.expiryDate}
                 onChange={formik.handleChange}

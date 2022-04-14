@@ -29,11 +29,13 @@ import {
   ListItemText,
   Chip,
   OutlinedInput,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';;
 import toast from 'react-hot-toast';
+import _without from 'lodash/without';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { useMounted } from '../../../../../hooks/use-mounted';
@@ -109,21 +111,16 @@ const CreateTask = () => {
   const steps = [
     {
       label: 'Task Information',
-      description: `For each ad campaign that you create, you can control how much
-                you're willing to spend on clicks and conversions, which networks
-                and geographical locations you want your ads to show on, and more.`,
+      description: `Task basic information`,
     },
     {
       label: activeStep === 1 && taskInformation.taskType === 'registration' ? "Add Team Member" : "Upload Schedule",
       description:
-        'An ad group contains one or more ads which target a shared set of keywords.',
+        'More information.',
     },
     {
       label: 'Assign Questionaire',
-      description: `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`,
+      description: `Add questionaires to the tasks.`,
     },
   ];
 
@@ -139,19 +136,25 @@ const CreateTask = () => {
     } catch (error) {
       
     }
-  }, [setProjectMembers]);
+  }, [setProjectMembers, projectId]);
 
   // Get Project Questionaires
   const fetchQuestionaires = useCallback(async () => {
     try {
-      const data = await FormsApi.getAllProjectForms();
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        clientId = user.clientId;
+      }
+      const data = await FormsApi.getAllProjectForms(projectId, clientId);
       if (data) {
         setQuestionairesList(data);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [setQuestionairesList]);
+  }, [setQuestionairesList, projectId, user]);
 
   useEffect(() => {
     fetchProjectTeam();
@@ -177,6 +180,11 @@ const CreateTask = () => {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+  };
+
+  const handleDeleteUserFromTask = (event, value) => {
+    event.preventDefault();
+    setTeam((current) => _without(current, value));
   };
 
   const handlePageChange = (event, newPage) => {
@@ -264,10 +272,8 @@ const CreateTask = () => {
   const handleCreateTask = async () => {
     try {
       // Make call to task creation API
-      let questLst = [];
-      data && data.forEach((item) => {
-        questLst.push(item.field);
-      });
+      // let questLst = [];
+      
       const task = {
         ...taskInformation,
         questionaire: questionaires.map((item) => item._id),
@@ -282,6 +288,9 @@ const CreateTask = () => {
       };
       const data = await tasksApi.createTask(task);
       if (data) {
+        // data.forEach((item) => {
+        //   questLst.push(item.field);
+        // });
         toast.success("Yeah, you have create a task");
         router.push(`/dashboard/projects/${projectId}/taskmanager`);
       }
@@ -298,7 +307,7 @@ const CreateTask = () => {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({ onDrop: onDropExcelFiles, accept: '.xlsx,.csv,.xls', maxFiles: 1, })
-
+  // console.log(team)
   return (
     <>
       <Head>
@@ -317,7 +326,7 @@ const CreateTask = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="#"
+              href={`/dashboard/projects/${projectId}/taskmanager`}
               passHref
             >
               <Link
@@ -436,7 +445,13 @@ const CreateTask = () => {
                                         {selected.map((value, idx) => (
                                           <Chip
                                             key={idx}
-                                            label={value.name} />
+                                            label={value.name}
+                                            onDelete={(event) => {
+                                              event.preventDefault();
+                                              console.log('clicked me');
+                                              // setTeam((prevState) => prevState.filter((item) => item.name !== value.name))
+                                            }}
+                                           />
                                         ))}
                                       </Box>
                                     )}

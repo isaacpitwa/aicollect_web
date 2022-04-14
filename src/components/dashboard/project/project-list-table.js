@@ -126,7 +126,7 @@ export const ProjectListTable = (props) => {
           </TableHead>
           <TableBody>
             {projects.map((project, idx) => {
-              const isProjectSelected = selectedProjects.includes(project.id);
+              const isProjectSelected = selectedProjects.includes(project._id);
               return (
                 <TableRow
                   hover
@@ -136,12 +136,14 @@ export const ProjectListTable = (props) => {
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isProjectSelected}
-                      onChange={(event) => handleSelectOneProject(event, project.id)}
+                      onChange={(event) => handleSelectOneProject(event, project._id)}
                       value={isProjectSelected}
                     />
                   </TableCell>
-                  <TableCell>
-                    <Typography>{project.projectname}</Typography>
+                  <TableCell sx={{ cursor: 'pointer' }}>
+                    <NextLink href={`/dashboard/projects/${project._id}`}>
+                      <Typography>{project.projectname}</Typography>
+                    </NextLink>
                   </TableCell>
                   <TableCell>
                     {project.projectTeam.length}
