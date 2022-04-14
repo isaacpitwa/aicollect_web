@@ -1,45 +1,47 @@
-import { useState, useEffect, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useEffect, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     Typography
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import Section from '../../dialogs/Section';
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
-import FormField from '../FormField'
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
+import FormField from '../FormField';
 
+/**
+ * @function SectionField
+ * @desc This is the Section Field component, it is the Section field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Section field.
+ * @returns {Component} - Returns a Section field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SectionField = (props) => {
 
     const {
         setError,
-        selectSection,
+        conditionalDisplay,
         sectionId,
         setSelectSection,
         setSectionId,
-        subSectionId,
         setSubSectionId,
         componentsData,
         setComponentsData,
-        fieldResponses,
-        setFieldResponses,
-        editStatus
+        editStatus,
+        dependantId,
+        dependecyValue,
     } = useContext(FormContext);
 
     const { fieldData } = props
 
-    const [fieldStyles, setFieldStyles] = useState(0)
-    const [sectionDialog, setSectionDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
-
-    useEffect(() => {
-        setFieldStyles(sectionId===fieldData.id?3:0)
-    }, [sectionId, componentsData, editStatus])
+    const [sectionDialog, setSectionDialog] = useState(false)
 
     const handleSectionField = () => {
         setSectionDialog(true)
@@ -62,82 +64,86 @@ const SectionField = (props) => {
     }
 
     const deleteField = () => {
-        deleteFieldData(fieldData)
-    }
+        setComponentsData(componentsData.filter(section => section.id !== fieldData.id));
+    };
 
     const handleClose = () => {
         setSectionDialog(false)
-    }
+    };
 
     const smallBtn = smallBtns();
-    let classes = formStyles();
+    const classes = formStyles();
 
-    return (
-        fieldData.conditional && fieldResponses.find(item => item.fieldId === fieldData.conditional.when).value === fieldData.conditional.value?
-            editStatus?
-                <Grid key={fieldData.id} container className={fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3}>
-                    <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
-                    <Typography
-                        onMouseOver={() => { setDisplay('visible') }}
-                        onMouseOut={() => { setDisplay('hidden') }}
-                        className={classes.sectionLabel}
-                        variant='h5'
-                    >
-                        {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
-                        {editStatus?
-                            <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
-                                <EditIcon
-                                    onClick={handleSectionField}
-                                    className={smallBtn.editBtn}
-                                />
-                                <HighlightOffIcon
-                                    onClick={() => {
-                                        setComponentsData(componentsData.filter(section => section.id !== fieldData.id))
-                                    }}
-                                    className={smallBtn.deleteBtn}
-                                />
-                            </small>
-                        :
-                            ""
-                        }
-                    </Typography>
-                    <DescriptionCard description={fieldData.description} helperText={true} />
-                    {fieldData.components.map((componentData, index) => (
-                        <FormField key={index} fieldKey={index} fieldData={componentData}  fieldResponses={fieldResponses}/>
-                    ))}
-                </Grid>
-                : ''
-            :
-            <Grid key={fieldData.id} container className={editStatus?fieldStyles===0?classes.section:fieldStyles===2?classes.section2:classes.section3:classes.section2}>
-                <Section open={sectionDialog} fieldData={fieldData} handleClose={handleClose} />
+    const sectionStyle = () => {
+        if(editStatus) {
+            if(sectionId===fieldData.id) {
+                return classes.section3
+            } else {
+                return classes.section
+            }
+        } else {
+            return classes.section2
+        }
+    };
+
+    const fieldDisplay = (key) => {
+
+        return (
+            <Grid
+                key={key}
+                container
+                className={sectionStyle()}
+            >
+                {editStatus?
+                    <Section
+                        open={sectionDialog}
+                        fieldData={fieldData}
+                        handleClose={handleClose}
+                    />
+                : "" }
                 <Typography
-                    onClick={getSectionId}
                     onMouseOver={() => { setDisplay('visible') }}
                     onMouseOut={() => { setDisplay('hidden') }}
+                    onClick={getSectionId}
                     className={classes.sectionLabel}
-                    variant='h5'
                 >
-                    {fieldData.label}{fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                    {fieldData.label}{fieldData.tooltip!==''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
                     {editStatus ?
-                        <small style={{ float: 'right', visibility: display, paddingTop: '5px' }}>
+                        <small
+                            className={smallBtn.sectionBtns}
+                            style={{ visibility: display }}
+                        >
                             <EditIcon
                                 onClick={handleSectionField}
                                 className={smallBtn.editBtn}
                             />
                             <HighlightOffIcon
+                                onClick={deleteField}
                                 className={smallBtn.deleteBtn}
-                                onClick={() => {
-                                    setComponentsData(componentsData.filter(section => section.id !== fieldData.id))
-                                }}
                             />
                         </small>
-                        : ''}
+                        : "" }
                 </Typography>
-                <DescriptionCard description={fieldData.description} helperText={true} />
-                {fieldData.components.map((comp, index) => (
-                    <FormField key={index} fieldKey={index} fieldData={comp} fieldResponses={fieldResponses}/>
+                <DescriptionCard description={fieldData.description} helperText={false} />
+                {fieldData.components.map((field, index) => (
+                    <FormField key={index} fieldData={field} />
                 ))}
-            </Grid>
+            </Grid>          
+        )
+    }
+
+    return (
+        fieldData.display==='visible'?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : fieldData.dependency===dependantId&&dependecyValue>0?
+            [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
+                fieldDisplay(index)
+            ))
+        : conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : ""
     )
 }
 

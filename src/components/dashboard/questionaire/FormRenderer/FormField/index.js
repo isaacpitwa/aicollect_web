@@ -1,5 +1,3 @@
-import { useEffect, useState, useContext } from 'react'
-import SectionField from './sectionField'
 import SubSectionField from './subSectionField'
 import TextField from './textField'
 import TextAreaField from './textAreaField'
@@ -11,41 +9,40 @@ import EmailField from './emailField'
 import PhoneNumberField from './phoneNumberField'
 import ImageField from './imageField'
 import LocationField from './locationField'
-
+import DateField from './dateField'
 import AreaMappingField from './areaMappingField'
-import { FormContext } from '../../context'
 
 const FormField = (props) => {
 
-    const { fieldResponses } = useContext(FormContext)
-
-    const { fieldKey, fieldData, editStatus } = props
+    const { fieldData } = props
     
     switch (fieldData.type) {
         case 'sub-section':
-            return <SubSectionField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <SubSectionField fieldData={fieldData} />
         case 'text':
-            return <TextField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <TextField fieldData={fieldData} />
         case 'text-area':
-            return <TextAreaField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <TextAreaField fieldData={fieldData} />
         case 'number':
-            return <NumberField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <NumberField fieldData={fieldData} />
         case 'select-box':
-            return <SelectBoxesField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <SelectBoxesField fieldData={fieldData} />
         case 'select':
-            return <SelectField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <SelectField fieldData={fieldData} />
         case 'radio':
-            return <RadioField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <RadioField fieldData={fieldData} />
         case 'email':
-            return <EmailField fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <EmailField fieldData={fieldData} />
         case 'phone-number':
-            return <PhoneNumberField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <PhoneNumberField fieldData={fieldData} />
         case 'image':
-            return <ImageField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <ImageField fieldData={fieldData} />
         case 'location':
-            return <LocationField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <LocationField fieldData={fieldData} />
+        case 'date':
+            return <DateField fieldData={fieldData} />
         case 'area-mapping':
-            return <AreaMappingField fieldKey={fieldKey} fieldData={fieldData} fieldResponses={fieldResponses} editStatus={editStatus}/>
+            return <AreaMappingField fieldData={fieldData} />
     }
 }
 

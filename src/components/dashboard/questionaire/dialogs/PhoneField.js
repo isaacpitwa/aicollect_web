@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
@@ -36,7 +36,7 @@ import GeneralTooltip from '../previews/GeneralTooltip';
 import PhonefieldPreview from '../previews/PhonefieldPreview';
 
 // This is the field for type=TextField
-const PhoneField = (props) => {
+const PhoneField_ = (props) => {
 
     const {
         setError,
@@ -127,7 +127,7 @@ const PhoneField = (props) => {
     const addTextField = () => {
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
@@ -282,7 +282,7 @@ const PhoneField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'phone-number').map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -373,4 +373,4 @@ const PhoneField = (props) => {
     )
 }
 
-export default PhoneField
+export default PhoneField_

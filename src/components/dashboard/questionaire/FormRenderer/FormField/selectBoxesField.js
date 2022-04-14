@@ -1,19 +1,27 @@
-import { useState, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     Typography,
     Checkbox
-} from "@mui/material"
+} from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import SelectBoxField from '../../dialogs/SelectBoxField'
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import { FormContext } from '../../context';
+import SelectBoxField from '../../dialogs/SelectBoxField';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function SelectBoxesField
+ * @desc This is the Select Checkbox Field component, it is the Select Checkbox field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Select Checkbox field.
+ * @returns {Component} - Returns a Select Checkbox field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const SelectBoxesField = (props) => {
 
     const {
@@ -21,7 +29,8 @@ const SelectBoxesField = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        editStatus
+        editStatus,
+        deleteFieldData
     } = useContext(FormContext);
 
     const { fieldData } = props
@@ -38,6 +47,10 @@ const SelectBoxesField = (props) => {
         setSelectBoxDialog(true)
     }
 
+    const deleteField = () => {
+        deleteFieldData(fieldData)
+    }
+
     const handleClose = () => {
         setSelectBoxDialog(false)
     }
@@ -50,12 +63,19 @@ const SelectBoxesField = (props) => {
             {editStatus?
                 <>
                     <SelectBoxField open={selectBoxDialog} fieldData={fieldData} handleClose={handleClose} />
-                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <Typography
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
+						align={'right'}
+                    >
                         <EditIcon
                             onClick={handleSelectBoxField}
                             className={smallBtn.editBtn}
                         />
-                        <HighlightOffIcon className={smallBtn.deleteBtn} />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
                     </Typography>
                 </>
             : '' }

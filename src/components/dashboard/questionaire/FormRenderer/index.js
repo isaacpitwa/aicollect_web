@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useContext } from 'react'
 import formStyles from '../styles/FormStyles'
 import {
     Grid,
@@ -12,18 +12,15 @@ import SectionField from './FormField/sectionField'
 
 const FormRenderer = (props) => {
 
-    const classes = formStyles();
-
     const { isLoaded, componentsData, setComponentsData, fieldResponses } = useContext(FormContext)
 
     const { editStatus, handleFormUpdate } = props
 
-    // useEffect(() => {
-    // }, [componentsData])
-
     const handleRemove = (fieldId) => {
         setComponentsData(componentsData.filter(section => section.id !== fieldId))
     }
+
+    const classes = formStyles();
 
     return (
         isLoaded?
@@ -31,10 +28,10 @@ const FormRenderer = (props) => {
                 container
                 className={classes.form}
             >
-                {componentsData.map((componentData, index) => (
+                {componentsData.map((fieldData, index) => (
                     <SectionField
                         key={index}
-                        fieldData={componentData}
+                        fieldData={fieldData}
                         fieldResponses={fieldResponses}
                         editStatus={editStatus}
                         handleFormUpdate={handleFormUpdate}
@@ -42,7 +39,9 @@ const FormRenderer = (props) => {
                     />
                 ))}
                 {componentsData.length===0?
-                    <Box style={{ background: '#448AFF', color: 'white', padding: '10px', width: '100%', textAlign: 'center', marginTop: '20px' }}>
+                    <Box 
+                        className={classes.formFields}
+                    >
                         Drag and Drop a form component
                     </Box>
                     :

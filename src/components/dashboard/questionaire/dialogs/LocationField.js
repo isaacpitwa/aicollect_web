@@ -1,35 +1,34 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 import {
     Box,
     Button,
     ButtonGroup,
     Grid,
-    Typography,
-    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
     TextField,
+    Typography,
+    Checkbox,
     Select,
-    MenuItem,
+    MenuItem
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { FormContext } from '../context';
 import {
     allFormFields,
-    findComponentIndex,
 } from '../utils';
 import {
     FieldError,
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
-import TextareafieldPreview from '../previews/TextareafieldPreview';
+import LocationfieldPreview from '../previews/LocationfieldPreview';
 
 // This is the field for type=TextField
-const TextAreaField = (props) => {
+const LocationField = (props) => {
 
     const {
         setError,
@@ -37,28 +36,28 @@ const TextAreaField = (props) => {
         subSectionId,
         componentsData,
         addComponentToSection,
-        updateComponentsData
+        updateFieldInSection,
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
 
     const [errorTag, setErrorTag] = useState(false)
-    const [compsData, setCompsData] = useState([]);
     const [buttonFocused, setButtonFocused] = useState('display')
     const [id] = useState(fieldData ? fieldData.id : uuidv4())
-    const [type] = useState(fieldData ? fieldData.type : 'text-area')
+    const [type] = useState(fieldData ? fieldData.type : 'location')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
+    const [gpsValues] = useState(null)
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [conditional, setConditional] = useState(false)
-    const [display, setDisplay] = useState('')
-    const [when, setWhen] = useState('')
-    const [compValue, setCompValue] = useState('')
+    const [conditional, setConditional] = useState(null)
+    const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
+    const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
+    const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
 
     useEffect(() => {
-        setCompsData(componentsData);
+
     }, [componentsData])
 
     const handleLabel = (event) => {
@@ -73,13 +72,13 @@ const TextAreaField = (props) => {
 
     const handleDescription = (event) => {
         setFieldDescription(event.target.value);
-    }
+    };
 
     const handleTooltip = (e) => {
         setTooltip(e.target.value)
     }
 
-    const handleChecked = (e) => {
+    const handleIsRequired = (e) => {
         setIsRequired(!isRequired)
     }
 
@@ -118,11 +117,11 @@ const TextAreaField = (props) => {
                 value: compValue.toLowerCase()                
             }
         } else {
-            return false
+            return null
         }
     }
 
-    const addTextAreaField = () => {
+    const addLocationField = () => {
 
         let newFieldObj = {
             id: uuidv4(),
@@ -130,6 +129,7 @@ const TextAreaField = (props) => {
             subParentId: subSectionId,
             type: type,
             value: fieldValue,
+            gpsValues: gpsValues,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
@@ -144,7 +144,7 @@ const TextAreaField = (props) => {
             setFieldLabel('')
             setFieldDescription('')
             setTooltip('')
-            setIsRequired(!isRequired)
+            setIsRequired(false)
             setButtonFocused('Display')
             setConditional(false)
             handleClose()
@@ -157,25 +157,30 @@ const TextAreaField = (props) => {
     }
 
     const handleUpdate = () => {
+
         let newField = {
             id: id,
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
-            value: value,
+            value: fieldValue,
             required: isRequired,
             label: fieldLabel,
             description: fieldDescription,
-            tooltip: tooltip
-        }        
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+            tooltip: tooltip,
+            conditional: conditionalLogic()
+        }
+
+        updateFieldInSection(newField)
         handleClose()
+
     }
 
     const cancel = () => {
         setError(false)
         setErrorTag(false)
         setFieldLabel('')
+        setFieldValue('')
         setFieldDescription('')
         setTooltip('')
         setIsRequired(!isRequired)
@@ -198,12 +203,21 @@ const TextAreaField = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Text Area Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose} />
+                Location Field Component
+                <CancelIcon
+                    color='error'
+                    style={{ float: 'right', cursor: 'pointer' }}
+                    onClick={handleClose}
+                />
             </DialogTitle>
             <DialogContent>
                 <Grid container>
-                    <Grid item xs={12} md={6} style={{ padding: '20px' }}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        style={{ padding: '20px' }}
+                    >
                         <FieldError errorTag={errorTag}/>
                         <Box
                             sx={{
@@ -215,10 +229,22 @@ const TextAreaField = (props) => {
                                 },
                             }}
                         >
-                            <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                                <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                                <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional}>Conditional</Button>
-                                <Button disabled variant={buttonFocused == "logic" ? "contained" : "outlined"} onClick={handleLogic} style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
+                            <ButtonGroup
+                                variant="outlined"
+                                size='small'
+                                aria-label="outlined button group"
+                            >
+                                <Button
+                                    variant={buttonFocused == "display" ? "contained" : "outlined"}
+                                    onClick={handleDisplay}
+                                    style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
+                                <Button
+                                    variant={buttonFocused == "conditional" ? "contained" : "outlined"}
+                                    onClick={handleConditional}>Conditional</Button>
+                                <Button
+                                    variant={buttonFocused == "logic" ? "contained" : "outlined"}
+                                    onClick={handleLogic}
+                                    style={{ borderRadius: '0px 8px 0px 0px' }}>Logic</Button>
                             </ButtonGroup>
                         </Box>
                         <Box
@@ -227,7 +253,9 @@ const TextAreaField = (props) => {
                         >
                             {conditional ?
                                 <>
-                                    <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
+                                    <Typography
+                                        style={{ fontSize: '18px', color: '#5048E5' }}
+                                    >
                                         This component should Display:
                                     </Typography>
                                     <Select
@@ -310,24 +338,49 @@ const TextAreaField = (props) => {
                                         onChange={handleTooltip}
                                     />
                                     <Typography style={{ color: '#5048E5' }}>
-                                        <Checkbox size={'small'} checked={isRequired} onChange={handleChecked} />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        <Checkbox
+                                            size={'small'}
+                                            checked={isRequired}
+                                            onChange={handleIsRequired}
+                                        />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                     </Typography>
                                 </>
                             }
                         </Box>
-
                     </Grid>
-                    <TextareafieldPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} isRequired={isRequired} />
+                    <LocationfieldPreview
+                        label={fieldLabel}
+                        description={fieldDescription}
+                        tooltip={tooltip}
+                        isRequired={isRequired}
+                    />
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Grid item xs={12} md={12} style={{ padding: '30px' }} align='right'>
-                    <Button onClick={cancel} variant="outlined" size='small' style={{ margin: '0px 20px' }} color="error">Cancel</Button>
-                    <Button onClick={fieldData?handleUpdate:addTextAreaField} variant="outlined" size='small' color="success">{fieldData?"Save Changes":"Add Field"}</Button>
+                <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    style={{ padding: '30px' }}
+                    align='right'
+                >
+                    <Button
+                        onClick={cancel}
+                        variant="outlined"
+                        size='small'
+                        style={{ margin: '0px 20px' }}
+                        color="error"
+                    >Cancel</Button>
+                    <Button
+                        onClick={fieldData?handleUpdate:addLocationField}
+                        variant="outlined"
+                        size='small'
+                        color="success"
+                    >{fieldData?"Save Changes":"Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default TextAreaField
+export default LocationField

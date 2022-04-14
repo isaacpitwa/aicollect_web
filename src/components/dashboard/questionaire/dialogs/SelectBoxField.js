@@ -166,7 +166,7 @@ const SelectBoxField = (props) => {
         let labelStatus = valuesLabelStatus()
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
@@ -328,7 +328,7 @@ const SelectBoxField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, fieldData.id, 'text').map((option, index) => (
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
                                             <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
                                         ))}
                                     </Select>

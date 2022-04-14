@@ -1,21 +1,29 @@
-import { useState, useContext } from 'react'
-import formStyles from '../../styles/FormStyles'
-import { smallBtns } from '../../styles/FormStyles'
+import { useState, useContext } from 'react';
+import formStyles from '../../styles/FormStyles';
+import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
     Typography
-} from "@mui/material"
-import MuiPhoneNumber from 'material-ui-phone-number'
-import 'react-phone-number-input/style.css'
+} from "@mui/material";
+import MuiPhoneNumber from 'material-ui-phone-number';
+import 'react-phone-number-input/style.css';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import PhoneField from '../../dialogs/PhoneField'
-import { DescriptionCard } from '../../utils'
-import GeneralTooltip from '../../previews/GeneralTooltip'
+import { FormContext } from '../../context';
+import PhoneField from '../../dialogs/PhoneField';
+import { DescriptionCard } from '../../utils';
+import GeneralTooltip from '../../previews/GeneralTooltip';
 
+/**
+ * @function PhoneNumberField
+ * @desc This is the Phone Number Field component, it is the Phone Number field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Phone Number field.
+ * @returns {Component} - Returns a Phone Number field JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const PhoneNumberField = (props) => {
 
     const {
@@ -23,7 +31,8 @@ const PhoneNumberField = (props) => {
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        editStatus
+        editStatus,
+        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props;
@@ -61,7 +70,11 @@ const PhoneNumberField = (props) => {
             {editStatus?
                 <>
                     <PhoneField open={phoneFieldDialog} fieldData={fieldData} handleClose={handleClose} />
-                    <Typography style={{ width: '100%', paddingBottom: '2px', visibility: display }} align={'right'} >
+                    <Typography
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
+						align={'right'}
+                    >
                         <EditIcon
                             onClick={handlePhoneField}
                             className={smallBtn.editBtn}

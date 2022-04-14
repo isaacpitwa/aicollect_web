@@ -27,6 +27,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormContext } from '../context';
 import {
     allFormFields,
+    conditionalLogic
 } from '../utils';
 import {
     FieldError,
@@ -49,44 +50,29 @@ const SelectRadioField = (props) => {
     const { open, fieldData, handleClose } = props
     
     const [errorTag, setErrorTag] = useState(false)
-    const [buttonFocused, setButtonFocused] = useState('display')
-    const [id] = useState(fieldData ? fieldData.id : uuidv4())
+    const [panelType, setPanelType] = useState('display')
+    const [id] = useState(fieldData?fieldData.id:'')
+    const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
+    const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
     const [type] = useState(fieldData ? fieldData.type : 'radio')
-    const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
-    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
-    const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
+    const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
+    const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
+    const [fieldValue, setFieldValue] = useState(fieldData?fieldData.value:'')
+    const [radios, setRadios] = useState(fieldData?fieldData.radios:[{id: uuidv4(),label:'',value:''}])
+    const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [radios, setRadios] = useState(fieldData? fieldData.radios : [
-        {
-            'id': uuidv4(),
-            'label': '',
-            'value': '',
-        }
-    ])
     const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [conditional, setConditional] = useState(false)
-    const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
+    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
+    const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
-    const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
-
-    const handleRemoveItem = (e) => {
-        setradios(radios.filter(item => item.id !== e.target.value));
-    };
+    const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
 
     const handleLabel = (e) => {
         setFieldLabel(e.target.value);
     }
     
     const handleRadio = (e) => {
-        setRadioValue(e.target.value)
-    }
-
-    const handleDescription = (event) => {
-        setFieldDescription(event.target.value);
-    }
-
-    const handleTooltip = (e) => {
-        setTooltip(e.target.value)
+        setFieldValue(e.target.value)
     }
 
     const addRadio = () => {
@@ -98,43 +84,49 @@ const SelectRadioField = (props) => {
         setRadios(radios => [...radios, data])
     }
 
+    const handleDescription = (event) => {
+        setFieldDescription(event.target.value);
+    }
+
+    const handleTooltip = (e) => {
+        setTooltip(e.target.value)
+    }
+
     const handleIsRequired = (e) => {
         setIsRequired(!isRequired)
     }
 
-    const handleDisplay = (e) => {
-        setButtonFocused("display")
+    const displayPanel = (e) => {
+        setPanelType("display")
         setConditional(false)
     }
 
-    const handleConditional = (e) => {
-        setButtonFocused("conditional")
+    const conditionalPanel = (e) => {
+        setPanelType("conditional")
         setConditional(true)
     }
 
-    const handleDiplayValue = (e) => {
-        setDisplay(e.target.value)
+    const logicPanel = (e) => {
+        setPanelType("logic")
     }
 
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
 
-    const handleCompValue = (e) => {
-        setCompValue(e.target.value)
+    const handleValue = (e) => {
+        setValue(e.target.value)
     }
 
-    const conditionalLogic = () => {
-        if(display!==''&&when!==''&&compValue!==''){
-            return {
-                display: display,
-                when: when,
-                value: compValue.toLowerCase()                
-            }
-        } else {
-            return false
-        }
-    };
+    const removeConditional = () => {
+        setWhen(conditional?fieldData.conditional.when:'')
+        setValue(conditional?fieldData.conditional.value:'')
+    }
+
+    const conditionalData = conditionalLogic({
+        when: when,
+        value: value
+    })
 
     const optionsLabelStatus = () => {
         let status = true
@@ -151,37 +143,35 @@ const SelectRadioField = (props) => {
         let labelStatus = optionsLabelStatus()
 
         let newFieldObj = {
-            id: id,
+            id: uuidv4(),
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
-            value: fieldValue,
-            required: isRequired,
+            display: conditionalData?'hidden':display,
             label: fieldLabel,
+            value: fieldValue,
+            radios: radios,
             description: fieldDescription,
             tooltip: tooltip,
-            radios: radios,
-            conditional: conditionalLogic()
+            required: isRequired,
+            dependency: dependency,
+            conditional: conditionalData,
         }
 
         if(sectionId&&fieldLabel!==''&&labelStatus) {
             addComponentToSection(newFieldObj)
             setError(false)
             setErrorTag(false)
+            setPanelType('display')
             setFieldLabel('')
             setFieldValue('')
+            setRadios([{id: uuidv4(),label:'',value:''}])
             setFieldDescription('')
             setTooltip('')
-            setRadios([
-                {
-                    'id': uuidv4(),
-                    'label': '',
-                    'value': '',
-                }
-            ])
-            setIsRequired(!isRequired)
-            setButtonFocused('Display')
-            setConditional(false)
+            setIsRequired(false)
+            setDependency(null)
+            setConditional(null)
+            removeConditional()
             handleClose()
         } else {
             setError(true)
@@ -200,16 +190,18 @@ const SelectRadioField = (props) => {
 
         let newFieldObj = {
             id: id,
-            parentId: sectionId,
-            subParentId: subSectionId,
+            parentId: parentId,
+            subParentId: subParentId,
             type: type,
-            value: fieldValue,
-            required: isRequired,
+            display: conditionalData?'hidden':display,
             label: fieldLabel,
+            value: fieldValue,
+            radios: radios,
             description: fieldDescription,
             tooltip: tooltip,
-            radios: radios,
-            conditional: conditionalLogic()
+            required: isRequired,
+            dependency: dependency,
+            conditional: conditionalData,
         }
 
         if(sectionId&&fieldLabel!==''&&labelStatus) {
@@ -227,18 +219,17 @@ const SelectRadioField = (props) => {
     }
 
     const cancel = () => {
-        setFieldLabel('')
-        setFieldValue('')
-        setFieldDescription('')
-        setTooltip('')
-        setRadios([
-            {
-                'id': uuidv4(),
-                'label': '',
-                'value': '',
-            }
-        ])
+        setError(false)
+        setErrorTag(false)
+        setPanelType('display')
+        setFieldLabel(fieldData?fieldData.label:'')
+        setFieldValue(fieldData?fieldData.value:'')
+        setRadios(fieldData?fieldData.radios:[{id: uuidv4(),label:'',value:''}])
+        setFieldDescription(fieldData?fieldData.description:'')
+        setTooltip(fieldData?fieldData.tooltip:'')
         setIsRequired(!isRequired)
+        setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
+        removeConditional()
         handleClose()
     }
 
@@ -269,7 +260,7 @@ const SelectRadioField = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Select Radio Component
+                Radio Field Component
                 <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
             </DialogTitle>
             <DialogContent>
@@ -286,9 +277,26 @@ const SelectRadioField = (props) => {
                             },
                         }}
                         >
-                            <ButtonGroup variant="outlined" size='small' aria-label="outlined button group">
-                                <Button variant={buttonFocused == "display" ? "contained" : "outlined"} onClick={handleDisplay} style={{ borderRadius: '8px 0px 0px 0px' }}>Display</Button>
-                                <Button variant={buttonFocused == "conditional" ? "contained" : "outlined"} onClick={handleConditional} style={{ borderRadius: '0px 8px 0px 0px' }}>Conditional</Button>
+                            <ButtonGroup
+                                variant="outlined"
+                                size='small'
+                                aria-label="outlined button group"
+                            >
+                                <Button
+                                    variant={panelType == "display" ? "contained" : "outlined"}
+                                    onClick={displayPanel}
+                                    style={{ borderRadius: '8px 0px 0px 0px' }}
+                                >Display</Button>
+                                <Button
+                                    variant={panelType == "conditional" ? "contained" : "outlined"}
+                                    onClick={conditionalPanel}
+                                >Conditional</Button>
+                                <Button
+                                    disabled
+                                    variant={panelType == "logic" ? "contained" : "outlined"}
+                                    onClick={logicPanel}
+                                    style={{ borderRadius: '0px 8px 0px 0px' }}
+                                >Logic</Button>
                             </ButtonGroup>
                         </Box>
                         <Box
@@ -297,20 +305,6 @@ const SelectRadioField = (props) => {
                         >
                             {conditional ?
                                 <>
-                                    <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                                        This component should Display:
-                                    </Typography>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={display}
-                                        fullWidth
-                                        size={'small'}
-                                        onChange={handleDiplayValue}
-                                    >
-                                        <MenuItem value={true}>True</MenuItem>
-                                        <MenuItem value={false}>False</MenuItem>
-                                    </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:
                                     </Typography>
@@ -322,8 +316,11 @@ const SelectRadioField = (props) => {
                                         size={'small'}
                                         onChange={handleWhen}
                                     >
-                                        {allFormFields(componentsData, id, 'text').map((option, index) => (
-                                            <MenuItem key={index} value={option.id}>{option.label}</MenuItem>
+                                        {allFormFields(componentsData, fieldData).map((option, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={option.id}
+                                            >{option.label}</MenuItem>
                                         ))}
                                     </Select>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
@@ -337,11 +334,11 @@ const SelectRadioField = (props) => {
                                         size="small"
                                         fullWidth
                                         variant="outlined"
-                                        value={compValue}
-                                        onChange={handleCompValue}
+                                        value={value}
+                                        onChange={handleValue}
                                     />
                                 </>
-                                :
+                            :
                                 <>
                                     <TextField
                                         autoFocus
@@ -456,7 +453,14 @@ const SelectRadioField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SelectRadioPreview fieldLabel={fieldLabel} fieldDescription={fieldDescription} tooltip={tooltip} fieldValue={fieldValue} radios={radios} isRequired={isRequired}/>
+                    <SelectRadioPreview
+                        fieldLabel={fieldLabel}
+                        fieldValue={fieldValue}
+                        radios={radios}
+                        fieldDescription={fieldDescription}
+                        tooltip={tooltip}
+                        isRequired={isRequired}
+                    />
                 </Grid>
             </DialogContent>
             <DialogActions>

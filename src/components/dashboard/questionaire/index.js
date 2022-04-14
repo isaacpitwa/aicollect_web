@@ -55,6 +55,10 @@ import SelectField from './dialogs/SelectField'
 import SelectRadioField from './dialogs/SelectRadioField'
 import EmailField from './dialogs/EmailField'
 import PhoneField from './dialogs/PhoneField'
+import ImageField from './dialogs/ImageField'
+import DateField from './dialogs/DateField'
+import LocationField from './dialogs/LocationField'
+import AreaMappingField from './dialogs/AreaMappingField'
 
 import { FormContext } from './context'
 import FormRenderer from './FormRenderer'
@@ -96,12 +100,15 @@ const Questionaire = () => {
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
     const [emailFieldDialog, setEmailFieldDialog] = useState(false)
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
+    const [imageDialog, setImageDialog] = useState(false)
+    const [locationDialog, setLocationDialog] = useState(false)
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
+    const [dateDialog, setDateDialog] = useState(false)
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
         setFormName(formData.name)
-    }, [ isLoaded ])
+    }, [isLoaded])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
@@ -147,7 +154,19 @@ const Questionaire = () => {
         setPhoneFieldDialog(true)
     }
 
-    const handleAreaMapping = () => {
+    const handleImageField = () => {
+        setImageDialog(true)
+    }
+
+    const handleDateField = () => {
+        setDateDialog(true)        
+    }
+
+    const handleLocationField = () => {
+        setLocationDialog(true)
+    }
+
+    const handleAreaMappingField = () => {
         setAreaMappingDialog(true)
     }
 
@@ -179,6 +198,10 @@ const Questionaire = () => {
         setSelectRadioDialog(false)
         setEmailFieldDialog(false)
         setPhoneFieldDialog(false)
+        setImageDialog(false)
+        setDateDialog(false)
+        setLocationDialog(false)
+        setAreaMappingDialog(false)
     }
 
     const handleDragStart = () => {
@@ -197,38 +220,67 @@ const Questionaire = () => {
             />
             <SubSection
                 open={subSectionDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <TextField_
                 open={textFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <TextAreaField
                 open={textAreaFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <NumberField
                 open={numberFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <SelectBoxField
                 open={selectBoxDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <SelectField
                 open={selectDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <SelectRadioField
                 open={selectRadioDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <EmailField
                 open={emailFieldDialog}
+                fieldData={false}
                 handleClose={handleClose}
             />
             <PhoneField
                 open={phoneFieldDialog}
+                fieldData={false}
+                handleClose={handleClose} 
+            />
+            <ImageField
+                open={imageDialog}
+                fieldData={false}
+                handleClose={handleClose} 
+            />
+            <DateField
+                open={dateDialog}
+                fieldData={false}
+                handleClose={handleClose} 
+            />
+            <LocationField
+                open={locationDialog}
+                fieldData={false}
+                handleClose={handleClose} 
+            />
+            <AreaMappingField
+                open={areaMappingDialog}
+                fieldData={false}
                 handleClose={handleClose} 
             />
             <Grid
@@ -415,12 +467,14 @@ const Questionaire = () => {
                                                 startIcon={<ImageIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleImageField}
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Image</Button>
                                             <Button
                                                 startIcon={<DateRangeIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleDateField}
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Date</Button>
                                         </Grid>
@@ -465,6 +519,7 @@ const Questionaire = () => {
                                                 startIcon={<AddLocationAltIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleLocationField}
                                                 style={{ width: '100%', marginTop: '10px' }}
                                             >Location</Button>
                                         </Grid>
@@ -496,6 +551,7 @@ const Questionaire = () => {
                                                 startIcon={<MapIcon />}
                                                 variant="contained"
                                                 size="small"
+                                                onClick={handleAreaMappingField}
                                                 style={{ width: '100%' }}
                                             >Area Mapping</Button>
                                             <Button
