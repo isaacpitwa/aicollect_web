@@ -17,9 +17,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Typography,
-  Box,
-  Chip
+  Typography
 } from "@mui/material";
 import toast from 'react-hot-toast';
 import { userApi } from '../../../api/users-api';
@@ -29,14 +27,13 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
     userObj: {},
     role: '',
   });
-  const [members, setMembers] = useState([]);
   console.log(projectId)
   const [users, setUsers] = useState([]);
   const router = useRouter();
 
   const handleChange = (event) => {
     event.preventDefault();
-    setMembers((prevState) => ([...prevState].concat(event.target.value)));
+    setMember((prevState) => ({ ...prevState, [event.target.name]: event.target.value }));
   };
 
   useEffect(() => {
@@ -81,7 +78,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
       console.log(error);
     }
   };
-  console.log(members)
+
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle>Add Project Team Member</DialogTitle>
@@ -93,17 +90,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
                 <Grid item md={12} xs={12}>
                   <FormControl fullWidth>
                     <FormLabel>Team Members</FormLabel>
-                    <Select
-                      name="members"
-                      value={members} 
-                      renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                          {selected.map((value) => (
-                            <Chip key={value.id} label={`${value.firstname} ${value.lastname}`} />
-                          ))}
-                        </Box>
-                      )}
-                      onChange={handleChange}>
+                    <Select name="userObj"  value={member.userObj} onChange={handleChange}>
                       {
                         users.map((user, idx) => (
                           <MenuItem key={idx} value={user}>{`${user.firstname} ${user.lastname}`}</MenuItem>

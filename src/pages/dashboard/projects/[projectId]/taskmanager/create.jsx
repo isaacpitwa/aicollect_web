@@ -272,10 +272,8 @@ const CreateTask = () => {
   const handleCreateTask = async () => {
     try {
       // Make call to task creation API
-      let questLst = [];
-      data && data.forEach((item) => {
-        questLst.push(item.field);
-      });
+      // let questLst = [];
+      
       const task = {
         ...taskInformation,
         questionaire: questionaires.map((item) => item._id),
@@ -290,6 +288,9 @@ const CreateTask = () => {
       };
       const data = await tasksApi.createTask(task);
       if (data) {
+        // data.forEach((item) => {
+        //   questLst.push(item.field);
+        // });
         toast.success("Yeah, you have create a task");
         router.push(`/dashboard/projects/${projectId}/taskmanager`);
       }
@@ -325,7 +326,7 @@ const CreateTask = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="#"
+              href={`/dashboard/projects/${projectId}/taskmanager`}
               passHref
             >
               <Link
@@ -445,8 +446,10 @@ const CreateTask = () => {
                                           <Chip
                                             key={idx}
                                             label={value.name}
-                                            onDelete={() => {
-                                              setTeam((prevState) => prevState.filter((item) => item.name !== value.name))
+                                            onDelete={(event) => {
+                                              event.preventDefault();
+                                              console.log('clicked me');
+                                              // setTeam((prevState) => prevState.filter((item) => item.name !== value.name))
                                             }}
                                            />
                                         ))}
