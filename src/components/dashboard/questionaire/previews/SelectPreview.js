@@ -7,7 +7,7 @@ import {
     Select
 } from '@mui/material';
 
-import GeneralTooltip from '../previews/GeneralTooltip';
+import GeneralTooltip from './GeneralTooltip';
 
 /**
  * @function SelectPreview

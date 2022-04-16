@@ -8,81 +8,80 @@ import {
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { FormContext } from '../../context'
-import Section from '../../dialogs/Section';
+import { FormContext } from '../../context';
+import SubSection from '../../dialogs/SubSection';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
-import FormField from '../FormField';
+import FormField from '.';
 
 /**
- * @function SectionField
- * @desc This is the Section Field component, it is the Section field displayed in the form.
- * @arg {Object} fieldData - The data of the field which contains all the properties of the Section field.
- * @returns {Component} - Returns a Section field JSX component.
+ * @function SubSectionField
+ * @desc This is the Sub-Section Field component, it is the Sub-Section field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the Sub-Section field.
+ * @returns {Component} - Returns a Sub-Section field JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
-const SectionField = (props) => {
+const SubSectionField = (props) => {
 
     const {
         setError,
         conditionalDisplay,
-        sectionId,
         setSelectSection,
         setSectionId,
+        subSectionId,
         setSubSectionId,
-        componentsData,
-        setComponentsData,
         editStatus,
         dependantId,
         dependecyValue,
+        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props
 
     const [display, setDisplay] = useState('hidden');
-    const [sectionDialog, setSectionDialog] = useState(false)
+    const [subSectionDialog, setSubSectionDialog] = useState(false)
 
-    const handleSectionField = () => {
-        setSectionDialog(true)
+    const handleSubSection = () => {
+        setSubSectionDialog(true)
     }
 
-    const getSectionId = () => {
+    const getSectionIds = () => {
         if(editStatus){
-            if(sectionId===fieldData.id) {
+            if(subSectionId===fieldData.id) {
                 setError(false)
-                setSelectSection(false)
-                setSectionId(null)
                 setSubSectionId(null)
             } else {
                 setError(false)
                 setSelectSection(true)
-                setSectionId(fieldData.id)
-                setSubSectionId(null)
+                setSectionId(fieldData.parentId)
+                setSubSectionId(fieldData.id)
             }
         }
-    }
+    };
 
     const deleteField = () => {
-        setComponentsData(componentsData.filter(section => section.id !== fieldData.id));
-    };
+        setSectionId(null)
+        setSubSectionId(null)
+        deleteFieldData(fieldData)
+    };   
 
     const handleClose = () => {
-        setSectionDialog(false)
+        setSubSectionDialog(false)
     };
-
-    const smallBtn = smallBtns();
+    
     const classes = formStyles();
+    const smallBtn = smallBtns();
 
-    const sectionStyle = () => {
+    const subSectionStyle = () => {
         if(editStatus) {
-            if(sectionId===fieldData.id) {
-                return classes.section3
+            if(subSectionId===fieldData.id) {
+                return classes.subSection3
             } else {
-                return classes.section
+                return classes.subSection
             }
         } else {
-            return classes.section2
+            return classes.subSection2
         }
     };
 
@@ -92,29 +91,29 @@ const SectionField = (props) => {
             <Grid
                 key={key}
                 container
-                className={sectionStyle()}
+                onClick={getSectionIds}
+                className={subSectionStyle()}
             >
-                {editStatus?
-                    <Section
-                        open={sectionDialog}
-                        fieldData={fieldData}
-                        handleClose={handleClose}
-                    />
-                : "" }
                 <Typography
-                    onMouseOver={() => { setDisplay('visible') }}
-                    onMouseOut={() => { setDisplay('hidden') }}
-                    onClick={getSectionId}
-                    className={classes.sectionLabel}
+                    onMouseOver={() => { setDisplay('visible'); } }
+                    onMouseOut={() => { setDisplay('hidden'); } }
+                    className={classes.subSectionLabel}
                 >
-                    {fieldData.label}{fieldData.tooltip!==''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
-                    {editStatus ?
+                    {editStatus?
+                        <SubSection
+                            open={subSectionDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
+                    : "" }
+                    {fieldData.label}{fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
+                    {editStatus?
                         <small
                             className={smallBtn.sectionBtns}
                             style={{ visibility: display }}
                         >
                             <EditIcon
-                                onClick={handleSectionField}
+                                onClick={handleSubSection}
                                 className={smallBtn.editBtn}
                             />
                             <HighlightOffIcon
@@ -122,21 +121,21 @@ const SectionField = (props) => {
                                 className={smallBtn.deleteBtn}
                             />
                         </small>
-                        : "" }
+                    : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
                 {fieldData.components.map((field, index) => (
                     <FormField key={index} fieldData={field} />
                 ))}
-            </Grid>          
+            </Grid>        
         )
     }
 
     return (
         fieldData.display==='visible'?
-            fieldDisplay()
+            fieldDisplay(fieldData.id)
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
+            fieldDisplay(fieldData.id)
         : fieldData.dependency===dependantId&&dependecyValue>0?
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
                 fieldDisplay(index)
@@ -147,4 +146,4 @@ const SectionField = (props) => {
     )
 }
 
-export default SectionField
+export default SubSectionField

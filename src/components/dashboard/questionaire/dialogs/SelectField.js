@@ -42,7 +42,7 @@ import SelectPreview from '../previews/SelectPreview';
  * @function SelectField
  * @desc This is the Select field dialog component
  * @arg {Object} props - The properties passed to the select field dialog.
- * @arg {Boolean} props.open - The form Id, passed through props.
+ * @arg {Boolean} props.open - The display status of the dialog component, passed through props.
  * @arg {Object} props.fieldData - The form Id, passed through props.
  * @arg {Object} props.handleClose - The form Id, passed through props.
  * @returns {Component} The Select field dialog component
@@ -69,7 +69,7 @@ const SelectField = (props) => {
     const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
     const [type] = useState(fieldData ? fieldData.type : 'select')
     const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
-    const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
+    const [fieldLabel22, setFieldLabel] = useState(fieldData?fieldData.label:'')
     const [fieldValue, setFieldValue] = useState(fieldData?fieldData.value:'')
     const [options, setOptions] = useState(fieldData?fieldData.options:[{id: uuidv4(),label:'',value:''}])
     const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
@@ -143,13 +143,10 @@ const SelectField = (props) => {
     })
 
     const optionsLabelStatus = () => {
-        let status = true
         options.map((option) => {
-            if(option.label==='') {
-                status = false
-            }
+            if(option.label==='') return false
         })
-        return status
+        return true
     }
 
     const addSelectField = () => {
@@ -162,7 +159,7 @@ const SelectField = (props) => {
             subParentId: subSectionId,
             type: type,
             display: conditionalData?'hidden':display,
-            label: fieldLabel,
+            label: fieldLabel22,
             value: fieldValue,
             options: options,
             description: fieldDescription,
@@ -172,7 +169,7 @@ const SelectField = (props) => {
             conditional: conditionalData,
         }
 
-        if(sectionId&&fieldLabel!==''&&labelStatus) {
+        if(sectionId&&fieldLabel22!==''&&labelStatus) {
             addComponentToSection(newFieldObj)
             setError(false)
             setErrorTag(false)
@@ -189,7 +186,7 @@ const SelectField = (props) => {
             handleClose()
         } else {
             setError(true)
-            if(fieldLabel===''){
+            if(fieldLabel22===''){
                 setErrorTag('Label')
             }
             if(!labelStatus){
@@ -208,7 +205,7 @@ const SelectField = (props) => {
             subParentId: subParentId,
             type: type,
             display: conditionalData?'hidden':display,
-            label: fieldLabel,
+            label: fieldLabel22,
             value: fieldValue,
             options: options,
             description: fieldDescription,
@@ -218,12 +215,12 @@ const SelectField = (props) => {
             conditional: conditionalData,
         }
 
-        if(sectionId&&fieldLabel!==''&&labelStatus) {
+        if(sectionId&&fieldLabel22!==''&&labelStatus) {
             updateFieldInSection(newFieldObj)
             handleClose()
         } else {
             setError(true)
-            if(fieldLabel===''){
+            if(fieldLabel22===''){
                 setErrorTag('Label')
             }
             if(!labelStatus){
@@ -357,7 +354,7 @@ const SelectField = (props) => {
                                         size="small"
                                         fullWidth
                                         variant="outlined"
-                                        value={fieldLabel}
+                                        value={fieldLabel22}
                                         onChange={handleLabel}
                                     />
                                     <TableContainer style={{ marginTop: '20px' }}>
@@ -462,7 +459,7 @@ const SelectField = (props) => {
                         </Box>
                     </Grid>
                     <SelectPreview
-                        fieldLabel={fieldLabel}
+                        fieldLabel={fieldLabel22}
                         fieldValue={fieldValue}
                         options={options}
                         fieldDescription={fieldDescription}

@@ -33,6 +33,18 @@ import {
 import GeneralTooltip from '../previews/GeneralTooltip';
 import FieldPreview from '../previews';
 
+/**
+ * @function FieldDialog
+ * @desc This is the field dialog component that has forms to add/edit field properties, this component helps to add/edit a field in a form that is being built or edited.
+ * @arg {Object} props - The properties passed to the select field dialog.
+ * @arg {Boolean} props.open - The display status of the dialog component, passed through props.
+ * @arg {String} props.dialogType - The dialog type property passed to the dialog component through props.
+ * @arg {Object} props.fieldData - The field data, passed through props.
+ * @arg {Object} props.handleClose - The method to close the dialog component, passed through props.
+ * @returns {Component} The field dialog component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const FieldDialog = (props) => {
 
     const {
@@ -65,9 +77,7 @@ const FieldDialog = (props) => {
     const [when, setWhen] = useState(fieldData?fieldData.conditional.when:'')
     const [value, setValue] = useState(fieldData?fieldData.conditional.value:'')
 
-    const handleLabel = (event) => {
-        setFieldLabel(event.target.value);
-    }
+    const handleLabel = e => setFieldLabel(e.target.value);
 
     const addOption = () => {
         let optionId = uuidv4()
@@ -121,25 +131,19 @@ const FieldDialog = (props) => {
         setValue(e.target.value)
     }
 
-    const optionsLabelStatus = () => {
-        let status = true
+    const checkOptionsLabels = () => {
         options.map((option) => {
-            if(option.label==='') {
-                status = false
-            }
+            if(option.label==='') return false
         })
-        return status
+        return true
     }
 
     const removeConditional = () => {
-        setWhen(conditional?fieldData.conditional.when:'')
-        setValue(conditional?fieldData.conditional.value:'')
+        setWhen(conditional?conditional.when:'')
+        setValue(conditional?conditional.value:'')
     }
 
-    const conditionalData = conditionalLogic({
-        when: when,
-        value: value
-    });
+    const conditionalData = conditionalLogic({ when: when, value: value });
 
     const getDependantField = (fieldId) => {
         try {
@@ -151,7 +155,9 @@ const FieldDialog = (props) => {
         }
     }
 
-    const addTextField = () => {
+    const addField = () => {
+
+        let optionsLabels = checkOptionsLabels()
 
         let newFieldObj = {
             id: uuidv4(),
@@ -169,7 +175,7 @@ const FieldDialog = (props) => {
             dependency: dependantId?dependantId:null,
         }
 
-        if(sectionId&&fieldLabel!=='') {
+        if(sectionId&&fieldLabel!==''&&optionsLabels) {
             addComponentToSection(newFieldObj)
             setError(false)
             setErrorTag(false)
@@ -184,13 +190,16 @@ const FieldDialog = (props) => {
             handleClose()
         } else {
             setError(true)
-            if(fieldLabel===''){
-                setErrorTag('Label')
-            }
+            
+            if(fieldLabel==='')setErrorTag('Label')
+
+            if(!labelStatus)setErrorTag('Options Label')
         }
     }
 
-    const handleUpdate = () => {
+    const updateField = () => {
+
+        let selectOptions = optionsLabelStatus()
 
         let textFieldData = {
             id: id,
@@ -437,7 +446,7 @@ const FieldDialog = (props) => {
                         color="error"
                     >Cancel</Button>
                     <Button
-                        onClick={fieldData?handleUpdate:addTextField}
+                        onClick={fieldData?updateField:addField}
                         variant="outlined"
                         size='small'
                         color="success"

@@ -87,7 +87,6 @@ export const DescriptionCard = (props) => {
  * @version 1.0.0
  */
 export const allFormFields = (data, fieldData) => {
-
     let allFields = [];
     if(fieldData) {
         if(fieldData.type==='section'){
@@ -143,13 +142,7 @@ export const getSectionsSubSections = (field, componentsData) => {
  * @author Atama Zack <atama.zack@gmail.com>.
  * @version 1.0.0
  */
-export const conditionalLogic = (data) => {
-    if(data.when!==''&&data.value!==''){
-        return {
-            when: data.when,
-            value: data.value.toLowerCase()                
-        }
-    } else {
-        return null
-    }
-}
+export const conditionalLogic = data => data.when!==''&&data.value!==''?{
+    when: data.when,
+    value: data.value.toLowerCase()                
+}:null

@@ -4,7 +4,19 @@ import {
 
 const formStyles = makeStyles({
     form: {
+        border: "#5048E5 1px solid",
+        backgroundColor: 'white',
+        borderRadius: "5px",
+    },
+    formRender: {
         padding: '1%',
+    },
+    formButtons: {
+        margin: '0px',
+        padding: '0px'
+    },
+    formButton: {
+        width: '100%',
     },
     formFields: {
         background: '#448AFF',
