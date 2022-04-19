@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import { styled } from '@mui/material/styles'
+import { useState, useEffect, useContext } from 'react';
+import formStyles from './styles/FormStyles';
+import { styled } from '@mui/material/styles';
 import {
     Box,
     Paper,
@@ -12,7 +12,9 @@ import {
     AccordionDetails,
     TextField,
     Typography
-} from '@mui/material'
+} from '@mui/material';
+import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
+import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import SelectAllIcon from '@mui/icons-material/SelectAll'
@@ -77,6 +79,7 @@ const Questionaire = () => {
     const {
         isLoaded,
         refresh,
+        getFormData,
         sectionCreated,
         formData,
         setFormData,
@@ -208,6 +211,8 @@ const Questionaire = () => {
 
     }
 
+    const classes = formStyles();
+
     return (
         <Grid
             container
@@ -289,59 +294,84 @@ const Questionaire = () => {
                 md={12}
             >
                 <Typography
-                    variant="h5"
                     gutterBottom
                     color="primary"
-                    component="div"
-                    style={{ fontWeight: '300' }}
+                    className={classes.form}
                 >
-                    {isLoaded?formData.formFields.length === 0?
-                        'Create New Form':'Edit Form'
-                    : 
-                        'Form Builder data loading...'
-                    }
+                    <strong>
+                        {isLoaded?
+                            "Form Builder:"
+                        : 
+                            "Form Data Loading..."
+                        }
+                    </strong> {isLoaded?formPreview?"Preview Mode":"Edit Mode":""}
                 </Typography>
                 <Grid container>
                     <Grid
                         item
                         xs={12}
-                        md={4}
+                        sm={12}
+                        md={6}
+                        lg={6}
+                        xl={4}
+                        className={classes.formField}
                     >
                         <TextField
+                            disabled={formPreview}
                             fullWidth
                             required
                             id="outlined-basic"
                             variant="outlined"
                             size="small"
-                            value={formName}
+                            label={'Form Name'}
+                            value={isLoaded?formName:'Loading...'}
                             onChange={handleFormName}
-                            style={{
-                                fontSize: '20px'
+                            InputLabelProps={{
+                                shrink: true,
                             }}
                     />
                     </Grid>
                     <Grid
                         item
                         xs={12}
-                        md={3}
+                        sm={12}
+                        md={6}
+                        lg={6}
+                        xl={4}
+                        className={classes.formField}
                     >
-                        {isLoaded?
+                        <>
                             <Button
-                                disabled={formData.name===formName}
+                                disabled={!isLoaded||formData.name===formName}
                                 variant="contained"
                                 color="success"
                                 size="small"
                                 onClick={saveChanges}
-                                style={{ marginLeft: '20px' }}
+                                className={classes.formButton}
                             >
+                                <SaveAsOutlinedIcon className={classes.formButtonIcon}/>
                                 Save Change
                             </Button>
-                        : '' }
+                            <Button
+                                disabled={!isLoaded}
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                onClick={getFormData}
+                                className={classes.formButton}
+                            >
+                                <CachedOutlinedIcon className={classes.formButtonIcon}/>
+                                Reload Form
+                            </Button>
+                        </>
                     </Grid>
                     <Grid
                         item
                         xs={12}
-                        md={5}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        xl={4}
                     >
                         <Stack
                             direction="row"
@@ -359,7 +389,7 @@ const Questionaire = () => {
                                 color="primary"
                                 size="small"
                                 onClick={handleFormPreview}
-                            >{formPreview ? 'Edit Form' : 'Form Preview'}</Button>
+                            >{formPreview ? 'Edit' : 'Preview'} Form</Button>
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -377,6 +407,8 @@ const Questionaire = () => {
                     xs={12}
                     sm={12}
                     md={3.5}
+                    lg={3.5}
+                    xl={3}
                 >
                     <Grid
                         container
@@ -677,47 +709,33 @@ const Questionaire = () => {
                     : ''}
                 </Grid>
             }
-            {formPreview ?
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                >
-                    <Grid
-                        container
-                        style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}
-                    >
-                        <FormRenderer
-                            editStatus={editStatus}
-                        />
-                    </Grid>
-                </Grid>
-
-                :
-                refresh ? '' :
-                    <Grid
-                        item
-                        xs={6}
-                        md={8.5}
-                    >
-                        <Grid
-                            container
-                            style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}
-                        >
-                            <FormRenderer editStatus={editStatus} />
-                        </Grid>
-                    </Grid>
-            }
             <Grid
                 item
-                xs={6}
-                md={12}
+                xs={12}
+                sm={12}
+                md={formPreview?12:8.5}
+                lg={formPreview?12:8.5}
+                xl={formPreview?12:9}
             >
+                <Grid
+                    container
+                    style={{
+                        maxHeight: '75vh',
+                        minHeight: '15vh',
+                        overflow: 'scroll',
+                        backgroundColor: 'white',
+                        border: "#5048E5 1px solid",
+                        borderRadius: "5px",
+                    }}
+                >
+                    <FormRenderer/>
+                </Grid>
                 <Stack
                     direction="row"
                     spacing={2}
-                    justifyContent={'right'}
+                    style={{
+                        paddingTop: '15px',
+                    }}
                 >
                     <Button
                         variant="outlined"

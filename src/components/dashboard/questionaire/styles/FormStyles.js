@@ -4,15 +4,44 @@ import {
 
 const formStyles = makeStyles({
     form: {
+        paddingBottom: '10px',
+        fontSize: '1.5rem',
+    },
+    formField: {
+        paddingBottom: '15px',
+    },
+    formButton: {
+        paddingTop: '7px',
+        paddingBottom: '7px',
+        marginLeft: '15px',
+    },
+    formButtonIcon: {
+        fontSize: '25px',
+        marginRight: '5px',
+    },
+    formRender: {
         padding: '1%',
+    },
+    alertContainer: {
+        margin: '30px 0px',
+    },
+    alertTitle: {
+        fontSize: '25px',
+    },
+    alertHeader1: {
+        fontSize: '20px',
+    },
+    alertBody: {
+        fontSize: '16px',
     },
     formFields: {
         background: '#448AFF',
-        color: 'white',
-        padding: '10px',
+        marginTop: '3%',
         width: '100%',
+        height: '50px',
+        padding: '12px',
+        color: 'white',
         textAlign: 'center',
-        marginTop: '20px'
     },
     section: {
         width: '100%',

@@ -53,6 +53,8 @@ const TextFieldComp = (props) => {
     };
 
     const deleteField = () => {
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     };
 
@@ -100,8 +102,8 @@ const TextFieldComp = (props) => {
                 <TextField
                     required={fieldData.required}
                     fullWidth
+                    variant="outlined"
                     type={'text'}
-                    variant={'outlined'}
                     label={fieldData.label}
                     value={fieldValue}
                     onChange={handleFieldValue}
@@ -115,11 +117,9 @@ const TextFieldComp = (props) => {
     }
 
     return (
-        !fieldData.display||fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
-        : conditionalDisplay(fieldData)?
             fieldDisplay()
         : ""
     )

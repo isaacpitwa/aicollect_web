@@ -1,17 +1,21 @@
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 
 import {
-    Typography
+    Typography,
+    IconButton,
+    Tooltip,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import FormStyles from '../styles/FormStyles';
-import InfoIcon from '@mui/icons-material/Info';
 
 /**
  * @function DescriptionCard
  * @desc This is a description component for displaying descriptions of form fields.
- * @arg {String} description - The description property from a field object.
- * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.description - The description property from a field object.
+ * @arg {Boolean} props.helperText - The MUI form field property that shows helping text below a field, if True then use the property.
  * @returns {Component} - Returns a description JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
@@ -38,6 +42,30 @@ export const DescriptionCard = (props) => {
             :
             ''
 
+    )
+}
+
+/**
+ * @function FieldTooltip
+ * @desc This is a tooltip component for displaying tooltips of form fields.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.tooltip - The tooltip property from a field object.
+ * @returns {Component} - Returns a tooltip JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FieldTooltip = (props) => {
+
+    const { tooltip } = props
+
+    return (
+        tooltip!=''?
+            <Tooltip title={tooltip}>
+            <IconButton>
+                <HelpOutlineIcon/>
+            </IconButton>
+            </Tooltip>
+        : ''
     )
 }
 
@@ -92,14 +120,14 @@ export const allFormFields = (data, fieldData) => {
     if(fieldData) {
         if(fieldData.type==='section'){
             data.filter(item=>item.id!==fieldData.id).forEach((item) => {
-                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
+                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"||field.type==="select-box"))
             });
         } else {
             if(fieldData.subParentId) {
                 let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
-                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"||field.type==="select-box"))
             } else {
-                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"||field.type==="select-box"))
             }
         }
     }

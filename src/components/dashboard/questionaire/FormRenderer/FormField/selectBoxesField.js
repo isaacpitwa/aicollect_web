@@ -11,7 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import SelectBoxField from '../../dialogs/SelectBoxField';
-import { DescriptionCard } from '../../utils';
+import {
+    DescriptionCard,
+    FieldTooltip
+} from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
 /**
@@ -80,7 +83,7 @@ const SelectBoxesField = (props) => {
                 </>
             : '' }
             <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
+                {fieldData.label}<FieldTooltip tooltip={fieldData.tooltip} />
             </Typography>
             <DescriptionCard description={fieldData.description} helperText={true}/>
             {checkOptions.map(option => (
@@ -92,6 +95,7 @@ const SelectBoxesField = (props) => {
                         onChange={(e) => {
                             option.checked = !option.checked;
                             setCheckOptions([...checkOptions]);
+                            console.log('CheckBox Values:===>', checkOptions)
                         }}/>
                         {option.label}
                 </Typography>

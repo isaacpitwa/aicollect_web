@@ -57,11 +57,43 @@ const FormProvider = (props) => {
         getFormData();
     }, [])
 
+    /**
+     * @function getFormDetails
+     * @desc This method gets form data from the API response and updates the form builder state.
+     * @arg {Object} data - The data of a form containing all form details.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const getFormDetails = (data) => {
         setComponentsData(data.formFields);
         setFormData(data);
-        setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false)
+        setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false);
+        setFormFieldValues(getFieldsValues(data));
         setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}));
+    }
+
+    /**
+     * @function getFieldsValues
+     * @desc This method gets form data from the API response and updates the form builder state.
+     * @arg {Object} data - The data of a form containing all form details.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
+    const getFieldsValues = (data) => {
+        let sections = data.formFields;
+        let allFields = []
+        if(sections) sections.forEach(section=>{
+            if(section.components) section.components.map(field=>allFields.push(...getField(field)))
+        })
+        return allFields
+    }
+
+    const getField = (field) => {
+        return field.type==='sub-section'?field.components.map(field => {
+            return { id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }
+        }):[{ id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }];
     }
 
     /**
@@ -222,6 +254,7 @@ const FormProvider = (props) => {
             value={{
                 isLoaded,
                 setIsLoaded,
+                getFormData,
                 error,
                 setError,
                 selectSection,

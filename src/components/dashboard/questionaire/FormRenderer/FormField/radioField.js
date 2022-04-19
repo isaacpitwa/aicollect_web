@@ -36,6 +36,8 @@ const RadioField = (props) => {
         conditionalDisplay,
         setConditionalId,
         setConditionalValue,
+        formFieldValues,
+        setFormFieldValues,
         deleteFieldData,
     } = useContext(FormContext);
 
@@ -43,6 +45,8 @@ const RadioField = (props) => {
 
     const [display, setDisplay] = useState('hidden');
     const [radioValue, setRadioValue] = useState(fieldData.value)
+    const [field, setField] = useState(formFieldValues.find(field=>field.id===fieldData.id))
+    const [fieldIndex, setFieldIndex] = useState(formFieldValues.findIndex(field=>field.id===fieldData.id))
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
 
     const handleSelectRadioField = () => {
@@ -57,6 +61,15 @@ const RadioField = (props) => {
         setConditionalId(fieldData.id);
         setConditionalValue(e.target.value.toLowerCase());
         setRadioValue(e.target.value);
+        updateFieldValue(e.target.value.toLowerCase());
+    }
+
+    const updateFieldValue = (value) => {
+        let fields = formFieldValues;
+        let thisField = field;
+        thisField.value = value;
+        fields[fieldIndex] = thisField;
+        setFormFieldValues(fields);
     }
 
     const deleteField = () => {
