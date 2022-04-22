@@ -9,7 +9,7 @@ import {
     FormControl,
 } from '@mui/material';
 
-import GeneralTooltip from '../previews/GeneralTooltip';
+import GeneralTooltip from './GeneralTooltip';
 
 const SelectRadioPreview = (props) => {
 

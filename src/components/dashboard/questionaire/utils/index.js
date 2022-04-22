@@ -1,14 +1,14 @@
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-
+import formStyles from '../styles/FormStyles'
 import {
     Typography,
     IconButton,
     Tooltip,
 } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import InfoIcon from '@mui/icons-material/Info';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-
-import FormStyles from '../styles/FormStyles';
 
 /**
  * @function DescriptionCard
@@ -21,8 +21,6 @@ import FormStyles from '../styles/FormStyles';
  * @version 1.0.0
  */
 export const DescriptionCard = (props) => {
-
-    const Styles = FormStyles.sectionStyles
 
     const { description, helperText } = props
 
@@ -66,6 +64,43 @@ export const DescriptionCard = (props) => {
             </IconButton>
             </Tooltip>
         : ''
+    )
+}
+
+/**
+ * @function FormBuildHelp
+ * @desc This is a component with quick steps on how to build a form.
+ * @returns {Component} - Returns the FormBuildHelp component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FormBuildHelp = () => {
+
+    const classes = formStyles();
+
+    return (
+        <Alert
+            severity="info"
+            className={classes.alertContainer}
+        >
+            <AlertTitle
+                className={classes.alertTitle}
+            >This Form has no fields.</AlertTitle>
+            <Typography
+                className={classes.alertHeader1}
+            >
+                <strong>Quick Start</strong><br/>
+            </Typography>
+            <Typography
+                className={classes.alertBody}
+            >
+                To add fields to this form, follow the steps listed below;<br/>
+                <strong>Step 1:</strong> Check if you are in [ <strong>Form Builder: </strong>Edit Mode ] at the top, if not, click on the <strong>Edit Form</strong> button.<br/>
+                <strong>Step 2:</strong> Click on the <strong>Section</strong> button to add a section to the form.<br/>
+                <strong>Step 3:</strong> Other buttons will appear after creating a form Section field.
+            </Typography>
+        </Alert>
+
     )
 }
 
@@ -115,7 +150,6 @@ export const DescriptionCard = (props) => {
  * @version 1.0.0
  */
 export const allFormFields = (data, fieldData) => {
-
     let allFields = [];
     if(fieldData) {
         if(fieldData.type==='section'){
@@ -171,13 +205,7 @@ export const getSectionsSubSections = (field, componentsData) => {
  * @author Atama Zack <atama.zack@gmail.com>.
  * @version 1.0.0
  */
-export const conditionalLogic = (data) => {
-    if(data.when!==''&&data.value!==''){
-        return {
-            when: data.when,
-            value: data.value.toLowerCase()                
-        }
-    } else {
-        return null
-    }
-}
+export const conditionalLogic = data => data.when!==''&&data.value!==''?{
+    when: data.when,
+    value: data.value.toLowerCase()                
+}:null

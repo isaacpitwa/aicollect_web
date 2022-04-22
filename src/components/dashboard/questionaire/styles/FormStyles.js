@@ -4,20 +4,12 @@ import {
 
 const formStyles = makeStyles({
     form: {
-        paddingBottom: '10px',
-        fontSize: '1.5rem',
-    },
-    formField: {
-        paddingBottom: '15px',
-    },
-    formButton: {
-        paddingTop: '7px',
-        paddingBottom: '7px',
-        marginLeft: '15px',
-    },
-    formButtonIcon: {
-        fontSize: '25px',
-        marginRight: '5px',
+        maxHeight: '75vh',
+        minHeight: '15vh',
+        overflow: 'scroll',
+        backgroundColor: 'white',
+        border: "#5048E5 1px solid",
+        borderRadius: "5px",
     },
     formRender: {
         padding: '1%',
@@ -34,14 +26,13 @@ const formStyles = makeStyles({
     alertBody: {
         fontSize: '16px',
     },
-    formFields: {
-        background: '#448AFF',
-        marginTop: '3%',
+    formButtons: {
+        margin: '0px',
+        padding: '0px'
+    },
+    formButton: {
         width: '100%',
-        height: '50px',
-        padding: '12px',
-        color: 'white',
-        textAlign: 'center',
+        fontSize: '0.8rem'
     },
     section: {
         width: '100%',
@@ -49,7 +40,6 @@ const formStyles = makeStyles({
         border: '1px #DDDDDD dotted',
         borderRadius: '8px',
         overflow: 'hidden',
-        minHeight: '50px',
         padding: '10px 1%',
         paddingTop: '0px',
         margin: '5px 0px',

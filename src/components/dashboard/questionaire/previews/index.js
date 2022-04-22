@@ -8,6 +8,20 @@ import {
 
 import GeneralTooltip from '../previews/GeneralTooltip'
 
+/**
+ * @function FieldPreview
+ * @desc This is the Field preview component that displays how a particular field will look like when added to the form.
+ * @arg {Object} props - The properties passed to the field preview.
+ * @arg {String} props.fieldLabel - The field label passed through props.
+ * @arg {String} props.fieldValue - The field value passed through props.
+ * @arg {Object} props.options - The field options passed through props.
+ * @arg {String} props.fieldDescription - The field description passed through props.
+ * @arg {String} props.tooltip - The field passed tooltip through props.
+ * @arg {Boolean} props.isRequired - The field required passed through props.
+ * @returns {Component} The Field preview component
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
 const FieldPreview = (props) => {
 
     const { fieldLabel, fieldDescription, tooltip, isRequired } = props

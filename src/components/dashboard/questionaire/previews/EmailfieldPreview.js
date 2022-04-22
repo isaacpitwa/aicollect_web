@@ -5,7 +5,7 @@ import {
     Typography,
     TextField
 } from '@mui/material'
-import GeneralTooltip from '../previews/GeneralTooltip'
+import GeneralTooltip from './GeneralTooltip'
 
 const EmailfieldPreview = (props) => {
 
