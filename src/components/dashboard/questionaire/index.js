@@ -406,8 +406,8 @@ const Questionaire = () => {
                     item
                     xs={12}
                     sm={12}
-                    md={3.5}
-                    lg={3.5}
+                    md={4}
+                    lg={4}
                     xl={3}
                 >
                     <Grid
@@ -425,7 +425,7 @@ const Questionaire = () => {
                                     draggable="true"
                                     onClick={handleSection}
                                     variant="contained"
-                                    style={{ width: '150%' }}
+                                    style={{ width: '150%', fontSize: '0.7rem' }}
                                 >Section</Button>
                             : <ButtonsLoader/> }
                             {isLoaded?
@@ -434,7 +434,7 @@ const Questionaire = () => {
                                     draggable='true'
                                     onClick={handleSubSection}
                                     variant="contained"
-                                    style={{ width: '150%', visibility: sectionCreated ? 'visible' : 'hidden' }}
+                                    style={{ width: '150%', fontSize: '0.7rem', visibility: sectionCreated ? 'visible' : 'hidden' }}
                                 >Sub Section</Button>
                             : <ButtonsLoader/> }
                         </Stack>
@@ -713,8 +713,8 @@ const Questionaire = () => {
                 item
                 xs={12}
                 sm={12}
-                md={formPreview?12:8.5}
-                lg={formPreview?12:8.5}
+                md={formPreview?12:8}
+                lg={formPreview?12:8}
                 xl={formPreview?12:9}
             >
                 <Grid

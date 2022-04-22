@@ -117,14 +117,25 @@ const FormProvider = (props) => {
             let section = newComponentsData.find(section=>section.id===fieldData.parentId);
             let sectionIndex = newComponentsData.findIndex(section=>section.id===fieldData.parentId);
             dependantFieldIndex = section.components.findIndex(field=>field.id===dependantField.id)
-            section.components[dependantFieldIndex] = dependantField;
+            section.components[dependantFieldIndex] = dependantField
             newComponentsData[sectionIndex] = section;
         }
         setComponentsData(newComponentsData)
     }
 
-    const conditionalDisplay = (field) => {
-        return field.conditional&&field.conditional.when===conditionalId&&field.conditional.value===conditionalValue&&!editStatus?true:false
+    const conditionalDisplay = (fieldData) => {
+        let dependee = formFieldValues.find(field=>field.id===fieldData.conditional.when);
+        if(dependee) {
+            if(dependee.type==='select-box') {
+                let values = []
+                dependee.values.map(item=>{ if(item.checked) values.push(item.label.toLowerCase()) })
+                return values.includes(fieldData.conditional.value);
+            } else {
+                return fieldData.conditional.when===dependee.id&&fieldData.conditional.value===dependee.value&&!editStatus?true:false;
+            }
+        } else {
+            return false;
+        }
     };
 
     const updateComponentsData = (fieldIndex, newFieldData) => {
