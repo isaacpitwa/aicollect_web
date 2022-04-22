@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import { styled } from '@mui/material/styles'
+import { useState, useEffect, useContext } from 'react';
+import { styled } from '@mui/material/styles';
+import formStyles from './styles/FormStyles'
 import {
-    Box,
     Paper,
     Button,
     Grid,
@@ -61,7 +60,8 @@ import LocationField from './dialogs/LocationField'
 import AreaMappingField from './dialogs/AreaMappingField'
 
 import { FormContext } from './context'
-import FormRenderer from './FormRenderer'
+import FormButtons from './FormButtons'
+import FormRender from './FormRender'
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -80,15 +80,12 @@ const Questionaire = () => {
         sectionCreated,
         formData,
         setFormData,
-        addComponent,
-        componentsData,
         updateFormData,
         formPreview,
         editStatus,
         handleFormPreview
     } = useContext(FormContext)
 
-    const [dataIsLoaded, setDataIsLoaded] = useState(false)
     const [formName, setFormName] = useState(formData?formData.name:'')
     const [sectionDialog, setSectionDialog] = useState(false)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
@@ -105,10 +102,6 @@ const Questionaire = () => {
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [dateDialog, setDateDialog] = useState(false)
     const [open, setOpen] = useState(false)
-
-    useEffect(() => {
-        setFormName(formData.name)
-    }, [isLoaded])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
@@ -158,25 +151,146 @@ const Questionaire = () => {
         setImageDialog(true)
     }
 
-    const handleDateField = () => {
-        setDateDialog(true)        
-    }
-
     const handleLocationField = () => {
         setLocationDialog(true)
+    }
+
+    const handleDateField = () => {
+        setDateDialog(true)        
     }
 
     const handleAreaMappingField = () => {
         setAreaMappingDialog(true)
     }
 
+    const defaultFunction = (name) => {
+        console.log(`${name} Dialog Method`)
+    }
+
     const saveFormChanges = () => {
         updateFormData()
     }
 
-    const createTextField = () => {
-        setTextFieldDialog(true)
-    }
+    const BasicFields = [
+        {
+            name: 'Text Field',
+            icon: <TextFieldsIcon/>,
+            func: handleTextField
+        },
+        {
+            name: 'Text Area Field',
+            icon: <TextSnippetIcon/>,
+            func: handleTextAreaField
+        },
+        {
+            name: 'Number Field',
+            icon: <TagIcon/>,
+            func: handleNumberField
+        },
+        {
+            name: 'Select Box',
+            icon: <CheckBoxIcon/>,
+            func: handleSelectBoxField
+        },
+        {
+            name: 'Select Field',
+            icon: <ListIcon/>,
+            func: handleSelectField
+        },
+        {
+            name: 'Radio Field',
+            icon: <RadioButtonCheckedIcon/>,
+            func: handleSelectRadioField
+        },
+        {
+            name: 'Email Address',
+            icon: <AlternateEmailIcon/>,
+            func: handleEmailField
+        },
+        {
+            name: 'Phone Number',
+            icon: <PhoneInTalkIcon/>,
+            func: handlePhoneField
+        },
+        {
+            name: 'Image Upload',
+            icon: <ImageIcon/>,
+            func: handleImageField
+        },
+        {
+            name: 'Location Field',
+            icon: <AddLocationAltIcon/>,
+            func: handleLocationField
+        },
+        {
+            name: 'Date Field',
+            icon: <DateRangeIcon/>,
+            func: handleDateField
+        },
+    ]
+
+    const AdvancedFields = [
+        {
+            name: 'Area Mapping',
+            icon: <MapIcon/>,
+            func: handleTextField
+        },
+        {
+            name: 'File Upload',
+            icon: <UploadFileIcon/>,
+            func: false
+        },
+        {
+            name: 'Audio Field',
+            icon: <MicIcon/>,
+            func: false
+        },
+        {
+            name: 'Video Field',
+            icon: <VideoLibraryIcon/>,
+            func: false
+        },
+        {
+            name: 'Image Geo Tag',
+            icon: <PersonPinIcon/>,
+            func: false
+        },
+        {
+            name: 'Barcode Field',
+            icon: <BlurLinearIcon/>,
+            func: false
+        },
+        {
+            name: 'Currency Field',
+            icon: <MonetizationOnIcon/>,
+            func: false
+        },
+        {
+            name: 'QR Code Field',
+            icon: <QrCode2Icon/>,
+            func: false
+        },
+        {
+            name: 'Signature Field',
+            icon: <GestureIcon/>,
+            func: false
+        },
+        {
+            name: 'Columns',
+            icon: <VerticalSplitIcon/>,
+            func: false
+        },
+        {
+            name: 'Table Field',
+            icon: <TableChartIcon/>,
+            func: false
+        },
+        {
+            name: 'Calculated Field',
+            icon: <CalculateIcon/>,
+            func: false
+        },
+    ]
 
     const saveChanges = () => {
         let newForm = formData
@@ -208,510 +322,41 @@ const Questionaire = () => {
 
     }
 
+    const classes = formStyles();
+
     return (
         <Grid
             container
             spacing={2}
         >
-            <Section
-                open={sectionDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <SubSection
-                open={subSectionDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <TextField_
-                open={textFieldDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <TextAreaField
-                open={textAreaFieldDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <NumberField
-                open={numberFieldDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <SelectBoxField
-                open={selectBoxDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <SelectField
-                open={selectDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <SelectRadioField
-                open={selectRadioDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <EmailField
-                open={emailFieldDialog}
-                fieldData={false}
-                handleClose={handleClose}
-            />
-            <PhoneField
-                open={phoneFieldDialog}
-                fieldData={false}
-                handleClose={handleClose} 
-            />
-            <ImageField
-                open={imageDialog}
-                fieldData={false}
-                handleClose={handleClose} 
-            />
-            <DateField
-                open={dateDialog}
-                fieldData={false}
-                handleClose={handleClose} 
-            />
-            <LocationField
-                open={locationDialog}
-                fieldData={false}
-                handleClose={handleClose} 
-            />
-            <AreaMappingField
-                open={areaMappingDialog}
-                fieldData={false}
-                handleClose={handleClose} 
-            />
-            <Grid
-                item
-                xs={6}
-                md={12}
-            >
-                <Typography
-                    variant="h5"
-                    gutterBottom
-                    color="primary"
-                    component="div"
-                    style={{ fontWeight: '300' }}
-                >
-                    {isLoaded?formData.formFields.length === 0?
-                        'Create New Form':'Edit Form'
-                    : 
-                        'Form Builder data loading...'
-                    }
-                </Typography>
-                <Grid container>
-                    <Grid
-                        item
-                        xs={12}
-                        md={4}
-                    >
-                        <TextField
-                            fullWidth
-                            required
-                            id="outlined-basic"
-                            variant="outlined"
-                            size="small"
-                            value={formName}
-                            onChange={handleFormName}
-                            style={{
-                                fontSize: '20px'
-                            }}
-                    />
-                    </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={3}
-                    >
-                        {isLoaded?
-                            <Button
-                                disabled={formData.name===formName}
-                                variant="contained"
-                                color="success"
-                                size="small"
-                                onClick={saveChanges}
-                                style={{ marginLeft: '20px' }}
-                            >
-                                Save Change
-                            </Button>
-                        : '' }
-                    </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={5}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            justifyContent={'right'}
-                        >
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                size="small"
-                                style={{ backgroundColor: 'white' }}
-                            >Save Draft</Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                onClick={handleFormPreview}
-                            >{formPreview ? 'Edit Form' : 'Form Preview'}</Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                            >Publish</Button>
-                        </Stack>
-                    </Grid>
-                </Grid>
-            </Grid>
-            {formPreview ?
-                ''
-                :
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={3.5}
-                >
-                    <Grid
-                        container
-                        style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px",  backgroundColor: "white" }}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            style={{ width: "100%" }}
-                        >
-                            {isLoaded?
-                                <Button
-                                    startIcon={<CheckBoxOutlineBlankIcon />}
-                                    draggable="true"
-                                    onClick={handleSection}
-                                    variant="contained"
-                                    style={{ width: '150%' }}
-                                >Section</Button>
-                            : <ButtonsLoader/> }
-                            {isLoaded?
-                                <Button
-                                    startIcon={<SelectAllIcon />}
-                                    draggable='true'
-                                    onClick={handleSubSection}
-                                    variant="contained"
-                                    style={{ width: '150%', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                                >Sub Section</Button>
-                            : <ButtonsLoader/> }
-                        </Stack>
-                    </Grid>
-                    {isLoaded?
-                        <>
-                            <Accordion
-                                variant="contained"
-                                style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                    style={{ marginTop: '3px' }}
-                                >
-                                    <Typography>Basic Data Types</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid
-                                        container
-                                        spacing={2}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<TextFieldsIcon />}
-                                                draggable="true"
-                                                onClick={handleTextField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Text Field</Button>
-                                            <Button
-                                                startIcon={<TagIcon />}
-                                                draggable="true"
-                                                onClick={handleNumberField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Number Field</Button>
-                                            <Button
-                                                startIcon={<ListIcon />}
-                                                draggable="true"
-                                                onClick={handleSelectField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Select</Button>
-                                            <Button
-                                                startIcon={<AlternateEmailIcon />}
-                                                draggable="true"
-                                                onClick={handleEmailField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Email Address</Button>
-                                            <Button
-                                                startIcon={<ImageIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                onClick={handleImageField}
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Image</Button>
-                                            <Button
-                                                startIcon={<DateRangeIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                onClick={handleDateField}
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Date</Button>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<TextSnippetIcon />}
-                                                draggable="true"
-                                                onClick={handleTextAreaField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Text Area</Button>
-                                            <Button
-                                                startIcon={<CheckBoxIcon />}
-                                                draggable="true"
-                                                onClick={handleSelectBoxField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Select Boxes</Button>
-                                            <Button
-                                                startIcon={<RadioButtonCheckedIcon />}
-                                                draggable="true"
-                                                onClick={handleSelectRadioField}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Radio</Button>
-                                            <Button
-                                                startIcon={<PhoneInTalkIcon />}
-                                                draggable="true"
-                                                onClick={handlePhoneField}
-                                                variant="contained"
-                                                size="small"                                            
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Phone Number</Button>
-                                            <Button
-                                                startIcon={<AddLocationAltIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                onClick={handleLocationField}
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Location</Button>
-                                        </Grid>
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion
-                                variant="contained"
-                                style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>Advanced Data Types</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid
-                                        container
-                                        spacing={2}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<MapIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                onClick={handleAreaMappingField}
-                                                style={{ width: '100%' }}
-                                            >Area Mapping</Button>
-                                            <Button
-                                                startIcon={<MicIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Audio</Button>
-                                            <Button
-                                                startIcon={<PersonPinIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Image Geo Tag</Button>
-                                            <Button
-                                                startIcon={<MonetizationOnIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Currency</Button>
-                                            <Button
-                                                startIcon={<GestureIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Signature</Button>
-                                            <Button
-                                                startIcon={<TableChartIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Tables</Button>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<UploadFileIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Upload File</Button>
-                                            <Button
-                                                startIcon={<VideoLibraryIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Video</Button>
-                                            <Button
-                                                startIcon={<BlurLinearIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Bar Code</Button>
-                                            <Button
-                                                startIcon={<QrCode2Icon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >QR Code</Button>
-                                            <Button
-                                                startIcon={<VerticalSplitIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Columns</Button>
-                                            <Button
-                                                startIcon={<CalculateIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%', marginTop: '10px' }}
-                                            >Calculated Field</Button>
-                                        </Grid>
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion
-                                variant="contained"
-                                style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>Feedback</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid
-                                        container
-                                        spacing={2}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<LinearScaleIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Likert Scale</Button>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<GradeIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Rating</Button>
-                                        </Grid>
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                        </>
-                    : ''}
-                </Grid>
-            }
+            {<FormButtons/>}
             {formPreview ?
                 <Grid
                     item
                     xs={12}
                     sm={12}
                     md={12}
+                    lg={12}
+                    xl={12}
                 >
-                    <Grid
-                        container
-                        style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}
-                    >
-                        <FormRenderer
-                            editStatus={editStatus}
-                        />
-                    </Grid>
+                    <FormRender/>
                 </Grid>
 
-                :
-                refresh ? '' :
-                    <Grid
-                        item
-                        xs={6}
-                        md={8.5}
-                    >
-                        <Grid
-                            container
-                            style={{ border: "#5048E5 1px solid", backgroundColor: 'white', borderRadius: "5px" }}
-                        >
-                            <FormRenderer editStatus={editStatus} />
-                        </Grid>
-                    </Grid>
+            :
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={9}
+                    lg={9}
+                    xl={9}
+                >
+                    <FormRender/>
+                </Grid>
             }
             <Grid
                 item
-                xs={6}
+                xs={12}
                 md={12}
             >
                 <Stack

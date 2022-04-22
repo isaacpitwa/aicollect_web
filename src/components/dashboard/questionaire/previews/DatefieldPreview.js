@@ -10,6 +10,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
+import { DescriptionCard } from '../utils';
 import GeneralTooltip from './GeneralTooltip'
 
 const DatefieldPreview = (props) => {
@@ -42,18 +43,20 @@ const DatefieldPreview = (props) => {
                         onChange={(newValue) => {
                           setValue(newValue);
                         }}
-						renderInput={(params) => <TextField {...params} fullWidth/>}
+						renderInput={
+                            (params) => <TextField
+                                required={isRequired}
+                                fullWidth
+                                {...params}
+                                helperText={<DescriptionCard description={fieldDescription} helperText={true} />}
+                            />
+                        }
+                        InputProps={{
+                            startAdornment: <GeneralTooltip tipData={tooltip} />
+                        }}
+                        
 					/>
                 </LocalizationProvider>
-                {fieldDescription!=''?
-                    <Typography
-                        style={{ fontSize: '14px', color: '#5048e598' }}
-                    >
-                        <i>{fieldDescription}</i>
-                    </Typography>
-                :
-                    ''
-                }
             </Box>
         </Grid>
 

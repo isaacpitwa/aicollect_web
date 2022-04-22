@@ -4,7 +4,7 @@ import {
     Grid,
     Typography,
 } from '@mui/material'
-import GeneralTooltip from '../previews/GeneralTooltip'
+import GeneralTooltip from './GeneralTooltip'
 
 const SubSectionPreview = (props) => {
 

@@ -6,7 +6,7 @@ import {
     TextField
 } from '@mui/material'
 
-import GeneralTooltip from '../previews/GeneralTooltip'
+import GeneralTooltip from './GeneralTooltip'
 
 const TextfieldPreview = (props) => {
 

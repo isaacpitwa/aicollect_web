@@ -51,6 +51,10 @@ const DatefieldComp = (props) => {
         setDateFieldDialog(true)
     }
 
+    const handleDateValue = (e) => {
+
+    }
+
     const createTextField = () => {
         setDateFieldDialog(false)
     }
@@ -122,6 +126,9 @@ const DatefieldComp = (props) => {
 							setDateValue(newValue);
 						}}
 						renderInput={(params) => <TextField {...params} fullWidth/>}
+                        InputProps={{
+                            endAdornment: <GeneralTooltip tipData={fieldData.tooltip} />
+                        }}
 					/>
 				</LocalizationProvider>
             </Grid>
