@@ -11,7 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import SelectBoxField from '../../dialogs/SelectBoxField';
-import { DescriptionCard } from '../../utils';
+import {
+    DescriptionCard,
+    FieldTooltip
+} from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
 /**
@@ -30,6 +33,10 @@ const SelectBoxesField = (props) => {
         setSectionId,
         setSubSectionId,
         editStatus,
+        setConditionalId,
+        setConditionalValue,
+        formFieldValues,
+        setFormFieldValues,
         deleteFieldData
     } = useContext(FormContext);
 
@@ -37,6 +44,8 @@ const SelectBoxesField = (props) => {
 
     const [selectBoxDialog, setSelectBoxDialog] = useState(false)
     const [checkOptions, setCheckOptions] = useState(fieldData.values)
+    const [field, setField] = useState(formFieldValues.find(field=>field.id===fieldData.id))
+    const [fieldIndex, setFieldIndex] = useState(formFieldValues.findIndex(field=>field.id===fieldData.id))
     const [display, setDisplay] = useState('hidden');
 
     const handleSelectBoxField = () => {
@@ -45,6 +54,18 @@ const SelectBoxesField = (props) => {
         setSectionId(fieldData.parentId)
         setSubSectionId(fieldData.subParentId)
         setSelectBoxDialog(true)
+    }
+
+    const handleCheckbox = (e) => {
+
+    }
+
+    const updateFieldValue = (values) => {
+        let fields = formFieldValues;
+        let thisField = field;
+        thisField.values = values;
+        fields[fieldIndex] = thisField;
+        setFormFieldValues(fields);
     }
 
     const deleteField = () => {
@@ -80,7 +101,7 @@ const SelectBoxesField = (props) => {
                 </>
             : '' }
             <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                {fieldData.label}<GeneralTooltip tipData={fieldData.tooltip} />
+                {fieldData.label}<FieldTooltip tooltip={fieldData.tooltip} />
             </Typography>
             <DescriptionCard description={fieldData.description} helperText={true}/>
             {checkOptions.map(option => (
@@ -90,8 +111,13 @@ const SelectBoxesField = (props) => {
                         checked={option.checked}
                         // Switching state of a perticular check box
                         onChange={(e) => {
+                            setConditionalId("");
+                            setConditionalValue("");
                             option.checked = !option.checked;
                             setCheckOptions([...checkOptions]);
+                            setConditionalId(fieldData.id);
+                            setConditionalValue(e.target.value.toLowerCase());
+                            updateFieldValue(checkOptions);
                         }}/>
                         {option.label}
                 </Typography>

@@ -10,7 +10,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context'
 import Section from '../../dialogs/Section';
-import { DescriptionCard } from '../../utils';
+import {
+    DescriptionCard,
+    FieldTooltip,
+} from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import FormField from '.';
 
@@ -107,7 +110,7 @@ const SectionField = (props) => {
                     onClick={getSectionId}
                     className={classes.sectionLabel}
                 >
-                    {fieldData.label}{fieldData.tooltip!==''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
+                    {fieldData.label}{fieldData.tooltip!==''?<FieldTooltip tooltip={fieldData.tooltip}/>:false}
                     {editStatus ?
                         <small
                             className={smallBtn.sectionBtns}
@@ -128,7 +131,7 @@ const SectionField = (props) => {
                 {fieldData.components.map((field, index) => (
                     <FormField key={index} fieldData={field} />
                 ))}
-            </Grid>          
+            </Grid>
         )
     }
 

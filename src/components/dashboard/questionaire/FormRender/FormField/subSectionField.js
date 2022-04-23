@@ -61,7 +61,7 @@ const SubSectionField = (props) => {
     };
 
     const deleteField = () => {
-        setSectionId(null)
+        setSectionId(fieldData.parentId)
         setSubSectionId(null)
         deleteFieldData(fieldData)
     };   

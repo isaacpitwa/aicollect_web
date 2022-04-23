@@ -6,12 +6,9 @@ import {
     Button,
     Grid,
     Stack,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    TextField,
-    Typography
-} from '@mui/material'
+} from '@mui/material';
+import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
+import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import SelectAllIcon from '@mui/icons-material/SelectAll'
@@ -60,6 +57,7 @@ import LocationField from './dialogs/LocationField'
 import AreaMappingField from './dialogs/AreaMappingField'
 
 import { FormContext } from './context'
+import FormHeader from './FormHeader'
 import FormButtons from './FormButtons'
 import FormRender from './FormRender'
 
@@ -75,312 +73,63 @@ const Item = styled(Paper)(({ theme }) => ({
 const Questionaire = () => {
 
     const {
-        isLoaded,
-        refresh,
-        sectionCreated,
-        formData,
-        setFormData,
         updateFormData,
         formPreview,
-        editStatus,
-        handleFormPreview
     } = useContext(FormContext)
-
-    const [formName, setFormName] = useState(formData?formData.name:'')
-    const [sectionDialog, setSectionDialog] = useState(false)
-    const [subSectionDialog, setSubSectionDialog] = useState(false)
-    const [textFieldDialog, setTextFieldDialog] = useState(false)
-    const [textAreaFieldDialog, setTextAreaFieldDialog] = useState(false)
-    const [numberFieldDialog, setNumberFieldDialog] = useState(false)
-    const [selectBoxDialog, setSelectBoxDialog] = useState(false)
-    const [selectDialog, setSelectDialog] = useState(false)
-    const [selectRadioDialog, setSelectRadioDialog] = useState(false)
-    const [emailFieldDialog, setEmailFieldDialog] = useState(false)
-    const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
-    const [imageDialog, setImageDialog] = useState(false)
-    const [locationDialog, setLocationDialog] = useState(false)
-    const [areaMappingDialog, setAreaMappingDialog] = useState(false)
-    const [dateDialog, setDateDialog] = useState(false)
-    const [open, setOpen] = useState(false)
-
-    const handleFormName = (e) => {
-        setFormName(e.target.value)
-    }
-
-    const handleSection = () => {
-        setSectionDialog(true)
-    }
-
-    const handleSubSection = () => {
-        setSubSectionDialog(true)
-    }
-
-    const handleTextField = () => {
-        setTextFieldDialog(true)
-    }
-
-    const handleTextAreaField = () => {
-        setTextAreaFieldDialog(true)
-    }
-
-    const handleNumberField = () => {
-        setNumberFieldDialog(true)
-    }
-
-    const handleSelectBoxField = () => {
-        setSelectBoxDialog(true)
-    }
-
-    const handleSelectField = () => {
-        setSelectDialog(true)
-    }
-
-    const handleSelectRadioField = () => {
-        setSelectRadioDialog(true)
-    }
-
-    const handleEmailField = () => {
-        setEmailFieldDialog(true)
-    }
-
-    const handlePhoneField = () => {
-        setPhoneFieldDialog(true)
-    }
-
-    const handleImageField = () => {
-        setImageDialog(true)
-    }
-
-    const handleLocationField = () => {
-        setLocationDialog(true)
-    }
-
-    const handleDateField = () => {
-        setDateDialog(true)        
-    }
-
-    const handleAreaMappingField = () => {
-        setAreaMappingDialog(true)
-    }
-
-    const defaultFunction = (name) => {
-        console.log(`${name} Dialog Method`)
-    }
 
     const saveFormChanges = () => {
         updateFormData()
     }
 
-    const BasicFields = [
-        {
-            name: 'Text Field',
-            icon: <TextFieldsIcon/>,
-            func: handleTextField
-        },
-        {
-            name: 'Text Area Field',
-            icon: <TextSnippetIcon/>,
-            func: handleTextAreaField
-        },
-        {
-            name: 'Number Field',
-            icon: <TagIcon/>,
-            func: handleNumberField
-        },
-        {
-            name: 'Select Box',
-            icon: <CheckBoxIcon/>,
-            func: handleSelectBoxField
-        },
-        {
-            name: 'Select Field',
-            icon: <ListIcon/>,
-            func: handleSelectField
-        },
-        {
-            name: 'Radio Field',
-            icon: <RadioButtonCheckedIcon/>,
-            func: handleSelectRadioField
-        },
-        {
-            name: 'Email Address',
-            icon: <AlternateEmailIcon/>,
-            func: handleEmailField
-        },
-        {
-            name: 'Phone Number',
-            icon: <PhoneInTalkIcon/>,
-            func: handlePhoneField
-        },
-        {
-            name: 'Image Upload',
-            icon: <ImageIcon/>,
-            func: handleImageField
-        },
-        {
-            name: 'Location Field',
-            icon: <AddLocationAltIcon/>,
-            func: handleLocationField
-        },
-        {
-            name: 'Date Field',
-            icon: <DateRangeIcon/>,
-            func: handleDateField
-        },
-    ]
-
-    const AdvancedFields = [
-        {
-            name: 'Area Mapping',
-            icon: <MapIcon/>,
-            func: handleTextField
-        },
-        {
-            name: 'File Upload',
-            icon: <UploadFileIcon/>,
-            func: false
-        },
-        {
-            name: 'Audio Field',
-            icon: <MicIcon/>,
-            func: false
-        },
-        {
-            name: 'Video Field',
-            icon: <VideoLibraryIcon/>,
-            func: false
-        },
-        {
-            name: 'Image Geo Tag',
-            icon: <PersonPinIcon/>,
-            func: false
-        },
-        {
-            name: 'Barcode Field',
-            icon: <BlurLinearIcon/>,
-            func: false
-        },
-        {
-            name: 'Currency Field',
-            icon: <MonetizationOnIcon/>,
-            func: false
-        },
-        {
-            name: 'QR Code Field',
-            icon: <QrCode2Icon/>,
-            func: false
-        },
-        {
-            name: 'Signature Field',
-            icon: <GestureIcon/>,
-            func: false
-        },
-        {
-            name: 'Columns',
-            icon: <VerticalSplitIcon/>,
-            func: false
-        },
-        {
-            name: 'Table Field',
-            icon: <TableChartIcon/>,
-            func: false
-        },
-        {
-            name: 'Calculated Field',
-            icon: <CalculateIcon/>,
-            func: false
-        },
-    ]
-
-    const saveChanges = () => {
-        let newForm = formData
-        newForm.name = formName
-        setFormData(newForm)
-        updateFormData()
-    }
-
-    const handleClose = () => {
-        // Dialog box closing method
-        setOpen(false)
-        setSectionDialog(false)
-        setSubSectionDialog(false)
-        setTextFieldDialog(false)
-        setTextAreaFieldDialog(false)
-        setNumberFieldDialog(false)
-        setSelectBoxDialog(false)
-        setSelectDialog(false)
-        setSelectRadioDialog(false)
-        setEmailFieldDialog(false)
-        setPhoneFieldDialog(false)
-        setImageDialog(false)
-        setDateDialog(false)
-        setLocationDialog(false)
-        setAreaMappingDialog(false)
-    }
-
-    const handleDragStart = () => {
-
-    }
-
-    const classes = formStyles();
-
     return (
         <Grid
-            container
-            spacing={2}
+            item
         >
-            {<FormButtons/>}
-            {formPreview ?
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    xl={12}
-                >
-                    <FormRender/>
-                </Grid>
-
-            :
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={9}
-                    lg={9}
-                    xl={9}
-                >
-                    <FormRender/>
-                </Grid>
-            }
+            <FormHeader/>
             <Grid
-                item
-                xs={12}
-                md={12}
+                container
+                spacing={2}
+                style={{
+                    paddingTop: '120px',
+                }}
             >
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    justifyContent={'right'}
+                <FormButtons/>
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={formPreview?12:8}
+                    lg={formPreview?12:8}
+                    xl={formPreview?12:8}
                 >
-                    <Button
-                        variant="outlined"
-                        size='small'
-                        color="error"
-                    >Cancel</Button>
-                    <Button
-                        variant="outlined"
-                        size='small'
-                        color="primary"
-                    >Save Draft</Button>
-                    <Button
-                        onClick={saveFormChanges}
-                        variant="contained"
-                        size='small'
-                        color="primary"
-                    >Save Form</Button>
-                </Stack>
+                    <FormRender/>
+                    {!formPreview?
+                        <Stack
+                            direction="row"
+                            spacing={2}
+                            style={{
+                                paddingTop: '15px',
+                            }}
+                        >
+                            <Button
+                                variant="outlined"
+                                size='small'
+                                color="error"
+                            >Cancel</Button>
+                            {/* <Button
+                                variant="outlined"
+                                size='small'
+                                color="primary"
+                            >Save Draft</Button> */}
+                            <Button
+                                onClick={saveFormChanges}
+                                variant="contained"
+                                size='small'
+                                color="primary"
+                            >Save Form</Button>
+                        </Stack>
+                    : ""}
+                </Grid>
             </Grid>
         </Grid>
     )

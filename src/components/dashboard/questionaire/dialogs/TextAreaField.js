@@ -37,7 +37,7 @@ const TextAreaField = (props) => {
         subSectionId,
         componentsData,
         addComponentToSection,
-        updateComponentsData
+        updateFieldInSection,
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
@@ -157,7 +157,7 @@ const TextAreaField = (props) => {
     }
 
     const handleUpdate = () => {
-        let newField = {
+        let updatedFieldData = {
             id: id,
             parentId: sectionId,
             subParentId: subSectionId,
@@ -167,8 +167,9 @@ const TextAreaField = (props) => {
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip
-        }        
-        updateComponentsData(findComponentIndex(fieldData, compsData), newField)
+        }
+
+        updateFieldInSection(updatedFieldData)
         handleClose()
     }
 

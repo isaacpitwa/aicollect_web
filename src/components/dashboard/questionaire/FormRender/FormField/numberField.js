@@ -109,8 +109,8 @@ const NumberFieldComp = (props) => {
                     <TextField
                         required={fieldData.required}
                         fullWidth
+                        variant="outlined"
                         type={'number'}
-                        variant={'outlined'}
                         label={fieldData.label}
                         value={fieldValue}
                         onChange={handleFieldValue}

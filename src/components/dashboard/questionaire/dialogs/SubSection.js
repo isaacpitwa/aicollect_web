@@ -31,6 +31,7 @@ import SubSectionPreview from '../previews/SubSectionPreview'
 const SubSection = (props) => {
 
     const {
+        setIsLoaded,
         setError,
         sectionId,
         componentsData,
@@ -110,6 +111,7 @@ const SubSection = (props) => {
         }
 
         if(sectionId&&fieldLabel!=='') {
+            setIsLoaded(false)
             addComponentToSection(newSubSection)
             setError(false)
             setErrorTag(false)

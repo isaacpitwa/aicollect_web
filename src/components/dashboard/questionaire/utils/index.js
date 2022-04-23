@@ -1,24 +1,27 @@
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-
+import formStyles from '../styles/FormStyles'
 import {
-    Typography
+    Typography,
+    IconButton,
+    Tooltip,
+    Grid,
 } from '@mui/material';
-
-import FormStyles from '../styles/FormStyles';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import InfoIcon from '@mui/icons-material/Info';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 /**
  * @function DescriptionCard
  * @desc This is a description component for displaying descriptions of form fields.
- * @arg {String} description - The description property from a field object.
- * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.description - The description property from a field object.
+ * @arg {Boolean} props.helperText - The MUI form field property that shows helping text below a field, if True then use the property.
  * @returns {Component} - Returns a description JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
 export const DescriptionCard = (props) => {
-
-    const Styles = FormStyles.sectionStyles
 
     const { description, helperText } = props
 
@@ -38,6 +41,70 @@ export const DescriptionCard = (props) => {
             :
             ''
 
+    )
+}
+
+/**
+ * @function FieldTooltip
+ * @desc This is a tooltip component for displaying tooltips of form fields.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.tooltip - The tooltip property from a field object.
+ * @returns {Component} - Returns a tooltip JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FieldTooltip = (props) => {
+
+    const { tooltip } = props
+
+    return (
+        tooltip!=''?
+            <Tooltip title={tooltip}>
+            <IconButton>
+                <HelpOutlineIcon/>
+            </IconButton>
+            </Tooltip>
+        : ''
+    )
+}
+
+/**
+ * @function FormBuildHelp
+ * @desc This is a component with quick steps on how to build a form.
+ * @returns {Component} - Returns the FormBuildHelp component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FormBuildHelp = () => {
+
+    const classes = formStyles();
+
+    return (
+        // <Grid
+        //     container
+        // >
+            <Alert
+                severity="info"
+                className={classes.alertContainer}
+            >
+                <AlertTitle
+                    className={classes.alertTitle}
+                >This Form has no fields.</AlertTitle>
+                <Typography
+                    className={classes.alertHeader1}
+                >
+                    <strong>Quick Start</strong><br/>
+                </Typography>
+                <Typography
+                    className={classes.alertBody}
+                >
+                    To add fields to this form, follow the steps listed below;<br/>
+                    <strong>Step 1:</strong> Check if you are in <strong>Form Builder: </strong>Edit Mode at the top, if not, click on the <strong>Edit Form</strong> button.<br/>
+                    <strong>Step 2:</strong> Click on the <strong>Section</strong> button to add a section to the form.<br/>
+                    <strong>Step 3:</strong> Other buttons will appear after creating a form Section field.
+                </Typography>
+            </Alert>
+        // </Grid>
     )
 }
 
@@ -91,14 +158,14 @@ export const allFormFields = (data, fieldData) => {
     if(fieldData) {
         if(fieldData.type==='section'){
             data.filter(item=>item.id!==fieldData.id).forEach((item) => {
-                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
+                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"||field.type==="select-box"))
             });
         } else {
             if(fieldData.subParentId) {
                 let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
-                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"||field.type==="select-box"))
             } else {
-                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"||field.type==="select-box"))
             }
         }
     }

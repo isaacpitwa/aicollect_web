@@ -27,8 +27,13 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
 const TextAreaFieldComp = (props) => {
 
     const {
+        setError,
         editStatus,
-        deleteFieldData 
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        conditionalDisplay,
+        deleteFieldData,
     } = useContext(FormContext);
 
     const { fieldData } = props
@@ -36,19 +41,17 @@ const TextAreaFieldComp = (props) => {
     const [display, setDisplay] = useState('hidden');
     const [textAreaFieldDialog, setTextAreaFieldDialog] = useState(false)
 
-    useEffect(()=>{
-
-    }, [textAreaFieldDialog])
-
     const handleTextAreaField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setTextAreaFieldDialog(true)
-    }
-    
-    const createTextField = () => {
-        setTextAreaFieldDialog(false)
     }
 
     const deleteField = () => {
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     }
 
@@ -61,7 +64,11 @@ const TextAreaFieldComp = (props) => {
 
     return (
         <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-            <TextAreaField open={textAreaFieldDialog} createTextField={createTextField} fieldData={fieldData} handleClose={handleClose} />
+            <TextAreaField
+                open={textAreaFieldDialog}
+                fieldData={fieldData}
+                handleClose={handleClose}
+            />
             {editStatus?
                 <Typography
                     className={smallBtn.fieldBtns}
@@ -82,8 +89,8 @@ const TextAreaFieldComp = (props) => {
                 required={fieldData.required}
                 fullWidth
                 multiline
+                variant="outlined"
                 type={'text'}
-                variant={'outlined'}
                 label={fieldData.label}
                 helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
                 style={formStyles.textfield}

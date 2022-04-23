@@ -1,12 +1,16 @@
-import { useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import formStyles from '../styles/FormStyles'
 import {
     Grid,
     Box,
+    Stack,
+    Button,
 } from "@mui/material";
+
 import FormLoader from '../utils/FormLoader';
-
-
+import {
+    FormBuildHelp,
+} from '../utils';
 import { FormContext } from '../context'
 import SectionField from './FormField/sectionField'
 
@@ -15,7 +19,14 @@ const FormRender = () => {
     const {
         isLoaded,
         componentsData,
+        formData,
+        setFormData,
+        updateFormData,
     } = useContext(FormContext)
+
+    const saveFormChanges = () => {
+        updateFormData()
+    }
 
     const classes = formStyles();
 
@@ -28,6 +39,8 @@ const FormRender = () => {
                 <Grid
                     container
                     className={classes.formRender}
+                    justifyContent={'center'}
+    
                 >
                     {componentsData.map((fieldData, index) => (
                         <SectionField
@@ -36,12 +49,8 @@ const FormRender = () => {
                         />
                     ))}
                     {componentsData.length===0?
-                        <Box 
-                            className={classes.formFields}
-                        >
-                            Drag and Drop a form component
-                        </Box>
-                        :
+                        <FormBuildHelp/>
+                    :
                         ''
                     }
                 </Grid>
