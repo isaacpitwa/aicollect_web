@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
-import formStyles from './styles/FormStyles'
+import formStyles from './styles/FormStyles';
 import {
     Paper,
     Button,
@@ -11,55 +11,56 @@ import {
     AccordionDetails,
     TextField,
     Typography
-} from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
-import SelectAllIcon from '@mui/icons-material/SelectAll'
-import TextFieldsIcon from '@mui/icons-material/TextFields'
-import TagIcon from '@mui/icons-material/Tag'
-import ListIcon from '@mui/icons-material/List'
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
-import BusinessIcon from '@mui/icons-material/Business'
-import TextSnippetIcon from '@mui/icons-material/TextSnippet'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
-import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk'
-import SmartButtonIcon from '@mui/icons-material/SmartButton'
-import CalculateIcon from '@mui/icons-material/Calculate'
-import ImageIcon from '@mui/icons-material/Image'
+} from '@mui/material';
+import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
+import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
+import TagIcon from '@mui/icons-material/Tag';
+import ListIcon from '@mui/icons-material/List';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import BusinessIcon from '@mui/icons-material/Business';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
+import SmartButtonIcon from '@mui/icons-material/SmartButton';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import ImageIcon from '@mui/icons-material/Image';
 import DateRangeIcon from '@mui/icons-material/DateRange';
-import PersonPinIcon from '@mui/icons-material/PersonPin'
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt'
-import MapIcon from '@mui/icons-material/Map'
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
-import GestureIcon from '@mui/icons-material/Gesture'
-import UploadFileIcon from '@mui/icons-material/UploadFile'
-import MicIcon from '@mui/icons-material/Mic'
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary'
-import BlurLinearIcon from '@mui/icons-material/BlurLinear'
-import QrCode2Icon from '@mui/icons-material/QrCode2'
-import VerticalSplitIcon from '@mui/icons-material/VerticalSplit'
-import TableChartIcon from '@mui/icons-material/TableChart'
-import LinearScaleIcon from '@mui/icons-material/LinearScale'
-import GradeIcon from '@mui/icons-material/Grade'
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import MapIcon from '@mui/icons-material/Map';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import GestureIcon from '@mui/icons-material/Gesture';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import MicIcon from '@mui/icons-material/Mic';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import BlurLinearIcon from '@mui/icons-material/BlurLinear';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import GradeIcon from '@mui/icons-material/Grade';
 
 import ButtonsLoader from './utils/ButtonsLoader';
-import Section from './dialogs/Section'
-import SubSection from './dialogs/SubSection'
-import TextField_ from './dialogs/TextField'
-import TextAreaField from './dialogs/TextAreaField'
-import NumberField from './dialogs/NumberField'
-import SelectBoxField from './dialogs/SelectBoxField'
-import SelectField from './dialogs/SelectField'
-import SelectRadioField from './dialogs/SelectRadioField'
-import EmailField from './dialogs/EmailField'
-import PhoneField from './dialogs/PhoneField'
-import ImageField from './dialogs/ImageField'
-import DateField from './dialogs/DateField'
-import LocationField from './dialogs/LocationField'
-import AreaMappingField from './dialogs/AreaMappingField'
-
-import { FormContext } from './context'
+import Section from './dialogs/Section';
+import SubSection from './dialogs/SubSection';
+import TextField_ from './dialogs/TextField';
+import TextAreaField from './dialogs/TextAreaField';
+import NumberField from './dialogs/NumberField';
+import SelectBoxField from './dialogs/SelectBoxField';
+import SelectField from './dialogs/SelectField';
+import SelectRadioField from './dialogs/SelectRadioField';
+import EmailField from './dialogs/EmailField';
+import PhoneField from './dialogs/PhoneField';
+import ImageField from './dialogs/ImageField';
+import DateField from './dialogs/DateField';
+import LocationField from './dialogs/LocationField';
+import AreaMappingField from './dialogs/AreaMappingField';
+import { FormContext } from './context';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -74,6 +75,7 @@ const FormButtons = () => {
 
     const {
         isLoaded,
+        getFormData,
         sectionCreated,
         formData,
         setFormData,
@@ -388,88 +390,6 @@ const FormButtons = () => {
                 fieldData={false}
                 handleClose={handleClose} 
             />
-            <Grid
-                item
-                xs={6}
-                md={12}
-            >
-                <Typography
-                    variant="h4"
-                    gutterBottom
-                    color="primary"
-                    component="div"
-                    style={{ paddingBottom: '10px', fontWeight: '500' }}
-                >
-                    {isLoaded?"Form Builder:":"Form Data Loading..."}
-                </Typography>
-                <Grid container>
-                    <Grid
-                        item
-                        xs={12}
-                        md={4}
-                    >
-                        <TextField
-                            fullWidth
-                            required
-                            id="outlined-basic"
-                            variant="outlined"
-                            size="small"
-                            value={formName}
-                            onChange={handleFormName}
-                            style={{
-                                fontSize: '20px'
-                            }}
-                    />
-                    </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={3}
-                    >
-                        {isLoaded?
-                            <Button
-                                disabled={formData.name===formName}
-                                variant="contained"
-                                color="success"
-                                size="small"
-                                onClick={saveChanges}
-                                style={{ marginLeft: '20px' }}
-                            >
-                                Save Change
-                            </Button>
-                        : '' }
-                    </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={5}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            justifyContent={'right'}
-                        >
-                            {/* <Button
-                                variant="outlined"
-                                color="primary"
-                                size="small"
-                                style={{ backgroundColor: 'white' }}
-                            >Save Draft</Button> */}
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                onClick={handleFormPreview}
-                            >{formPreview ? 'Edit Form' : 'Form Preview'}</Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                            >Publish</Button>
-                        </Stack>
-                    </Grid>
-                </Grid>
-            </Grid>
             {formPreview ?
                 ""
             :
@@ -479,59 +399,114 @@ const FormButtons = () => {
                     sm={12}
                     md={4}
                     lg={4}
-                    xl={3}
+                    xl={4}
                 >
                     <Grid
-                        container
-                        style={{ border: "#5048E5 1px solid", borderRadius: "5px", padding: "10px",  backgroundColor: "white" }}
+                        item
+                        style={{
+                            position: 'fixed',
+                            width: '25vw',
+                        }}
                     >
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            style={{ width: "100%" }}
+                        <Grid
+                            container
+                            style={{
+                                border: "#5048E5 1px solid",
+                                borderRadius: "5px",
+                                padding: "10px", 
+                                backgroundColor: "white",
+                            }}
                         >
-                            {isLoaded?
-                                <Button
-                                    startIcon={<CheckBoxOutlineBlankIcon />}
-                                    draggable="true"
-                                    onClick={handleSection}
-                                    variant="contained"
-                                    style={{ width: '150%', fontSize: '0.8rem' }}
-                                >Section</Button>
-                            : <ButtonsLoader/> }
-                            {isLoaded?
-                                sectionCreated?
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                                style={{ width: "100%" }}
+                            >
+                                {isLoaded?
                                     <Button
-                                        startIcon={<SelectAllIcon />}
-                                        draggable='true'
-                                        onClick={handleSubSection}
+                                        startIcon={<CheckBoxOutlineBlankIcon />}
+                                        draggable="true"
+                                        onClick={handleSection}
                                         variant="contained"
                                         style={{ width: '150%', fontSize: '0.8rem' }}
-                                    >Sub Section</Button>
-                                : ""
-                            : <ButtonsLoader/> }
-                        </Stack>
-                    </Grid>
-                    {isLoaded&&sectionCreated?
-                        <>
-                            <Accordion
-                                variant="contained"
-                                style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                    style={{ marginTop: '3px' }}
+                                    >Section</Button>
+                                : <ButtonsLoader/> }
+                                {isLoaded?
+                                    sectionCreated?
+                                        <Button
+                                            startIcon={<SelectAllIcon />}
+                                            draggable='true'
+                                            onClick={handleSubSection}
+                                            variant="contained"
+                                            style={{ width: '150%', fontSize: '0.8rem' }}
+                                        >Sub Section</Button>
+                                    : ""
+                                : <ButtonsLoader/> }
+                            </Stack>
+                        </Grid>
+                        {isLoaded&&sectionCreated?
+                            <>
+                                <Accordion
+                                    variant="contained"
+                                    style={{
+                                        marginTop: '5px',
+                                        borderRadius: "5px",
+                                        color: '#5048E5',
+                                        border: '1px #5048E5 solid',
+                                        visibility: sectionCreated ? 'visible' : 'hidden'
+                                    }}
                                 >
-                                    <Typography>Basic Data Types</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid
-                                        container
-                                        spacing={1}
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                        style={{ marginTop: '3px' }}
                                     >
-                                        {BasicFields.map((button, index)=>(
+                                        <Typography>Basic Data Types</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Grid
+                                            container
+                                            spacing={1}
+                                        >
+                                            {BasicFields.map((button, index)=>(
+                                                <Grid
+                                                    key={index}
+                                                    item
+                                                    xs={12}
+                                                    md={6}
+                                                    className={classes.formButtons}
+                                                >
+                                                    <Button
+                                                        startIcon={button.icon}
+                                                        draggable={false}
+                                                        onClick={button.func}
+                                                        variant="contained"
+                                                        size="small"
+                                                        style={{ width: '100%' }}
+                                                    >{button.name}</Button>
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </AccordionDetails>
+                                </Accordion>
+                                <Accordion
+                                    variant="contained"
+                                    style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>Advanced Data Types</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Grid
+                                            container
+                                            spacing={1}
+                                        >
+                                        {AdvancedFields.map((button, index)=>(
                                             <Grid
                                                 key={index}
                                                 item
@@ -542,98 +517,62 @@ const FormButtons = () => {
                                                 <Button
                                                     startIcon={button.icon}
                                                     draggable={false}
-                                                    onClick={button.func}
+                                                    onClick={button.func?button.func:()=>{defaultFunction(button.name)}}
                                                     variant="contained"
                                                     size="small"
-                                                    className={classes.formButton}
+                                                    style={{ width: '100%' }}
                                                 >{button.name}</Button>
                                             </Grid>
                                         ))}
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion
-                                variant="contained"
-                                style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
+                                        </Grid>
+                                    </AccordionDetails>
+                                </Accordion>
+                                <Accordion
+                                    variant="contained"
+                                    style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
                                 >
-                                    <Typography>Advanced Data Types</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid
-                                        container
-                                        spacing={1}
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
                                     >
-                                    {AdvancedFields.map((button, index)=>(
+                                        <Typography>Feedback</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
                                         <Grid
-                                            key={index}
-                                            item
-                                            xs={12}
-                                            md={6}
-                                            className={classes.formButtons}
+                                            container
+                                            spacing={2}
                                         >
-                                            <Button
-                                                startIcon={button.icon}
-                                                draggable={false}
-                                                onClick={button.func?button.func:()=>{defaultFunction(button.name)}}
-                                                variant="contained"
-                                                size="small"
-                                                className={classes.formButton}
-                                            >{button.name}</Button>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={6}
+                                            >
+                                                <Button
+                                                    startIcon={<LinearScaleIcon />}
+                                                    variant="contained"
+                                                    size="small"
+                                                    style={{ width: '100%' }}
+                                                >Likert Scale</Button>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                md={6}
+                                            >
+                                                <Button
+                                                    startIcon={<GradeIcon />}
+                                                    variant="contained"
+                                                    size="small"
+                                                    style={{ width: '100%' }}
+                                                >Rating</Button>
+                                            </Grid>
                                         </Grid>
-                                    ))}
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion
-                                variant="contained"
-                                style={{ marginTop: '5px', borderRadius: "5px", color: '#5048E5', border: '1px #5048E5 solid', visibility: sectionCreated ? 'visible' : 'hidden' }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>Feedback</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid
-                                        container
-                                        spacing={2}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<LinearScaleIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Likert Scale</Button>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <Button
-                                                startIcon={<GradeIcon />}
-                                                variant="contained"
-                                                size="small"
-                                                style={{ width: '100%' }}
-                                            >Rating</Button>
-                                        </Grid>
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                        </>
-                    : "" }
+                                    </AccordionDetails>
+                                </Accordion>
+                            </>
+                        : "" }
+                    </Grid>
                 </Grid>
             }
         </>

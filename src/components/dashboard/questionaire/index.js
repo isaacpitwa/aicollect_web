@@ -57,6 +57,7 @@ import LocationField from './dialogs/LocationField'
 import AreaMappingField from './dialogs/AreaMappingField'
 
 import { FormContext } from './context'
+import FormHeader from './FormHeader'
 import FormButtons from './FormButtons'
 import FormRender from './FormRender'
 
@@ -82,43 +83,53 @@ const Questionaire = () => {
 
     return (
         <Grid
-            container
-            spacing={2}
+            item
         >
-            {<FormButtons/>}
+            <FormHeader/>
             <Grid
-                item
-                xs={12}
-                sm={12}
-                md={formPreview?12:8}
-                lg={formPreview?12:8}
-                xl={formPreview?12:9}
+                container
+                spacing={2}
+                style={{
+                    paddingTop: '120px',
+                }}
             >
-                <FormRender/>
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    style={{
-                        paddingTop: '15px',
-                    }}
+                <FormButtons/>
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={formPreview?12:8}
+                    lg={formPreview?12:8}
+                    xl={formPreview?12:8}
                 >
-                    <Button
-                        variant="outlined"
-                        size='small'
-                        color="error"
-                    >Cancel</Button>
-                    {/* <Button
-                        variant="outlined"
-                        size='small'
-                        color="primary"
-                    >Save Draft</Button> */}
-                    <Button
-                        onClick={saveFormChanges}
-                        variant="contained"
-                        size='small'
-                        color="primary"
-                    >Save Form</Button>
-                </Stack>
+                    <FormRender/>
+                    {!formPreview?
+                        <Stack
+                            direction="row"
+                            spacing={2}
+                            style={{
+                                paddingTop: '15px',
+                            }}
+                        >
+                            <Button
+                                variant="outlined"
+                                size='small'
+                                color="error"
+                            >Cancel</Button>
+                            {/* <Button
+                                variant="outlined"
+                                size='small'
+                                color="primary"
+                            >Save Draft</Button> */}
+                            <Button
+                                onClick={saveFormChanges}
+                                variant="contained"
+                                size='small'
+                                color="primary"
+                            >Save Form</Button>
+                        </Stack>
+                    : ""}
+                </Grid>
             </Grid>
         </Grid>
     )

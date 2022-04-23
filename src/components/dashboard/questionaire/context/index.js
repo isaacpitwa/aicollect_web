@@ -138,25 +138,6 @@ const FormProvider = (props) => {
         }
     };
 
-    const updateComponentsData = (fieldIndex, newFieldData) => {
-
-        let newComponentsData = componentsData;
-
-        if (newFieldData.parentId && newFieldData.subParentId) {
-            let sectionIndex = newComponentsData.components.findIndex(comp => comp.id === newFieldData.parentId);
-            let sectionFieldComponents = newComponentsData.find(comp => comp.id === newFieldData.parentId).components;
-            let subSectionIndex = sectionFieldComponents.findIndex(comp => comp.id === newFieldData.subParentId);
-            newComponentsData[sectionIndex].components[subSectionIndex].components[fieldIndex] = newFieldData;
-        } else if (newFieldData.parentId && !newFieldData.subParentId) {
-            let sectionIndex = newComponentsData.findIndex(comp => comp.id === newFieldData.parentId);
-            newComponentsData[sectionIndex].components[fieldIndex] = newFieldData;
-        } else {
-            newComponentsData[fieldIndex] = newFieldData;
-        }
-
-        setComponentsData(newComponentsData)
-    }
-
     /**
      * @function addComponentToSection
      * @desc This method adds a field to the form being built.
@@ -170,20 +151,21 @@ const FormProvider = (props) => {
         let newComponentsData = componentsData;
         let newSection = newComponentsData.find(section=>section.id===field.parentId);
         let sectionIndex = newComponentsData.findIndex(section => section.id === field.parentId);
+        let newSubSection = field.subParentId?newSection.components.find(subSec => subSec.id === field.subParentId):null;
+        let subSectionIndex = field.subParentId?newSection.components.findIndex(subSec => subSec.id === field.subParentId):null;
 
         if(field.subParentId) {
-            let newSubSection = newSection.components.find(subSec => subSec.id === field.subParentId)
-            let subSectionIndex = newSection.components.findIndex(subSec => subSec.id === field.subParentId)
-            newSubSection.components.push(field)
-            newSection.components[subSectionIndex] = newSubSection
-            newComponentsData[sectionIndex] = newSection
+            newSubSection.components.push(field);
+            newSection.components[subSectionIndex] = newSubSection;
+            newComponentsData[sectionIndex] = newSection;
         } else {
-            newSection.components.push(field)
-            newComponentsData[sectionIndex] = newSection
+            newSection.components.push(field);
+            newComponentsData[sectionIndex] = newSection;
         }
 
         setComponentsData(newComponentsData)
         if(field&&field.type==="number"&&field.dependency) addDependency(field);
+        setIsLoaded(true)
 
     }
 
@@ -211,8 +193,8 @@ const FormProvider = (props) => {
             section.components[fieldIndex] = fieldData;
         }
 
-        newFormFields[sectionIndex] = section
-        setComponentsData(newFormFields)
+        newFormFields[sectionIndex] = section;
+        setComponentsData(newFormFields);
         if(fieldData.type==="number"&&fieldData.dependency) addDependency(fieldData);
         updateFormData()
     }
@@ -282,7 +264,6 @@ const FormProvider = (props) => {
                 setComponentsData,
                 fieldResponses,
                 setFieldResponses,
-                updateComponentsData,
                 addComponentToSection,
                 updateFieldInSection,
                 addDependency,

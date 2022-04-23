@@ -4,17 +4,48 @@ import {
 
 const formStyles = makeStyles({
     form: {
-        maxHeight: '75vh',
-        minHeight: '15vh',
-        overflow: 'scroll',
+        // maxHeight: '75vh',
+        // minHeight: '15vh',
+        // overflow: 'scroll',
         backgroundColor: 'white',
         border: "#5048E5 1px solid",
         borderRadius: "5px",
+    },
+    formHeaderPanel: {
+        marginTop: '-65px',
+        position: 'fixed',
+        zIndex: '100',
+        padding: '15px 1.2vw',
+        paddingTop: '50px',
+        width: '85.3vw',
+        backgroundColor: '#f1f1fb',
+        boxShadow: '0 5px 6px -4px #5048E5',
+        paddingBottom: '25px',
+    },
+    formHeader: {
+        fontSize: '1.5rem',
+    },
+    formField: {
+        backgroundColor: 'white',
+        borderRadius: '8px',
+    },
+    formButtons: {
+        
+    },
+    formButton: {
+        paddingTop: '6px',
+        paddingBottom: '7px',
+        marginLeft: '15px',
+    },
+    formButtonIcon: {
+        fontSize: '25px',
+        marginRight: '5px',
     },
     formRender: {
         padding: '1%',
     },
     alertContainer: {
+        width: '70%',
         margin: '30px 0px',
     },
     alertTitle: {
@@ -26,13 +57,14 @@ const formStyles = makeStyles({
     alertBody: {
         fontSize: '16px',
     },
-    formButtons: {
-        margin: '0px',
-        padding: '0px'
-    },
-    formButton: {
+    formFields: {
+        background: '#448AFF',
+        marginTop: '3%',
         width: '100%',
-        fontSize: '0.8rem'
+        height: '50px',
+        padding: '12px',
+        color: 'white',
+        textAlign: 'center',
     },
     section: {
         width: '100%',
@@ -40,6 +72,7 @@ const formStyles = makeStyles({
         border: '1px #DDDDDD dotted',
         borderRadius: '8px',
         overflow: 'hidden',
+        minHeight: '50px',
         padding: '10px 1%',
         paddingTop: '0px',
         margin: '5px 0px',
