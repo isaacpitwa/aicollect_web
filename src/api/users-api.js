@@ -91,8 +91,8 @@ class UserApi {
         body: JSON.stringify(user)
       });
       const data = await response.json();
-      if (data && data.status === 200) {
-        return data.data;
+      if (data) {
+        return data
       }
     } catch (error) {
       console.log('user error \n', error);
