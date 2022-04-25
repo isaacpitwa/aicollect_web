@@ -42,7 +42,7 @@ export const ProjectListTable = (props) => {
 
   const handleSelectAllProjects = (event) => {
     setSelectedProjects(event.target.checked
-      ? projects.map((project) => project.id)
+      ? projects.map((project) => project._id)
       : []);
   };
 

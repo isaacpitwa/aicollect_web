@@ -2,7 +2,7 @@ class ProjectsApi {
   async fetchProjects(clientId) {
     try {
       console.log('you pinged me');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/userProjects`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/userProjects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
@@ -20,7 +20,7 @@ class ProjectsApi {
 
   async fetchProjectDetails(projectId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/${projectId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/${projectId}`);
       const data = await response.json();
       if (data?.status === 200) {
         return data.data
@@ -32,7 +32,7 @@ class ProjectsApi {
 
   async updateProject(projectDetails) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/update`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
