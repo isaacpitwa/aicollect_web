@@ -8,12 +8,12 @@ class UserApi {
         }
       });
       const data = await response.json();
-      console.log(data);
+      console.log('CLIENTS RESPONSE ', data);
       if (data.status === 200) {
         return data.data;
       }
     } catch (error) {
-      console.log(error);
+      console.log('GET USERS ERROR: ', error);
       throw new Error('Could not process request, try again later');
     }
   }
@@ -73,11 +73,10 @@ class UserApi {
         body: JSON.stringify(user)
       });
       const data = await response.json();
-      if (data.status === 201) {
-        return data.data;
-      }
+      return data;
+
     } catch (error) {
-      console.error(error);
+      console.error('Issues', error);
     }
   }
 

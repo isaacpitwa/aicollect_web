@@ -11,10 +11,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import toast from 'react-hot-toast';
+
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
 import { ProjectListTable } from '../../../components/dashboard/project/project-list-table';
-// import { useMounted } from '../../../hooks/use-mounted';
 import { Download as DownloadIcon } from '../../../icons/download';
 import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
@@ -25,10 +26,7 @@ import { useAuth } from '../../../hooks/use-auth';
 // Fetch Projects API
 import { projectsApi } from '../../../api/projects-api';
 
-// Higher Order Componet
-import { WithFetchData } from '../../../hocs/with-fech-data';
 import { LoadingSkeleton } from '../../../components/dashboard/dashboard-wait-for-data-loader';
-import toast from 'react-hot-toast';
 
 const sortOptions = [
   {
@@ -158,9 +156,7 @@ const ProjectList = (props) => {
       console.log(error);
     }
     setLoading(false);
-  }, [
-    setProjects
-  ]);
+  }, [setProjects, user]);
 
   useEffect(() => {
     getUserProjects();
