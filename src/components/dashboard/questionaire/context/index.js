@@ -106,7 +106,7 @@ const FormProvider = (props) => {
      */
     const addDependency = (fieldData) => {
         let newComponentsData = componentsData;
-        let dependantField = getSectionsSubSections(fieldData.parentId, componentsData).find(field=>field.id===fieldData.dependency);
+        let dependantField = getSectionsSubSections(fieldData, componentsData).find(field=>field.id===fieldData.dependency);
         let dependantFieldIndex = "";
         dependantField.display = "hidden";
         dependantField.dependency = fieldData.id
