@@ -28,6 +28,7 @@ import { projectsApi } from '../../../api/projects-api';
 // Higher Order Componet
 import { WithFetchData } from '../../../hocs/with-fech-data';
 import { LoadingSkeleton } from '../../../components/dashboard/dashboard-wait-for-data-loader';
+import toast from 'react-hot-toast';
 
 const sortOptions = [
   {
@@ -48,13 +49,13 @@ const sortOptions = [
   }
 ];
 
-const applyFilters = (customers, filters) => customers.filter((customer) => {
+const applyFilters = (projects, filters) => projects.filter((project) => {
   if (filters.query) {
     let queryMatched = false;
     const properties = ['projectname'];
 
     properties.forEach((property) => {
-      if (customer[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      if (project[property].toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });
@@ -64,15 +65,15 @@ const applyFilters = (customers, filters) => customers.filter((customer) => {
     }
   }
 
-  if (filters.hasAcceptedMarketing && !customer.hasAcceptedMarketing) {
+  if (filters.hasAcceptedMarketing && !project.hasAcceptedMarketing) {
     return false;
   }
 
-  if (filters.isProspect && !customer.isProspect) {
+  if (filters.isProspect && !project.isProspect) {
     return false;
   }
 
-  if (filters.isReturning && !customer.isReturning) {
+  if (filters.isReturning && !project.isReturning) {
     return false;
   }
 
@@ -114,7 +115,7 @@ const applySort = (customers, sort) => {
   return stabilizedThis.map((el) => el[0]);
 };
 
-const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
+const applyPagination = (projects, page, rowsPerPage) => projects.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
 const ProjectList = (props) => {
@@ -146,8 +147,12 @@ const ProjectList = (props) => {
         cliendId = user.clientId;
       }
       const data = await projectsApi.fetchProjects(clientId);
-      if (data) {
-        setProjects(data);
+      console.log('Projects ', data);
+      if (data?.status === 200) {
+        console.log(data.status);
+        setProjects(data.data);
+      } else if (data?.status === 401) {
+        toast.error('Your session is expired, please login again');
       }
     } catch (error) {
       console.log(error);

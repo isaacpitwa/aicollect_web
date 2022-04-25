@@ -1,20 +1,36 @@
 class ProjectsApi {
-  async fetchProjects(clientId) {
+  async createProject(project) {
     try {
-      console.log('you pinged me');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/userProjects`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/create`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'Application/json'
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(project)
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw new Error('something went wrong, please contact support');
+    }
+  }
+  async fetchProjects(clientId) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/userProjects`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify({ clientId })
       });
       const data = await response.json();
-      if (data && data.status === 200) {
-        return data.data;
-      }
+      return data;
     } catch (error) {
       console.log(error);
+      throw new Error('something went wrong, please contact support');
     }
   }
 
