@@ -182,15 +182,16 @@ export const allFormFields = (data, fieldData) => {
  * @version 1.0.0
  */
 export const getSectionsSubSections = (field, componentsData) => {
-    let sectionSubsection = []
-    let sections = []
-    let subSections = []
+    let section = componentsData.find(section=>section.id===field.parentId);
+    let sectionSubsection = [];
+    let sections = [];
+    let subSections = field.subParentId===null?section.components.filter(subField=>subField.type==='sub-section'):[];
+    if(subSections) sectionSubsection.push(...subSections);
     if(field) {
         sections = componentsData.filter(section=>section.id!==field.parentId);
         if(sections) sectionSubsection.push(...sections);
         if(field.subParentId) {
-            sections = componentsData.find(section=>section.id===field.parentId);
-            subSections = sections.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
+            subSections = section.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
             if(subSections) sectionSubsection.push(...subSections);
         }
         return sectionSubsection;

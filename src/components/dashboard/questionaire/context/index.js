@@ -124,7 +124,7 @@ const FormProvider = (props) => {
     }
 
     const conditionalDisplay = (fieldData) => {
-        let dependee = formFieldValues.find(field=>field.id===fieldData.conditional.when);
+        let dependee = fieldData.conditional?formFieldValues.find(field=>field.id===fieldData.conditional.when):null;
         if(dependee) {
             if(dependee.type==='select-box') {
                 let values = []
