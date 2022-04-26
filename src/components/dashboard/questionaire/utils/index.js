@@ -43,6 +43,30 @@ export const getField = (fieldData) => {
 }
 
 /**
+ * @function FieldTooltip
+ * @desc This is a tooltip component for displaying tooltips of form fields.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.tooltip - The tooltip property from a field object.
+ * @returns {Component} - Returns a tooltip JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FieldTooltip = (props) => {
+
+    const { tooltip } = props
+
+    return (
+        tooltip!==''?
+            <Tooltip title={tooltip}>
+            <IconButton>
+                <HelpOutlineIcon/>
+            </IconButton>
+            </Tooltip>
+        : false
+    )
+}
+
+/**
  * @function DescriptionCard
  * @desc This is a description component for displaying descriptions of form fields.
  * @arg {Object} props - The properties passed to the component.
@@ -72,30 +96,6 @@ export const DescriptionCard = (props) => {
             :
             ''
 
-    )
-}
-
-/**
- * @function FieldTooltip
- * @desc This is a tooltip component for displaying tooltips of form fields.
- * @arg {Object} props - The properties passed to the component.
- * @arg {String} props.tooltip - The tooltip property from a field object.
- * @returns {Component} - Returns a tooltip JSX component.
- * @author Atama Zack <atama.zack@gmail.com>
- * @version 1.0.0
- */
- export const FieldTooltip = (props) => {
-
-    const { tooltip } = props
-
-    return (
-        tooltip!=''?
-            <Tooltip title={tooltip}>
-            <IconButton>
-                <HelpOutlineIcon/>
-            </IconButton>
-            </Tooltip>
-        : ''
     )
 }
 

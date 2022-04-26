@@ -12,9 +12,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import { FormContext } from '../../context';
 import TextAreaField from '../../dialogs/TextAreaField';
 import {
+    FieldTooltip,
     DescriptionCard,
 } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
 
 /**
  * @function TextAreaFieldComp
@@ -62,44 +62,64 @@ const TextAreaFieldComp = (props) => {
     const classes = formStyles();
     const smallBtn = smallBtns();
 
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
+
+    const fieldDisplay = () => {
+        return (
+            <Grid
+                container
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}
+                className={fieldStyle()}
+                style={{ display: 'block' }}
+            >
+                {editStatus?
+                    <Typography
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
+                        align={'right'}
+                    >
+                        <TextAreaField
+                            open={textFieldDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
+                        <EditIcon
+                            onClick={handleTextField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                : ""}
+                <TextField
+                    required={fieldData.required}
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                    type={'text'}
+                    label={fieldData.label}
+                    helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
+                    style={formStyles.textfield}
+                    rows={4}
+                    InputProps={{
+                        endAdornment: <FieldTooltip tipData={fieldData.tooltip}/>
+                    }}
+                />
+            </Grid>
+        )
+    }
+
     return (
-        <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-            <TextAreaField
-                open={textAreaFieldDialog}
-                fieldData={fieldData}
-                handleClose={handleClose}
-            />
-            {editStatus?
-                <Typography
-                    className={smallBtn.fieldBtns}
-                    style={{ visibility: display }}
-                    align={'right'}
-                >
-                    <EditIcon
-                        onClick={handleTextAreaField}
-                        className={smallBtn.editBtn}
-                    />
-                    <HighlightOffIcon
-                        onClick={deleteField}
-                        className={smallBtn.deleteBtn}
-                    />
-                </Typography>
-            : '' }
-            <TextField
-                required={fieldData.required}
-                fullWidth
-                multiline
-                variant="outlined"
-                type={'text'}
-                label={fieldData.label}
-                helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
-                style={formStyles.textfield}
-                rows={4}
-                InputProps={{
-                    endAdornment: fieldData.tooltip != '' ?<GeneralTooltip tipData={fieldData.tooltip} />:false
-                }}
-            />
-        </Grid>
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : ""
     )
 }
 

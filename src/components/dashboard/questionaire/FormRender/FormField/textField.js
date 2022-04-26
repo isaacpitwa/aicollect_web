@@ -11,8 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import TextField_ from '../../dialogs/TextField';
-import { DescriptionCard } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
+import {
+    FieldTooltip,
+    DescriptionCard,
+} from '../../utils';
 
 /**
  * @function TextFieldComp
@@ -109,7 +111,7 @@ const TextFieldComp = (props) => {
                     onChange={handleFieldValue}
                     helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                     InputProps={{
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                        endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
                     }}
                 />
             </Grid>

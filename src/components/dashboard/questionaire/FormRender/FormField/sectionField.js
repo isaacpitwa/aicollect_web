@@ -110,7 +110,7 @@ const SectionField = (props) => {
                     onClick={getSectionId}
                     className={classes.sectionLabel}
                 >
-                    {fieldData.label}{fieldData.tooltip!==''?<FieldTooltip tooltip={fieldData.tooltip}/>:false}
+                    {fieldData.label}<FieldTooltip tooltip={fieldData.tooltip}/>
                     {editStatus ?
                         <small
                             className={smallBtn.sectionBtns}
