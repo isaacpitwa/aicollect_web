@@ -150,8 +150,9 @@ const FormProvider = (props) => {
         }
 
         setComponentsData(newComponentsData)
-        if(field&&field.type==="number"&&field.dependency) addDependency(field);
-        setIsLoaded(true)
+        setFormFieldValues(getFieldsValues(newComponentsData))
+        // if(field&&field.type==="number"&&field.dependency) addDependency(field);
+        // setIsLoaded(true)
     }
 
     /**
@@ -245,8 +246,6 @@ const FormProvider = (props) => {
                 sectionCreated,
                 formData,
                 setFormData,
-                componentsData,
-                setComponentsData,
                 fieldResponses,
                 setFieldResponses,
                 addComponentToSection,
@@ -268,6 +267,8 @@ const FormProvider = (props) => {
                 formFieldValues,
                 setFormFieldValues,
                 deleteFieldData,
+                setComponentsData,
+                componentsData,
             }}
         >
             {props.children}

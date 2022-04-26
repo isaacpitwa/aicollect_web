@@ -39,7 +39,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 export const getField = (fieldData) => {
     return fieldData.type==='sub-section'?fieldData.components.map(field => {
         return { id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }
-    }):[{ id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }];
+    }):[{ id: fieldData.id, type: fieldData.type, value: fieldData.value, values: fieldData.values?fieldData.values:[] }];
 }
 
 /**

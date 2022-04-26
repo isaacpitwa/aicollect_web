@@ -46,7 +46,7 @@ const FormHeader = () => {
 
     useEffect(() => {
         setFormName(formData.name)
-    }, [isLoaded])
+    }, [formData])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
@@ -97,16 +97,17 @@ const FormHeader = () => {
                 position: 'fixed',
                 zIndex: '100',
                 width: '85.3vw',
-                marginTop: '-63px',
+                marginTop: '-48px',
             }}
-        >
-            <Grid
-                container
-            >
-                <Typography sx={{ width: '100%' }}>
-                    <LinearProgress />
-                </Typography>
-            </Grid>
+        >   {!isLoaded?
+                <Grid
+                    container
+                >
+                    <Typography sx={{ width: '100%' }}>
+                        <LinearProgress />
+                    </Typography>
+                </Grid>
+            : ""}
             <Grid
                 container
                 className={classes.formHeaderPanel}

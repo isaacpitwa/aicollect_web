@@ -44,7 +44,12 @@ const SectionField = (props) => {
     const { fieldData } = props
 
     const [display, setDisplay] = useState('hidden');
+    const [sectionFields, setSectionFields] = useState(fieldData?fieldData.components:[]);
     const [sectionDialog, setSectionDialog] = useState(false)
+
+    useEffect(()=>{
+        setSectionFields(getSectionFields())
+    }, [componentsData])
 
     const handleSectionField = () => {
         setSectionDialog(true)
@@ -64,6 +69,11 @@ const SectionField = (props) => {
                 setSubSectionId(null)
             }
         }
+    }
+
+    const getSectionFields = () => {
+        let allFields = componentsData.find(section=>section.id===fieldData.id).components;
+        return allFields?allFields:[]
     }
 
     const deleteField = () => {
@@ -97,13 +107,11 @@ const SectionField = (props) => {
                 container
                 className={sectionStyle()}
             >
-                {editStatus?
-                    <Section
-                        open={sectionDialog}
-                        fieldData={fieldData}
-                        handleClose={handleClose}
-                    />
-                : "" }
+                <Section
+                    open={sectionDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
                 <Typography
                     onMouseOver={() => { setDisplay('visible') }}
                     onMouseOut={() => { setDisplay('hidden') }}
@@ -128,7 +136,7 @@ const SectionField = (props) => {
                         : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
-                {fieldData.components.map((field, index) => (
+                {sectionFields.map((field, index) => (
                     <FormField key={index} fieldData={field} />
                 ))}
             </Grid>
@@ -136,7 +144,7 @@ const SectionField = (props) => {
     }
 
     return (
-        fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
             fieldDisplay()
@@ -144,8 +152,6 @@ const SectionField = (props) => {
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
                 fieldDisplay(index)
             ))
-        : conditionalDisplay(fieldData)?
-            fieldDisplay()
         : ""
     )
 }

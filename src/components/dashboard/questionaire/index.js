@@ -116,11 +116,6 @@ const Questionaire = () => {
                                 size='small'
                                 color="error"
                             >Cancel</Button>
-                            {/* <Button
-                                variant="outlined"
-                                size='small'
-                                color="primary"
-                            >Save Draft</Button> */}
                             <Button
                                 onClick={saveFormChanges}
                                 variant="contained"
