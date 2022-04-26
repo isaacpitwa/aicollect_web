@@ -12,6 +12,37 @@ import InfoIcon from '@mui/icons-material/Info';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 /**
+ * @function getFieldsValues
+ * @desc This method gets form data from the API response and updates the form builder state.
+ * @arg {Array} formFields - An array of form field objects.
+ * @returns {Array} Returns an array of form field objects.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const getFieldsValues = (formFields) => {
+    let sections = formFields;
+    let allFields = []
+    if(sections) sections.forEach(section=>{
+        if(section.components) section.components.map(field=>allFields.push(...getField(field)))
+    })
+    return allFields
+}
+
+/**
+ * @function getField
+ * @desc This method helps to get form fields within a sub-section field.
+ * @arg {Object} fieldData - The data of a form field.
+ * @returns {Array} Returns an array of form field objects.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+export const getField = (fieldData) => {
+    return fieldData.type==='sub-section'?fieldData.components.map(field => {
+        return { id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }
+    }):[{ id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }];
+}
+
+/**
  * @function DescriptionCard
  * @desc This is a description component for displaying descriptions of form fields.
  * @arg {Object} props - The properties passed to the component.

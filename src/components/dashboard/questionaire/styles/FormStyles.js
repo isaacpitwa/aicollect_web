@@ -4,17 +4,11 @@ import {
 
 const formStyles = makeStyles({
     form: {
-        // maxHeight: '75vh',
-        // minHeight: '15vh',
-        // overflow: 'scroll',
         backgroundColor: 'white',
         border: "#5048E5 1px solid",
         borderRadius: "5px",
     },
     formHeaderPanel: {
-        marginTop: '-65px',
-        position: 'fixed',
-        zIndex: '100',
         padding: '15px 1.2vw',
         paddingTop: '50px',
         width: '85.3vw',
