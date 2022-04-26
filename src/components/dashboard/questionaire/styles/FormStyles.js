@@ -4,9 +4,6 @@ import {
 
 const formStyles = makeStyles({
     form: {
-        // maxHeight: '75vh',
-        // minHeight: '15vh',
-        // overflow: 'scroll',
         backgroundColor: 'white',
         border: "#5048E5 1px solid",
         borderRadius: "5px",
