@@ -104,7 +104,7 @@ const CreateTask = () => {
   const [colDefs, setColDefs] = useState();
   // Table rows from imported Excel file
   const [data, setData] = useState(null);
-  
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -130,11 +130,12 @@ const CreateTask = () => {
   const fetchProjectTeam = useCallback(async () => {
     try {
       const data = await projectsApi.fetchProjectDetails(projectId);
-      if (data) {
-        setProjectMembers(data.projectTeam);
+      console.log('project', data);
+      if (data?.status === 200) {
+        setProjectMembers(data.data.projectTeam);
       }
     } catch (error) {
-      
+
     }
   }, [setProjectMembers, projectId]);
 
@@ -236,7 +237,7 @@ const CreateTask = () => {
       setData(convertToJSON(headers, fileData));
       // console.log(data);
     };
-    
+
     reader.onerror = (event) => {
       setFileError("Wrong file type, please use excel or csv file");
     };
@@ -273,7 +274,7 @@ const CreateTask = () => {
     try {
       // Make call to task creation API
       // let questLst = [];
-      
+
       const task = {
         ...taskInformation,
         questionaire: questionaires.map((item) => item._id),
@@ -433,7 +434,7 @@ const CreateTask = () => {
                               <Grid item md={12} mt={3} sm={12}>
                                 <FormControl fullWidth>
                                   <InputLabel id="select-team">Select Team</InputLabel>
-                                  <Select
+                                  {/* <Select
                                     labelId="select-team"
                                     id="select-team"
                                     multiple
@@ -466,7 +467,26 @@ const CreateTask = () => {
                                         {member.name}
                                       </MenuItem>
                                     ))}
-                                  </Select>
+                                  </Select> */}
+                                  <TextField
+                                    labelId="select-team"
+                                    id="select-team"
+                                    multiple
+                                    value={team}
+                                    onChange={handleChangeTeam}
+                                    
+                                    select
+                                    >
+                                    {projectMembers.map((member, idx) => (
+                                      <MenuItem
+                                        key={idx}
+                                        value={member}
+                                        style={getStyles(member, questionaires, theme)}
+                                      >
+                                        {member.name}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
                                 </FormControl>
                               </Grid>
                             </Grid>
@@ -601,13 +621,13 @@ const CreateTask = () => {
                                   {
                                     data && colDefs && (
                                       <ScheduleStagingTable
-                                    cols={colDefs || []}
-                                    tasks={data || []}
-                                    tasksCount={data?.length}
-                                    onPageChange={handlePageChange}
-                                    onRowsPerPageChange={handleRowsPerPageChange}
-                                    page={page}
-                                    rowsPerPage={rowsPerPage} />
+                                        cols={colDefs || []}
+                                        tasks={data || []}
+                                        tasksCount={data?.length}
+                                        onPageChange={handlePageChange}
+                                        onRowsPerPageChange={handleRowsPerPageChange}
+                                        page={page}
+                                        rowsPerPage={rowsPerPage} />
                                     )
                                   }
                                 </>
