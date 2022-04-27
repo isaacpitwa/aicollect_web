@@ -135,7 +135,7 @@ export const JWTLogin = (props) => {
           label="Remember me"
         />
 
-        <NextLink href="#" variant="subtitle2">
+        <NextLink href="/authentication/password-reset" variant="subtitle2">
           Forgot Password.
         </NextLink>
       </Stack>

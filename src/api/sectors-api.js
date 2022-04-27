@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 class SectorsApi {
   async getSectors() {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/sectors`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/sectors`, {
         headers: {
           'Content-Type': 'Application/json'
         }

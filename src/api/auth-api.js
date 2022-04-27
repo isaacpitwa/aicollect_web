@@ -92,6 +92,25 @@ class AuthApi {
       console.log(error);
     }
   }
+
+  async requestPasswordReset(email) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/request-password-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({email})
+      });
+      const data = await response.json();
+      if (data) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong, could not hit the endpoint');
+    }
+  }
 }
 
 export const authenticationApi = new AuthApi();
