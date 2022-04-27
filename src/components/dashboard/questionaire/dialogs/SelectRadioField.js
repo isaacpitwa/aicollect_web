@@ -98,12 +98,10 @@ const SelectRadioField = (props) => {
 
     const displayPanel = (e) => {
         setPanelType("display")
-        setConditional(false)
     }
 
     const conditionalPanel = (e) => {
         setPanelType("conditional")
-        setConditional(true)
     }
 
     const logicPanel = (e) => {
@@ -303,7 +301,7 @@ const SelectRadioField = (props) => {
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {conditional ?
+                            {panelType==='conditional'?
                                 <>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:

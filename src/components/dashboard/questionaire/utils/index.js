@@ -219,8 +219,8 @@ export const getSectionsSubSections = (field, componentsData) => {
     let subSections = field.subParentId===null?section.components.filter(subField=>subField.type==='sub-section'):[];
     if(subSections) sectionSubsection.push(...subSections);
     if(field) {
-        sections = componentsData.filter(section=>section.id!==field.parentId);
-        if(sections) sectionSubsection.push(...sections);
+        // sections = componentsData.filter(section=>section.id!==field.parentId);
+        // if(sections) sectionSubsection.push(...sections);
         if(field.subParentId) {
             subSections = section.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
             if(subSections) sectionSubsection.push(...subSections);
