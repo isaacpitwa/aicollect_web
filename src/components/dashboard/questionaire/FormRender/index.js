@@ -12,21 +12,14 @@ import {
     FormBuildHelp,
 } from '../utils';
 import { FormContext } from '../context'
-import SectionField from './FormField/sectionField'
+import FormField from './FormField'
 
-const FormRender = () => {
+const FormRender = (props) => {
 
     const {
         isLoaded,
         componentsData,
-        formData,
-        setFormData,
-        updateFormData,
     } = useContext(FormContext)
-
-    const saveFormChanges = () => {
-        updateFormData()
-    }
 
     const classes = formStyles();
 
@@ -43,10 +36,7 @@ const FormRender = () => {
     
                 >
                     {componentsData.map((fieldData, index) => (
-                        <SectionField
-                            key={index}
-                            fieldData={fieldData}
-                        />
+                        <FormField key={index} fieldData={fieldData}/>
                     ))}
                     {componentsData.length===0?
                         <FormBuildHelp/>

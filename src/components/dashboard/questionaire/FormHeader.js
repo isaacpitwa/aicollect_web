@@ -6,12 +6,14 @@ import {
     Button,
     Grid,
     Stack,
-    Accordion,
+    Box,
     AccordionSummary,
     AccordionDetails,
     TextField,
     Typography
 } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import PreviewRoundedIcon from '@mui/icons-material/PreviewRounded';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
@@ -44,7 +46,7 @@ const FormHeader = () => {
 
     useEffect(() => {
         setFormName(formData.name)
-    }, [isLoaded])
+    }, [formData])
 
     const handleFormName = (e) => {
         setFormName(e.target.value)
@@ -76,15 +78,38 @@ const FormHeader = () => {
         setAreaMappingDialog(false)
     }
 
+    const FormHeaderLoad = () => {
+
+        return (
+            <Typography>
+                Form Data Loading...
+            </Typography>
+        )
+    };
+
     const classes = formStyles();
 
     return (
         <Grid
             container
-        >
+            spacing={3}
+            style={{
+                position: 'fixed',
+                zIndex: '100',
+                width: '85.3vw',
+                marginTop: '-48px',
+            }}
+        >   {!isLoaded?
+                <Grid
+                    container
+                >
+                    <Typography sx={{ width: '100%' }}>
+                        <LinearProgress />
+                    </Typography>
+                </Grid>
+            : ""}
             <Grid
                 container
-                spacing={3}
                 className={classes.formHeaderPanel}
             >
                 <Typography
@@ -96,7 +121,7 @@ const FormHeader = () => {
                         {isLoaded?
                             "Form Builder: "
                         : 
-                            "Form Data Loading..."
+                            <FormHeaderLoad/>
                         }
                     </strong>
                     {isLoaded?formPreview?"Preview Mode":"Edit Mode":""}

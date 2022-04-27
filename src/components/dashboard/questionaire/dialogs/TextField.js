@@ -33,8 +33,11 @@ const TextField_ = (props) => {
 
     const {
         setError,
+        setSelectSection,
         sectionId,
         subSectionId,
+        setSectionId,
+        setSubSectionId,
         componentsData,
         addComponentToSection,
         updateFieldInSection,

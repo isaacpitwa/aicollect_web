@@ -33,6 +33,9 @@ const Section = (props) => {
     const {
         setIsLoaded,
         setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
         componentsData,
         setComponentsData,
         setSectionCreated,
@@ -95,6 +98,8 @@ const Section = (props) => {
 
     const addSection = () => {
 
+        setIsLoaded(false)
+
         let sectionData = {
             id: uuidv4(),
             type: 'section',
@@ -110,10 +115,13 @@ const Section = (props) => {
         let formFields = componentsData
         
         if(fieldLabel!=='') {
-            setIsLoaded(false)
+            setError(false)
+            setSectionCreated(true)
+            setSelectSection(true)
+            setSectionId(sectionData.id)
+            setSubSectionId(null)
             formFields.push(sectionData)
             setComponentsData(formFields)
-            setSectionCreated(true)
             setPanelType('display')
             setFieldLabel('')
             setFieldDescription('')
@@ -122,7 +130,6 @@ const Section = (props) => {
             setConditional(null)
             setComponents([])
             removeConditional()
-            setIsLoaded(true)
             handleClose()
         } else {
             setError(true)
@@ -130,6 +137,7 @@ const Section = (props) => {
                 setErrorTag('Label')
             }
         }
+        setIsLoaded(true)
     }
 
     const updateSection = () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useCallback } from "react";
 
 import { FormsApi } from '../../../../api/forms-api'
 import {
+    getFieldsValues,
     allFormFields,
     getSectionsSubSections,
 } from '../utils';
@@ -69,31 +70,8 @@ const FormProvider = (props) => {
         setComponentsData(data.formFields);
         setFormData(data);
         setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false);
-        setFormFieldValues(getFieldsValues(data));
+        setFormFieldValues(getFieldsValues(data.formFields));
         setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}));
-    }
-
-    /**
-     * @function getFieldsValues
-     * @desc This method gets form data from the API response and updates the form builder state.
-     * @arg {Object} data - The data of a form containing all form details.
-     * @returns {Void} Nothing is returned.
-     * @author Atama Zack <atama.zack@gmail.com>
-     * @version 1.0.0
-     */
-    const getFieldsValues = (data) => {
-        let sections = data.formFields;
-        let allFields = []
-        if(sections) sections.forEach(section=>{
-            if(section.components) section.components.map(field=>allFields.push(...getField(field)))
-        })
-        return allFields
-    }
-
-    const getField = (field) => {
-        return field.type==='sub-section'?field.components.map(field => {
-            return { id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }
-        }):[{ id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }];
     }
 
     /**
@@ -123,6 +101,14 @@ const FormProvider = (props) => {
         setComponentsData(newComponentsData)
     }
 
+    /**
+     * @function conditionalDisplay
+     * @desc This method checks if a specific field has a conditional dependency.
+     * @arg {Object} fieldData - A field Object containing all field properties.
+     * @returns {Boolean} A Boolean value, True if a field has a conditional dependency and False if not
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const conditionalDisplay = (fieldData) => {
         let dependee = fieldData.conditional?formFieldValues.find(field=>field.id===fieldData.conditional.when):null;
         if(dependee) {
@@ -164,9 +150,9 @@ const FormProvider = (props) => {
         }
 
         setComponentsData(newComponentsData)
-        if(field&&field.type==="number"&&field.dependency) addDependency(field);
-        setIsLoaded(true)
-
+        setFormFieldValues(getFieldsValues(newComponentsData))
+        // if(field&&field.type==="number"&&field.dependency) addDependency(field);
+        // setIsLoaded(true)
     }
 
     /**
@@ -260,8 +246,6 @@ const FormProvider = (props) => {
                 sectionCreated,
                 formData,
                 setFormData,
-                componentsData,
-                setComponentsData,
                 fieldResponses,
                 setFieldResponses,
                 addComponentToSection,
@@ -283,6 +267,8 @@ const FormProvider = (props) => {
                 formFieldValues,
                 setFormFieldValues,
                 deleteFieldData,
+                setComponentsData,
+                componentsData,
             }}
         >
             {props.children}

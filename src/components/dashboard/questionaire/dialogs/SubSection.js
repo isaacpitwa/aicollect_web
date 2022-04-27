@@ -31,9 +31,11 @@ import SubSectionPreview from '../previews/SubSectionPreview'
 const SubSection = (props) => {
 
     const {
-        setIsLoaded,
         setError,
         sectionId,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
         componentsData,
         addComponentToSection,
         updateFieldInSection,
@@ -111,10 +113,12 @@ const SubSection = (props) => {
         }
 
         if(sectionId&&fieldLabel!=='') {
-            setIsLoaded(false)
-            addComponentToSection(newSubSection)
             setError(false)
             setErrorTag(false)
+            setSelectSection(true)
+            setSectionId(newSubSection.parentId)
+            setSubSectionId(newSubSection.id)
+            addComponentToSection(newSubSection)
             setPanelType('display')
             setFieldLabel('')
             setFieldDescription('')
