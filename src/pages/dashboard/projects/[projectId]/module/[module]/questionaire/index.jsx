@@ -272,8 +272,10 @@ const QuestionaireList = () => {
   const fetchProjectDetails = useCallback(async () => {
     try {
       const data = await projectsApi.fetchProjectDetails(projectId);
-      if (data) {
-        setProject(data);
+      if (data?.status === 200) {
+        setProject(data.data);
+      } else {
+        toast.error(data?.message)
       }
     } catch (error) {
       console.log(error);
