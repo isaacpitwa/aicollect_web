@@ -15,7 +15,6 @@ import {
     DescriptionCard,
     FieldTooltip
 } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
 
 /**
  * @function SelectBoxesField
@@ -33,8 +32,7 @@ const SelectBoxesField = (props) => {
         setSectionId,
         setSubSectionId,
         editStatus,
-        setConditionalId,
-        setConditionalValue,
+        conditionalDisplay,
         formFieldValues,
         setFormFieldValues,
         deleteFieldData
@@ -56,10 +54,6 @@ const SelectBoxesField = (props) => {
         setSelectBoxDialog(true)
     }
 
-    const handleCheckbox = (e) => {
-
-    }
-
     const updateFieldValue = (values) => {
         let fields = formFieldValues;
         let thisField = field;
@@ -79,16 +73,26 @@ const SelectBoxesField = (props) => {
     const classes = formStyles();
     const smallBtn = smallBtns();
 
-    return (
-        <Grid key={fieldData.id} item sm={12} onMouseOver={()=>{setDisplay('visible')}} onMouseOut={()=>{setDisplay('hidden')}} className={editStatus?classes.section:classes.section2}>
-            {editStatus?
-                <>
-                    <SelectBoxField open={selectBoxDialog} fieldData={fieldData} handleClose={handleClose} />
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
+
+    const fieldDisplay = () => {
+        return (
+            <Grid
+                container
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}
+                className={fieldStyle()}
+                style={{ display: 'block' }}
+            >
+                {editStatus?
                     <Typography
                         className={smallBtn.fieldBtns}
                         style={{ visibility: display }}
 						align={'right'}
                     >
+                        <SelectBoxField open={selectBoxDialog} fieldData={fieldData} handleClose={handleClose} />
                         <EditIcon
                             onClick={handleSelectBoxField}
                             className={smallBtn.editBtn}
@@ -98,32 +102,39 @@ const SelectBoxesField = (props) => {
                             className={smallBtn.deleteBtn}
                         />
                     </Typography>
-                </>
-            : '' }
-            <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
-                {fieldData.label}<FieldTooltip tooltip={fieldData.tooltip} />
-            </Typography>
-            <DescriptionCard description={fieldData.description} helperText={true}/>
-            {checkOptions.map(option => (
-                <Typography key={option.id}>
-                    <Checkbox
-                        name={option.label}
-                        checked={option.checked}
-                        // Switching state of a perticular check box
-                        onChange={(e) => {
-                            setConditionalId("");
-                            setConditionalValue("");
-                            option.checked = !option.checked;
-                            setCheckOptions([...checkOptions]);
-                            setConditionalId(fieldData.id);
-                            setConditionalValue(e.target.value.toLowerCase());
-                            updateFieldValue(checkOptions);
-                        }}/>
-                        {option.label}
+                : ""}
+                <Typography style={{ fontSize: '18px', color: '#5048E5' }}>
+                    {fieldData.label}<FieldTooltip tooltip={fieldData.tooltip} />
                 </Typography>
-            ))}
-        </Grid>
+                <DescriptionCard description={fieldData.description} helperText={true}/>
+                {checkOptions.map(option => (
+                    <Typography key={option.id}>
+                        <Checkbox
+                            name={option.label}
+                            checked={option.checked}
+                            // Switching state of a perticular check box
+                            onChange={(e) => {
+                                setConditionalId("");
+                                setConditionalValue("");
+                                option.checked = !option.checked;
+                                setCheckOptions([...checkOptions]);
+                                setConditionalId(fieldData.id);
+                                setConditionalValue(e.target.value.toLowerCase());
+                                updateFieldValue(checkOptions);
+                            }}/>
+                            {option.label}
+                    </Typography>
+                ))}
+            </Grid>
+        )
+    }
 
+    return (
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : ""
     )
 }
 
