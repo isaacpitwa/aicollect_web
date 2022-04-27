@@ -57,7 +57,6 @@ export const CompleteUserProfile = (props) => {
           password: values.password,
           token,
         }
-        console.log(user);
         await profileUpdate(user);
 
         if (isMounted()) {

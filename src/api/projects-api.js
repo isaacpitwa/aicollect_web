@@ -36,10 +36,15 @@ class ProjectsApi {
 
   async fetchProjectDetails(projectId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/${projectId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/${projectId}`, {
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
       const data = await response.json();
-      if (data?.status === 200) {
-        return data.data
+      if (data?.status) {
+        return data
       }
     } catch (error) {
       console.log(error);
