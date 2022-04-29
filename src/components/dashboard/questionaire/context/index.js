@@ -151,8 +151,6 @@ const FormProvider = (props) => {
 
         setComponentsData(newComponentsData)
         setFormFieldValues(getFieldsValues(newComponentsData))
-        // if(field&&field.type==="number"&&field.dependency) addDependency(field);
-        // setIsLoaded(true)
     }
 
     /**
