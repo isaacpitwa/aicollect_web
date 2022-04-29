@@ -14,7 +14,7 @@ import {
 import { FormContext } from '../context'
 import FormField from './FormField'
 
-const FormRender = (props) => {
+const FormRender = () => {
 
     const {
         isLoaded,

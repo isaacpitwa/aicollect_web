@@ -34,7 +34,7 @@ const EmailfieldPreview = (props) => {
                 margin="dense"
                 id="label"
                 label={fieldLabel?fieldLabel:'Label'}
-                type="text"
+                type="email"
                 size="small"
                 fullWidth
                 variant="outlined"
