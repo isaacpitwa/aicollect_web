@@ -111,6 +111,22 @@ class AuthApi {
       throw new Error('Something went wrong, could not hit the endpoint');
     }
   }
+  async resetForgottenPassword(password, confirmPassword, token, userId) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/reset-password/${userId}/${token}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({ password, confirmPassword })
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong, please contact support');
+    }
+  }
 }
 
 export const authenticationApi = new AuthApi();

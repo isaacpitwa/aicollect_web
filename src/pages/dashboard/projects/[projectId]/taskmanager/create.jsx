@@ -30,6 +30,7 @@ import {
   Chip,
   OutlinedInput,
   useTheme,
+  InputAdornment,
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';;
 import toast from 'react-hot-toast';
@@ -269,6 +270,7 @@ const CreateTask = () => {
   //   event.preventDefault();
   //   setSchedule(event.target.files[0]);
   // };
+  console.log('team', team)
 
   const handleCreateTask = async () => {
     try {
@@ -469,18 +471,37 @@ const CreateTask = () => {
                                     ))}
                                   </Select> */}
                                   <TextField
-                                    labelId="select-team"
                                     id="select-team"
                                     multiple
                                     value={team}
                                     onChange={handleChangeTeam}
-                                    
+                                    SelectProps={{
+                                      renderValue: (selected) => {
+                                        console.log('selected', selected)
+                                        const users = selected.spit(',');
+                                        return (
+                                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                          {users.map((value, idx) => (
+                                            <Chip
+                                              key={idx}
+                                              label={value.name}
+                                              onDelete={() => {
+                                                console.log('clicked me');
+                                                // setTeam((prevState) => prevState.filter((item) => item.name !== value.name))
+                                              }}
+                                             />
+                                          ))}
+                                        </Box>
+                                        )
+                                      }
+                                    }}
                                     select
                                     >
                                     {projectMembers.map((member, idx) => (
                                       <MenuItem
                                         key={idx}
                                         value={member}
+                                        
                                         style={getStyles(member, questionaires, theme)}
                                       >
                                         {member.name}
