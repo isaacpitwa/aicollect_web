@@ -29,8 +29,10 @@ class Forms {
       });
 
       const data = await response.json();
-      if (data.status === 200) {
-        return data.data;
+      console.log('questionaires', data);
+      if (data) {
+        console.log('Data from questionaires response', data);
+        return data;
       }
     } catch (err) {
       console.error(err);

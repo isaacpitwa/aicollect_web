@@ -262,9 +262,15 @@ const QuestionaireList = () => {
       } else {
         clientId = user.clientId;
       }
+      console.log('Form api params', projectId, clientId, module)
       const data = await FormsApi.getModuleForms(projectId, clientId, module);
       if (isMounted() && data) {
-        setQuestionaires(data);
+        if (data.status === 200) {
+          toast.success('Questionaires have been retrieved', { duration: 5000 });
+          setQuestionaires(data.data);
+        } else {
+          toast.error(data.message, { duration: 7000 });
+        }
       }
     } catch (err) {
       console.error(err);
