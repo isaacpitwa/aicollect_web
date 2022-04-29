@@ -227,7 +227,7 @@ const AccountButton = () => {
             height: 40,
             width: 40
           }}
-          src={user?.profileImage ? user.profileImage : 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png'}
+          src={user?.Profile.profileImage ? user.Profile.profileImage : 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png'}
         >
           <UserCircleIcon fontSize="small" />
         </Avatar>

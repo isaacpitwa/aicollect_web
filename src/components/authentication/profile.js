@@ -23,6 +23,7 @@ import { authenticationApi } from '../../api/auth-api';
 import { sectorApi } from '../../api/sectors-api';
 import { useMounted } from "../../hooks/use-mounted";
 import { billingPlanApi } from "../../api/billingplan-api";
+import { fileToBase64 } from "../../utils/file-to-base64";
 
 export const Profile = (props) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -51,9 +52,10 @@ export const Profile = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
+        const base64Image = await fileToBase64(profileImage);
         const profile = {
           ...values,
-          profileImage,
+          profileImage: base64Image,
           companyLogo,
           user: props.user.id
         }

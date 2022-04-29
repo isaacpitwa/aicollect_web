@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 class SectorsApi {
   async getSectors() {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/sectors`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/sectors`, {
         headers: {
           'Content-Type': 'Application/json'
         }
@@ -20,7 +20,7 @@ class SectorsApi {
 
   async createSector(sector) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/sectors/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/sectors/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -39,7 +39,7 @@ class SectorsApi {
 
   async getSectorDetails(id) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/sectors/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/sectors/${id}`, {
         headers: {
           'Content-Type': 'Application/json'
         }
@@ -55,7 +55,7 @@ class SectorsApi {
 
   async getSectorModules(sectorId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/modules/sectorModules`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/modules/sectorModules`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -74,7 +74,7 @@ class SectorsApi {
 
   async createSectorModule(sector) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/modules/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/modules/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
