@@ -33,7 +33,7 @@ const ProjectTaskDetails = () => {
 
   const fetchTaskDetails = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/tasks/${taskId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/tasks/${taskId}`, {
         headers: {
           'Content-Type': 'Application/json'
         }
