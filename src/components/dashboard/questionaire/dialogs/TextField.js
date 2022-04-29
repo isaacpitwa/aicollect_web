@@ -33,11 +33,8 @@ const TextField_ = (props) => {
 
     const {
         setError,
-        setSelectSection,
         sectionId,
         subSectionId,
-        setSectionId,
-        setSubSectionId,
         componentsData,
         addComponentToSection,
         updateFieldInSection,
@@ -207,7 +204,7 @@ const TextField_ = (props) => {
                 >Logic</Button>
             </ButtonGroup>            
         )
-    }
+    };
 
     return (
         <Dialog

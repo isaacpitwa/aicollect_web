@@ -28,6 +28,7 @@ const SelectFieldComp = (props) => {
     const {
         setError,
         editStatus,
+        componentsData,
         setSelectSection,
         setSectionId,
         setSubSectionId,
@@ -58,8 +59,6 @@ const SelectFieldComp = (props) => {
     }
 
     const deleteField = () => {
-        setSectionId(fieldData.parentId)
-        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     }
 
@@ -128,11 +127,9 @@ const SelectFieldComp = (props) => {
     }
 
     return (
-        !fieldData.display||fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay(fieldData.id)
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay(fieldData.id)
-        : conditionalDisplay(fieldData)?
             fieldDisplay(fieldData.id)
         : ""
     )

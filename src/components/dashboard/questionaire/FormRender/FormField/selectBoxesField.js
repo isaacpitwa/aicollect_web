@@ -94,7 +94,11 @@ const SelectBoxesField = (props) => {
                         style={{ visibility: display }}
 						align={'right'}
                     >
-                        <SelectBoxField open={selectBoxDialog} fieldData={fieldData} handleClose={handleClose} />
+                        <SelectBoxField
+                            open={selectBoxDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
                         <EditIcon
                             onClick={handleSelectBoxField}
                             className={smallBtn.editBtn}
