@@ -26,6 +26,7 @@ const SubSectionField = (props) => {
 
     const {
         setError,
+        componentsData,
         conditionalDisplay,
         setSelectSection,
         setSectionId,
@@ -61,9 +62,7 @@ const SubSectionField = (props) => {
     };
 
     const deleteField = () => {
-        setSectionId(fieldData.parentId)
-        setSubSectionId(null)
-        deleteFieldData(fieldData)
+        deleteFieldData(fieldData);
     };   
 
     const handleClose = () => {
@@ -132,7 +131,7 @@ const SubSectionField = (props) => {
     }
 
     return (
-        fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay(fieldData.id)
         : fieldData.display==='hidden'&&editStatus?
             fieldDisplay(fieldData.id)
@@ -140,8 +139,6 @@ const SubSectionField = (props) => {
             [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
                 fieldDisplay(index)
             ))
-        : conditionalDisplay(fieldData)?
-            fieldDisplay()
         : ""
     )
 }

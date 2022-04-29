@@ -211,11 +211,12 @@ const FormProvider = (props) => {
             section.components[subSectionIndex] = subSection;
             newFields[sectionIndex] = section;
         } else {
-            section.components = section.components.filter(field=>field.id!==fieldData.id)
-            newFields[sectionIndex] = section
+            section.components = section.components.filter(field=>field.id!==fieldData.id);
+            newFields[sectionIndex] = section;
         }
 
         setComponentsData(newFields)
+        setFormFieldValues(getFieldsValues(newFields))
     }
 
     const handleFormPreview = () => {
@@ -232,6 +233,8 @@ const FormProvider = (props) => {
                 isLoaded,
                 setIsLoaded,
                 getFormData,
+                componentsData,
+                setComponentsData,
                 error,
                 setError,
                 selectSection,
@@ -265,8 +268,6 @@ const FormProvider = (props) => {
                 formFieldValues,
                 setFormFieldValues,
                 deleteFieldData,
-                setComponentsData,
-                componentsData,
             }}
         >
             {props.children}

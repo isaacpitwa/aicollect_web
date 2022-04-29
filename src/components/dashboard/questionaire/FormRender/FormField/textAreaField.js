@@ -50,8 +50,6 @@ const TextAreaFieldComp = (props) => {
     }
 
     const deleteField = () => {
-        setSectionId(fieldData.parentId)
-        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     }
 
@@ -82,12 +80,12 @@ const TextAreaFieldComp = (props) => {
                         align={'right'}
                     >
                         <TextAreaField
-                            open={textFieldDialog}
+                            open={textAreaFieldDialog}
                             fieldData={fieldData}
                             handleClose={handleClose}
                         />
                         <EditIcon
-                            onClick={handleTextField}
+                            onClick={handleTextAreaField}
                             className={smallBtn.editBtn}
                         />
                         <HighlightOffIcon

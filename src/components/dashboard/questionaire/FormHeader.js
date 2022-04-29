@@ -76,7 +76,7 @@ const FormHeader = () => {
         setDateDialog(false)
         setLocationDialog(false)
         setAreaMappingDialog(false)
-    }
+    };
 
     const FormHeaderLoad = () => {
 
@@ -197,12 +197,6 @@ const FormHeader = () => {
                             spacing={2}
                             justifyContent={'right'}
                         >
-                            {/* <Button
-                                variant="outlined"
-                                color="primary"
-                                size="small"
-                                style={{ backgroundColor: 'white' }}
-                            >Save Draft</Button> */}
                             <Button
                                 variant={"contained"}
                                 color={formPreview?"info":"primary"}
@@ -217,10 +211,11 @@ const FormHeader = () => {
                                 Form
                             </Button>
                             <Button
+                                onClick={saveChanges}
                                 variant="contained"
+                                size='small'
                                 color="primary"
-                                size="small"
-                            >Publish</Button>
+                            >Save Form</Button>
                         </Stack>
                     </Grid>
                 </Grid>

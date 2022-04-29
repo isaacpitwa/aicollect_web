@@ -55,8 +55,6 @@ const TextFieldComp = (props) => {
     };
 
     const deleteField = () => {
-        setSectionId(fieldData.parentId)
-        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     };
 
