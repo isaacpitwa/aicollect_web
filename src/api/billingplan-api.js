@@ -1,7 +1,7 @@
 class BillingPlanApi {
   async getBillingPlans() {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/billingplans`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/billingplans`, {
         headers: {
           'Content-Type': 'Application/json'
         }

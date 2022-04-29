@@ -6,7 +6,7 @@ class AuthApi {
    * @returns {string} User token
    */
   async login({ email, password }) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/login`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'Application/json'
@@ -22,7 +22,7 @@ class AuthApi {
 
   async userProfile(accessToken) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/check-user`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/check-user`, {
       headers: {
         'Content-Type': 'Application/json',
         'Authorization': `Bearer ${accessToken}`
@@ -40,7 +40,7 @@ class AuthApi {
 
   async completeUserProfileAfterEmailInvitation(userDetails) {
     // console.log("DETAILS", userDetails);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/complete-profile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/complete-profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
@@ -57,7 +57,7 @@ class AuthApi {
 
   async createUserProfile(profileDetails) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/profiles/create-profile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/profiles/create-profile`, {
         method: 'POST',
         'headers': {
           'Content-Type': 'Application/json',
@@ -76,7 +76,7 @@ class AuthApi {
 
   async createUserPassword(userDetails) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/authService/setPassword`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/setPassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -90,6 +90,41 @@ class AuthApi {
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async requestPasswordReset(email) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/request-password-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({email})
+      });
+      const data = await response.json();
+      if (data) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong, could not hit the endpoint');
+    }
+  }
+  async resetForgottenPassword(password, confirmPassword, token, userId) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/reset-password/${userId}/${token}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({ password, confirmPassword })
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong, please contact support');
     }
   }
 }

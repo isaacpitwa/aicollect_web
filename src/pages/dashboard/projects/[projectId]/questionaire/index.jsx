@@ -23,20 +23,21 @@ import { FactCheck, GroupAddRounded, AddTaskRounded } from '@mui/icons-material'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 // import XLSX from 'xlsx';
 import toast from 'react-hot-toast';
-import { AuthGuard } from '../../../../../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../../../../../components/dashboard/dashboard-layout';
-import { QuestionaireListTable } from '../../../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
-import { CreateNewFormDialog } from '../../../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
-import { useMounted } from '../../../../../../../hooks/use-mounted';
-import { useAuth } from '../../../../../../../hooks/use-auth';
-import { Search as SearchIcon } from '../../../../../../../icons/search';
-import { gtm } from '../../../../../../../lib/gtm';
-import ExcelDataImport from '../../../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
-import { convertToJSON } from '../../../../../../../utils/convert-excel-data-to-json';
-
+import { AuthGuard } from '../../../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
+import { QuestionaireListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
+import { CreateNewFormDialog } from '../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
+import { useMounted } from '../../../../../hooks/use-mounted';
+import { useAuth } from '../../../../../hooks/use-auth';
+import { Search as SearchIcon } from '../../../../../icons/search';
+import { gtm } from '../../../../../lib/gtm';
+import ExcelDataImport from '../../../../../components/dashboard/projectDetails/questionaires/excelDataImport';
+import { convertToJSON } from '../../../../../utils/convert-excel-data-to-json';
+import {ModuleCard} from '../../../../../components/dashboard/projectDetails/module-card';
 // API
-import { FormsApi } from '../../../../../../../api/forms-api';
-import { projectsApi } from '../../../../../../../api/projects-api';
+import { FormsApi } from '../../../../../api/forms-api';
+import { projectsApi } from '../../../../../api/projects-api';
+import { sectorApi } from '../../../../../api/sectors-api';
 
 const tabs = [
   {
@@ -163,6 +164,7 @@ const QuestionaireList = () => {
   const [colDefs, setColDefs] = useState();
   const [data, setData] = useState(null);
   const [openCreateFormDialog, setOpenCreateFormDialog] = useState(false);
+  const [modules, setModules] = useState([]);
 
   const handleOpenCreateFormDialog = () => setOpenCreateFormDialog(true);
   const handleCloseCreateFormDialog = () => setOpenCreateFormDialog(false);
@@ -235,7 +237,6 @@ const QuestionaireList = () => {
       toast.error('Could not create Questoinaire');
     }
   };
-  data && console.log("Data in file: ", data);
 
   
 
@@ -262,7 +263,12 @@ const QuestionaireList = () => {
       }
       const data = await FormsApi.getModuleForms(projectId, clientId, module);
       if (isMounted() && data) {
-        setQuestionaires(data);
+        if (data.status === 200) {
+          toast.success('Questionaires have been retrieved', { duration: 5000 });
+          setQuestionaires(data.data);
+        } else {
+          toast.error(data.message, { duration: 7000 });
+        }
       }
     } catch (err) {
       console.error(err);
@@ -272,8 +278,10 @@ const QuestionaireList = () => {
   const fetchProjectDetails = useCallback(async () => {
     try {
       const data = await projectsApi.fetchProjectDetails(projectId);
-      if (data) {
-        setProject(data);
+      if (data?.status === 200) {
+        setProject(data.data);
+      } else {
+        toast.error(data?.message)
       }
     } catch (error) {
       console.log(error);
@@ -288,6 +296,26 @@ const QuestionaireList = () => {
 
   useEffect(() => {
     fetchProjectDetails();
+  }, []);
+
+  const getSectorModules = useCallback(async () => {
+    try {
+      // TODO: Find sectorID
+      const { Profile: { sector } } = user;
+      console.log('sector', sector);
+      const data = await sectorApi.getSectorModules(sector);
+      if (data) {
+        console.log(data);
+        setModules(data);
+      }
+    } catch (error) {
+      toast.error('Could not load modules', { duration: 6000 });
+      console.log(error);
+    }
+  }, [setModules, user]);
+
+  useEffect(() => {
+    getSectorModules()
   }, []);
 
   const handleTabsChange = (event, value) => {
@@ -361,71 +389,16 @@ const QuestionaireList = () => {
 
           </Box>
 
-          <Stack
-          direction="row"
-            mb={4}
-          >
-            <Grid container spacing={3} >
-              <Grid item md={3} sm={6} xs={12} >
-              <NextLink href={`/dashboard/projects/${projectId}/module/registration/questionaire`} passHref>
-                <Card sx={{ backgroundColor: module === 'registration' ? '#e0dcdc' : null, cursor: "pointer" }}>
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "start",
-                      px: 3,
-                      py: 2,
-                    }}
-                  >
-                    <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }}>
-                      <GroupAddRounded />
-                    </IconButton>
-                    <div>
-                      <Typography variant="body2">10</Typography>
-                      <Typography
-                        sx={{ mt: 1 }}
-                        color="textSecondary"
-                        variant="h8"
-                      >
-                        Registration
-                      </Typography>
-                    </div>
-                    {/* <LineChart /> */}
-                  </Box>
-                </Card>
-                </NextLink>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-              <NextLink href={`/dashboard/projects/${projectId}/module/inspection/questionaire`} passHref>
-                <Card sx={{ backgroundColor: module === 'inspection' ? '#e0dcdc' : null, cursor: "pointer" }}>
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "start",
-                      px: 3,
-                      py: 2,
-                    }}
-                  >
-                    <IconButton size="large" style={{ borderRadius: "50%", backgroundColor: "orange", marginRight: '8px', color: 'white' }} >
-                      <FactCheck />
-                    </IconButton>
-                    <div>
-                      <Typography variant="body2">10</Typography>
-                      <Typography
-                        sx={{ mt: 1 }}
-                        color="textSecondary"
-                        variant="h8"
-                      >
-                        Inspection
-                      </Typography>
-                    </div>
-                    {/* <LineChart /> */}
-                  </Box>
-                </Card>
-                </NextLink>
-              </Grid>
+          <Stack direction="row" mb={4}>
+            <Grid container flex flexDirection="row" spacing={3}>
+
+              {
+                modules.map((module) => (
+                  <ModuleCard projectId={projectId} module={module} key={module.id} />
+
+                ))
+              }
+
             </Grid>
           </Stack>
 

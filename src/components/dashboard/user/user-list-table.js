@@ -118,7 +118,7 @@ export const UserListTable = (props) => {
                 Verified
               </TableCell>
               <TableCell>
-                Added By
+                Created By
               </TableCell>
               <TableCell>
                 Date of Joining
@@ -189,7 +189,7 @@ export const UserListTable = (props) => {
                     {customer.email}
                   </TableCell>
                   <TableCell>
-                    {customer.phone}
+                    {customer.phone || 'N/A'}
                   </TableCell>
                   <TableCell>
                     {customer.status}

@@ -60,10 +60,11 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         role: member.role,
         createdBy: "Stuart Dambi",
       }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/addTeamMember`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/addTeamMember`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify({...teamMemberObject, projectId: router.query.projectId})
       });

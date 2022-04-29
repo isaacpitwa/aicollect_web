@@ -24,6 +24,7 @@ import { UserAdd as UserAddIcon } from "../../../../icons/user-add";
 import { gtm } from "../../../../lib/gtm";
 import AddTeamMember from "../../../../components/dashboard/projectDetails/project-addteam-member";
 import { sectorApi } from '../../../../api/sectors-api';
+import { projectsApi } from '../../../../api/projects-api';
 import { useAuth } from '../../../../hooks/use-auth';
 import { ModuleCard } from "../../../../components/dashboard/projectDetails/module-card";
 
@@ -173,15 +174,16 @@ const ProjectDetails = () => {
     rowsPerPage
   );
 
-  const getProjects = useCallback(async () => {
+  const getProjectDetails = useCallback(async () => {
     if (projectId) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/projects/${projectId}`);
-        const data = await response.json();
-        console.log(data);
+        const data = await projectsApi.fetchProjectDetails(projectId);
         if (data?.status === 200) {
           toast.success(data.message, { duration: 10000 });
           setProject(data.data);
+          console.log(data);
+        } else {
+          toast.error(data.message)
         }
       } catch (error) {
         console.log(error);
@@ -207,7 +209,7 @@ const ProjectDetails = () => {
   }, [setModules, user]);
 
   useEffect(() => {
-    getProjects();
+    getProjectDetails();
   }, [])
 
   useEffect(() => {
@@ -245,7 +247,7 @@ const ProjectDetails = () => {
                 open={openProjectDialog}
                 handleClose={handleCloseProjectDialog}
                 projectId={projectId}
-                getProjects={getProjects}
+                getProjects={getProjectDetails}
               />
             </Grid>
           </Box>

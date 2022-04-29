@@ -17,7 +17,7 @@ import { DeleteOutline } from '@mui/icons-material';
 
 export const CreateNewFormDialog = ({ open, handleClose, user }) => {
   const router = useRouter();
-  const { module } = router.query;
+  const { moduleId } = router.query;
   const [metaData, setMetaData] = React.useState({
     name: '',
     createdBy: {
@@ -29,7 +29,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
     projectId: router.query.projectId,
     formFields: [],
     version: 1,
-    module: module 
+    module: moduleId 
   });
   const [checked, setChecked] = React.useState(false);
   const [regionValues, setRegionValues] = React.useState([
@@ -68,7 +68,7 @@ export const CreateNewFormDialog = ({ open, handleClose, user }) => {
       const formResponse = await FormsApi.createNewForm({...metaData, regions: regionValues});
       console.log(formResponse);
       if (formResponse.data.name) {
-        router.push(`/dashboard/projects/${router.query.projectId}/module/${module}/questionaire/${formResponse.data._id}/form`);
+        router.push(`/dashboard/projects/${router.query.projectId}/module/${moduleId}/questionaire/${formResponse.data._id}/form`);
       }
     } catch (error) {
       console.log(error);
