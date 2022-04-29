@@ -11,8 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import TextField_ from '../../dialogs/TextField';
-import { DescriptionCard } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
+import {
+    FieldTooltip,
+    DescriptionCard,
+} from '../../utils';
 
 /**
  * @function TextFieldComp
@@ -53,6 +55,8 @@ const TextFieldComp = (props) => {
     };
 
     const deleteField = () => {
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     };
 
@@ -100,14 +104,14 @@ const TextFieldComp = (props) => {
                 <TextField
                     required={fieldData.required}
                     fullWidth
+                    variant="outlined"
                     type={'text'}
-                    variant={'outlined'}
                     label={fieldData.label}
                     value={fieldValue}
                     onChange={handleFieldValue}
                     helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                     InputProps={{
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                        endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
                     }}
                 />
             </Grid>
@@ -115,11 +119,9 @@ const TextFieldComp = (props) => {
     }
 
     return (
-        !fieldData.display||fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
-        : conditionalDisplay(fieldData)?
             fieldDisplay()
         : ""
     )

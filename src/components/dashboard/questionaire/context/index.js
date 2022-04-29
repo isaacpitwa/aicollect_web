@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useCallback } from "react";
 
 import { FormsApi } from '../../../../api/forms-api'
 import {
+    getFieldsValues,
     allFormFields,
     getSectionsSubSections,
 } from '../utils';
@@ -57,10 +58,19 @@ const FormProvider = (props) => {
         getFormData();
     }, [])
 
+    /**
+     * @function getFormDetails
+     * @desc This method gets form data from the API response and updates the form builder state.
+     * @arg {Object} data - The data of a form containing all form details.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const getFormDetails = (data) => {
         setComponentsData(data.formFields);
         setFormData(data);
-        setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false)
+        setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false);
+        setFormFieldValues(getFieldsValues(data.formFields));
         setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}));
     }
 
@@ -74,7 +84,7 @@ const FormProvider = (props) => {
      */
     const addDependency = (fieldData) => {
         let newComponentsData = componentsData;
-        let dependantField = getSectionsSubSections(fieldData.parentId, componentsData).find(field=>field.id===fieldData.dependency);
+        let dependantField = getSectionsSubSections(fieldData, componentsData).find(field=>field.id===fieldData.dependency);
         let dependantFieldIndex = "";
         dependantField.display = "hidden";
         dependantField.dependency = fieldData.id
@@ -85,34 +95,34 @@ const FormProvider = (props) => {
             let section = newComponentsData.find(section=>section.id===fieldData.parentId);
             let sectionIndex = newComponentsData.findIndex(section=>section.id===fieldData.parentId);
             dependantFieldIndex = section.components.findIndex(field=>field.id===dependantField.id)
-            section.components[dependantFieldIndex] = dependantField;
+            section.components[dependantFieldIndex] = dependantField
             newComponentsData[sectionIndex] = section;
         }
         setComponentsData(newComponentsData)
     }
 
-    const conditionalDisplay = (field) => {
-        return field.conditional&&field.conditional.when===conditionalId&&field.conditional.value===conditionalValue&&!editStatus?true:false
-    };
-
-    const updateComponentsData = (fieldIndex, newFieldData) => {
-
-        let newComponentsData = componentsData;
-
-        if (newFieldData.parentId && newFieldData.subParentId) {
-            let sectionIndex = newComponentsData.components.findIndex(comp => comp.id === newFieldData.parentId);
-            let sectionFieldComponents = newComponentsData.find(comp => comp.id === newFieldData.parentId).components;
-            let subSectionIndex = sectionFieldComponents.findIndex(comp => comp.id === newFieldData.subParentId);
-            newComponentsData[sectionIndex].components[subSectionIndex].components[fieldIndex] = newFieldData;
-        } else if (newFieldData.parentId && !newFieldData.subParentId) {
-            let sectionIndex = newComponentsData.findIndex(comp => comp.id === newFieldData.parentId);
-            newComponentsData[sectionIndex].components[fieldIndex] = newFieldData;
+    /**
+     * @function conditionalDisplay
+     * @desc This method checks if a specific field has a conditional dependency.
+     * @arg {Object} fieldData - A field Object containing all field properties.
+     * @returns {Boolean} A Boolean value, True if a field has a conditional dependency and False if not
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
+    const conditionalDisplay = (fieldData) => {
+        let dependee = fieldData.conditional?formFieldValues.find(field=>field.id===fieldData.conditional.when):null;
+        if(dependee) {
+            if(dependee.type==='select-box') {
+                let values = []
+                dependee.values.map(item=>{ if(item.checked) values.push(item.label.toLowerCase()) })
+                return values.includes(fieldData.conditional.value);
+            } else {
+                return fieldData.conditional.when===dependee.id&&fieldData.conditional.value===dependee.value&&!editStatus?true:false;
+            }
         } else {
-            newComponentsData[fieldIndex] = newFieldData;
+            return false;
         }
-
-        setComponentsData(newComponentsData)
-    }
+    };
 
     /**
      * @function addComponentToSection
@@ -127,21 +137,20 @@ const FormProvider = (props) => {
         let newComponentsData = componentsData;
         let newSection = newComponentsData.find(section=>section.id===field.parentId);
         let sectionIndex = newComponentsData.findIndex(section => section.id === field.parentId);
+        let newSubSection = field.subParentId?newSection.components.find(subSec => subSec.id === field.subParentId):null;
+        let subSectionIndex = field.subParentId?newSection.components.findIndex(subSec => subSec.id === field.subParentId):null;
 
         if(field.subParentId) {
-            let newSubSection = newSection.components.find(subSec => subSec.id === field.subParentId)
-            let subSectionIndex = newSection.components.findIndex(subSec => subSec.id === field.subParentId)
-            newSubSection.components.push(field)
-            newSection.components[subSectionIndex] = newSubSection
-            newComponentsData[sectionIndex] = newSection
+            newSubSection.components.push(field);
+            newSection.components[subSectionIndex] = newSubSection;
+            newComponentsData[sectionIndex] = newSection;
         } else {
-            newSection.components.push(field)
-            newComponentsData[sectionIndex] = newSection
+            newSection.components.push(field);
+            newComponentsData[sectionIndex] = newSection;
         }
 
         setComponentsData(newComponentsData)
-        if(field&&field.type==="number"&&field.dependency) addDependency(field);
-
+        setFormFieldValues(getFieldsValues(newComponentsData))
     }
 
     /**
@@ -168,8 +177,8 @@ const FormProvider = (props) => {
             section.components[fieldIndex] = fieldData;
         }
 
-        newFormFields[sectionIndex] = section
-        setComponentsData(newFormFields)
+        newFormFields[sectionIndex] = section;
+        setComponentsData(newFormFields);
         if(fieldData.type==="number"&&fieldData.dependency) addDependency(fieldData);
         updateFormData()
     }
@@ -222,6 +231,7 @@ const FormProvider = (props) => {
             value={{
                 isLoaded,
                 setIsLoaded,
+                getFormData,
                 error,
                 setError,
                 selectSection,
@@ -234,11 +244,8 @@ const FormProvider = (props) => {
                 sectionCreated,
                 formData,
                 setFormData,
-                componentsData,
-                setComponentsData,
                 fieldResponses,
                 setFieldResponses,
-                updateComponentsData,
                 addComponentToSection,
                 updateFieldInSection,
                 addDependency,
@@ -258,6 +265,8 @@ const FormProvider = (props) => {
                 formFieldValues,
                 setFormFieldValues,
                 deleteFieldData,
+                setComponentsData,
+                componentsData,
             }}
         >
             {props.children}

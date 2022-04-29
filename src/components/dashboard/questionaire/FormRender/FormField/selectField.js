@@ -58,6 +58,8 @@ const SelectFieldComp = (props) => {
     }
 
     const deleteField = () => {
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         deleteFieldData(fieldData)
     }
 
@@ -109,8 +111,7 @@ const SelectFieldComp = (props) => {
                 <TextField
                     fullWidth
                     select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+                    variant="outlined"
                     value={selectValue}
                     onChange={handleSelect}
                     helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}

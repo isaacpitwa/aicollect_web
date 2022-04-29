@@ -1,3 +1,4 @@
+import SectionField from './sectionField'
 import SubSectionField from './subSectionField'
 import TextField from './textField'
 import TextAreaField from './textAreaField'
@@ -43,6 +44,8 @@ const FormField = (props) => {
             return <DateField fieldData={fieldData} />
         case 'area-mapping':
             return <AreaMappingField fieldData={fieldData} />
+        default:
+            return <SectionField fieldData={fieldData} />
     }
 }
 

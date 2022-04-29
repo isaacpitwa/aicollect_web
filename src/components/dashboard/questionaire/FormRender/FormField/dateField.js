@@ -15,7 +15,10 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import { FormContext } from '../../context';
 import DateField from '../../dialogs/DateField';
-import { DescriptionCard, FieldIndex } from '../../utils';
+import {
+    DescriptionCard,
+    FieldTooltip,
+} from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 
 /**
@@ -42,13 +45,14 @@ const DatefieldComp = (props) => {
 
     const handleFieldValue = (e) => {
         setDateValue(e.target.value)
-        let newFieldResponses = fieldResponses
-        newFieldResponses[FieldIndex(fieldData.id, fieldResponses)] = { fieldId: fieldData.id, value: e.target.value.toLowerCase() }
-        setFieldResponses(newFieldResponses)
     }
 
     const handleTextField = () => {
         setDateFieldDialog(true)
+    }
+
+    const handleDateValue = (e) => {
+
     }
 
     const createTextField = () => {
@@ -122,6 +126,9 @@ const DatefieldComp = (props) => {
 							setDateValue(newValue);
 						}}
 						renderInput={(params) => <TextField {...params} fullWidth/>}
+                        InputProps={{
+                            endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                        }}
 					/>
 				</LocalizationProvider>
             </Grid>

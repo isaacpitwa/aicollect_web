@@ -31,7 +31,11 @@ import SectionPreview from '../previews/SectionPreview'
 const Section = (props) => {
 
     const {
+        setIsLoaded,
         setError,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
         componentsData,
         setComponentsData,
         setSectionCreated,
@@ -94,7 +98,9 @@ const Section = (props) => {
 
     const addSection = () => {
 
-        const sectionData = {
+        setIsLoaded(false)
+
+        let sectionData = {
             id: uuidv4(),
             type: 'section',
             display: conditionalData?'hidden':display,
@@ -105,12 +111,17 @@ const Section = (props) => {
             conditional: conditionalData,
             components: components
         }
+
+        let formFields = componentsData
         
         if(fieldLabel!=='') {
-            let formFields = componentsData
+            setError(false)
+            setSectionCreated(true)
+            setSelectSection(true)
+            setSectionId(sectionData.id)
+            setSubSectionId(null)
             formFields.push(sectionData)
             setComponentsData(formFields)
-            setSectionCreated(true)
             setPanelType('display')
             setFieldLabel('')
             setFieldDescription('')
@@ -126,9 +137,10 @@ const Section = (props) => {
                 setErrorTag('Label')
             }
         }
+        setIsLoaded(true)
     }
 
-    const UpdateSection = () => {
+    const updateSection = () => {
         let sectionData = {
             id: id,
             type: type,
@@ -334,7 +346,7 @@ const Section = (props) => {
                         color="error"
                     >Cancel</Button>
                     <Button
-                        onClick={fieldData?UpdateSection:addSection}
+                        onClick={fieldData?updateSection:addSection}
                         variant="outlined"
                         size='small'
                         color="success"

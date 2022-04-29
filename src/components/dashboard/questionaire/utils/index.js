@@ -1,24 +1,82 @@
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-
+import formStyles from '../styles/FormStyles'
 import {
-    Typography
+    Typography,
+    IconButton,
+    Tooltip,
+    Grid,
 } from '@mui/material';
-
-import FormStyles from '../styles/FormStyles';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import InfoIcon from '@mui/icons-material/Info';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
+/**
+ * @function getFieldsValues
+ * @desc This method gets form data from the API response and updates the form builder state.
+ * @arg {Array} formFields - An array of form field objects.
+ * @returns {Array} Returns an array of form field objects.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const getFieldsValues = (formFields) => {
+    let sections = formFields;
+    let allFields = []
+    if(sections) sections.forEach(section=>{
+        if(section.components) section.components.map(field=>allFields.push(...getField(field)))
+    })
+    return allFields
+}
+
+/**
+ * @function getField
+ * @desc This method helps to get form fields within a sub-section field.
+ * @arg {Object} fieldData - The data of a form field.
+ * @returns {Array} Returns an array of form field objects.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+export const getField = (fieldData) => {
+    return fieldData.type==='sub-section'?fieldData.components.map(field => {
+        return { id: field.id, type: field.type, value: field.value, values: field.values?field.values:[] }
+    }):[{ id: fieldData.id, type: fieldData.type, value: fieldData.value, values: fieldData.values?fieldData.values:[] }];
+}
+
+/**
+ * @function FieldTooltip
+ * @desc This is a tooltip component for displaying tooltips of form fields.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.tooltip - The tooltip property from a field object.
+ * @returns {Component} - Returns a tooltip JSX component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FieldTooltip = (props) => {
+
+    const { tooltip } = props
+
+    return (
+        tooltip!==''?
+            <Tooltip title={tooltip}>
+            <IconButton>
+                <HelpOutlineIcon/>
+            </IconButton>
+            </Tooltip>
+        : false
+    )
+}
 
 /**
  * @function DescriptionCard
  * @desc This is a description component for displaying descriptions of form fields.
- * @arg {String} description - The description property from a field object.
- * @arg {Boolean} helperText - The MUI form field property that shows helping text below a field, if True then use the property.
+ * @arg {Object} props - The properties passed to the component.
+ * @arg {String} props.description - The description property from a field object.
+ * @arg {Boolean} props.helperText - The MUI form field property that shows helping text below a field, if True then use the property.
  * @returns {Component} - Returns a description JSX component.
  * @author Atama Zack <atama.zack@gmail.com>
  * @version 1.0.0
  */
 export const DescriptionCard = (props) => {
-
-    const Styles = FormStyles.sectionStyles
 
     const { description, helperText } = props
 
@@ -38,6 +96,46 @@ export const DescriptionCard = (props) => {
             :
             ''
 
+    )
+}
+
+/**
+ * @function FormBuildHelp
+ * @desc This is a component with quick steps on how to build a form.
+ * @returns {Component} - Returns the FormBuildHelp component.
+ * @author Atama Zack <atama.zack@gmail.com>
+ * @version 1.0.0
+ */
+ export const FormBuildHelp = () => {
+
+    const classes = formStyles();
+
+    return (
+        // <Grid
+        //     container
+        // >
+            <Alert
+                severity="info"
+                className={classes.alertContainer}
+            >
+                <AlertTitle
+                    className={classes.alertTitle}
+                >This Form has no fields.</AlertTitle>
+                <Typography
+                    className={classes.alertHeader1}
+                >
+                    <strong>Quick Start</strong><br/>
+                </Typography>
+                <Typography
+                    className={classes.alertBody}
+                >
+                    To add fields to this form, follow the steps listed below;<br/>
+                    <strong>Step 1:</strong> Check if you are in <strong>Form Builder: </strong>Edit Mode at the top, if not, click on the <strong>Edit Form</strong> button.<br/>
+                    <strong>Step 2:</strong> Click on the <strong>Section</strong> button to add a section to the form.<br/>
+                    <strong>Step 3:</strong> Other buttons will appear after creating a form Section field.
+                </Typography>
+            </Alert>
+        // </Grid>
     )
 }
 
@@ -87,19 +185,18 @@ export const DescriptionCard = (props) => {
  * @version 1.0.0
  */
 export const allFormFields = (data, fieldData) => {
-
     let allFields = [];
     if(fieldData) {
         if(fieldData.type==='section'){
             data.filter(item=>item.id!==fieldData.id).forEach((item) => {
-                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"))
+                allFields.push(...item.components.filter(field=>field.type==="select"||field.type==="radio"||field.type==="select-box"))
             });
         } else {
             if(fieldData.subParentId) {
                 let subSection = data.find(item=>item.id===fieldData.parentId).components.find(field=>field.id===fieldData.subParentId)
-                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+                allFields = subSection.components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"||field.type==="select-box"))
             } else {
-                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"))
+                allFields = data.find(item=>item.id===fieldData.parentId).components.filter(field=>field.id!==fieldData.id&&(field.type==="select"||field.type==="radio"||field.type==="select-box"))
             }
         }
     }
@@ -116,15 +213,16 @@ export const allFormFields = (data, fieldData) => {
  * @version 1.0.0
  */
 export const getSectionsSubSections = (field, componentsData) => {
-    let sectionSubsection = []
-    let sections = []
-    let subSections = []
+    let section = componentsData.find(section=>section.id===field.parentId);
+    let sectionSubsection = [];
+    let sections = [];
+    let subSections = field.subParentId===null?section.components.filter(subField=>subField.type==='sub-section'):[];
+    if(subSections) sectionSubsection.push(...subSections);
     if(field) {
-        sections = componentsData.filter(section=>section.id!==field.parentId);
-        if(sections) sectionSubsection.push(...sections);
+        // sections = componentsData.filter(section=>section.id!==field.parentId);
+        // if(sections) sectionSubsection.push(...sections);
         if(field.subParentId) {
-            sections = componentsData.find(section=>section.id===field.parentId);
-            subSections = sections.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
+            subSections = section.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
             if(subSections) sectionSubsection.push(...subSections);
         }
         return sectionSubsection;
@@ -143,13 +241,7 @@ export const getSectionsSubSections = (field, componentsData) => {
  * @author Atama Zack <atama.zack@gmail.com>.
  * @version 1.0.0
  */
-export const conditionalLogic = (data) => {
-    if(data.when!==''&&data.value!==''){
-        return {
-            when: data.when,
-            value: data.value.toLowerCase()                
-        }
-    } else {
-        return null
-    }
-}
+export const conditionalLogic = data => data.when!==''&&data.value!==''?{
+    when: data.when,
+    value: data.value.toLowerCase()                
+}:null

@@ -4,15 +4,61 @@ import {
 
 const formStyles = makeStyles({
     form: {
+        backgroundColor: 'white',
+        border: "#5048E5 1px solid",
+        borderRadius: "5px",
+    },
+    formHeaderPanel: {
+        padding: '15px 1.2vw',
+        paddingTop: '50px',
+        width: '85.3vw',
+        backgroundColor: '#f1f1fb',
+        boxShadow: '0 5px 6px -4px #5048E5',
+        paddingBottom: '25px',
+    },
+    formHeader: {
+        fontSize: '1.5rem',
+    },
+    formField: {
+        backgroundColor: 'white',
+        borderRadius: '8px',
+    },
+    formButtons: {
+        
+    },
+    formButton: {
+        paddingTop: '6px',
+        paddingBottom: '7px',
+        marginLeft: '15px',
+    },
+    formButtonIcon: {
+        fontSize: '25px',
+        marginRight: '5px',
+    },
+    formRender: {
         padding: '1%',
+    },
+    alertContainer: {
+        width: '70%',
+        margin: '30px 0px',
+    },
+    alertTitle: {
+        fontSize: '25px',
+    },
+    alertHeader1: {
+        fontSize: '20px',
+    },
+    alertBody: {
+        fontSize: '16px',
     },
     formFields: {
         background: '#448AFF',
-        color: 'white',
-        padding: '10px',
+        marginTop: '3%',
         width: '100%',
+        height: '50px',
+        padding: '12px',
+        color: 'white',
         textAlign: 'center',
-        marginTop: '20px'
     },
     section: {
         width: '100%',

@@ -241,20 +241,20 @@ const NumberField = (props) => {
                             aria-label="outlined button group"
                         >
                             <Button
-                                variant={panelType == "display" ? "contained" : "outlined"}
+                                variant={panelType === "display" ? "contained" : "outlined"}
                                 onClick={displayPanel}
                                 style={{ borderRadius: '8px 0px 0px 0px' }}
                             >Display</Button>
                             <Button
-                                variant={panelType == "conditional" ? "contained" : "outlined"}
+                                variant={panelType === "conditional" ? "contained" : "outlined"}
                                 onClick={conditionalPanel}
                             >Conditional</Button>
                             <Button
-                                variant={panelType == "logic" ? "contained" : "outlined"}
+                                variant={panelType === "logic" ? "contained" : "outlined"}
                                 onClick={logicPanel}
                             >Logic</Button>
                             <Button
-                                variant={panelType == "dependency" ? "contained" : "outlined"}
+                                variant={panelType === "dependency" ? "contained" : "outlined"}
                                 onClick={dependencyPanel}
                                 style={{ borderRadius: '0px 8px 0px 0px' }}
                             >Dependency</Button>

@@ -6,7 +6,7 @@ import {
     TextField,
     Checkbox
 } from '@mui/material'
-import GeneralTooltip from '../previews/GeneralTooltip'
+import GeneralTooltip from './GeneralTooltip'
 
 const SelectBoxesPreview = (props) => {
 

@@ -11,8 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
 import NumberField from '../../dialogs/NumberField';
-import { DescriptionCard } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
+import {
+    FieldTooltip,
+    DescriptionCard,
+} from '../../utils';
 
 /**
  * @function NumberFieldComp
@@ -109,15 +111,15 @@ const NumberFieldComp = (props) => {
                     <TextField
                         required={fieldData.required}
                         fullWidth
+                        variant="outlined"
                         type={'number'}
-                        variant={'outlined'}
                         label={fieldData.label}
                         value={fieldValue}
                         onChange={handleFieldValue}
                         helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
                         style={formStyles.textfield}
                         InputProps={{
-                            endAdornment: <GeneralTooltip tipData={fieldData.tooltip} />
+                            endAdornment: <FieldTooltip tipData={fieldData.tooltip}/>
                         }}
                     />
             </Grid>
@@ -125,11 +127,9 @@ const NumberFieldComp = (props) => {
     }
 
     return (
-        fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
-        : conditionalDisplay(fieldData)?
             fieldDisplay()
         : ""
     )

@@ -12,7 +12,7 @@ import { FormContext } from '../../context';
 import SubSection from '../../dialogs/SubSection';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
-import FormField from '../FormField';
+import FormField from '.';
 
 /**
  * @function SubSectionField
@@ -61,7 +61,7 @@ const SubSectionField = (props) => {
     };
 
     const deleteField = () => {
-        setSectionId(null)
+        setSectionId(fieldData.parentId)
         setSubSectionId(null)
         deleteFieldData(fieldData)
     };   
