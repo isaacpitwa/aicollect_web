@@ -16,6 +16,7 @@ import {
   Stack,
   Checkbox,
   FormControlLabel,
+  Typography,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -122,21 +123,22 @@ export const JWTLogin = (props) => {
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         sx={{ my: 2 }}
       >
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Checkbox
+              value={formik.values.remember}
               onChange={formik.handleChange}
               checked={formik.values.remember}
             />
           }
           label="Remember me"
-        />
+        /> */}
 
         <NextLink href="/authentication/password-reset-request" variant="subtitle2">
-          Forgot Password.
+          <Typography sx={{ cursor: 'pointer' }} color="purple">Forgot Password.</Typography>
         </NextLink>
       </Stack>
       <Box sx={{ mt: 2 }}>

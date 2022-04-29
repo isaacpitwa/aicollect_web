@@ -22,7 +22,8 @@ class Forms {
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/getModuleForms`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'Application/json'
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify({ projectId, clientId, module })
       });
