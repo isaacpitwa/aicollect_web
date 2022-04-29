@@ -32,6 +32,8 @@ const SelectBoxesField = (props) => {
         setSectionId,
         setSubSectionId,
         editStatus,
+        setConditionalId,
+        setConditionalValue,
         conditionalDisplay,
         formFieldValues,
         setFormFieldValues,
@@ -114,8 +116,6 @@ const SelectBoxesField = (props) => {
                             checked={option.checked}
                             // Switching state of a perticular check box
                             onChange={(e) => {
-                                setConditionalId("");
-                                setConditionalValue("");
                                 option.checked = !option.checked;
                                 setCheckOptions([...checkOptions]);
                                 setConditionalId(fieldData.id);
