@@ -145,7 +145,7 @@ const QuestionaireList = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
   const router = useRouter();
-  const { projectId, module } = router.query;
+  const { projectId, moduleId } = router.query;
   const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [questionaires, setQuestionaires] = useState([]);
@@ -262,8 +262,8 @@ const QuestionaireList = () => {
       } else {
         clientId = user.clientId;
       }
-      console.log('Form api params', projectId, clientId, module)
-      const data = await FormsApi.getModuleForms(projectId, clientId, module);
+      console.log('Form api params', projectId, clientId, moduleId)
+      const data = await FormsApi.getModuleForms(projectId, clientId, moduleId);
       if (isMounted() && data) {
         if (data.status === 200) {
           toast.success('Questionaires have been retrieved', { duration: 5000 });
