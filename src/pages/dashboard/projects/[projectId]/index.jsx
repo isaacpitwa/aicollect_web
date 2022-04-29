@@ -181,6 +181,7 @@ const ProjectDetails = () => {
         if (data?.status === 200) {
           toast.success(data.message, { duration: 10000 });
           setProject(data.data);
+          console.log(data);
         } else {
           toast.error(data.message)
         }

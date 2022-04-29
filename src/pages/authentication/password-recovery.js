@@ -1,13 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { Box, Card, Container, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
+import { Box, Button, Card, Container, Divider, Link, TextField, Typography, Alert, Stack } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
-import { AuthBanner } from '../../components/authentication/auth-banner';
-import { AmplifyPasswordRecovery } from '../../components/authentication/amplify-password-recovery';
+// import { AuthBanner } from '../../components/authentication/auth-banner';
+import { AmplifyPasswordReset } from '../../components/authentication/amplify-password-reset';
 import { Logo } from '../../components/logo';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
+import { authenticationApi } from '../../api/auth-api';
+import toast from 'react-hot-toast';
 
 const platformIcons = {
   Amplify: '/static/icons/amplify.svg',
@@ -17,17 +20,50 @@ const platformIcons = {
 };
 
 const PasswordRecovery = () => {
+  const router = useRouter();
   const { platform } = useAuth();
+  const { disableGuard, userId, token } = router.query;
+  const [state, setState] = useState({
+    password: '',
+    confirmPassword: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [passwordReset, setPasswordReset] = useState(null);
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setState((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+  };
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
+  const handlePasswordReset = async () => {
+    setLoading(true);
+    try {
+      const { password, confirmPassword } = state;
+      const data = await authenticationApi.resetForgottenPassword(password, confirmPassword, token, userId);
+      if (data?.status === 200) {
+        setPasswordReset(`Password has been reset successfully`);
+        toast.success('Redirecting to login....', { duration: 7000 });
+        router.push('/');
+      } else {
+        setPasswordReset(data?.message)
+      }
+    } catch (error) {
+      console.log(error);
+      setPasswordReset('Something went wrong, please try again later');
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <Head>
         <title>
-          Password Recovery | Material Kit Pro
+          Password Reset | AiCollect
         </title>
       </Head>
       <Box
@@ -39,7 +75,7 @@ const PasswordRecovery = () => {
           minHeight: '100vh'
         }}
       >
-        <AuthBanner />
+        {/* <AuthBanner /> */}
         <Container
           maxWidth="sm"
           sx={{
@@ -76,12 +112,8 @@ const PasswordRecovery = () => {
               color="textSecondary"
               variant="caption"
             >
-              The app authenticates via {platform}
+              Password reset Page
             </Typography>
-            <img
-              alt="Auth platform"
-              src={platformIcons[platform]}
-            />
           </Box>
           <Card
             elevation={16}
@@ -109,23 +141,42 @@ const PasswordRecovery = () => {
                 </a>
               </NextLink>
               <Typography variant="h4">
-                Password Recovery
+                Password Reset
               </Typography>
               <Typography
                 color="textSecondary"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, mb: 4 }}
                 variant="body2"
               >
-                Tell us your email so we can send you a reset link
+                Please enter your new Password.
               </Typography>
-            </Box>
-            <Box
-              sx={{
-                flexGrow: 1,
-                mt: 3
-              }}
-            >
-              {platform === 'Amplify' && <AmplifyPasswordRecovery />}
+              { passwordReset && <Alert severity={ passwordReset === 'Password has been reset successfully' ? 'success' : 'error'  } sx={{ width: '100%', mb: 3 }}>{passwordReset}</Alert> }
+              <TextField
+                label='Enter New Password'
+                type='password'
+                name="password"
+                onChange={handleChange}
+                value={state.password}
+                placeholder='Password' fullWidth
+              />
+              <TextField
+                sx={{ mt: 3, mb: 2 }}
+                label='Confirm Password'
+                type='password'
+                name="confirmPassword"
+                onChange={handleChange}
+                value={state.confirmPassword}
+                placeholder='Confirm Password' fullWidth
+              />
+              <Button
+                variant='contained'
+                style={{ marginTop: 15 }}
+                onClick={handlePasswordReset}
+                disabled={loading}
+                fullWidth
+                >
+                  { loading ? 'loading ...' : 'Reset Password' }
+              </Button>
             </Box>
           </Card>
         </Container>
