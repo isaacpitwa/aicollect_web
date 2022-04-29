@@ -1,7 +1,7 @@
 class Forms {
   async getAllProjectForms(projectId, clientId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/getClientForms`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/getClientForms`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
@@ -19,17 +19,20 @@ class Forms {
   }
   async getModuleForms(projectId, clientId, module) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/getModuleForms`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/getModuleForms`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'Application/json'
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify({ projectId, clientId, module })
       });
 
       const data = await response.json();
-      if (data.status === 200) {
-        return data.data;
+      console.log('questionaires', data);
+      if (data) {
+        console.log('Data from questionaires response', data);
+        return data;
       }
     } catch (err) {
       console.error(err);
@@ -38,7 +41,7 @@ class Forms {
 
   async createNewForm(formMeta) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/create/newForm`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/create/newForm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -55,7 +58,7 @@ class Forms {
 
   async getFormDetails(formId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/${formId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/${formId}`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -73,7 +76,7 @@ class Forms {
 
   async addFieldsToNewForm(formData) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/forms/update`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',

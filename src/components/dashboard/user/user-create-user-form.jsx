@@ -12,12 +12,14 @@ import {
   InputLabel,
   CircularProgress,
 } from "@mui/material";
+import { useRouter } from 'next/router';
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
 // import MuiPhoneNumber from 'material-ui-phone-number';
 import * as Yup from "yup";
 import { userApi } from '../../../api/users-api';
 import { useAuth } from '../../../hooks/use-auth';
+import { useState } from "react";
 // import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 
 // TODO: Refactor Function to reduce Cognitive Complexity
@@ -25,16 +27,35 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
   // To get the user from the authContext, you can use
   // `const { user } = useAuth();`
   const { user } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleCreateUser = async () => {
-    const clientId = user.roles === 'Owner' ? user.id : user.clientId;
-    console.log(clientId);
-    const data = await userApi.createUser({ ...formik.values, clientId, addedBy: 1, profileImage: null })
-    if (data) {
-      toast("User created successfully");
-      getClientUsers();
-      handleClose();
+    setLoading(true);
+    try {
+      const clientId = user.roles === 'Owner' ? user.id : user.clientId;
+      const data = await userApi.createUser({
+        ...formik.values,
+        supervisor: formik.values.supervisor === "" ? null : formik.values.supervisor,
+        clientId,
+        createdBy: user.id
+      })
+      if (data?.status === 201) {
+        toast.success("User created successfully");
+        getClientUsers();
+        handleClose();
+      } else if (data?.status === 401) {
+        toast.error('Session has expired, please login again');
+        router.push({ pathname: '/', query: { returnUrl: '/dashboard/users' } });
+      } else if (data?.status === 403) {
+        toast.error('You do not have the permissions to create user');
+      } else {
+        toast.error('User Fields validations');
+      }
+    } catch (error) {
+      toast.error('Something went wrong, contact support')
     }
+    setLoading(false);
   };
 
   const phoneRegEx = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -47,7 +68,6 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
       phone: "",
       roles: "",
       supervisor: "",
-      profilePhoto: null
     },
     validationSchema: Yup.object({
       firstName: Yup.string().min(3).max(255).required("First Name is required"),
@@ -115,7 +135,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           flexDirection="row "
           justifyContent="space-between"
         >
-          
+
           <Grid item md={6} sm={12}>
             <TextField
               error={formik.touched.email && formik.errors.email}
@@ -187,7 +207,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
             </FormControl>
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3} marginTop={1}>
-          <FormControl fullWidth>
+            <FormControl fullWidth>
               <InputLabel>Role *</InputLabel>
               <Select type="date" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange} fullWidth>
                 <MenuItem value="Admin">Super Administrator</MenuItem>
@@ -200,10 +220,10 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
             </FormControl>
           </Grid>
         </Grid>
-        
+
         <Grid item md={12} sm={12} display="flex" justifyContent="space-between">
           {
-            formik.isSubmitting ? (
+            loading || formik.isSubmitting ? (
               <Button variant="contained" disabled>
                 <CircularProgress color="inherit" />
               </Button>

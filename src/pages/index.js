@@ -65,7 +65,7 @@ const Login = () => {
   }, []);
 
   const handleLoginWithGoogle = async () => {
-    router.push(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authService/google`);
+    router.push(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/google`);
   };
   return (
     <>
@@ -95,10 +95,10 @@ const Login = () => {
             </Stack>
             <JWTLogin />
             <Divider sx={{ my: 3 }} />
-            <Typography color="textSecondary" variant="body2">
+            {/* <Typography color="textSecondary" variant="body2">
               Or sign in with
-            </Typography>
-            <Box display="flex" flexDirection="row" mt={2}>
+            </Typography> */}
+            {/* <Box display="flex" flexDirection="row" mt={2}>
               <Button
                 size="large"
                 color="error"
@@ -113,7 +113,7 @@ const Login = () => {
                 <TwitterIcon />
                 Twitter
               </Button>
-            </Box>
+            </Box> */}
           </ContentStyle>
         </Container>
       </RootStyle>

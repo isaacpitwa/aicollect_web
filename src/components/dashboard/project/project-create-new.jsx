@@ -17,6 +17,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import toast from "react-hot-toast";
 import { useAuth } from '../../../hooks/use-auth';
+import { projectsApi } from '../../../api/projects-api';
 
 const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
   const { user } = useAuth();
@@ -34,20 +35,19 @@ const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
   const handleCreateProject = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/projectService/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'Application/json',
-        },
-        body: JSON.stringify({...project, userId: user.id, name: `${user.firstname} ${user.lastname}`, roles: user.roles})
+      const data = await projectsApi.createProject({
+        ...project,
+        userId: user.id,
+        name: `${user.firstname} ${user.lastname}`,
+        roles: user.roles
       });
-      const data = await response.json();
       if (data?.status === 201) {
         toast.success("Project has been created successfully", { duration: 9000 });
         getProjects();
         handleClose();
       } else {
-        toast.error("Sorry, project could not be created")
+        console.log(data);
+        toast.error("Something went wrong, project was not created")
       }
     } catch (error) {
       console.log(error);
@@ -92,10 +92,10 @@ const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
                       onChange={handleChange}
                       placeholder="description *"
                       rows={3}
-                      multiline  />
+                      multiline />
                   </FormControl>
                 </Grid>
-                
+
               </Grid>
             </form>
           </DialogContent>
@@ -105,7 +105,7 @@ const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
                 <LoadingButton
                   loading
                   variant="outlined">
-                    Save
+                  Save
                 </LoadingButton>
               ) : (
                 <Button

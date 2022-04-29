@@ -11,7 +11,7 @@ import {
   Box,
 } from '@mui/material';
 import CreateUserForm from './user-create-user-form';
-import SendCustomerInvite from './user-send-invite';
+import SendUserInvitation from './user-send-invite';
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -72,9 +72,9 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
                 label="Create User"
                 {...a11yProps(0)} />
               {/* TODO: UNCOMMENT TO ADD INVITE USER THROUGH EMAIL */}
-              {/* <Tab
+              <Tab
                 label="By Invite"
-                {...a11yProps(1)} /> */}
+                {...a11yProps(1)} />
             </Tabs>
           </Box>
           <TabPanel
@@ -84,11 +84,11 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
             <CreateUserForm supervisors={supervisors} handleClose={handleClose} getClientUsers={getClientUsers} />
           </TabPanel>
           
-          {/* <TabPanel
+          <TabPanel
             value={value}
             index={1}>
-            <SendCustomerInvite getClientUsers={getClientUsers} handleClose={handleClose} />
-          </TabPanel> */}
+            <SendUserInvitation getClientUsers={getClientUsers} handleClose={handleClose} />
+          </TabPanel>
           
         </Box>
       </DialogContent>

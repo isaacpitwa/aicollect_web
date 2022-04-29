@@ -1,7 +1,7 @@
 class TasksApi {
   async createTask(taskObject) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/tasks/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/tasks/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
@@ -20,7 +20,7 @@ class TasksApi {
 
   async getProjectTasks(projectId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/tasks/project`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/tasks/project`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json'
@@ -38,7 +38,7 @@ class TasksApi {
 
   async getTaskDetails(taskId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PROJECTS_URL}/tasks/${taskId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/tasks/${taskId}`, {
         headers: {
           'Content-Type': 'Application/json'
         }

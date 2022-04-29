@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, Container, Divider, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Link, TextField, Typography, Alert, Stack } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
-import { AuthBanner } from '../../components/authentication/auth-banner';
+// import { AuthBanner } from '../../components/authentication/auth-banner';
 import { AmplifyPasswordReset } from '../../components/authentication/amplify-password-reset';
 import { Logo } from '../../components/logo';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
+import { authenticationApi } from '../../api/auth-api';
 
 const platformIcons = {
   Amplify: '/static/icons/amplify.svg',
@@ -21,10 +22,28 @@ const PasswordReset = () => {
   const router = useRouter();
   const { platform } = useAuth();
   const { disableGuard } = router.query;
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(null);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
+
+  const handleRequestPasswordReset = async () => {
+    setLoading(true);
+    try {
+      const data = await authenticationApi.requestPasswordReset(email);
+      if (data?.status === 200) {
+        setEmailSent(`Please check your email for a password reset link`);
+      } else {
+        setEmailSent(data?.message)
+      }
+    } catch (error) {
+      setEmailSent('Something went wrong, please try again later');
+    }
+    setLoading(false);
+  };
 
   return (
     <>
@@ -117,8 +136,26 @@ const PasswordReset = () => {
               >
                 Please enter your email below to reset your password.
               </Typography>
-              <TextField label='Email Address' type='email' placeholder='Enter your email' fullWidth />
-              <Button variant='contained' style={{ marginTop: 15 }}>Send Password Reset</Button>
+              { emailSent && <Alert severity={ emailSent === 'Please check your email for a password reset link' ? 'success' : 'error'  } sx={{ width: '100%', mb: 3 }}>{emailSent}</Alert> }
+              <TextField
+                label='Email Address'
+                type='email'
+                name="email"
+                onChange={(e) => {
+                  e.preventDefault();
+                  setEmail(e.target.value);
+                }}
+                value={email}
+                placeholder='Enter your email' fullWidth
+              />
+              <Button
+                variant='contained'
+                style={{ marginTop: 15 }}
+                onClick={handleRequestPasswordReset}
+                disabled={loading}
+                >
+                  { loading ? 'loading ...' : 'Send Password Reset' }
+              </Button>
             </Box>
             <Box
               sx={{
