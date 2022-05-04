@@ -43,12 +43,12 @@ const SectionField = (props) => {
 
     const { fieldData } = props
 
+    const [sectionLoaded, setSectionLoaded] = useState(false);
     const [display, setDisplay] = useState('hidden');
-    const [sectionFields, setSectionFields] = useState(fieldData?fieldData.components:[]);
     const [sectionDialog, setSectionDialog] = useState(false)
 
     useEffect(()=>{
-        setSectionFields(getSectionFields())
+        setSectionLoaded(true)
     }, [componentsData])
 
     const handleSectionField = () => {
@@ -136,9 +136,11 @@ const SectionField = (props) => {
                         : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
-                {sectionFields.map((field, index) => (
-                    <FormField key={index} fieldData={field} />
-                ))}
+                {sectionLoaded?
+                    getSectionFields().map((field, index) => (
+                        <FormField key={index} fieldData={field} />
+                    ))
+                : ""}
             </Grid>
         )
     }

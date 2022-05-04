@@ -40,7 +40,13 @@ const FormProvider = (props) => {
     const [conditionalValue, setConditionalValue] = useState("");
     const [formFieldValues, setFormFieldValues] = useState([]);
 
-
+    /**
+     * @function getFormData
+     * @desc This method gets a particular form's data using the form API.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const getFormData = async () => {
         setIsLoaded(false)
         try {
@@ -52,11 +58,11 @@ const FormProvider = (props) => {
             console.log('DEBUG error --> \n', error);
         }
         setIsLoaded(true)
-    }
+    };
 
     useEffect(() => {
         getFormData();
-    }, [])
+    }, []);
 
     /**
      * @function getFormDetails
@@ -140,7 +146,7 @@ const FormProvider = (props) => {
         let newSubSection = field.subParentId?newSection.components.find(subSec => subSec.id === field.subParentId):null;
         let subSectionIndex = field.subParentId?newSection.components.findIndex(subSec => subSec.id === field.subParentId):null;
 
-        if(field.subParentId) {
+        if(field.subParentId&&field.subParentId!==null) {
             newSubSection.components.push(field);
             newSection.components[subSectionIndex] = newSubSection;
             newComponentsData[sectionIndex] = newSection;
@@ -181,13 +187,20 @@ const FormProvider = (props) => {
         setComponentsData(newFormFields);
         if(fieldData.type==="number"&&fieldData.dependency) addDependency(fieldData);
         updateFormData()
-    }
+    };
 
+    /**
+     * @function updateFormData
+     * @desc This method updates a particular form's data using the form API.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const updateFormData = async () => {
         let newForm = formData
         newForm.formFields = componentsData
         setFormData(newForm)
-        const updatedForm = await FormsApi.addFieldsToNewForm({formId: newForm._id, ...newForm});
+        const updatedForm = await FormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm });
         getFormData(updatedForm.formId);
     }
 
@@ -204,7 +217,7 @@ const FormProvider = (props) => {
         let section = newFields.find(field=>field.id===fieldData.parentId);
         let sectionIndex = newFields.findIndex(field=>field.id===fieldData.parentId);
         
-        if(fieldData.subParentId) {
+        if(fieldData.subParentId&&fieldData.subParentId!==null) {
             let subSection = section.components.find(field=>field.id===fieldData.subParentId);
             let subSectionIndex = section.components.findIndex(field=>field.id===fieldData.subParentId);
             subSection.components = subSection.components.filter(field=>field.id!==fieldData.id);
@@ -214,11 +227,17 @@ const FormProvider = (props) => {
             section.components = section.components.filter(field=>field.id!==fieldData.id);
             newFields[sectionIndex] = section;
         }
-
-        setComponentsData(newFields)
-        setFormFieldValues(getFieldsValues(newFields))
+        setComponentsData(newFields);
+        setFormFieldValues(getFieldsValues(newFields));
     }
 
+    /**
+     * @function handleFormPreview
+     * @desc This method helps to view the form in preview mode.
+     * @returns {Void} Nothing is returned.
+     * @author Atama Zack <atama.zack@gmail.com>
+     * @version 1.0.0
+     */
     const handleFormPreview = () => {
         setFormPreview(!formPreview)
         setEditStatus(!editStatus)

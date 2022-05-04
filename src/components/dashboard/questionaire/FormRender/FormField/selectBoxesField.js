@@ -64,6 +64,14 @@ const SelectBoxesField = (props) => {
         setFormFieldValues(fields);
     }
 
+    const resetValues = () => {
+        let values = field.values.map(value=>{ return { id: value.id, label: value.label, checked: false } });
+        let fieldUpdate = field;
+        fieldUpdate.values = values;
+        setField(fieldUpdate)
+        updateFieldValue(values)
+    }
+
     const deleteField = () => {
         deleteFieldData(fieldData)
     }
@@ -138,7 +146,7 @@ const SelectBoxesField = (props) => {
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
             fieldDisplay()
-        : ""
+        : resetValues()
     )
 }
 

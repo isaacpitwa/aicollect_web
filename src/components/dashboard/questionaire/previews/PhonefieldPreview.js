@@ -6,12 +6,11 @@ import {
     TextField
 } from '@mui/material'
 import MuiPhoneNumber from 'material-ui-phone-number'
-import 'react-phone-number-input/style.css'
 import GeneralTooltip from './GeneralTooltip'
 
 const PhonefieldPreview = (props) => {
 
-    const { defaultCountry, fieldDescription, tooltip } = props
+    const { defaultCountry, fieldLabel, fieldDescription, tooltip } = props
 
     const [value, setValue] = useState('')
 
@@ -40,10 +39,10 @@ const PhonefieldPreview = (props) => {
                 <MuiPhoneNumber
                     fullWidth
                     size={'small'}
-                    label={'Phone Number'}
+                    label={fieldLabel?fieldLabel:'Phone Number'}
                     margin="dense"
                     variant='outlined'
-                    defaultCountry={'ug'}
+                    defaultCountry={defaultCountry}
                     onChange={setValue}
                     InputProps={{
                         endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
