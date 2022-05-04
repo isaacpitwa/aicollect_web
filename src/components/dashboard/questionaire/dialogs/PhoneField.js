@@ -339,6 +339,7 @@ const PhoneField_ = (props) => {
                     </Grid>
                     <PhonefieldPreview
                         defaultCountry={'ug'}
+                        fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
