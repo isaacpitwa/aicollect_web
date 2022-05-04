@@ -276,11 +276,17 @@ const CreateTask = () => {
     try {
       // Make call to task creation API
       // let questLst = [];
-
+      const formattedTeam = [];
+      team.forEach((user) => {
+        delete user.createdBy;
+        delete user.createdAt;
+        formattedTeam.push(user);
+      })
+      console.log("formated team", formattedTeam);
       const task = {
         ...taskInformation,
         questionaire: questionaires.map((item) => item._id),
-        team,
+        team: formattedTeam,
         schedule,
         project: projectId,
         createdBy: {
