@@ -72,7 +72,7 @@ const NumberField = (props) => {
         setTooltip(e.target.value)
     }
 
-    const handleChecked = (e) => {
+    const handleIsRequired = (e) => {
         setIsRequired(!isRequired)
     }
 
@@ -340,7 +340,7 @@ const NumberField = (props) => {
                                             Remove Dependency
                                         </Button>
                                      </Typography>
-                                </>                                        
+                                </>
                             :
                                 <>
                                     <TextField
@@ -389,7 +389,7 @@ const NumberField = (props) => {
                                         <Checkbox
                                             size={'small'}
                                             checked={isRequired}
-                                            onChange={handleChecked}
+                                            onChange={handleIsRequired}
                                         />Required<GeneralTooltip tipData={'A required field must be filled.'}/>
                                     </Typography>
                                 </>

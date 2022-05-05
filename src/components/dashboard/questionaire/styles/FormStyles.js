@@ -10,14 +10,16 @@ const formStyles = makeStyles({
     },
     formHeaderPanel: {
         padding: '15px 1.2vw',
-        paddingTop: '50px',
+        paddingTop: '30px',
         width: '85.3vw',
         backgroundColor: '#f1f1fb',
         boxShadow: '0 5px 6px -4px #5048E5',
-        paddingBottom: '25px',
+        paddingBottom: '20px',
     },
     formHeader: {
-        fontSize: '1.5rem',
+        width: '100%',
+        fontSize: '1.3rem',
+        paddingBottom: '10px',
     },
     formField: {
         backgroundColor: 'white',

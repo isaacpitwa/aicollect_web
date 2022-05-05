@@ -30,7 +30,6 @@ const TextareafieldPreview = (props) => {
             >
             <TextField
                 required={isRequired}
-                autoFocus
                 margin="dense"
                 id="label"
                 label={fieldLabel?fieldLabel:'Label'}

@@ -19,12 +19,12 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import { FormContext } from '../context';
 import {
+    FieldTooltip,
     allFormFields,
 } from '../utils';
 import {
     FieldError,
 } from '../utils/ErrorCards';
-import GeneralTooltip from '../previews/GeneralTooltip';
 import DatefieldPreview from '../previews/DatefieldPreview';
 
 // This is the field for type=TextField
@@ -344,7 +344,7 @@ const DateField = (props) => {
                                             size={'small'}
                                             checked={isRequired}
                                             onChange={handleIsRequired}
-                                        />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        />Required <FieldTooltip tooltip={'A required field must be filled.'}/>
                                     </Typography>
                                 </>
                             }

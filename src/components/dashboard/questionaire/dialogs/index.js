@@ -23,15 +23,14 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import { FormContext } from '../context';
 import {
+    FieldTooltip,
+    DescriptionCard,
     allFormFields,
-    conditionalLogic,
     getSectionsSubSections
 } from '../utils';
 import {
     FieldError,
 } from '../utils/ErrorCards';
-import GeneralTooltip from '../previews/GeneralTooltip';
-import FieldPreview from '../previews';
 
 /**
  * @function FieldDialog
@@ -48,227 +47,45 @@ import FieldPreview from '../previews';
 const FieldDialog = (props) => {
 
     const {
-        setError,
-        sectionId,
-        subSectionId,
         componentsData,
-        addComponentToSection,
-        updateFieldInSection,
     } = useContext(FormContext)
 
-    const { open, dialogType, fieldData, handleClose } = props;
-
-    const [errorTag, setErrorTag] = useState(false)
-    const [panelType, setPanelType] = useState('display')
-    const [id] = useState(fieldData?fieldData.id:'')
-    const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
-    const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
-    const [type] = useState(fieldData?fieldData.type:dialogType)
-    const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
-    const [fieldLabel, setFieldLabel] = useState(fieldData?fieldData.label:'')
-    const [fieldValue, setFieldValue] = useState(fieldData?fieldData.value:'')
-    const [options, setOptions] = useState(fieldData?fieldData.options:[{id: uuidv4(),label:'',value:''}])
-    const [fieldDescription, setFieldDescription] = useState(fieldData?fieldData.description:'')
-    const [tooltip, setTooltip] = useState(fieldData?fieldData.tooltip:'')
-    const [isRequired, setIsRequired] = useState(fieldData?fieldData.required:false)
-    const [conditional, setConditional] = useState(fieldData?fieldData.conditional:null)
-    const [logic, setLogic] = useState(null)
-    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency.id:null)
-    const [when, setWhen] = useState(fieldData?fieldData.conditional.when:'')
-    const [value, setValue] = useState(fieldData?fieldData.conditional.value:'')
-
-    const handleLabel = e => setFieldLabel(e.target.value);
-
-    const addOption = () => {
-        let optionId = uuidv4()
-        let data = {
-            'id': optionId,
-            'label': '',
-            'value': ''
-        }
-        setOptions(options => [...options, data])
-    }
-
-    const handleDescription = (event) => {
-        setFieldDescription(event.target.value);
-    };
-
-    const handleTooltip = (e) => {
-        setTooltip(e.target.value)
-    }
-
-    const handleIsRequired = (e) => {
-        setIsRequired(!isRequired)
-    }
-
-    const handleDependency = (e) => {
-        setDependency(getDependantField(e.target.value))
-    }
-
-    const displayPanel = (e) => {
-        setPanelType("display")
-    }
-
-    const conditionalPanel = (e) => {
-        setPanelType("conditional")
-    }
-
-    // To be used later
-    const logicPanel = (e) => {
-        setPanelType("logic")
-    }
-
-    const dependencyPanel = (e) => {
-        setPanelType("dependency")
-
-    }
-
-    const handleWhen = (e) => {
-        setWhen(e.target.value)
-    }
-
-    const handleValue = (e) => {
-        setValue(e.target.value)
-    }
-
-    const checkOptionsLabels = () => {
-        options.map((option) => {
-            if(option.label==='') return false
-        })
-        return true
-    }
-
-    const removeConditional = () => {
-        setWhen(conditional?conditional.when:'')
-        setValue(conditional?conditional.value:'')
-    }
-
-    const conditionalData = conditionalLogic({ when: when, value: value });
-
-    const getDependantField = (fieldId) => {
-        try {
-            let field = getSectionsSubSections(parentId, componentsData).find(field=>field.id===fieldId)
-            if(field) return { type: field.type, id: field.id }
-
-        } catch (err) {
-            return null
-        }
-    }
-
-    const addField = () => {
-
-        let optionsLabels = checkOptionsLabels()
-
-        let newFieldObj = {
-            id: uuidv4(),
-            parentId: sectionId,
-            subParentId: subSectionId,
-            type: type,
-            display: conditionalData?'hidden':display,
-            label: fieldLabel,
-            value: fieldValue,
-            description: fieldDescription,
-            tooltip: tooltip,
-            required: isRequired,
-            conditional: conditionalData,
-            logic: logic,
-            dependency: dependantId?dependantId:null,
-        }
-
-        if(sectionId&&fieldLabel!==''&&optionsLabels) {
-            addComponentToSection(newFieldObj)
-            setError(false)
-            setErrorTag(false)
-            setPanelType('display')
-            setFieldLabel('')
-            setFieldDescription('')
-            setTooltip('')
-            setIsRequired(false)
-            setDependency(null)
-            setConditional(null)
-            removeConditional()
-            handleClose()
-        } else {
-            setError(true)
-            
-            if(fieldLabel==='')setErrorTag('Label')
-
-            if(!labelStatus)setErrorTag('Options Label')
-        }
-    }
-
-    const updateField = () => {
-
-        let selectOptions = optionsLabelStatus()
-
-        let textFieldData = {
-            id: id,
-            parentId: parentId,
-            subParentId: subParentId,
-            type: type,
-            display: conditionalData?'hidden':display,
-            label: fieldLabel,
-            value: fieldValue,
-            description: fieldDescription,
-            tooltip: tooltip,
-            required: isRequired,
-            dependency: dependency,
-            conditional: conditionalData,
-        }
-
-        updateFieldInSection(textFieldData)
-        handleClose()
-
-    }
-
-    const cancel = () => {
-        setError(false)
-        setErrorTag(false)
-        setPanelType('display')
-        setFieldLabel(fieldData?fieldData.label:'')
-        setFieldValue(fieldData?fieldData.value:'')
-        setFieldDescription(fieldData?fieldData.description:'')
-        setTooltip(fieldData?fieldData.tooltip:'')
-        setIsRequired(!isRequired)
-        setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
-        removeConditional()
-        handleClose()
-    };
+    const {
+        fieldData,
+        open,
+        handleClose,
+        fieldTitle,
+        errorTag,
+        mode,
+        displayMode,
+        conditionalMode,
+        dependencyMode,
+        calculateMode,
+        when,
+        handleWhen,
+        value,
+        handleValue,
+        removeConditional,
+        fieldValue,
+        handleFieldValue,
+        dependency,
+        handleDependency,
+        removeDependency,
+        fieldLabel,
+        handleLabel,
+        fieldDescription,
+        handleDescription,
+        tooltip,
+        handleTooltip,
+        isRequired,
+        handleIsRequired,
+        cancel,
+        addField,
+        updateField,
+    } = props;
 
     const mainClass = dialogStyles();
     const modeBtnClass = modeBtnStyles();
-
-    const DialogModes = () => {
-
-        return (
-            <ButtonGroup
-                variant="outlined"
-                size='small'
-                aria-label="outlined button group"
-            >
-                <Button
-                    variant={panelType==="display"?"contained":"outlined"}
-                    onClick={displayPanel}
-                    className={modeBtnClass.startBtn}
-                >Display</Button>
-                <Button
-                    variant={panelType==="conditional"?"contained":"outlined"}
-                    onClick={conditionalPanel}
-                >Conditional</Button>
-                <Button
-                    disabled
-                    variant={panelType==="logic"?"contained":"outlined"}
-                    onClick={logicPanel}
-                >Logic</Button>
-                <Button
-                    disabled={dialogType==='number'?true:false}
-                    variant={panelType == "dependency" ? "contained" : "outlined"}
-                    onClick={dependencyPanel}
-                    className={modeBtnClass.endBtn}
-                >Dependency</Button>
-            </ButtonGroup>            
-        )
-    }
 
     return (
         <Dialog
@@ -284,7 +101,7 @@ const FieldDialog = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Text Field Component
+                {fieldTitle}
                 <CancelIcon
                     color='error'
                     style={{ float: 'right', cursor: 'pointer' }}
@@ -300,6 +117,8 @@ const FieldDialog = (props) => {
                         style={{ padding: '20px' }}
                     >
                         <FieldError errorTag={errorTag}/>
+
+                        {/* DIALOG MODE BUTTONS */}
                         <Box
                             sx={{
                                 display: 'flex',
@@ -310,13 +129,41 @@ const FieldDialog = (props) => {
                                 },
                             }}
                         >
-                            {DialogModes()}
+                            <ButtonGroup
+                                variant="outlined"
+                                size='small'
+                                aria-label="outlined button group"
+                            >
+                                <Button
+                                    variant={mode==="display"?"contained":"outlined"}
+                                    onClick={displayMode}
+                                    style={{ borderRadius: '8px 0px 0px 0px' }}
+                                >Display</Button>
+                                <Button
+                                    disabled={conditionalMode?false:true}
+                                    variant={mode==="conditional"?"contained":"outlined"}
+                                    onClick={conditionalMode?conditionalMode:''}
+                                >Conditional</Button>
+                                <Button
+                                    disabled={dependencyMode?false:true}
+                                    variant={mode==="logic"?"contained":"outlined"}
+                                    onClick={dependencyMode?dependencyMode:''}
+                                >Dependency</Button>
+                                <Button
+                                    disabled={calculateMode?false:true}
+                                    variant={mode==="logic"?"contained":"outlined"}
+                                    onClick={calculateMode?calculateMode:''}
+                                    style={{ borderRadius: '0px 8px 0px 0px' }}
+                                >Calculator</Button>
+                            </ButtonGroup> 
                         </Box>
+
+                        {/* DIALOG MODES */}
                         <Box
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {panelType==='conditional'?
+                            {mode==='conditional'? // CONDITION MODE
                                 <>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:
@@ -347,8 +194,21 @@ const FieldDialog = (props) => {
                                         value={value}
                                         onChange={handleValue}
                                     />
+                                    <Typography
+                                        style={{ paddingTop: '10px' }}
+                                    >
+                                        <Button
+                                            disabled={when&&value?false:true}
+                                            variant='outlined'
+                                            size='small'
+                                            color='error'
+                                            onClick={removeConditional}
+                                        >
+                                            Remove Conditional
+                                        </Button>
+                                    </Typography>
                                 </>
-                            :panelType==="dependency"?
+                            :mode==="dependency"? // DEPENDENCY MODE
                                 <>
                                     <Typography
                                         style={{ fontSize: '15px', color: '#5048E5' }}
@@ -363,7 +223,7 @@ const FieldDialog = (props) => {
                                         size={'small'}
                                         onChange={handleDependency}
                                     >
-                                        {getSectionsSubSections(sectionId, componentsData).map((option, index) => (
+                                        {getSectionsSubSections(fieldData, componentsData).map((option, index) => (
                                             <MenuItem
                                                 key={index}
                                                 value={option.id}
@@ -372,8 +232,56 @@ const FieldDialog = (props) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    <Typography
+                                        style={{ paddingTop: '10px' }}
+                                    >
+                                        <Button
+                                            disabled={dependency?false:true}
+                                            variant='outlined'
+                                            size='small'
+                                            color='error'
+                                            onClick={removeDependency}
+                                        >
+                                            Remove Dependency
+                                        </Button>
+                                    </Typography>
+                                </>
+                            :mode==="calculate"? // CALCULATION MODE [ for calculated fields ]
+                                <>
+                                    <Typography
+                                        style={{ fontSize: '15px', color: '#5048E5' }}
+                                    >
+                                        Field Value Operation:
+                                    </Typography>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={'Addition'}
+                                        fullWidth
+                                        size={'small'}
+                                    >
+                                        {/* {getSectionsSubSections(sectionId, componentsData).map((option, index) => ( */}
+                                            <MenuItem
+                                                key={index}
+                                                value={'Addition'}
+                                            >Addition [ + ]</MenuItem>
+                                            <MenuItem
+                                                key={index}
+                                                value={'Subtraction'}
+                                            >Subtraction [ - ]</MenuItem>
+                                            <MenuItem
+                                                key={index}
+                                                value={'Multiplication'}
+                                            >Multiplication [ x ]</MenuItem>
+                                            <MenuItem
+                                                key={index}
+                                                value={'Division'}
+                                            >Division [ / ]</MenuItem>
+                                        {/* ))} */}
+                                    </Select>
                                 </>  
                             :
+                            // DISPLAY MODE [ this is the default mode where a field is defined ]
                                 <>
                                     <TextField
                                         autoFocus
@@ -400,7 +308,6 @@ const FieldDialog = (props) => {
                                         onChange={handleDescription}
                                     />
                                     <TextField
-                                        autoFocus
                                         margin="dense"
                                         id="tooltip"
                                         label="Tooltip (Optional)"
@@ -416,18 +323,45 @@ const FieldDialog = (props) => {
                                             size={'small'}
                                             checked={isRequired}
                                             onChange={handleIsRequired}
-                                        />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        />Required<FieldTooltip tooltip={fieldData.tooltip} />
                                     </Typography>
                                 </>
                             }
                         </Box>
                     </Grid>
-                    <FieldPreview
-                        fieldLabel={fieldLabel}
-                        fieldDescription={fieldDescription}
-                        tooltip={tooltip}
-                        isRequired={isRequired}
-                    />
+
+                    {/* FIELD PREVIEW */}
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        style={{ padding: '30px 20px' }}
+                    >
+                        <Typography
+                            style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }}
+                            size='small'
+                        >
+                            <strong>Preview</strong>
+                        </Typography>
+                        <Box
+                            component="form"
+                            style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
+                        >
+                        <TextField
+                            required={isRequired}
+                            fullWidth
+                            variant="outlined"
+                            type={'text'}
+                            label={fieldLabel}
+                            value={fieldValue}
+                            onChange={handleFieldValue}
+                            helperText={<DescriptionCard description={fieldDescription} helperText={true} />}
+                            InputProps={{
+                                endAdornment: <FieldTooltip tooltip={tooltip}/>
+                            }}
+                        />
+                        </Box>
+                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>

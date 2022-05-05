@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
 import formStyles from './styles/FormStyles';
 import {
@@ -6,35 +7,27 @@ import {
     Button,
     Grid,
     Stack,
-    Box,
+    Chip,
     AccordionSummary,
     AccordionDetails,
     TextField,
     Typography
 } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import CircularProgress from '@mui/material/CircularProgress';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PreviewRoundedIcon from '@mui/icons-material/PreviewRounded';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 import { FormContext } from './context';
 
-
-const Item = styled(Paper)(({ theme }) => ({
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}))
-
-
 const FormHeader = () => {
+
+    const router = useRouter()
 
     const {
         isLoaded,
         getFormData,
-        sectionCreated,
         formData,
         setFormData,
         updateFormData,
@@ -58,25 +51,6 @@ const FormHeader = () => {
         setFormData(newForm)
         updateFormData()
     }
-
-    const handleClose = () => {
-        // Dialog box closing method
-        setOpen(false)
-        setSectionDialog(false)
-        setSubSectionDialog(false)
-        setTextFieldDialog(false)
-        setTextAreaFieldDialog(false)
-        setNumberFieldDialog(false)
-        setSelectBoxDialog(false)
-        setSelectDialog(false)
-        setSelectRadioDialog(false)
-        setEmailFieldDialog(false)
-        setPhoneFieldDialog(false)
-        setImageDialog(false)
-        setDateDialog(false)
-        setLocationDialog(false)
-        setAreaMappingDialog(false)
-    };
 
     const FormHeaderLoad = () => {
 
@@ -111,7 +85,19 @@ const FormHeader = () => {
             <Grid
                 container
                 className={classes.formHeaderPanel}
-            >
+            >                
+                <Typography
+                    className={classes.formHeader}
+                >
+                    <Chip
+                        icon={<ArrowBackIcon />}
+                        size="small"
+                        label="Back"
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => router.back()}
+                    />
+                </Typography>
                 <Typography
                     gutterBottom
                     color={"primary"}
