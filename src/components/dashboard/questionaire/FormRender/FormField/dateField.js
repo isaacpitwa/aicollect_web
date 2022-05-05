@@ -16,10 +16,9 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { FormContext } from '../../context';
 import DateField from '../../dialogs/DateField';
 import {
-    DescriptionCard,
     FieldTooltip,
+    DescriptionCard,
 } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
 
 /**
  * @function DatefieldComp
@@ -31,99 +30,82 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
  */
 const DatefieldComp = (props) => {
 
-    const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);
+    const {
+        setError,
+        editStatus,
+        setSelectSection,
+        setSectionId,
+        setSubSectionId,
+        conditionalDisplay,
+        deleteFieldData,
+    } = useContext(FormContext);
 
-    const { fieldKey, fieldData, fieldResponses } = props;
+    const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [dateValue, setDateValue] = useState(fieldData.value?fieldData.value:new Date().toLocaleDateString());
+    const [fieldValue, setFieldValue] = useState(fieldData.value?fieldData.value:new Date().toLocaleDateString());
     const [dateFieldDialog, setDateFieldDialog] = useState(false);
-    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
 
-    useEffect(() => {
-    }, [fieldResponses])
-
-    const handleFieldValue = (e) => {
-        setDateValue(e.target.value)
-    }
-
-    const handleTextField = () => {
+    const handleDateField = () => {
+        setError(false)
+        setSelectSection(true)
+        setSectionId(fieldData.parentId)
+        setSubSectionId(fieldData.subParentId)
         setDateFieldDialog(true)
-    }
+    };
 
-    const handleDateValue = (e) => {
-
-    }
-
-    const createTextField = () => {
-        setDateFieldDialog(false)
+    const deleteField = () => {
+        deleteFieldData(fieldData)
     }
 
     const handleClose = () => {
         setDateFieldDialog(false)
     }
 
-    const deleteField = () => {
-        deleteFieldData(fieldData)
-    }
-
     const classes = formStyles();
     const smallBtn = smallBtns();
 
+    const fieldStyle = () => {
+        return editStatus?classes.section:classes.section2
+    };
 
-    return (
-        dependantField&&dependantField.value===fieldData.conditional.value&&!editStatus?
+    const fieldDisplay = () => {
+        return (
             <Grid
-                key={fieldKey}
-                style={{ display: 'block' }}
-                container
-                className={classes.section2}
-            >
-				<LocalizationProvider dateAdapter={AdapterDateFns}>
-					<DesktopDatePicker
-						label={fieldData.label}
-						value={dateValue}
-						onChange={(newValue) => {
-							setDateValue(newValue);
-						}}
-						renderInput={(params) => <TextField {...params} fullWidth/>}
-					/>
-				</LocalizationProvider>
-            </Grid>
-        :
-            <Grid
-                key={fieldKey}
-                style={{ display: 'block' }}
                 container
                 onMouseOver={() => { setDisplay('visible') }}
                 onMouseOut={() => { setDisplay('hidden') }}
-                className={classes.section}
+                className={fieldStyle()}
+                style={{ display: 'block' }}
             >
-                <DateField
-                    open={dateFieldDialog}
-                    fieldData={fieldData} handleClose={handleClose}
-                />
-                <Typography
-                    className={smallBtn.fieldBtns}
-                    style={{ visibility: display }}
-                    align={'right'}
-                >
-                    <EditIcon
-                        onClick={handleTextField}
-                        className={smallBtn.editBtn}
-                    />
-                    <HighlightOffIcon
-                        onClick={deleteField}
-                        className={smallBtn.deleteBtn}
-                    />
-                </Typography>
+                {editStatus?
+                    <Typography
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
+                        align={'right'}
+                    >
+                        <DateField
+                            open={dateFieldDialog}
+                            fieldData={fieldData}
+                            handleClose={handleClose}
+                        />
+                        <EditIcon
+                            onClick={handleDateField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                : ""}
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
 					<DesktopDatePicker
 						label={fieldData.label}
-						value={dateValue}
+						value={fieldValue}
                         helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
 						onChange={(newValue) => {
-							setDateValue(newValue);
+							setFieldValue(newValue);
 						}}
 						renderInput={(params) => <TextField {...params} fullWidth/>}
                         InputProps={{
@@ -132,6 +114,15 @@ const DatefieldComp = (props) => {
 					/>
 				</LocalizationProvider>
             </Grid>
+        )
+    }
+
+    return (
+        !fieldData.display||fieldData.display==='visible'||conditionalDisplay(fieldData)?
+            fieldDisplay()
+        : fieldData.display==='hidden'&&editStatus?
+            fieldDisplay()
+        : ""
     )
 }
 

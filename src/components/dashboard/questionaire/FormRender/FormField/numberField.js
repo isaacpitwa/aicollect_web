@@ -127,7 +127,7 @@ const NumberFieldComp = (props) => {
     }
 
     return (
-        fieldData.display==='visible'||conditionalDisplay(fieldData)?
+        !fieldData.display||fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
             fieldDisplay()

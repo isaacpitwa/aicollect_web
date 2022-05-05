@@ -14,7 +14,6 @@ import {
     DescriptionCard,
     FieldTooltip,
 } from '../../utils';
-import GeneralTooltip from '../../previews/GeneralTooltip';
 import FormField from '.';
 
 /**

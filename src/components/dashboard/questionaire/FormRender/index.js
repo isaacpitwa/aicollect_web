@@ -12,7 +12,7 @@ import {
     FormBuildHelp,
 } from '../utils';
 import { FormContext } from '../context'
-import FormField from './FormField'
+import SectionField from './FormField/sectionField'
 
 const FormRender = () => {
 
@@ -36,7 +36,7 @@ const FormRender = () => {
     
                 >
                     {componentsData.map((fieldData, index) => (
-                        <FormField key={index} fieldData={fieldData}/>
+                        <SectionField key={index} fieldData={fieldData}/>
                     ))}
                     {componentsData.length===0?
                         <FormBuildHelp/>
