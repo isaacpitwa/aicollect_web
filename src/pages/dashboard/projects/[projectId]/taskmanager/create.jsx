@@ -276,11 +276,17 @@ const CreateTask = () => {
     try {
       // Make call to task creation API
       // let questLst = [];
-
+      const formattedTeam = [];
+      team.forEach((user) => {
+        delete user.createdBy;
+        delete user.createdAt;
+        formattedTeam.push(user);
+      })
+      console.log("formated team", formattedTeam);
       const task = {
         ...taskInformation,
         questionaire: questionaires.map((item) => item._id),
-        team,
+        team: formattedTeam,
         schedule,
         project: projectId,
         createdBy: {
@@ -436,7 +442,7 @@ const CreateTask = () => {
                               <Grid item md={12} mt={3} sm={12}>
                                 <FormControl fullWidth>
                                   <InputLabel id="select-team">Select Team</InputLabel>
-                                  {/* <Select
+                                  <Select
                                     labelId="select-team"
                                     id="select-team"
                                     multiple
@@ -469,45 +475,8 @@ const CreateTask = () => {
                                         {member.name}
                                       </MenuItem>
                                     ))}
-                                  </Select> */}
-                                  <TextField
-                                    id="select-team"
-                                    multiple
-                                    value={team}
-                                    onChange={handleChangeTeam}
-                                    SelectProps={{
-                                      renderValue: (selected) => {
-                                        console.log('selected', selected)
-                                        const users = selected.spit(',');
-                                        return (
-                                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                          {users.map((value, idx) => (
-                                            <Chip
-                                              key={idx}
-                                              label={value.name}
-                                              onDelete={() => {
-                                                console.log('clicked me');
-                                                // setTeam((prevState) => prevState.filter((item) => item.name !== value.name))
-                                              }}
-                                             />
-                                          ))}
-                                        </Box>
-                                        )
-                                      }
-                                    }}
-                                    select
-                                    >
-                                    {projectMembers.map((member, idx) => (
-                                      <MenuItem
-                                        key={idx}
-                                        value={member}
-                                        
-                                        style={getStyles(member, questionaires, theme)}
-                                      >
-                                        {member.name}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
+                                  </Select>
+                                 
                                 </FormControl>
                               </Grid>
                             </Grid>

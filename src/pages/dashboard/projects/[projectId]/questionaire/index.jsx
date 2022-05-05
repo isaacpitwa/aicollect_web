@@ -261,7 +261,8 @@ const QuestionaireList = () => {
       } else {
         clientId = user.clientId;
       }
-      const data = await FormsApi.getModuleForms(projectId, clientId, module);
+      const currentModule = router.query.module;
+      const data = await FormsApi.getModuleForms(projectId, clientId, currentModule);
       if (isMounted() && data) {
         if (data.status === 200) {
           toast.success('Questionaires have been retrieved', { duration: 5000 });
