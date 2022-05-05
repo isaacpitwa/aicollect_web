@@ -27,21 +27,24 @@ const SelectFieldComp = (props) => {
 
     const {
         setError,
-        editStatus,
-        componentsData,
         setSelectSection,
         setSectionId,
         setSubSectionId,
-        conditionalDisplay,
+        editStatus,
         setConditionalId,
         setConditionalValue,
-        deleteFieldData,
+        conditionalDisplay,
+        formFieldValues,
+        setFormFieldValues,
+        deleteFieldData
     } = useContext(FormContext);
 
     const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [selectValue, setSelectValue] = useState('')
+    const [selectValue, setSelectValue] = useState(fieldData.value)
+    const [field] = useState(formFieldValues.find(field=>field.id===fieldData.id))
+    const [fieldIndex] = useState(formFieldValues.findIndex(field=>field.id===fieldData.id))
     const [selectDialog, setSelectDialog] = useState(false)
 
     const handleSelectField = () => {
@@ -56,6 +59,15 @@ const SelectFieldComp = (props) => {
         setConditionalId(fieldData.id);
         setConditionalValue(e.target.value.toLowerCase());
         setSelectValue(e.target.value);
+        updateFieldValue(e.target.value.toLowerCase());
+    }
+
+    const updateFieldValue = (value) => {
+        let fields = formFieldValues;
+        let thisField = field;
+        thisField.value = value;
+        fields[fieldIndex] = thisField;
+        setFormFieldValues(fields);
     }
 
     const deleteField = () => {

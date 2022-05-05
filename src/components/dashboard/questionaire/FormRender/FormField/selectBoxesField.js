@@ -146,7 +146,7 @@ const SelectBoxesField = (props) => {
             fieldDisplay()
         : fieldData.display==='hidden'&&editStatus?
             fieldDisplay()
-        : resetValues()
+        : ""
     )
 }
 

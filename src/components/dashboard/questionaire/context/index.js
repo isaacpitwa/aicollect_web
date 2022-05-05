@@ -53,7 +53,6 @@ const FormProvider = (props) => {
             let data = await FormsApi.getFormDetails(questionaireId);
             if (data) {
                 getFormDetails(data);
-                console.log('FORM DATA: \n', data);
             }
         } catch (error) {
             console.log('DEBUG error --> \n', error);
