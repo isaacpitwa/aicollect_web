@@ -26,7 +26,8 @@ import {
     TableHead,
     TableBody,
     TableRow,
-    TableCell
+    TableCell,
+    FormControlLabel
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -360,7 +361,7 @@ const SelectBoxField = (props) => {
                                                                 label='Default Value'
                                                                 checked={row.checked}
                                                                 onChange={(e) => {
-                                                                    row.checked = !row.checked;
+                                                                    row.checked = e.target.value;
                                                                     setValues([...values]);
                                                                 }}
                                                                 inputProps={{

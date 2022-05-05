@@ -45,8 +45,8 @@ const RadioField = (props) => {
 
     const [display, setDisplay] = useState('hidden');
     const [radioValue, setRadioValue] = useState(fieldData.value)
-    const [field, setField] = useState(formFieldValues.find(field=>field.id===fieldData.id))
-    const [fieldIndex, setFieldIndex] = useState(formFieldValues.findIndex(field=>field.id===fieldData.id))
+    const [field] = useState(formFieldValues.find(field=>field.id===fieldData.id))
+    const [fieldIndex] = useState(formFieldValues.findIndex(field=>field.id===fieldData.id))
     const [selectRadioDialog, setSelectRadioDialog] = useState(false)
 
     const handleSelectRadioField = () => {
@@ -144,11 +144,9 @@ const RadioField = (props) => {
     }
 
     return (
-        !fieldData.display||fieldData.display==='visible'?
+        fieldData.display==='visible'||conditionalDisplay(fieldData)?
             fieldDisplay(fieldData.id)
         : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay(fieldData.id)
-        : conditionalDisplay(fieldData)?
             fieldDisplay(fieldData.id)
         : ""
     )
