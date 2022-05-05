@@ -62,7 +62,7 @@ const FormProvider = (props) => {
 
     useEffect(() => {
         getFormData();
-    }, []);
+    });
 
     /**
      * @function getFormDetails
