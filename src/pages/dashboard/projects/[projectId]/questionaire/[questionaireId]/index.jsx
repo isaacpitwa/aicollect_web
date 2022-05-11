@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router'
 import NextLink from 'next/link';
 import {
   Box,
@@ -23,7 +24,7 @@ import { QuestionaireDetailsTable } from '../../../../../../components/dashboard
 import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
-
+import {FormsApi} from '../../../../../../api/forms-api'
 const tabs = [
   {
     label: 'Summary',
@@ -125,6 +126,8 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
 const QuestionaireDetails = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
+  const router = useRouter()
+  const [responses, setResponses] = useState([]);
   const [customers, setCustomers] = useState([
     {
       id: 1,
@@ -168,6 +171,15 @@ const QuestionaireDetails = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   //   []);
 
+  const fetchFormResponses = async ()=>{
+    const { questionaireId} = router.query
+    const apiReponses = await FormsApi.getFormResponses(questionaireId);
+    setResponses(apiReponses);
+  }
+
+  useEffect(() => {
+    fetchFormResponses()
+    },[])
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
       ...filters,
@@ -213,7 +225,7 @@ const QuestionaireDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Questionaire
+          Dashboard: Questionaire Repsonses
         </title>
       </Head>
       <Box
