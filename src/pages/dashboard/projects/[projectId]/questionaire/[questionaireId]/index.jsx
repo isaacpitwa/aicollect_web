@@ -232,7 +232,7 @@ const QuestionaireDetails = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Project XYZD
+                  Project XYZ Reponses
                 </Typography>
               </Grid>
               
@@ -319,7 +319,7 @@ const QuestionaireDetails = () => {
                   </option>
                 ))}
               </TextField>
-            </Box>
+            </Box>  
             <QuestionaireDetailsTable
               customers={paginatedCustomers}
               customersCount={filteredCustomers.length}
