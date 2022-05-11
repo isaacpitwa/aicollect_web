@@ -339,6 +339,7 @@ const QuestionaireDetails = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
               page={page}
+              responses = {responses}
             />
           </Card>
         </Container>
