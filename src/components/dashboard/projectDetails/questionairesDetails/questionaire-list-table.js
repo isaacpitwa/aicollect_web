@@ -120,19 +120,30 @@ const columns = [
       // loop through formfields
       for (let j = 0; j < response.answers[i].components.length; j++) {
         const formField = response.answers[i].components[j];
-        if (formField.type === 'sub-section') {
+        if (formField.type === 'sub-section' && formField.dependency === null) {
           if (formField.components) {
             //  loop through sub-section Formfields
             for (let k = 0; k < formField.components.length; k++) {
               const subsectionFormField = formField.components[k];
-              formattedResponse = { ...formattedResponse, [ formField.label+subsectionFormField.label]: subsectionFormField.value }
-            }
+              if (subsectionFormField.type === 'select-box'){
+                console.log('Logging Select box values');
+                console.log(subsectionFormField.values);
+                formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
+              } else{
+              formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.value }
+               } }
           }
-        } else {
+        }  else if (formField.type === 'select-box'){
+          console.log('Logging Select box values');
+          console.log(formField.values);
+          formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
+        }
+        else {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
         }
       }
     }
+
     return formattedResponse;
   }
 
@@ -140,22 +151,25 @@ const columns = [
     let currentcolumns = [...columns,];
     // Loop sections
     if (responses.length) {
-      const response = responses[0]
+      const response = responses[responses.length -1]
       for (let i = 0; i < response.answers.length; i++) {
         // loop through formfields
         for (let j = 0; j < response.answers[i].components.length; j++) {
           const formField = response.answers[i].components[j];
+
           if (formField.type === 'sub-section') {
-            //  loop through sub-section Formfields
-            if (formField.components) {
+            if (formField.components && formField.dependency === null) {
+              //  loop through sub-section Formfields
               for (let k = 0; k < formField.components.length; k++) {
                 const subsectionFormField = formField.components[k];
-                currentcolumns = [...currentcolumns, { field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
+                currentcolumns = [...currentcolumns, { field:`${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
               }
             }
           } else {
             currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150 }]
+
           }
+
         }
       }
     }
@@ -170,7 +184,12 @@ const columns = [
   //  setTableColumns(getColumns());
   const formattedResponses = responses.map((response) => ({ ...formatResponse(response) }));
   const [tableColumns, setTableColumns] = useState(getColumns());
+  console.log("Logging- Responses")
   console.log(formattedResponses);
+
+
+  console.log("Logging- Columns")
+  console.log(tableColumns);
 
   return (
     <div {...other}>
@@ -236,5 +255,3 @@ const reverseGeocode = async (lat, lon) => {
   const JSONres = await res.json()
   return JSONres.results[0].formatted_address;
 }
-
-
