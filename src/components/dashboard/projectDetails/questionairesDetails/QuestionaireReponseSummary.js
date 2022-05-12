@@ -5,12 +5,11 @@ import { Box, Button, Checkbox, IconButton, responsiveFontSizes } from "@mui/mat
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
 
-export const QuestionaireDetailsTable = (props) => {
+export const QuestionaireResponseSummaryTable = (props) => {
   const {
     customers,
     customersCount,
@@ -82,9 +81,9 @@ const columns = [
       if (selectedCustomers.length) {
         setSelectedCustomers([]);
       }
-      if (responses.length) {
-        setTableColumns(getColumns());
-      }
+    //   if (responses.length) {
+    //     setTableColumns(columns);
+    //   }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customers]
@@ -136,32 +135,6 @@ const columns = [
     return formattedResponse;
   }
 
-  const getColumns = () => {
-    let currentcolumns = [...columns,];
-    // Loop sections
-    if (responses.length) {
-      const response = responses[0]
-      for (let i = 0; i < response.answers.length; i++) {
-        // loop through formfields
-        for (let j = 0; j < response.answers[i].components.length; j++) {
-          const formField = response.answers[i].components[j];
-          if (formField.type === 'sub-section') {
-            //  loop through sub-section Formfields
-            if (formField.components) {
-              for (let k = 0; k < formField.components.length; k++) {
-                const subsectionFormField = formField.components[k];
-                currentcolumns = [...currentcolumns, { field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
-              }
-            }
-          } else {
-            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150 }]
-          }
-        }
-      }
-    }
-
-    return currentcolumns;
-  }
 
   const enableBulkActions = selectedCustomers.length > 0;
   const selectedSomeCustomers =
@@ -169,7 +142,7 @@ const columns = [
   const selectedAllCustomers = selectedCustomers.length === customers.length;
   //  setTableColumns(getColumns());
   const formattedResponses = responses.map((response) => ({ ...formatResponse(response) }));
-  const [tableColumns, setTableColumns] = useState(getColumns());
+  const [tableColumns, setTableColumns] = useState(columns);
   console.log(formattedResponses);
 
   return (
@@ -213,7 +186,7 @@ const columns = [
   );
 };
 
-QuestionaireDetailsTable.propTypes = {
+QuestionaireResponseSummaryTable.propTypes = {
   customers: PropTypes.array.isRequired,
   customersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,

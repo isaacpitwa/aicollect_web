@@ -14,13 +14,16 @@ import {
   Tabs,
   TextField,
   Typography,
+  
 } from '@mui/material';
+import { TabPanel, TabContext } from '@mui/lab';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 // import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 // import { Auth } from '../../../../../../../../components/authentication/auth-guard';
 import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireDetailsTable } from '../../../../../../components/dashboard/projectDetails/questionairesDetails/questionaire-list-table';
+import {QuestionaireResponseSummaryTable} from '../../../../../../components/dashboard/projectDetails/questionairesDetails/QuestionaireReponseSummary';
 import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
@@ -28,11 +31,11 @@ import {FormsApi} from '../../../../../../api/forms-api'
 const tabs = [
   {
     label: 'Summary',
-    value: 'all'
+    value: 'summary'
   },
   {
     label: 'Overview',
-    value: 'hasAcceptedMarketing'
+    value: 'all'
   }
 ];
 
@@ -138,7 +141,7 @@ const QuestionaireDetails = () => {
       status: "active",
     }
   ]);
-  const [currentTab, setCurrentTab] = useState('all');
+  const [currentTab, setCurrentTab] = useState('summary');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
@@ -255,6 +258,7 @@ const QuestionaireDetails = () => {
           
 
           <Card>
+          <TabContext value={currentTab}>
             <Tabs
               indicatorColor="primary"
               onChange={handleTabsChange}
@@ -332,6 +336,18 @@ const QuestionaireDetails = () => {
                 ))}
               </TextField>
             </Box>  
+            <TabPanel value='summary' index={0}>
+            <QuestionaireResponseSummaryTable
+              customers={paginatedCustomers}
+              customersCount={filteredCustomers.length}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              responses = {responses}
+            />
+            </TabPanel>
+            <TabPanel value='all' index={1}>
             <QuestionaireDetailsTable
               customers={paginatedCustomers}
               customersCount={filteredCustomers.length}
@@ -341,6 +357,8 @@ const QuestionaireDetails = () => {
               page={page}
               responses = {responses}
             />
+            </TabPanel>
+            </TabContext>
           </Card>
         </Container>
       </Box>
