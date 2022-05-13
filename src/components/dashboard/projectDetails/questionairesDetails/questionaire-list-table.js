@@ -129,7 +129,11 @@ const columns = [
                 console.log('Logging Select box values');
                 console.log(subsectionFormField.values);
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
-              } else{
+              } 
+              else if (subsectionFormField.type === 'date') {
+                formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
+              }
+              else{
               formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.value }
                } }
           }
@@ -137,6 +141,8 @@ const columns = [
           console.log('Logging Select box values');
           console.log(formField.values);
           formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
+        } else if (formField.type === 'date') {
+          formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
         }
         else {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
@@ -184,12 +190,6 @@ const columns = [
   //  setTableColumns(getColumns());
   const formattedResponses = responses.map((response) => ({ ...formatResponse(response) }));
   const [tableColumns, setTableColumns] = useState(getColumns());
-  console.log("Logging- Responses")
-  console.log(formattedResponses);
-
-
-  console.log("Logging- Columns")
-  console.log(tableColumns);
 
   return (
     <div {...other}>
@@ -214,9 +214,9 @@ const columns = [
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 800, width: "100%" }}>
         <DataGrid
-          rows={formattedResponses}
+          rows={formattedResponses.reverse()}
           columns={tableColumns}
           components={{
             Toolbar: GridToolbar,

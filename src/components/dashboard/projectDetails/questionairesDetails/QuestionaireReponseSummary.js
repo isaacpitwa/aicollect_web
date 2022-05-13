@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from 'next/link';
 import PropTypes from "prop-types";
 import { Box, Button, Checkbox, IconButton, responsiveFontSizes } from "@mui/material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -170,7 +169,7 @@ const columns = [
       {/* <Scrollbar> */}
       <div style={{ height: 500, width: "100%" }}>
         <DataGrid
-          rows={formattedResponses}
+          rows={formattedResponses.reverse()}
           columns={tableColumns}
           components={{
             Toolbar: GridToolbar,
