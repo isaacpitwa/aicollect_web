@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router'
 import NextLink from 'next/link';
 import {
   Box,
@@ -13,25 +14,28 @@ import {
   Tabs,
   TextField,
   Typography,
+  
 } from '@mui/material';
+import { TabPanel, TabContext } from '@mui/lab';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 // import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 // import { Auth } from '../../../../../../../../components/authentication/auth-guard';
 import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireDetailsTable } from '../../../../../../components/dashboard/projectDetails/questionairesDetails/questionaire-list-table';
+import {QuestionaireResponseSummaryTable} from '../../../../../../components/dashboard/projectDetails/questionairesDetails/QuestionaireReponseSummary';
 import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
-
+import {FormsApi} from '../../../../../../api/forms-api'
 const tabs = [
   {
     label: 'Summary',
-    value: 'all'
+    value: 'summary'
   },
   {
     label: 'Overview',
-    value: 'hasAcceptedMarketing'
+    value: 'all'
   }
 ];
 
@@ -125,6 +129,8 @@ const applyPagination = (customers, page, rowsPerPage) => customers.slice(page *
 const QuestionaireDetails = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
+  const router = useRouter()
+  const [responses, setResponses] = useState([]);
   const [customers, setCustomers] = useState([
     {
       id: 1,
@@ -135,7 +141,7 @@ const QuestionaireDetails = () => {
       status: "active",
     }
   ]);
-  const [currentTab, setCurrentTab] = useState('all');
+  const [currentTab, setCurrentTab] = useState('summary');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
@@ -168,6 +174,15 @@ const QuestionaireDetails = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   //   []);
 
+  const fetchFormResponses = async ()=>{
+    const { questionaireId} = router.query
+    const apiReponses = await FormsApi.getFormResponses(questionaireId);
+    setResponses(apiReponses);
+  }
+
+  useEffect(() => {
+    fetchFormResponses()
+    },[])
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
       ...filters,
@@ -213,7 +228,7 @@ const QuestionaireDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Questionaire
+          Dashboard: Questionaire Repsonses
         </title>
       </Head>
       <Box
@@ -232,7 +247,7 @@ const QuestionaireDetails = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Project XYZ
+                  Project XYZ Reponses
                 </Typography>
               </Grid>
               
@@ -243,6 +258,7 @@ const QuestionaireDetails = () => {
           
 
           <Card>
+          <TabContext value={currentTab}>
             <Tabs
               indicatorColor="primary"
               onChange={handleTabsChange}
@@ -319,7 +335,19 @@ const QuestionaireDetails = () => {
                   </option>
                 ))}
               </TextField>
-            </Box>
+            </Box>  
+            <TabPanel value='summary' index={0}>
+            <QuestionaireResponseSummaryTable
+              customers={paginatedCustomers}
+              customersCount={filteredCustomers.length}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              responses = {responses}
+            />
+            </TabPanel>
+            <TabPanel value='all' index={1}>
             <QuestionaireDetailsTable
               customers={paginatedCustomers}
               customersCount={filteredCustomers.length}
@@ -327,7 +355,10 @@ const QuestionaireDetails = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
               page={page}
+              responses = {responses}
             />
+            </TabPanel>
+            </TabContext>
           </Card>
         </Container>
       </Box>

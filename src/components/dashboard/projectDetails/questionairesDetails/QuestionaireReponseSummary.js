@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link } from 'next/link';
 import PropTypes from "prop-types";
 import { Box, Button, Checkbox, IconButton, responsiveFontSizes } from "@mui/material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
 
-export const QuestionaireDetailsTable = (props) => {
+export const QuestionaireResponseSummaryTable = (props) => {
   const {
     customers,
     customersCount,
@@ -82,9 +80,9 @@ const columns = [
       if (selectedCustomers.length) {
         setSelectedCustomers([]);
       }
-      if (responses.length) {
-        setTableColumns(getColumns());
-      }
+    //   if (responses.length) {
+    //     setTableColumns(columns);
+    //   }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customers]
@@ -120,68 +118,22 @@ const columns = [
       // loop through formfields
       for (let j = 0; j < response.answers[i].components.length; j++) {
         const formField = response.answers[i].components[j];
-        if (formField.type === 'sub-section' && formField.dependency === null) {
+        if (formField.type === 'sub-section') {
           if (formField.components) {
             //  loop through sub-section Formfields
             for (let k = 0; k < formField.components.length; k++) {
               const subsectionFormField = formField.components[k];
-              if (subsectionFormField.type === 'select-box'){
-                console.log('Logging Select box values');
-                console.log(subsectionFormField.values);
-                formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
-              } 
-              else if (subsectionFormField.type === 'date') {
-                formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
-              }
-              else{
-              formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.value }
-               } }
+              formattedResponse = { ...formattedResponse, [ formField.label+subsectionFormField.label]: subsectionFormField.value }
+            }
           }
-        }  else if (formField.type === 'select-box'){
-          console.log('Logging Select box values');
-          console.log(formField.values);
-          formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
-        } else if (formField.type === 'date') {
-          formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
-        }
-        else {
+        } else {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
         }
       }
     }
-
     return formattedResponse;
   }
 
-  const getColumns = () => {
-    let currentcolumns = [...columns,];
-    // Loop sections
-    if (responses.length) {
-      const response = responses[responses.length -1]
-      for (let i = 0; i < response.answers.length; i++) {
-        // loop through formfields
-        for (let j = 0; j < response.answers[i].components.length; j++) {
-          const formField = response.answers[i].components[j];
-
-          if (formField.type === 'sub-section') {
-            if (formField.components && formField.dependency === null) {
-              //  loop through sub-section Formfields
-              for (let k = 0; k < formField.components.length; k++) {
-                const subsectionFormField = formField.components[k];
-                currentcolumns = [...currentcolumns, { field:`${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
-              }
-            }
-          } else {
-            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150 }]
-
-          }
-
-        }
-      }
-    }
-
-    return currentcolumns;
-  }
 
   const enableBulkActions = selectedCustomers.length > 0;
   const selectedSomeCustomers =
@@ -189,7 +141,8 @@ const columns = [
   const selectedAllCustomers = selectedCustomers.length === customers.length;
   //  setTableColumns(getColumns());
   const formattedResponses = responses.map((response) => ({ ...formatResponse(response) }));
-  const [tableColumns, setTableColumns] = useState(getColumns());
+  const [tableColumns, setTableColumns] = useState(columns);
+  console.log(formattedResponses);
 
   return (
     <div {...other}>
@@ -214,7 +167,7 @@ const columns = [
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 800, width: "100%" }}>
+      <div style={{ height: 500, width: "100%" }}>
         <DataGrid
           rows={formattedResponses.reverse()}
           columns={tableColumns}
@@ -232,7 +185,7 @@ const columns = [
   );
 };
 
-QuestionaireDetailsTable.propTypes = {
+QuestionaireResponseSummaryTable.propTypes = {
   customers: PropTypes.array.isRequired,
   customersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
@@ -255,3 +208,5 @@ const reverseGeocode = async (lat, lon) => {
   const JSONres = await res.json()
   return JSONres.results[0].formatted_address;
 }
+
+
