@@ -44,8 +44,6 @@ const FormField = (props) => {
             return <DateField fieldData={fieldData} />
         case 'area-mapping':
             return <AreaMappingField fieldData={fieldData} />
-        default:
-            return <SectionField fieldData={fieldData} />
     }
 }
 

@@ -6,7 +6,10 @@ import {
     TextField
 } from '@mui/material'
 
-import GeneralTooltip from '../previews/GeneralTooltip'
+import {
+    FieldTooltip,
+    DescriptionCard,
+} from '../utils';
 
 /**
  * @function FieldPreview
@@ -44,18 +47,17 @@ const FieldPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
             <TextField
-                required={isRequired}
-                autoFocus
-                InputProps={{
-                  endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                }}
-                margin="dense"
-                id="label"
-                label={fieldLabel?fieldLabel:'Label'}
-                type="text"
-                size="small"
+                required={fieldData.required}
                 fullWidth
                 variant="outlined"
+                type={'text'}
+                label={fieldData.label}
+                value={fieldValue}
+                onChange={handleFieldValue}
+                helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                InputProps={{
+                    endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
+                }}
             />
                 {fieldDescription!=''?
                     <Typography

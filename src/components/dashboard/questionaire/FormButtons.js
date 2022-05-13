@@ -75,17 +75,11 @@ const FormButtons = () => {
 
     const {
         isLoaded,
-        getFormData,
         sectionCreated,
         formData,
-        setFormData,
-        updateFormData,
         formPreview,
-        handleFormPreview
     } = useContext(FormContext)
 
-    const [formName, setFormName] = useState(formData?formData.name:'')
-    const [open, setOpen] = useState(false)
     const [sectionDialog, setSectionDialog] = useState(false)
     const [subSectionDialog, setSubSectionDialog] = useState(false)
     const [textFieldDialog, setTextFieldDialog] = useState(false)
@@ -100,14 +94,6 @@ const FormButtons = () => {
     const [locationDialog, setLocationDialog] = useState(false)
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [dateDialog, setDateDialog] = useState(false)
-
-    useEffect(() => {
-        setFormName(formData.name)
-    }, [isLoaded])
-
-    const handleFormName = (e) => {
-        setFormName(e.target.value)
-    }
 
     const handleSection = () => {
         setSectionDialog(true)
@@ -290,16 +276,8 @@ const FormButtons = () => {
         },
     ]
 
-    const saveChanges = () => {
-        let newForm = formData
-        newForm.name = formName
-        setFormData(newForm)
-        updateFormData()
-    }
-
     const handleClose = () => {
         // Dialog box closing method
-        setOpen(false)
         setSectionDialog(false)
         setSubSectionDialog(false)
         setTextFieldDialog(false)

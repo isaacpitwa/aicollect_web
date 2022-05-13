@@ -7,7 +7,7 @@ import {
     TextField
 } from '@mui/material'
 
-import AreaMappingImg from '../../../../../public/static/form/area-mapping.jpg';
+import AreaMappingImg from '../../../../../public/static/form/areaMap1.jpg';
 import {
     DescriptionCard,
 } from '../utils';

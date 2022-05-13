@@ -13,7 +13,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
-import AreaMappingImg from '../../../../../../public/static/form/area-mapping.jpg';
+import AreaMappingImg from '../../../../../../public/static/form/areaMap1.jpg';
 
 /**
  * @function AreaMappingField

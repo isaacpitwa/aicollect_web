@@ -32,7 +32,7 @@ const Questionaire = () => {
                 container
                 spacing={2}
                 style={{
-                    paddingTop: '120px',
+                    paddingTop: '140px',
                 }}
             >
                 <FormButtons/>

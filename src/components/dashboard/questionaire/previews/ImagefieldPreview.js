@@ -38,7 +38,7 @@ const ImagefieldPreview = (props) => {
                 margin="dense"
                 id="label"
                 label={fieldLabel?fieldLabel:'Label'}
-                type="text"
+                type="file"
                 size="small"
                 fullWidth
                 variant="outlined"
