@@ -53,10 +53,11 @@ export const Profile = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         const base64Image = await fileToBase64(profileImage);
+        const base64CompanyImage = await fileToBase64(companyLogo);
         const profile = {
           ...values,
           profileImage: base64Image,
-          companyLogo,
+          companyLogo: base64CompanyImage,
           user: props.user.id
         }
         const data = await authenticationApi.createUserProfile(profile);
