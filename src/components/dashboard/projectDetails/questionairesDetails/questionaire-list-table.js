@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from 'next/link';
 import PropTypes from "prop-types";
 import { Box, Button, Checkbox, IconButton, responsiveFontSizes } from "@mui/material";
+import ButtonGroup from '@mui/material/ButtonGroup';
+
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -33,48 +35,48 @@ export const QuestionaireDetailsTable = (props) => {
     ],
   });
 
-const router = useRouter()
-const columns = [
-  {
-    field: "action",
-    headerName: "Action",
-    width: 80,
-    sortable: false,
-    renderCell: (params) => {
-      const onClick = (e) => {
-        e.stopPropagation(); // don't select this row after clicking
+  const router = useRouter()
+  const columns = [
+    {
+      field: "action",
+      headerName: "Action",
+      width: 80,
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
 
-        const api = params.api;
-        const thisRow = {};
+          const api = params.api;
+          const thisRow = {};
 
-        api
-          .getAllColumns()
-          .filter((c) => c.field !== "__check__" && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-          );
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
 
-        return alert(JSON.stringify(thisRow, null, 4));
-      };
+          return alert(JSON.stringify(thisRow, null, 4));
+        };
 
-      return (
-        <div style={{ display: 'flex', flexDirection: 'row', border: 0, margin: 0 }}>
-          <NextLink
-            href={`/dashboard/projects/${router.query.projectId}/questionaire/${router.query.questionaireId}/response/4`}
-            passHref
-          ><IconButton  component="a"><RemoveRedEyeIcon fontSize="small" /></IconButton></NextLink>
-          <IconButton onClick={onClick}><LocalPrintshopIcon fontSize="small" /></IconButton>
-        </div>
-      );
-    }
-  },
-  { field: "Submitted By", headName: "SubmittedBy", width: 150 },
-  { field: "Date Submitted", headName: "date", width: 150 },
-  { field: "Time Spent", headName: "timespent", width: 150 },
-  { field: "Latitude", headName: "Latitude", width: 150 },
-  { field: "Longitude", headName: "Longitude", width: 150 },
-  { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
-];
+        return (
+          <div style={{ display: 'flex', flexDirection: 'row', border: 0, margin: 0 }}>
+            <NextLink
+              href={`/dashboard/projects/${router.query.projectId}/questionaire/${router.query.questionaireId}/response/4`}
+              passHref
+            ><IconButton component="a"><RemoveRedEyeIcon fontSize="small" /></IconButton></NextLink>
+            <IconButton onClick={onClick}><LocalPrintshopIcon fontSize="small" /></IconButton>
+          </div>
+        );
+      }
+    },
+    { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+    { field: "Date Submitted", headName: "date", width: 150 },
+    { field: "Time Spent", headName: "timespent", width: 150 },
+    { field: "Latitude", headName: "Latitude", width: 150 },
+    { field: "Longitude", headName: "Longitude", width: 150 },
+    { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
+  ];
 
   // Reset selected customers when customers change
   useEffect(
@@ -84,6 +86,7 @@ const columns = [
       }
       if (responses.length) {
         setTableColumns(getColumns());
+        setDepedancyQtns(getDependancyTabs())
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,9 +114,9 @@ const columns = [
       "Time Spent": response.timeSpentToSubmit,
       "Submitted By": response.submittedBy.name,
       "Date Submitted": new Date(response.submittedOn).toLocaleDateString("en-US"),
-      "Latitude": Math.round(response.gps.latitude * 10000000) / 10000000 ,
+      "Latitude": Math.round(response.gps.latitude * 10000000) / 10000000,
       "Longitude": Math.round(response.gps.longitude * 10000000) / 10000000,
-      "GPS Accuracy":  Math.round(response.gps.accuracy * 10) / 10
+      "GPS Accuracy": Math.round(response.gps.accuracy * 10) / 10
     }
     // Loop sections
     for (let i = 0; i < response.answers.length; i++) {
@@ -125,22 +128,23 @@ const columns = [
             //  loop through sub-section Formfields
             for (let k = 0; k < formField.components.length; k++) {
               const subsectionFormField = formField.components[k];
-              if (subsectionFormField.type === 'select-box'){
+              if (subsectionFormField.type === 'select-box') {
                 console.log('Logging Select box values');
                 console.log(subsectionFormField.values);
-                formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
-              } 
-              else if (subsectionFormField.type === 'date') {
-                formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
+                formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() }
               }
-              else{
-              formattedResponse = { ...formattedResponse, [subsectionFormField.label+`-(${formField.label})`]: subsectionFormField.value }
-               } }
+              else if (subsectionFormField.type === 'date') {
+                formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
+              }
+              else {
+                formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.value }
+              }
+            }
           }
-        }  else if (formField.type === 'select-box'){
+        } else if (formField.type === 'select-box') {
           console.log('Logging Select box values');
           console.log(formField.values);
-          formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item)=>item.checked).map((item)=>item.label).toString()}
+          formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item) => item.checked).map((item) => item.label).toString() }
         } else if (formField.type === 'date') {
           formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
         }
@@ -157,7 +161,8 @@ const columns = [
     let currentcolumns = [...columns,];
     // Loop sections
     if (responses.length) {
-      const response = responses[responses.length -1]
+      const response = responses[responses.length - 1]
+      console.log(response);
       for (let i = 0; i < response.answers.length; i++) {
         // loop through formfields
         for (let j = 0; j < response.answers[i].components.length; j++) {
@@ -168,7 +173,7 @@ const columns = [
               //  loop through sub-section Formfields
               for (let k = 0; k < formField.components.length; k++) {
                 const subsectionFormField = formField.components[k];
-                currentcolumns = [...currentcolumns, { field:`${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
+                currentcolumns = [...currentcolumns, { field: `${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
               }
             }
           } else {
@@ -183,6 +188,103 @@ const columns = [
     return currentcolumns;
   }
 
+  const getDependancyTabs = () => {
+    let currentTabs = [];
+    const mustColumns = [{
+      field: "action",
+      headerName: "Action",
+      width: 80,
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
+
+          const api = params.api;
+          const thisRow = {};
+
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+
+          return alert(JSON.stringify(thisRow, null, 4));
+        };
+
+        return (
+          <div style={{ display: 'flex', flexDirection: 'row', border: 0, margin: 0 }}>
+            <NextLink
+              href={`/dashboard/projects/${router.query.projectId}/questionaire/${router.query.questionaireId}/response/4`}
+              passHref
+            ><IconButton component="a"><RemoveRedEyeIcon fontSize="small" /></IconButton></NextLink>
+            <IconButton onClick={onClick}><LocalPrintshopIcon fontSize="small" /></IconButton>
+          </div>
+        );
+      }
+    }, { field: "Date Submitted", headName: "date", width: 150 }, { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+
+    ]
+    if (responses.length) {
+      let count = 0;
+      for (let res = 0; res < responses.length; res++) {
+        for (let i = 0; i < responses[res].answers.length; i++) {
+          // loop through formfields
+          for (let j = 0; j < responses[res].answers[i].components.length; j++) {
+            const formField = responses[res].answers[i].components[j];
+            if (formField.type === 'sub-section' && formField.dependency !== null && formField.display === 'visible') {
+              if (formField.components) {
+                //  loop through sub-section Formfields
+                currentTabs = [...currentTabs, { title: `${formField.label}` }].filter((value, index, self) =>
+                  index === self.findIndex((t) => (
+                    t.label === value.label
+                  )));
+                currentTabs = currentTabs.map((tab) => {
+                  if (tab.title === formField.label) {
+                    const readyQtns = tab.questions ? tab.questions : [...mustColumns];
+                    const readyRes = tab.responses ? tab.responses : [];
+                    let response = {
+                      id: readyRes.length,       "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
+                      "Submitted By": responses[res].submittedBy.name,
+                    }, qtns = [];
+                    count = count + 1
+                    console.log("===> Another Response:  ", count);
+                    for (let k = 0; k < formField.components.length; k++) {
+                      const subsectionFormField = formField.components[k];
+                      qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(''), width: 180 });
+                      if (subsectionFormField.type === 'select-box') {
+                        response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
+                      }
+                      else if (subsectionFormField.type === 'date') {
+                        // tab.questions = [...readyQtns, { field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(), width: 150 } ]
+                        response = { ...response, [subsectionFormField.label]: new Date(subsectionFormField.value).toLocaleDateString("en-US") };
+                      }
+                      else {
+                        // tab.questions = [...readyQtns, { field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(), width: 150 } ]
+                        response = { ...response, [subsectionFormField.label]: subsectionFormField.value };
+                      }
+                    }
+                    tab.questions = [...readyQtns, ...qtns].filter((value, index, self) => index === self.findIndex((t) => (t.field === value.field)))
+                    tab.responses = [...readyRes, { ...response }]
+                    return tab;
+                  }
+                  return tab
+                });
+
+
+
+              }
+            }
+          }
+        }
+      }
+
+
+    }
+
+    return currentTabs;
+  }
+
   const enableBulkActions = selectedCustomers.length > 0;
   const selectedSomeCustomers =
     selectedCustomers.length > 0 && selectedCustomers.length < customers.length;
@@ -190,7 +292,8 @@ const columns = [
   //  setTableColumns(getColumns());
   const formattedResponses = responses.map((response) => ({ ...formatResponse(response) }));
   const [tableColumns, setTableColumns] = useState(getColumns());
-
+  const [depedancyQtns, setDepedancyQtns] = useState(getDependancyTabs());
+  const [selectedDepTab, setSelectedDepTab] = useState({ notSelected: true });
   return (
     <div {...other}>
       <Box
@@ -214,19 +317,40 @@ const columns = [
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 800, width: "100%" }}>
-        <DataGrid
-          rows={formattedResponses.reverse()}
-          columns={tableColumns}
-          components={{
-            Toolbar: GridToolbar,
-          }}
-          filterModel={filterModel}
-          onFilterModelChange={(newFilterModel) =>
-            setFilterModel(newFilterModel)
-          }
-        />
+      <div style={{ height: 500, width: "100%" }}>
+        {
+          selectedDepTab.notSelected ? <DataGrid
+            rows={formattedResponses.reverse()}
+            columns={tableColumns}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            filterModel={filterModel}
+            onFilterModelChange={(newFilterModel) =>
+              setFilterModel(newFilterModel)
+            }
+
+          /> :
+            <DataGrid
+              rows={selectedDepTab.responses.reverse()}
+              columns={selectedDepTab.questions}
+              components={{
+                Toolbar: GridToolbar,
+              }}
+              filterModel={filterModel}
+              onFilterModelChange={(newFilterModel) =>
+                setFilterModel(newFilterModel)
+              }
+
+            />
+        }
+
       </div>
+      <ButtonGroup variant="contained" aria-label="outlined primary button group">
+        {
+          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => { setSelectedDepTab(depQtn); console.log(depQtn); }}>{depQtn.title}</Button>))
+        }
+      </ButtonGroup>
       {/* </Scrollbar> */}
     </div>
   );
