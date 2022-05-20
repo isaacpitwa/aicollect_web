@@ -52,8 +52,8 @@ export const Profile = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const base64Image = await fileToBase64(profileImage);
-        const base64CompanyImage =  props.user.roles === "Owner" ? await fileToBase64(companyLogo) : null;
+        const base64Image = profileImage ? await fileToBase64(profileImage): null;
+        const base64CompanyImage =  companyLogo ? await fileToBase64(companyLogo) : null;
         const profile = {
           ...values,
           profileImage: base64Image,
