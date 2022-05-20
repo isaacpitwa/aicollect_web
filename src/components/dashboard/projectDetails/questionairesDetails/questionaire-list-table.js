@@ -129,8 +129,6 @@ export const QuestionaireDetailsTable = (props) => {
             for (let k = 0; k < formField.components.length; k++) {
               const subsectionFormField = formField.components[k];
               if (subsectionFormField.type === 'select-box') {
-                console.log('Logging Select box values');
-                console.log(subsectionFormField.values);
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() }
               }
               else if (subsectionFormField.type === 'date') {
@@ -142,8 +140,6 @@ export const QuestionaireDetailsTable = (props) => {
             }
           }
         } else if (formField.type === 'select-box') {
-          console.log('Logging Select box values');
-          console.log(formField.values);
           formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item) => item.checked).map((item) => item.label).toString() }
         } else if (formField.type === 'date') {
           formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
@@ -162,7 +158,6 @@ export const QuestionaireDetailsTable = (props) => {
     // Loop sections
     if (responses.length) {
       const response = responses[responses.length - 1]
-      console.log(response);
       for (let i = 0; i < response.answers.length; i++) {
         // loop through formfields
         for (let j = 0; j < response.answers[i].components.length; j++) {
@@ -247,8 +242,6 @@ export const QuestionaireDetailsTable = (props) => {
                       id: readyRes.length,       "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
                       "Submitted By": responses[res].submittedBy.name,
                     }, qtns = [];
-                    count = count + 1
-                    console.log("===> Another Response:  ", count);
                     for (let k = 0; k < formField.components.length; k++) {
                       const subsectionFormField = formField.components[k];
                       qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(''), width: 180 });
@@ -256,11 +249,9 @@ export const QuestionaireDetailsTable = (props) => {
                         response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
                       }
                       else if (subsectionFormField.type === 'date') {
-                        // tab.questions = [...readyQtns, { field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(), width: 150 } ]
                         response = { ...response, [subsectionFormField.label]: new Date(subsectionFormField.value).toLocaleDateString("en-US") };
                       }
                       else {
-                        // tab.questions = [...readyQtns, { field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(), width: 150 } ]
                         response = { ...response, [subsectionFormField.label]: subsectionFormField.value };
                       }
                     }
@@ -332,7 +323,7 @@ export const QuestionaireDetailsTable = (props) => {
 
           /> :
             <DataGrid
-              rows={selectedDepTab.responses.reverse()}
+              rows={[...selectedDepTab.responses].reverse()}
               columns={selectedDepTab.questions}
               components={{
                 Toolbar: GridToolbar,
@@ -348,7 +339,9 @@ export const QuestionaireDetailsTable = (props) => {
       </div>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
         {
-          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => { setSelectedDepTab(depQtn); console.log(depQtn); }}>{depQtn.title}</Button>))
+          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => {selectedDepTab.title === depQtn.title? setSelectedDepTab({ notSelected: true }): setSelectedDepTab(depQtn);}} style={  selectedDepTab.title === depQtn.title?{
+            
+          }:{opacity:0.7}}>{depQtn.title}</Button>))
         }
       </ButtonGroup>
       {/* </Scrollbar> */}
