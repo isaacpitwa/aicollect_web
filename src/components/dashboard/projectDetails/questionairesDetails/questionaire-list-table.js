@@ -230,10 +230,12 @@ export const QuestionaireDetailsTable = (props) => {
             if (formField.type === 'sub-section' && formField.dependency !== null && formField.display === 'visible') {
               if (formField.components) {
                 //  loop through sub-section Formfields
+                console.log("===> Tab Gotten : ", formField.label);
                 currentTabs = [...currentTabs, { title: `${formField.label}` }].filter((value, index, self) =>
                   index === self.findIndex((t) => (
-                    t.label === value.label
+                    t.title === value.title
                   )));
+                  console.log("===> Tab Gotten  and Added: ", currentTabs.length );
                 currentTabs = currentTabs.map((tab) => {
                   if (tab.title === formField.label) {
                     const readyQtns = tab.questions ? tab.questions : [...mustColumns];
