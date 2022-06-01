@@ -114,9 +114,9 @@ export const QuestionaireDetailsTable = (props) => {
       "Time Spent": response.timeSpentToSubmit,
       "Submitted By": response.submittedBy.name,
       "Date Submitted": new Date(response.submittedOn).toLocaleDateString("en-US"),
-      "Latitude": Math.round(response.gps.latitude * 10000000) / 10000000,
-      "Longitude": Math.round(response.gps.longitude * 10000000) / 10000000,
-      "GPS Accuracy": Math.round(response.gps.accuracy * 10) / 10
+      "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
+      "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
+      "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A'
     }
     // Loop sections
     for (let i = 0; i < response.answers.length; i++) {
@@ -231,7 +231,7 @@ export const QuestionaireDetailsTable = (props) => {
               if (formField.components) {
                 //  loop through sub-section Formfields
                 console.log("===> Tab Gotten : ", formField.label);
-                currentTabs = [...currentTabs, { title: `${formField.label}` }].filter((value, index, self) =>
+                currentTabs = [...currentTabs, { title: `${formField.label.split('-')[0]}` }].filter((value, index, self) =>
                   index === self.findIndex((t) => (
                     t.title === value.title
                   )));
