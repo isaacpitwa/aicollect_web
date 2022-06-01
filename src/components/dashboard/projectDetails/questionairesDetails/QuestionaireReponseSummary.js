@@ -109,9 +109,9 @@ const columns = [
       "Time Spent": response.timeSpentToSubmit,
       "Submitted By": response.submittedBy.name,
       "Date Submitted": new Date(response.submittedOn).toLocaleDateString("en-US"),
-      "Latitude": Math.round(response.gps.latitude * 10000000) / 10000000 ,
-      "Longitude": Math.round(response.gps.longitude * 10000000) / 10000000,
-      "GPS Accuracy":  Math.round(response.gps.accuracy * 10) / 10
+      "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
+      "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
+      "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A'
     }
     // Loop sections
     for (let i = 0; i < response.answers.length; i++) {
