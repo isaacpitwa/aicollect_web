@@ -221,7 +221,6 @@ export const QuestionaireDetailsTable = (props) => {
 
     ]
     if (responses.length) {
-      let count = 0;
       for (let res = 0; res < responses.length; res++) {
         for (let i = 0; i < responses[res].answers.length; i++) {
           // loop through formfields
@@ -237,7 +236,7 @@ export const QuestionaireDetailsTable = (props) => {
                   )));
                   console.log("===> Tab Gotten  and Added: ", currentTabs.length );
                 currentTabs = currentTabs.map((tab) => {
-                  if (tab.title === formField.label) {
+                  if (tab.title === formField.label.split('-')[0]) {
                     const readyQtns = tab.questions ? tab.questions : [...mustColumns];
                     const readyRes = tab.responses ? tab.responses : [];
                     let response = {
