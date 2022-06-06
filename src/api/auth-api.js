@@ -20,6 +20,28 @@ class AuthApi {
     return data.data;
   }
 
+
+    /**
+   * Authenticates a user (Update session)
+   * @param {string} email
+   * @param {string} password 
+   * @returns {string} User token
+   */
+     async updateSession({ email, password }) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/newSession/web`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify({ email, password, deviceToken: '8ccedajs743' })
+      });
+      const data = await response.json();
+      if (data && data.status !== 200) {
+        throw new Error("Please check your email or password");
+      }
+      return data;
+    }
+
   async userProfile(accessToken) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/check-user`, {
