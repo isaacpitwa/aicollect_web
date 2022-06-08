@@ -14,11 +14,13 @@ import {
 } from "@mui/material";
 import AppsIcon from '@mui/icons-material/Apps';
 // import LowPriorityIcon from '@mui/icons-material/LowPriority';
-// import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 // import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
-// import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
+import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
 import { Home as HomeIcon } from "../../icons/home";
 import { Selector as SelectorIcon } from "../../icons/selector";
+import {OfficeBuilding as OfficeBuildingIcon } from "../../icons/office-building";
+import { ShoppingCart as ShoppingCartIcon } from "../../icons/shopping-cart";
 // import { Truck as TruckIcon } from '../../icons/truck';
 import { Users as UsersIcon } from "../../icons/users";
 import { Logo } from "../logo";
@@ -40,11 +42,11 @@ const getSections = (t) => [
       //   path: '/dashboard/analytics',
       //   icon: <ChartBarIcon fontSize="small" />
       // },
-      // {
-      //   title: t('Finance'),
-      //   path: '/dashboard/finance',
-      //   icon: <ChartPieIcon fontSize="small" />
-      // },
+      {
+        title: t('Finance'),
+        path: '/dashboard/finance',
+        icon: <ChartPieIcon fontSize="small" />
+      },
       // {
       //   title: t('Logistics'),
       //   path: '/dashboard/logistics',
@@ -80,17 +82,12 @@ const getSections = (t) => [
         path: "/dashboard/projects",
         icon: <AppsIcon fontSize="small" />
       },
-      // {
-      //   title: t("Task Manager"),
-      //   path: "/dashboard/tasks",
-      //   icon: <AssignmentIcon fontSize="small" />,
-      //   children: [
-      //     {
-      //       title: t("Tasks"),
-      //       path: "/dashboard/tasks",
-      //     },
-      //   ],
-      // },
+      {
+        title: t("Tasks"),
+        path: "/dashboard/tasks",
+        icon: <AssignmentIcon fontSize="small" />,
+
+      },
       // {
       //   title: t('Products'),
       //   path: '/dashboard/products',
