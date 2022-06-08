@@ -55,7 +55,7 @@ const roleRoutes = {
   'Supervisor' : isDataRoute,
   'Owner' : allRoutes,
   'Admin' :allRoutes,
-  'External user':allRoutes,
+  'External user':isExternalRoute,
 }
 
 const IndexRedirect = {
@@ -63,8 +63,8 @@ const IndexRedirect = {
   'Standard User' : '/dashboard/tasks',
   'Data Manager' : '/dashboard/projects',
   'Supervisor' : '/dashboard/projects',
-  'Owner' : '/',
-  'Admin' :'/',
+  'Owner' : '/dashboard/',
+  'Admin' :'/dashboard',
   'External user': '/collections/timeout',
 }
 

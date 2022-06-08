@@ -210,12 +210,12 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
             <FormControl fullWidth>
               <InputLabel>Role *</InputLabel>
               <Select type="date" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange} fullWidth>
-                <MenuItem value="Admin">Super Administrator</MenuItem>
-                {/* <MenuItem value="Owner">Owner</MenuItem> */}
-                <MenuItem value="Data Manager">Data Manager</MenuItem>
-                <MenuItem value="Billing Manager">Billing Manager</MenuItem>
-                <MenuItem value="Standard user">Standard user</MenuItem>
-                <MenuItem value="External user">External User</MenuItem>
+              <MenuItem value="Admin">Administrator</MenuItem>
+              <MenuItem value="Billing Manager">Billing Manager</MenuItem>
+              <MenuItem value="Data Manager">Data Manager</MenuItem>
+              <MenuItem value="Supervisor">Supervisor</MenuItem>
+              <MenuItem value="Standard User">Standard User</MenuItem>
+                {/* <MenuItem value="External user">External User</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
