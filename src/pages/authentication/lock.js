@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, Container, Divider, Link, TextField, Typography, Alert, Stack, Avatar } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Link, TextField, Typography, Alert, Stack, Avatar, CircularProgress } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 // import { AuthBanner } from '../../components/authentication/auth-banner';
 import { AmplifyPasswordReset } from '../../components/authentication/amplify-password-reset';
@@ -48,7 +48,7 @@ const LockAccess = () => {
         setLoading(true);
         try {
             const { password, confirmPassword } = state;
-            const data = await authenticationApi.updateSession({email:user.email,password:password});
+            const data = await authenticationApi.updateSession({ email: user.email, password: password });
             if (data?.status === 200) {
                 setPasswordReset(`Unlock made successfully`);
                 window.localStorage.setItem('accessToken', data.data);
@@ -59,7 +59,7 @@ const LockAccess = () => {
             }
         } catch (error) {
             console.log(error);
-            setPasswordReset( error.message ? "Wrong password":'Something went wrong, please try again later');
+            setPasswordReset(error.message ? "Wrong password" : 'Something went wrong, please try again later');
         }
         setLoading(false);
     };
@@ -129,15 +129,24 @@ const LockAccess = () => {
                                 value={state.password}
                                 placeholder='Password' fullWidth
                             />
-                            <Button
-                                variant='contained'
-                                style={{ marginTop: 15 }}
-                                onClick={handleUnlock}
-                                disabled={loading || !state.password}
-                                fullWidth
-                            >
-                                {loading ? 'loading ...' : 'Unlock'}
-                            </Button>
+                            {
+                                loading ?
+                                    <Button variant="contained" disabled startIcon={<CircularProgress color="inherit"  size={8}/>} fullWidth style={{ marginTop: 15 }}>
+                                        Loading...
+                                    </Button> :
+                                    <Button
+                                        variant='contained'
+                                        style={{ marginTop: 15 }}
+                                        onClick={handleUnlock}
+                                        disabled={loading || !state.password}
+                                        fullWidth
+                                    >
+
+                                        Unlock
+                                    </Button>
+
+                            }
+
                         </Box>
                     </Card>
                 </Container>

@@ -59,7 +59,7 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="lg">
+      maxWidth="md">
       <DialogTitle>Create new user</DialogTitle>
       <DialogContent>
         <Box sx={{ width: '100%' }}>

@@ -75,7 +75,7 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
           <TextField type="date" name="expiryDate" value={state.expiryDate} onChange={handleChange} variant="standard" required />
         </FormControl>
       </Grid>
-      <Grid item md={12} sm={12}>
+      <Grid item md={12} sm={12}  display="flex" justifyContent="flex-end" >
         {
           !loading ? (
             <Button variant='contained' onClick={handleInviteNewUser}>Send Invite</Button>
@@ -83,7 +83,7 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
             <Button variant='contained' disabled onClick={handleInviteNewUser}>Loading ...</Button>
           )
         }
-        <Button>Cancel</Button>
+        <Button variant="outlined">Cancel</Button>
       </Grid>
     </Grid>
   )

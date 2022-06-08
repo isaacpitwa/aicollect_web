@@ -221,11 +221,11 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           </Grid>
         </Grid>
 
-        <Grid item md={12} sm={12} display="flex" justifyContent="space-between">
+        <Grid item md={12} sm={12} display="flex" justifyContent="flex-end">
           {
             loading || formik.isSubmitting ? (
-              <Button variant="contained" disabled>
-                <CircularProgress color="inherit" />
+              <Button variant="contained" disabled startIcon={<CircularProgress color="inherit" />}>
+                Loading...
               </Button>
             ) : (
               <Button variant="contained" onClick={handleCreateUser}>
@@ -233,7 +233,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               </Button>
             )
           }
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}  variant="outlined" style={{marginLeft:"16px"}}>Cancel</Button>
         </Grid>
       </Grid>
     </form>
