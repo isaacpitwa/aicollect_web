@@ -1,11 +1,11 @@
 import { Box, Button, Card, Container, Divider, Link, TextField, Typography, Alert, Stack, Avatar } from '@mui/material';
 import Head from 'next/head';
 
-function TimeOut(props) {
+function DataShare(props) {
     return         <>
     <Head>
         <title>
-            Time out  | AiCollect
+            Collections  | AiCollect
         </title>
     </Head>
     <Box
@@ -40,14 +40,14 @@ function TimeOut(props) {
                     }}
                 >
                     <Typography variant="h4">
-                        Time Out 😫
+                        Hey External User 👋🏽
                     </Typography>
                     <Typography
                         color="textSecondary"
                         sx={{ mt: 2, mb: 4 }}
                         variant="body2"
                     >
-                       Time for  Viewing  shared Data is out.
+                       Your Viewing  shared Data is coming up.
                     </Typography>
                 </Box>
             </Card>
@@ -55,4 +55,4 @@ function TimeOut(props) {
     </Box>
 </>;
   }
-export default TimeOut;
+export default DataShare;
