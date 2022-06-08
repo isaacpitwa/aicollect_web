@@ -131,7 +131,7 @@ const LockAccess = () => {
                             />
                             {
                                 loading ?
-                                    <Button variant="contained" disabled startIcon={<CircularProgress color="inherit"  size={8}/>} fullWidth style={{ marginTop: 15 }}>
+                                    <Button variant="contained" disabled startIcon={<CircularProgress color="inherit"  size={16}/>} fullWidth style={{ marginTop: 15 }}>
                                         Loading...
                                     </Button> :
                                     <Button

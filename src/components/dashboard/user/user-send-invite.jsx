@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, FormControl, FormLabel, TextField, Typography, Select, Button, MenuItem  } from "@mui/material";
+import { Grid, FormControl, FormLabel, TextField, Typography, Select, Button, MenuItem,InputLabel  } from "@mui/material";
 import toast from "react-hot-toast";
 import { useAuth } from '../../../hooks/use-auth';
 
@@ -58,8 +58,8 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
       </Grid>
       <Grid item md={12} sm={12}>
         <FormControl fullWidth>
-          <FormLabel>Role Type *</FormLabel>
-          <Select type="date" variant="standard" name="roles" value={state.roles} onChange={handleChange} required>
+          <InputLabel>Role Type *</InputLabel>
+          <Select type="date" variant="standard" name="roles" value={state.roles} onChange={handleChange} required fullWidth>
             <MenuItem value="Admin">Administrator</MenuItem>
             <MenuItem value="Billing Manager">Billing Manager</MenuItem>
             <MenuItem value="Data Manager">Data Manager</MenuItem>
@@ -83,7 +83,7 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
             <Button variant='contained' disabled onClick={handleInviteNewUser}>Loading ...</Button>
           )
         }
-        <Button variant="outlined">Cancel</Button>
+        <Button variant="outlined" style={{marginLeft:"16px"}} onClick={handleClose}  >Cancel</Button>
       </Grid>
     </Grid>
   )

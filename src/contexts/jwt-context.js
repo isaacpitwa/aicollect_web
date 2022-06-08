@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { authApi } from '../__fake-api__/auth-api';
 import { authenticationApi } from '../api/auth-api';
+import {IndexRedirect} from '../components/authentication/auth-guard';
 
 const initialState = {
   isAuthenticated: false,
@@ -66,7 +67,6 @@ export const AuthProvider = (props) => {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-
         if (accessToken) {
           const user = await authenticationApi.userProfile(accessToken);
           console.log('User DATA: \n', user);
@@ -78,7 +78,7 @@ export const AuthProvider = (props) => {
                 user
               }
             });
-            // router.reload()
+            router.push(IndexRedirect[user.roles]);
           } else {
             dispatch({
               type: 'INITIALIZE',

@@ -208,8 +208,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3} marginTop={1}>
             <FormControl fullWidth>
-              <InputLabel>Role *</InputLabel>
-              <Select type="date" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange} fullWidth>
+              <InputLabel>Role Type *</InputLabel>
+              <Select type="text" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange}>
               <MenuItem value="Admin">Administrator</MenuItem>
               <MenuItem value="Billing Manager">Billing Manager</MenuItem>
               <MenuItem value="Data Manager">Data Manager</MenuItem>

@@ -23,7 +23,7 @@ export const AuthGuard = (props) => {
           console.log(`User of Roles ${auth.user.roles}: cannot access Route ${router.asPath}`);
           router.push({
             pathname: IndexRedirect[auth.user.roles],
-            query: { returnUrl: router.asPath }
+            // query: { returnUrl: router.asPath }
           });
         }
         setChecked(true);
@@ -58,7 +58,7 @@ const roleRoutes = {
   'External user':isExternalRoute,
 }
 
-const IndexRedirect = {
+export const IndexRedirect = {
   'Billing Manager': '/dashboard/finance',
   'Standard User' : '/dashboard/tasks',
   'Data Manager' : '/dashboard/projects',
