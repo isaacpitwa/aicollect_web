@@ -27,8 +27,11 @@ import { Logo } from "../logo";
 import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
 import { OrganizationPopover } from "./organization-popover";
+import { useAuth } from "../../hooks/use-auth";
+import { roleRoutes } from "../authentication/auth-guard";
 
-const getSections = (t) => [
+const getSections = (t,user) => user ? [
+  
   {
     title: t("General"),
     items: [
@@ -67,7 +70,7 @@ const getSections = (t) => [
       //   />
       // },
       
-    ]
+    ].filter((item)=>roleRoutes[user.roles].test(item.path))
   },
   {
     title: t("Management"),
@@ -133,7 +136,7 @@ const getSections = (t) => [
       //     }
       //   ]
       // }
-    ],
+    ].filter((item)=>roleRoutes[user.roles].test(item.path)),
   },
   {
     title: t("Settings"),
@@ -143,7 +146,7 @@ const getSections = (t) => [
         path: "/dashboard/account",
         icon: <UsersIcon fontSize="small" />,
       },
-    ],
+    ].filter((item)=>roleRoutes[user.roles].test(item.path)),
   },
   // {
   //   title: t('Projects'),
@@ -282,8 +285,8 @@ const getSections = (t) => [
   //     }
   //   ]
   // }
-];
-
+].filter((item)=>item.items.length > 0):[];
+ 
 export const DashboardSidebar = (props) => {
   const { onClose, open } = props;
   const router = useRouter();
@@ -291,7 +294,8 @@ export const DashboardSidebar = (props) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     noSsr: true,
   });
-  const sections = useMemo(() => getSections(t), [t]);
+  const { user } = useAuth();
+  const sections = useMemo(() => getSections(t, user), [t, user]);
   const organizationsRef = useRef(null);
   const [openOrganizationsPopover, setOpenOrganizationsPopover] =
     useState(false);
