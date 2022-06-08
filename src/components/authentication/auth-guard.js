@@ -43,7 +43,7 @@ export const AuthGuard = (props) => {
   return <>{children}</>;
 };
 
-const isBillingRoute = new RegExp(/^\/dashboard\/finance\.*/g); 
+const isBillingRoute = new RegExp(/^\/dashboard\/finance\/billing\.*/g); 
 const isDataRoute = new RegExp(/^\/dashboard\/projects\.*/g); 
 const isstandardRoute = new RegExp(/^\/dashboard\/tasks\.*/g);
 const isExternalRoute = new RegExp(/^\/dashboard\/collections\.*/g);
@@ -60,7 +60,7 @@ export const roleRoutes = {
 }
 
 export const IndexRedirect = {
-  'Billing Manager': '/dashboard/finance',
+  'Billing Manager': '/dashboard/finance/billing',
   'Standard User' : '/dashboard/tasks',
   'Data Manager' : '/dashboard/projects',
   'Supervisor' : '/dashboard/projects',

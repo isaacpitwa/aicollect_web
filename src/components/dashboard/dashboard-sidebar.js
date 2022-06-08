@@ -146,6 +146,11 @@ const getSections = (t,user) => user ? [
         path: "/dashboard/account",
         icon: <UsersIcon fontSize="small" />,
       },
+      {
+        title: t("BIlling"),
+        path: "/dashboard/finance/billing",
+        icon: <UsersIcon fontSize="small" />,
+      },
     ].filter((item)=>roleRoutes[user.roles].test(item.path)),
   },
   // {

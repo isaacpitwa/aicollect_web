@@ -24,6 +24,7 @@ import { sectorApi } from '../../api/sectors-api';
 import { useMounted } from "../../hooks/use-mounted";
 import { billingPlanApi } from "../../api/billingplan-api";
 import { fileToBase64 } from "../../utils/file-to-base64";
+import { IndexRedirect } from "./auth-guard";
 
 export const Profile = (props) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -34,7 +35,7 @@ export const Profile = (props) => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      userType: props.user.roles === "Owner" ? "Client" : "System user",
+      userType: props.user.roles,
       user: props.user.email,
       billingPlan: "",
       sector: "",
@@ -64,7 +65,7 @@ export const Profile = (props) => {
 
         if (isMounted() && data) {
           if (data) {
-            const returnUrl = router.query.returnUrl || "/dashboard";
+            const returnUrl = router.query.returnUrl ||  IndexRedirect[props.user.roles];
             router.push(returnUrl, null, { shallow: false });
           }
         }

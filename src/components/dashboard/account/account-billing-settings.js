@@ -50,7 +50,7 @@ export const AccountBillingSettings = (props) => {
         <CardContent>
           <div>
             <Typography variant="h6">
-              Change plan
+              Billing plan
             </Typography>
             <Typography
               color="textSecondary"
