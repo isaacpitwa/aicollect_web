@@ -147,7 +147,7 @@ const getSections = (t,user) => user ? [
         icon: <UsersIcon fontSize="small" />,
       },
       {
-        title: t("BIlling"),
+        title: t("Billing"),
         path: "/dashboard/finance/billing",
         icon: <UsersIcon fontSize="small" />,
       },

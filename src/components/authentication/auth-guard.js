@@ -48,6 +48,7 @@ const isDataRoute = new RegExp(/^\/dashboard\/projects\.*/g);
 const isstandardRoute = new RegExp(/^\/dashboard\/tasks\.*/g);
 const isExternalRoute = new RegExp(/^\/dashboard\/collections\.*/g);
 const allRoutes = new RegExp(/^\.*/g);
+const sharedRoutes = new RegExp(/^\/dashboard\/account\.*/g);
 
 export const roleRoutes = {
   'Billing Manager': isBillingRoute,

@@ -78,7 +78,7 @@ export const AuthProvider = (props) => {
                 user
               }
             });
-            router.push(IndexRedirect[user.roles]);
+            // router.push(IndexRedirect[user.roles]);
           } else {
             dispatch({
               type: 'INITIALIZE',
