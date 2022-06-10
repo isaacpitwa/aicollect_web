@@ -18,6 +18,7 @@ import {
   FormControlLabel,
   Radio,
   Typography
+  , InputLabel
 } from "@mui/material";
 import toast from 'react-hot-toast';
 import { userApi } from '../../../api/users-api';
@@ -28,6 +29,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
   const [member, setMember] = useState({
     userObj: {},
     role: '',
+    supervisor: ''
   });
   console.log(projectId)
   const [users, setUsers] = useState([]);
@@ -54,7 +56,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
     };
     fetchUserList();
   }, []);
-  
+
 
   const handleAddTeamMembers = async () => {
     try {
@@ -70,7 +72,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
-        body: JSON.stringify({...teamMemberObject, projectId: router.query.projectId})
+        body: JSON.stringify({ ...teamMemberObject, projectId: router.query.projectId })
       });
       const data = await response.json();
       if (data.status === 200) {
@@ -94,8 +96,8 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
               <Grid container spacing={3}>
                 <Grid item md={12} xs={12}>
                   <FormControl fullWidth>
-                    <FormLabel>Team Members</FormLabel>
-                    <Select name="userObj"  value={member.userObj} onChange={handleChange}>
+                    <FormLabel>Select User</FormLabel>
+                    <Select name="userObj" value={member.userObj} onChange={handleChange}>
                       {
                         users.map((user, idx) => (
                           <MenuItem key={idx} value={user}>{`${user.firstname} ${user.lastname}`}</MenuItem>
@@ -108,14 +110,28 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
                   <FormControl marginTop={3} fullWidth>
                     <FormLabel>Project Roles</FormLabel>
                     <RadioGroup name="role" value={member.role} defaultValue="inspector" onChange={handleChange}>
-                      <FormControlLabel value="inspector" control={<Radio />} label="Standard User" />
+                      <FormControlLabel value="Standard User" control={<Radio />} label="Standard User" />
                       <Typography variant="caption" mb={4}>Does project Inspection</Typography>
-                      <FormControlLabel value="manager" control={<Radio />} label="Project Manager / Supervisor" />
+
+                      <FormControlLabel value="Data Manager" control={<Radio />} label="Data Manager" />
                       <Typography variant="caption">Manages Project Activities</Typography>
+
+                      <FormControlLabel value="Supervisor" control={<Radio />} label="Supervisor" />
+                      <Typography variant="caption">Manages Team  Activities </Typography>
                     </RadioGroup>
                   </FormControl>
+                  <Grid item md={12} sm={12}  marginTop={3}>
+                    {member.role == "Standard User" ? <FormControl fullWidth>
+                      <FormLabel> Select Supervisor </FormLabel>
+                      <Select type="text" name="supervisor" value={member.supervisor} onChange={handleChange}>
+                        {
+                          users.filter(user => user.roles === 'Supervisor').map((user,idx) => {console.log(` Supervisor User :  ${user.firstname + ' ' + user.lastname}`); return <MenuItem  key ={idx} value={user.id}>{user.firstname + ' ' + user.lastname}</MenuItem>})
+                        }
+                      </Select>
+                    </FormControl> : null}
+                  </Grid>
                 </Grid>
-                
+
               </Grid>
             </form>
           </DialogContent>

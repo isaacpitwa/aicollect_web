@@ -171,7 +171,7 @@ export const ProjectTeamMembersTable = (props) => {
                     {customer.role}
                   </TableCell>
                   <TableCell>
-                    {customer.createdBy}
+                    {customer.createdBy.firstname ?  `${customer.createdBy.firstname + ' ' + customer.createdBy.lastname}` : customer.createdBy}
                   </TableCell>
                   <TableCell>
                     {customer.createdAt}
