@@ -59,12 +59,20 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
 
 
   const handleAddTeamMembers = async () => {
+    if(user.roles =='Supervisor'){
+      setMember((prevState) => ({ ...prevState, supervisor: user }));
+
+    }
     try {
       const teamMemberObject = {
         userId: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
-        supervisor: member.supervisor,
+        supervisor:  {
+          id: user.id,
+          name: `${ member.supervisor.firstname} ${ member.supervisor.lastname}`,
+          email:  member.supervisor.email,
+        },
         createdBy: {
           id: user.id,
           name: `${user.firstname} ${user.lastname}`,
@@ -115,18 +123,26 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
                   <FormControl marginTop={3} fullWidth>
                     <FormLabel>Project Roles</FormLabel>
                     <RadioGroup name="role" value={member.role} defaultValue="inspector" onChange={handleChange}>
+                      
+                     {
+                     user.roles !='Supervisor' && user.roles !='Data Manager'? 
+                    <><FormControlLabel value="Data Manager" control={<Radio />} label="Data Manager" />
+                    <Typography variant="caption">Manages Project Activities</Typography></> : null
+                     } 
+
+                     {
+                       user.roles !='Supervisor'?
+                       <>
+                       <FormControlLabel value="Supervisor" control={<Radio />} label="Supervisor" />
+                      <Typography variant="caption">Manages Team  Activities </Typography>
+                       </> :null
+                     }
                       <FormControlLabel value="Standard User" control={<Radio />} label="Standard User" />
                       <Typography variant="caption" mb={4}>Does project Inspection</Typography>
-
-                      <FormControlLabel value="Data Manager" control={<Radio />} label="Data Manager" />
-                      <Typography variant="caption">Manages Project Activities</Typography>
-
-                      <FormControlLabel value="Supervisor" control={<Radio />} label="Supervisor" />
-                      <Typography variant="caption">Manages Team  Activities </Typography>
                     </RadioGroup>
                   </FormControl>
                   <Grid item md={12} sm={12}  marginTop={3}>
-                    {member.role == "Standard User" ? <FormControl fullWidth>
+                    {member.role == "Standard User" && user.roles !='Supervisor' ? <FormControl fullWidth>
                       <FormLabel> Select Supervisor </FormLabel>
                       <Select type="text" name="supervisor" value={member.supervisor} onChange={handleChange}>
                         {
