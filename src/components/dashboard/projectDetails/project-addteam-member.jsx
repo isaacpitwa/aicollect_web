@@ -29,7 +29,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
   const [member, setMember] = useState({
     userObj: {},
     role: '',
-    supervisor: ''
+    supervisor: {}
   });
   console.log(projectId)
   const [users, setUsers] = useState([]);
@@ -64,6 +64,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         userId: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
+        supervisor: member.supervisor,
         createdBy: {
           id: user.id,
           name: `${user.firstname} ${user.lastname}`,
