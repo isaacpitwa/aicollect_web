@@ -64,7 +64,11 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         userId: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
-        createdBy: user.id,
+        createdBy: {
+          id: user.id,
+          name: `${user.firstname} ${user.lastname}`,
+          email: user.email,
+        },
       }
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/addTeamMember`, {
         method: 'POST',
