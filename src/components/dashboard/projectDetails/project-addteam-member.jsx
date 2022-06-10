@@ -21,6 +21,8 @@ import {
 } from "@mui/material";
 import toast from 'react-hot-toast';
 import { userApi } from '../../../api/users-api';
+import { useAuth } from '../../../hooks/use-auth';
+
 
 const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
   const [member, setMember] = useState({
@@ -30,6 +32,8 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
   console.log(projectId)
   const [users, setUsers] = useState([]);
   const router = useRouter();
+  const { user } = useAuth();
+
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -58,7 +62,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         userId: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
-        createdBy: "Stuart Dambi",
+        createdBy: user.id,
       }
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/addTeamMember`, {
         method: 'POST',
