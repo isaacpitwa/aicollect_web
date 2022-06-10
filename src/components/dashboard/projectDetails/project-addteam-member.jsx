@@ -69,7 +69,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
         supervisor:  {
-          id: user.id,
+          id: member.supervisor.id,
           name: `${ member.supervisor.firstname} ${ member.supervisor.lastname}`,
           email:  member.supervisor.email,
         },
@@ -79,6 +79,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
           email: user.email,
         },
       }
+      console.log("Datat to push : =>", teamMemberObject)
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/addTeamMember`, {
         method: 'POST',
         headers: {
@@ -112,8 +113,8 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
                     <FormLabel>Select User</FormLabel>
                     <Select name="userObj" value={member.userObj} onChange={handleChange}>
                       {
-                        users.map((user, idx) => (
-                          <MenuItem key={idx} value={user}>{`${user.firstname} ${user.lastname}`}</MenuItem>
+                        users.map((user_, idx) => (
+                          <MenuItem key={idx} value={user_}>{`${user_.firstname} ${user_.lastname}`}</MenuItem>
                         ))
                       }
                     </Select>
@@ -125,13 +126,13 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
                     <RadioGroup name="role" value={member.role} defaultValue="inspector" onChange={handleChange}>
                       
                      {
-                     user.roles !='Supervisor' && user.roles !='Data Manager'? 
+                     user?.roles !='Supervisor' && user?.roles !='Data Manager'? 
                     <><FormControlLabel value="Data Manager" control={<Radio />} label="Data Manager" />
                     <Typography variant="caption">Manages Project Activities</Typography></> : null
                      } 
 
                      {
-                       user.roles !='Supervisor'?
+                       user?.roles !='Supervisor'?
                        <>
                        <FormControlLabel value="Supervisor" control={<Radio />} label="Supervisor" />
                       <Typography variant="caption">Manages Team  Activities </Typography>
@@ -142,11 +143,11 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
                     </RadioGroup>
                   </FormControl>
                   <Grid item md={12} sm={12}  marginTop={3}>
-                    {member.role == "Standard User" && user.roles !='Supervisor' ? <FormControl fullWidth>
+                    {member.role == "Standard User" && user?.roles !='Supervisor' ? <FormControl fullWidth>
                       <FormLabel> Select Supervisor </FormLabel>
                       <Select type="text" name="supervisor" value={member.supervisor} onChange={handleChange}>
                         {
-                          users.filter(user => user.roles === 'Supervisor').map((user,idx) => {console.log(` Supervisor User :  ${user.firstname + ' ' + user.lastname}`); return <MenuItem  key ={idx} value={user.id}>{user.firstname + ' ' + user.lastname}</MenuItem>})
+                          users.filter(userIndex => userIndex.roles === 'Supervisor').map((_user,idx) => {console.log(` Supervisor User :  ${_user.firstname + ' ' + _user.lastname}`); return <MenuItem  key ={idx} value={_user}>{_user.firstname + ' ' + _user.lastname}</MenuItem>})
                         }
                       </Select>
                     </FormControl> : null}
