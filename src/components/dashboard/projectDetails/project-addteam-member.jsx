@@ -68,18 +68,18 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         userId: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
-        supervisor:  {
+        supervisor:  member.supervisor.includes(id) ? {
           id: member.supervisor.id,
           name: `${ member.supervisor.firstname} ${ member.supervisor.lastname}`,
           email:  member.supervisor.email,
-        },
+        }:null,
         createdBy: {
           id: user.id,
           name: `${user.firstname} ${user.lastname}`,
           email: user.email,
         },
       }
-      console.log("Datat to push : =>", teamMemberObject)
+      console.log("Data to push : =>", teamMemberObject)
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/addTeamMember`, {
         method: 'POST',
         headers: {
