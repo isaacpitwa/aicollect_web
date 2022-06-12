@@ -138,12 +138,10 @@ const ProjectList = (props) => {
   const getUserProjects = useCallback(async () => {
     setLoading(true);
     try {
+      console.log("Client Id: ", user.clientId);
       let clientId;
-      if (user.roles === 'Owner') {
-        clientId = user.id;
-      } else {
-        cliendId = user.clientId;
-      }
+        clientId =  user.roles === 'Owner' ? user.id: user.clientId;
+      
       const data = await projectsApi.fetchProjects(clientId);
       console.log('Projects ', data);
       if (data?.status === 200) {

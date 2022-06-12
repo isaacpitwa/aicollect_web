@@ -14,19 +14,24 @@ import {
 } from "@mui/material";
 import AppsIcon from '@mui/icons-material/Apps';
 // import LowPriorityIcon from '@mui/icons-material/LowPriority';
-// import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 // import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
-// import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
+import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
 import { Home as HomeIcon } from "../../icons/home";
 import { Selector as SelectorIcon } from "../../icons/selector";
+import {OfficeBuilding as OfficeBuildingIcon } from "../../icons/office-building";
+import { ShoppingCart as ShoppingCartIcon } from "../../icons/shopping-cart";
 // import { Truck as TruckIcon } from '../../icons/truck';
 import { Users as UsersIcon } from "../../icons/users";
 import { Logo } from "../logo";
 import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
 import { OrganizationPopover } from "./organization-popover";
+import { useAuth } from "../../hooks/use-auth";
+import { roleRoutes } from "../authentication/auth-guard";
 
-const getSections = (t) => [
+const getSections = (t,user) => user ? [
+  
   {
     title: t("General"),
     items: [
@@ -40,11 +45,11 @@ const getSections = (t) => [
       //   path: '/dashboard/analytics',
       //   icon: <ChartBarIcon fontSize="small" />
       // },
-      // {
-      //   title: t('Finance'),
-      //   path: '/dashboard/finance',
-      //   icon: <ChartPieIcon fontSize="small" />
-      // },
+      {
+        title: t('Finance'),
+        path: '/dashboard/finance',
+        icon: <ChartPieIcon fontSize="small" />
+      },
       // {
       //   title: t('Logistics'),
       //   path: '/dashboard/logistics',
@@ -65,7 +70,7 @@ const getSections = (t) => [
       //   />
       // },
       
-    ]
+    ].filter((item)=>roleRoutes[user.roles].test(item.path))
   },
   {
     title: t("Management"),
@@ -80,17 +85,12 @@ const getSections = (t) => [
         path: "/dashboard/projects",
         icon: <AppsIcon fontSize="small" />
       },
-      // {
-      //   title: t("Task Manager"),
-      //   path: "/dashboard/tasks",
-      //   icon: <AssignmentIcon fontSize="small" />,
-      //   children: [
-      //     {
-      //       title: t("Tasks"),
-      //       path: "/dashboard/tasks",
-      //     },
-      //   ],
-      // },
+      {
+        title: t("Tasks"),
+        path: "/dashboard/tasks",
+        icon: <AssignmentIcon fontSize="small" />,
+
+      },
       // {
       //   title: t('Products'),
       //   path: '/dashboard/products',
@@ -136,7 +136,7 @@ const getSections = (t) => [
       //     }
       //   ]
       // }
-    ],
+    ].filter((item)=>roleRoutes[user.roles].test(item.path)),
   },
   {
     title: t("Settings"),
@@ -146,7 +146,12 @@ const getSections = (t) => [
         path: "/dashboard/account",
         icon: <UsersIcon fontSize="small" />,
       },
-    ],
+      {
+        title: t("Billing"),
+        path: "/dashboard/finance/billing",
+        icon: <UsersIcon fontSize="small" />,
+      },
+    ].filter((item)=>roleRoutes[user.roles].test(item.path)),
   },
   // {
   //   title: t('Projects'),
@@ -285,8 +290,8 @@ const getSections = (t) => [
   //     }
   //   ]
   // }
-];
-
+].filter((item)=>item.items.length > 0):[];
+ 
 export const DashboardSidebar = (props) => {
   const { onClose, open } = props;
   const router = useRouter();
@@ -294,7 +299,8 @@ export const DashboardSidebar = (props) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     noSsr: true,
   });
-  const sections = useMemo(() => getSections(t), [t]);
+  const { user } = useAuth();
+  const sections = useMemo(() => getSections(t, user), [t, user]);
   const organizationsRef = useRef(null);
   const [openOrganizationsPopover, setOpenOrganizationsPopover] =
     useState(false);

@@ -208,24 +208,24 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3} marginTop={1}>
             <FormControl fullWidth>
-              <InputLabel>Role *</InputLabel>
-              <Select type="date" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange} fullWidth>
-                <MenuItem value="Admin">Super Administrator</MenuItem>
-                {/* <MenuItem value="Owner">Owner</MenuItem> */}
-                <MenuItem value="Data Manager">Data Manager</MenuItem>
-                <MenuItem value="Billing Manager">Billing Manager</MenuItem>
-                <MenuItem value="Standard user">Standard user</MenuItem>
-                <MenuItem value="External user">External User</MenuItem>
+              <InputLabel>Role Type *</InputLabel>
+              <Select type="text" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange}>
+              <MenuItem value="Admin">Administrator</MenuItem>
+              <MenuItem value="Billing Manager">Billing Manager</MenuItem>
+              <MenuItem value="Data Manager">Data Manager</MenuItem>
+              <MenuItem value="Supervisor">Supervisor</MenuItem>
+              <MenuItem value="Standard User">Standard User</MenuItem>
+                {/* <MenuItem value="External user">External User</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
         </Grid>
 
-        <Grid item md={12} sm={12} display="flex" justifyContent="space-between">
+        <Grid item md={12} sm={12} display="flex" justifyContent="flex-end">
           {
             loading || formik.isSubmitting ? (
-              <Button variant="contained" disabled>
-                <CircularProgress color="inherit" />
+              <Button variant="contained" disabled startIcon={<CircularProgress color="inherit" />}>
+                Loading...
               </Button>
             ) : (
               <Button variant="contained" onClick={handleCreateUser}>
@@ -233,7 +233,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               </Button>
             )
           }
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}  variant="outlined" style={{marginLeft:"16px"}}>Cancel</Button>
         </Grid>
       </Grid>
     </form>

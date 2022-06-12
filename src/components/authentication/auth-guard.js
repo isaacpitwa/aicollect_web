@@ -13,13 +13,20 @@ export const AuthGuard = (props) => {
       if (!router.isReady) {
         return;
       }
-
       if (!auth.isAuthenticated) {
         router.push({
           pathname: '/',
           query: { returnUrl: router.asPath }
         });
       } else {
+        if(!roleRoutes[auth.user.roles].test(router.asPath)){
+          console.log(`User of Roles ${auth.user.roles}: cannot access Route ${router.asPath}`);
+          router.push({
+            pathname: IndexRedirect[auth.user.roles],
+            // query: { returnUrl: router.asPath }
+          });
+        }
+        console.log(`User of Roles ${auth.user.roles}: cannot access Route ${router.asPath}`);
         setChecked(true);
       }
     },
@@ -35,6 +42,33 @@ export const AuthGuard = (props) => {
 
   return <>{children}</>;
 };
+
+const isBillingRoute = new RegExp(/^\/dashboard\/finance\/billing\.*/g); 
+const isDataRoute = new RegExp(/^\/dashboard\/projects\.*/g); 
+const isstandardRoute = new RegExp(/^\/dashboard\/tasks\.*/g);
+const isExternalRoute = new RegExp(/^\/dashboard\/collections\.*/g);
+const allRoutes = new RegExp(/^\.*/g);
+const sharedRoutes = new RegExp(/^\/dashboard\/account\.*/g);
+
+export const roleRoutes = {
+  'Billing Manager': isBillingRoute,
+  'Standard User' : isstandardRoute,
+  'Data Manager' : isDataRoute,
+  'Supervisor' : isDataRoute,
+  'Owner' : allRoutes,
+  'Admin' :allRoutes,
+  'External user':isExternalRoute,
+}
+
+export const IndexRedirect = {
+  'Billing Manager': '/dashboard/finance/billing',
+  'Standard User' : '/dashboard/tasks',
+  'Data Manager' : '/dashboard/projects',
+  'Supervisor' : '/dashboard/projects',
+  'Owner' : '/dashboard',
+  'Admin' :'/dashboard',
+  'External user': '/collections/timeout',
+}
 
 AuthGuard.propTypes = {
   children: PropTypes.node

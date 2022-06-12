@@ -23,12 +23,13 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
+import { IndexRedirect } from "./auth-guard";
 
 export const JWTLogin = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const isMounted = useMounted();
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -50,9 +51,8 @@ export const JWTLogin = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         await login(values.email, values.password);
-
         if (isMounted()) {
-          const returnUrl = router.query.returnUrl || "/dashboard";
+          const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
           router.push(returnUrl);
         }
       } catch (err) {

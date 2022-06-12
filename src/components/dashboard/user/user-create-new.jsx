@@ -54,12 +54,12 @@ const CreateNewUserDialog = ({ open, handleClose, users, getClientUsers }) => {
     setValue(newValue);
   };
 
-  const supervisors = users.filter((user) => user.roles === 'Admin');
+  const supervisors = users.filter((user) => user.roles === 'Supervisor');
   return (
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="lg">
+      maxWidth="md">
       <DialogTitle>Create new user</DialogTitle>
       <DialogContent>
         <Box sx={{ width: '100%' }}>
