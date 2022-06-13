@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 
 
 COPY /.env.example_temp ./.env
-RUN npm install -u --frozen-lockfile
+RUN npm install -u --frozen-lockfile --legacy-peer-deps
 
 FROM node:lts as builder
 WORKDIR /aicollect-web-app
