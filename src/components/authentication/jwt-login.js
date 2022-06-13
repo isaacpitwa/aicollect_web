@@ -50,11 +50,11 @@ export const JWTLogin = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await login(values.email, values.password);
-        if (isMounted()) {
-          const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
-          router.push(returnUrl);
-        }
+       await login(values.email, values.password);
+        // if (isMounted()) {
+        //   const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
+        //   router.push(returnUrl);
+        // }
       } catch (err) {
         console.error(err);
 
