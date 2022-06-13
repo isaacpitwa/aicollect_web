@@ -60,7 +60,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
 
   const handleAddTeamMembers = async () => {
     if(user.roles =='Supervisor'){
-      setMember((prevState) => ({ ...prevState, supervisor: user }));
+      setMember((prevState) => ({ ...prevState, supervisor: user.id }));
 
     }
     try {
@@ -68,11 +68,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         userId: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
-        supervisor:  member.supervisor.includes(id) ? {
-          id: member.supervisor.id,
-          name: `${ member.supervisor.firstname} ${ member.supervisor.lastname}`,
-          email:  member.supervisor.email,
-        }:null,
+        supervisor:  member.supervisor.includes(id) ? member.supervisor.id:null,
         createdBy: {
           id: user.id,
           name: `${user.firstname} ${user.lastname}`,
