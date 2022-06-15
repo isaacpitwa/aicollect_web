@@ -25,6 +25,8 @@ import { useMounted } from "../../hooks/use-mounted";
 import { billingPlanApi } from "../../api/billingplan-api";
 import { fileToBase64 } from "../../utils/file-to-base64";
 import { IndexRedirect } from "./auth-guard";
+import toast from 'react-hot-toast';
+
 
 export const Profile = (props) => {
   const [profileImage, setProfileImage] = useState(null);

@@ -14,6 +14,8 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
+import {IndexRedirect} from '../../components/authentication/auth-guard';
+
 
 export const CompleteUserProfile = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +62,7 @@ export const CompleteUserProfile = (props) => {
         await profileUpdate(user);
 
         if (isMounted()) {
-          const returnUrl = "/";
+          const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
           router.push(returnUrl);
         }
       } catch (err) {

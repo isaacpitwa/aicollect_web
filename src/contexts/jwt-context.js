@@ -123,8 +123,8 @@ export const AuthProvider = (props) => {
         user
       }
     });
-    const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
-    router.push(returnUrl);
+    // const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
+    // router.push(returnUrl);
   };
 
 
