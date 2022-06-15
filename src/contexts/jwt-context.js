@@ -125,6 +125,7 @@ export const AuthProvider = (props) => {
     });
     // const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
     // router.push(returnUrl);
+    return user;
   };
 
 

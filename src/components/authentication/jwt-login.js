@@ -29,7 +29,7 @@ export const JWTLogin = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const isMounted = useMounted();
   const router = useRouter();
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -50,10 +50,11 @@ export const JWTLogin = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-       await login(values.email, values.password);
+      const user = await login(values.email, values.password);
+        const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
+        router.push(returnUrl);
       } catch (err) {
         console.error(err);
-
         if (isMounted()) {
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
