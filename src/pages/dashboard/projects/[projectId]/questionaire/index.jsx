@@ -303,8 +303,8 @@ const QuestionaireList = () => {
     try {
       // TODO: Find sectorID
       const { Profile: { sector } } = user;
-      console.log('sector', sector);
-      const data = await sectorApi.getSectorModules(sector);
+      console.log('sector', 2);
+      const data = await sectorApi.getSectorModules(sector??2);
       if (data) {
         console.log(data);
         setModules(data);

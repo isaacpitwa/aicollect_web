@@ -71,7 +71,7 @@ export const Profile = (props) => {
         }
       } catch (err) {
         console.error(err);
-
+        toast.error(err.message?? 'Something went wrong');
         if (isMounted()) {
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
