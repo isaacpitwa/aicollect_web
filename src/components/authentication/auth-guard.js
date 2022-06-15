@@ -43,18 +43,23 @@ export const AuthGuard = (props) => {
   return <>{children}</>;
 };
 
+
+const allRoutes = new RegExp(/^\.*/g);
+const accountRoute = new RegExp(/^\/dashboard\/account\.*/g);
+const createPasswordRoute = new RegExp(/^\/createPassword\.*/g);
+const createProfileRoute = new RegExp(/^\/createProfile\.*/g);
+
+const sharedRoutes = new RegExp(accountRoute.source + '|' + createPasswordRoute.source + '|' + createProfileRoute.source);
 const isBillingRoute = new RegExp(/^\/dashboard\/finance\/billing\.*/g); 
 const isDataRoute = new RegExp(/^\/dashboard\/projects\.*/g); 
 const isstandardRoute = new RegExp(/^\/dashboard\/tasks\.*/g);
 const isExternalRoute = new RegExp(/^\/dashboard\/collections\.*/g);
-const allRoutes = new RegExp(/^\.*/g);
-const sharedRoutes = new RegExp(/^\/dashboard\/account\.*/g);
 
 export const roleRoutes = {
-  'Billing Manager': isBillingRoute,
-  'Standard User' : isstandardRoute,
-  'Data Manager' : isDataRoute,
-  'Supervisor' : isDataRoute,
+  'Billing Manager': new RegExp(sharedRoutes.source + '|' + isBillingRoute.source),
+  'Standard User' : new RegExp(sharedRoutes.source + '|' + isstandardRoute.source),
+  'Data Manager' : new RegExp(sharedRoutes.source + '|' + isDataRoute.source),
+  'Supervisor' :  new RegExp(sharedRoutes.source + '|' + isDataRoute.source),
   'Owner' : allRoutes,
   'Admin' :allRoutes,
   'External user':isExternalRoute,
