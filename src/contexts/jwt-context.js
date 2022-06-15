@@ -114,10 +114,6 @@ export const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-    // const accessToken = await authApi.login({ email, password });
-    // const user = await authApi.me(accessToken);
-
-    // localStorage.setItem('accessToken', accessToken);
     const accessToken = await authenticationApi.login({ email, password });
     const user = await authenticationApi.userProfile(accessToken);
     localStorage.setItem('accessToken', accessToken);
@@ -127,7 +123,11 @@ export const AuthProvider = (props) => {
         user
       }
     });
+    // const returnUrl = router.query.returnUrl || IndexRedirect[user.roles];
+    // router.push(returnUrl);
+    return user;
   };
+
 
   const logout = async () => {
     localStorage.removeItem('accessToken');
