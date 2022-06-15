@@ -23,23 +23,18 @@ export const DashboardLayout = (props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
   const [isTimedOut, setIsTimedOut] = useState(false);
-  const [timeout, setTimeout] = useState(1000 * 60 * 1); //Defines the Session Time out
+  const [timeout, setTimeout] = useState(1000 * 60 * 60* 1); //Defines the Session Time out = 1 minute
   const router = useRouter()
 
   const  onAction = ()=>{
-    console.log('user did something')
     setIsTimedOut(false);
   }
   const onActive = ()=>{
-    console.log('user is active')
     setIsTimedOut(false);
   }
   const onIdle = ()=>{
-    console.log('user is idle')
     setIsIdle(true)
     if (isTimedOut) {
-      console.log('user is timed out')
-        // props.history.push('/')
         router.push(`/authentication/lock?returnUrl=${router.asPath}`);
     } else {
       idleTimer.reset();
