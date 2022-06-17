@@ -40,7 +40,7 @@ export const CreateNewFieldFormDialog = ({ open, handleClose, user }) => {
       const formResponse = await FieldFormsApi.createNewFieldForm({...metaData});
       console.log(formResponse);
       if (formResponse.data.name) {
-        router.push(`/dashboard/projects/${router.query.projectId}/questionaire/${formResponse.data._id}/form`);
+        router.push(`/dashboard/projects/${router.query.projectId}/form-fields/${formResponse.data._id}/form`);
       }
     } catch (error) {
       console.log(error);

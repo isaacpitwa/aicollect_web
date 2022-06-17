@@ -14,7 +14,7 @@ const Form = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Form Builder</title>
+        <title>Dashboard: Field  Form Builder</title>
       </Head>
       <Box
         component="main"
@@ -25,7 +25,7 @@ const Form = () => {
       >
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <FormProvider questionaireId={questionaireId} isFormField ={false}>
+            <FormProvider questionaireId={questionaireId} isFormField ={true}>
               <Questionaire />
             </FormProvider>
           </Box>

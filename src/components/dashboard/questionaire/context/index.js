@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
+import { FieldFormsApi } from "../../../../api/fieldform-api";
 
 import { FormsApi } from '../../../../api/forms-api'
 import {
@@ -21,7 +22,7 @@ export const FormContext = createContext();
  */
 const FormProvider = (props) => {
 
-    const { questionaireId } = props;
+    const { questionaireId, isFormField } = props;
 
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false);
@@ -50,7 +51,7 @@ const FormProvider = (props) => {
     const getFormData = async () => {
         setIsLoaded(false)
         try {
-            let data = await FormsApi.getFormDetails(questionaireId);
+            let data = isFormField ? await FieldFormsApi.getFormDetails(questionaireId):  await FormsApi.getFormDetails(questionaireId);
             if (data) {
                 getFormDetails(data);
             }
