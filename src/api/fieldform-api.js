@@ -1,7 +1,7 @@
 class FieldForms {
     async getAllProjectForms(projectId, clientId) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/field/forms`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/fields/forms`, {
           method: 'POST',
           headers: {
             'Content-Type': 'Application/json',
@@ -12,7 +12,7 @@ class FieldForms {
   
         const data = await response.json();
         if (data.status === 200) {
-          return data.data;
+          return data;
         }
       } catch (err) {
         console.error(err);
@@ -56,7 +56,7 @@ class FieldForms {
   
     async addFieldsToNewForm(formData) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/update`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/fields/update`, {
           method: 'POST',
           headers: {
             'Content-Type': 'Application/json',
@@ -83,7 +83,7 @@ class FieldForms {
      */
     async getFormResponses(formId) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/responses/${formId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/fields/responses/${formId}`, {
           headers: {
             'Content-Type': 'Application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`

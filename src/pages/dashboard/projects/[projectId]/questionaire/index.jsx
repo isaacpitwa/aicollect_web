@@ -41,6 +41,7 @@ import { FormsApi } from '../../../../../api/forms-api';
 import { projectsApi } from '../../../../../api/projects-api';
 import { sectorApi } from '../../../../../api/sectors-api';
 import { FieldFormListTable } from '../../../../../components/dashboard/projectDetails/fieldforms/field-questioniare-list-table';
+import { FieldFormsApi } from '../../../../../api/fieldform-api';
 
 const tabs = [
   {
@@ -148,10 +149,18 @@ const QuestionaireList = () => {
   const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [questionaires, setQuestionaires] = useState([]);
+  const [fieldForms, setFieldForms] = useState([]);
   const [currentTab, setCurrentTab] = useState('forms');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
+
+
+  const [pageField, setPageField] = useState(0);
+  const [rowsPerPageField, setRowsPerPageField] = useState(10);
+  const [sortField, setSortField] = useState(sortOptions[0].value);
+
+  
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
@@ -280,6 +289,28 @@ const QuestionaireList = () => {
     }
   }, [isMounted, setQuestionaires, user, projectId, module]);
 
+  const getfieldForms = useCallback(async () => {
+    try {
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        clientId = user.clientId;
+      }
+      const data = await FieldFormsApi.getAllProjectForms(projectId, clientId);
+      if (isMounted && data) {
+        if (data.status === 200) {
+          toast.success('Field Forms  have been retrieved', { duration: 5000 });
+          setFieldForms(data.data);
+        } else {
+          toast.error(data.message, { duration: 7000 });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted, setFieldForms, user, projectId]);
+
   const fetchProjectDetails = useCallback(async () => {
     try {
       const data = await projectsApi.fetchProjectDetails(projectId);
@@ -302,6 +333,11 @@ const QuestionaireList = () => {
   useEffect(() => {
     fetchProjectDetails();
   }, []);
+
+  useEffect(() => {
+    getfieldForms();
+  },
+  []);
 
   const getSectorModules = useCallback(async () => {
     try {
@@ -363,6 +399,24 @@ const QuestionaireList = () => {
   const filteredCustomers = applyFilters(questionaires, filters);
   const sortedCustomers = applySort(filteredCustomers, sort);
   const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
+
+
+  const handleSortChangeField = (event) => {
+    setSortField(event.target.value);
+  };
+
+  const handlePageChangeField = (event, newPage) => {
+    setPageField(newPage);
+  };
+
+  const handleRowsPerPageChangeField = (event) => {
+    setRowsPerPageField(parseInt(event.target.value, 10));
+  };
+  
+    // Usually query is done on backend with indexing solutions
+    const filteredFieldForms = applyFilters(fieldForms, filters);
+    const sortedFieldForms = applySort(filteredFieldForms, sortField);
+    const paginatedFieldForms = applyPagination(sortedFieldForms, pageField, rowsPerPageField);
 
   return (
     <>
@@ -597,8 +651,8 @@ const QuestionaireList = () => {
               />
               <TextField
                 label="Sort By"
-                name="sort"
-                onChange={handleSortChange}
+                name="sortField"
+                onChange={handleSortChangeField}
                 select
                 SelectProps={{ native: true }}
                 sx={{ m: 1.5 }}
@@ -615,12 +669,12 @@ const QuestionaireList = () => {
               </TextField>
             </Box>
            <FieldFormListTable
-            questionaires={paginatedCustomers}
-            questionairesCount={filteredCustomers.length}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            questionaires={paginatedFieldForms}
+            questionairesCount={filteredFieldForms.length}
+            onPageChange={handlePageChangeField}
+            onRowsPerPageChange={handleRowsPerPageChangeField}
+            rowsPerPage={rowsPerPageField}
+            page={pageField}
            />
            </TabPanel>
           </Card>
