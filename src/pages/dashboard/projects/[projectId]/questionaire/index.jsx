@@ -16,6 +16,7 @@ import {
   Stack,
   IconButton
 } from '@mui/material';
+import { TabPanel, TabContext } from '@mui/lab';
 import NextLink from 'next/link';
 import { useDropzone } from 'react-dropzone';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -41,16 +42,12 @@ import { sectorApi } from '../../../../../api/sectors-api';
 
 const tabs = [
   {
-    label: 'All',
-    value: 'all'
-  },
-  {
     label: 'Registrations',
-    value: 'hasAcceptedMarketing'
+    value: 'forms'
   },
   {
-    label: 'Field Registrations',
-    value: 'isProspect'
+    label: 'Field Information',
+    value: 'field'
   }
 ];
 
@@ -149,7 +146,7 @@ const QuestionaireList = () => {
   const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [questionaires, setQuestionaires] = useState([]);
-  const [currentTab, setCurrentTab] = useState('all');
+  const [currentTab, setCurrentTab] = useState('forms');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
@@ -404,8 +401,9 @@ const QuestionaireList = () => {
           </Stack>
 
 
-
+          <TabContext value={currentTab}>
           <Card>
+        
             <Tabs
               indicatorColor="primary"
               onChange={handleTabsChange}
@@ -424,6 +422,7 @@ const QuestionaireList = () => {
               ))}
             </Tabs>
             <Divider />
+            <TabPanel value='forms' index={0}  sx={{ px:0}}>
             <Box
               sx={{
                 alignItems: 'center',
@@ -519,7 +518,99 @@ const QuestionaireList = () => {
               rowsPerPage={rowsPerPage}
               page={page}
             />
+           </TabPanel>
+           <TabPanel value='field' index={1} sx={{ px:0}}>
+           <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexWrap: 'wrap',
+                m: -1.5,
+                px: 3
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleQueryChange}
+                sx={{
+                  flexGrow: 1,
+                  m: 1.5
+                }}
+              >
+                <TextField
+                  defaultValue=""
+                  fullWidth
+                  inputProps={{ ref: queryRef }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  placeholder="Search"
+                />
+              </Box>
+              <Button
+                startIcon={<CloudDownloadIcon fontSize="small" />}
+                sx={{ m: 1 }}
+                variant="contained"
+                onClick={handleOpenImportData}
+              >
+                Import
+              </Button>
+              <ExcelDataImport
+                open={openImportData}
+                handleClose={handleCloseImportData}
+                excelFile={excelFile}
+                setExcelFile={setExcelFile}
+                getRootProps={getRootProps}
+                getInputProps={getInputProps}
+                handleCreateUploadFormToDatabase={handleCreateUploadFormToDatabase}
+                isDragActive={isDragActive} />
+              <Button
+                startIcon={<AddTaskRounded fontSize="small" />}
+                sx={{ m: 1 }}
+                variant="contained"
+              >
+                Create From Template
+              </Button>
+              <Button
+                startIcon={<AddCircleOutlineIcon fontSize="small" />}
+                sx={{ m: 1 }}
+                variant="contained"
+                onClick={handleOpenCreateFormDialog}
+              >
+                Create New Form
+              </Button>
+              <CreateNewFormDialog
+                open={openCreateFormDialog}
+                handleClose={handleCloseCreateFormDialog}
+                user={user}
+              />
+              <TextField
+                label="Sort By"
+                name="sort"
+                onChange={handleSortChange}
+                select
+                SelectProps={{ native: true }}
+                sx={{ m: 1.5 }}
+                value={sort}
+              >
+                {sortOptions.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Box>
+            <Typography variant="h4"> Field Forms Showing Here</Typography>
+           </TabPanel>
           </Card>
+          </TabContext>
         </Container>
       </Box>
     </>
