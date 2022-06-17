@@ -57,9 +57,9 @@ class FieldForms {
       }
     }
   
-    async getFormDetails(formId) {
+    async getFieldFormDetails(formId) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/${formId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/fields/${formId}`, {
           headers: {
             'Content-Type': 'Application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
