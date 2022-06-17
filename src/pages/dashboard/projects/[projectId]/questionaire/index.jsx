@@ -28,6 +28,7 @@ import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
 import { CreateNewFormDialog } from '../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
+import {CreateNewFieldFormDialog} from '../../../../../components/dashboard/projectDetails/fieldforms/createNewfieldFormDialog';
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { useAuth } from '../../../../../hooks/use-auth';
 import { Search as SearchIcon } from '../../../../../icons/search';
@@ -161,10 +162,15 @@ const QuestionaireList = () => {
   const [colDefs, setColDefs] = useState();
   const [data, setData] = useState(null);
   const [openCreateFormDialog, setOpenCreateFormDialog] = useState(false);
+  const [openCreateFieldFormDialog, setOpenCreateFieldFormDialog] = useState(false);
+
   const [modules, setModules] = useState([]);
 
   const handleOpenCreateFormDialog = () => setOpenCreateFormDialog(true);
+  const handleOpenCreateFieldFormDialog = () => setOpenCreateFieldFormDialog(true);
   const handleCloseCreateFormDialog = () => setOpenCreateFormDialog(false);
+  const handleCloseCreateFieldFormDialog = () => setOpenCreateFieldFormDialog(false);
+
 
  
   /**
@@ -579,13 +585,13 @@ const QuestionaireList = () => {
                 startIcon={<AddCircleOutlineIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
-                onClick={handleOpenCreateFormDialog}
+                onClick={handleOpenCreateFieldFormDialog}
               >
-                Create New Form
+                Create Field Form
               </Button>
-              <CreateNewFormDialog
-                open={openCreateFormDialog}
-                handleClose={handleCloseCreateFormDialog}
+              <CreateNewFieldFormDialog
+                open={openCreateFieldFormDialog}
+                handleClose={handleCloseCreateFieldFormDialog}
                 user={user}
               />
               <TextField
