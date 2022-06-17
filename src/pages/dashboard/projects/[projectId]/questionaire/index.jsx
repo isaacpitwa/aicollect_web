@@ -40,6 +40,7 @@ import {ModuleCard} from '../../../../../components/dashboard/projectDetails/mod
 import { FormsApi } from '../../../../../api/forms-api';
 import { projectsApi } from '../../../../../api/projects-api';
 import { sectorApi } from '../../../../../api/sectors-api';
+import { FieldFormListTable } from '../../../../../components/dashboard/projectDetails/fieldforms/field-questioniare-list-table';
 
 const tabs = [
   {
@@ -613,7 +614,14 @@ const QuestionaireList = () => {
                 ))}
               </TextField>
             </Box>
-            <Typography variant="h4"> Field Forms Showing Here</Typography>
+           <FieldFormListTable
+            questionaires={paginatedCustomers}
+            questionairesCount={filteredCustomers.length}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            rowsPerPage={rowsPerPage}
+            page={page}
+           />
            </TabPanel>
           </Card>
           </TabContext>

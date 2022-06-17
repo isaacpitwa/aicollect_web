@@ -1,7 +1,7 @@
 class FieldForms {
     async getAllProjectForms(projectId, clientId) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/getClientForms`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/field/forms`, {
           method: 'POST',
           headers: {
             'Content-Type': 'Application/json',
@@ -13,27 +13,6 @@ class FieldForms {
         const data = await response.json();
         if (data.status === 200) {
           return data.data;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    async getModuleForms(projectId, clientId, module) {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/getModuleForms`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'Application/json',
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-          },
-          body: JSON.stringify({ projectId, clientId, module })
-        });
-  
-        const data = await response.json();
-        console.log('questionaires', data);
-        if (data) {
-          console.log('Data from questionaires response', data);
-          return data;
         }
       } catch (err) {
         console.error(err);
