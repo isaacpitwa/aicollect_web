@@ -51,7 +51,8 @@ const FormProvider = (props) => {
     const getFormData = async () => {
         setIsLoaded(false)
         try {
-            let data = isFormField ? await FieldFormsApi.getFormDetails(questionaireId):  await FormsApi.getFormDetails(questionaireId);
+            console.log(`Is form Field Form: ${isFormField} \n field Form ID : ${questionaireId} `, );
+            let data = isFormField ? await FieldFormsApi.getFieldFormDetails(questionaireId):  await FormsApi.getFormDetails(questionaireId);
             if (data) {
                 getFormDetails(data);
             }
@@ -201,7 +202,7 @@ const FormProvider = (props) => {
         let newForm = formData
         newForm.formFields = componentsData
         setFormData(newForm)
-        const updatedForm = await FormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm });
+        const updatedForm = isFormField ? await FieldFormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm }) : await FormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm });
         getFormData(updatedForm.formId);
     }
 

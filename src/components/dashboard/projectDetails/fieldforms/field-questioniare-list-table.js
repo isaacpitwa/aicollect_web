@@ -186,7 +186,7 @@ export const FieldFormListTable = (props) => {
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}/form`}
+                      href={`/dashboard/projects/${router.query.projectId}/form-fields/${questionaire._id}/form`}
                       passHref
                     >
                       <IconButton component="a">
@@ -194,7 +194,7 @@ export const FieldFormListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}`}
+                      href={`/dashboard/projects/${router.query.projectId}/form-fields/${questionaire._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -202,7 +202,7 @@ export const FieldFormListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}`}
+                      href={`/dashboard/projects/${router.query.projectId}/form-fields/${questionaire._id}`}
                       passHref
                     >
                       <IconButton component="a">
@@ -210,7 +210,7 @@ export const FieldFormListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href={`/dashboard/projects/${router.query.projectId}/questionaire/${questionaire._id}`}
+                      href={`/dashboard/projects/${router.query.projectId}/form-fields/${questionaire._id}`}
                       passHref
                     >
                       <IconButton component="a">

@@ -9,7 +9,7 @@ import FormProvider from "../../../../../../components/dashboard/questionaire/co
 
 const Form = () => {
   const router = useRouter();
-  const { questionaireId } = router.query;
+  const { formFiedId } = router.query;
 
   return (
     <>
@@ -25,7 +25,7 @@ const Form = () => {
       >
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <FormProvider questionaireId={questionaireId} isFormField ={true}>
+            <FormProvider questionaireId={formFiedId} isFormField ={true}>
               <Questionaire />
             </FormProvider>
           </Box>

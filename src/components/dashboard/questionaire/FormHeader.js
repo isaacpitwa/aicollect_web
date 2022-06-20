@@ -129,7 +129,7 @@ const FormHeader = () => {
                             variant="outlined"
                             size="small"
                             label={'Form Name'}
-                            value={isLoaded?formName:'Loading...'}
+                            value={isLoaded? formName:'Loading...'}
                             onChange={handleFormName}
                             className={classes.formField}
                             InputLabelProps={{
