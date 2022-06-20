@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
+import { FieldFormsApi } from "../../../../api/fieldform-api";
 
 import { FormsApi } from '../../../../api/forms-api'
 import {
@@ -21,7 +22,7 @@ export const FormContext = createContext();
  */
 const FormProvider = (props) => {
 
-    const { questionaireId } = props;
+    const { questionaireId, isFormField } = props;
 
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false);
@@ -50,7 +51,8 @@ const FormProvider = (props) => {
     const getFormData = async () => {
         setIsLoaded(false)
         try {
-            let data = await FormsApi.getFormDetails(questionaireId);
+            console.log(`Is form Field Form: ${isFormField} \n field Form ID : ${questionaireId} `, );
+            let data = isFormField ? await FieldFormsApi.getFieldFormDetails(questionaireId):  await FormsApi.getFormDetails(questionaireId);
             if (data) {
                 getFormDetails(data);
             }
@@ -200,7 +202,7 @@ const FormProvider = (props) => {
         let newForm = formData
         newForm.formFields = componentsData
         setFormData(newForm)
-        const updatedForm = await FormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm });
+        const updatedForm = isFormField ? await FieldFormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm }) : await FormsApi.addFieldsToNewForm({ formId: newForm._id, ...newForm });
         getFormData(updatedForm.formId);
     }
 

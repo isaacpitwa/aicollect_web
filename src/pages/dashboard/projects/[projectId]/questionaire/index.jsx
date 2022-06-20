@@ -16,6 +16,7 @@ import {
   Stack,
   IconButton
 } from '@mui/material';
+import { TabPanel, TabContext } from '@mui/lab';
 import NextLink from 'next/link';
 import { useDropzone } from 'react-dropzone';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -27,6 +28,7 @@ import { AuthGuard } from '../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireListTable } from '../../../../../components/dashboard/projectDetails/questionaires/questionaire-list-table';
 import { CreateNewFormDialog } from '../../../../../components/dashboard/projectDetails/questionaires/createNewFormDialog';
+import {CreateNewFieldFormDialog} from '../../../../../components/dashboard/projectDetails/fieldforms/createNewfieldFormDialog';
 import { useMounted } from '../../../../../hooks/use-mounted';
 import { useAuth } from '../../../../../hooks/use-auth';
 import { Search as SearchIcon } from '../../../../../icons/search';
@@ -38,19 +40,17 @@ import {ModuleCard} from '../../../../../components/dashboard/projectDetails/mod
 import { FormsApi } from '../../../../../api/forms-api';
 import { projectsApi } from '../../../../../api/projects-api';
 import { sectorApi } from '../../../../../api/sectors-api';
+import { FieldFormListTable } from '../../../../../components/dashboard/projectDetails/fieldforms/field-questioniare-list-table';
+import { FieldFormsApi } from '../../../../../api/fieldform-api';
 
 const tabs = [
   {
-    label: 'All',
-    value: 'all'
-  },
-  {
     label: 'Registrations',
-    value: 'hasAcceptedMarketing'
+    value: 'forms'
   },
   {
-    label: 'Field Registrations',
-    value: 'isProspect'
+    label: 'Field Information',
+    value: 'field'
   }
 ];
 
@@ -149,10 +149,18 @@ const QuestionaireList = () => {
   const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [questionaires, setQuestionaires] = useState([]);
-  const [currentTab, setCurrentTab] = useState('all');
+  const [fieldForms, setFieldForms] = useState([]);
+  const [currentTab, setCurrentTab] = useState('forms');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
+
+
+  const [pageField, setPageField] = useState(0);
+  const [rowsPerPageField, setRowsPerPageField] = useState(10);
+  const [sortField, setSortField] = useState(sortOptions[0].value);
+
+  
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
@@ -164,10 +172,15 @@ const QuestionaireList = () => {
   const [colDefs, setColDefs] = useState();
   const [data, setData] = useState(null);
   const [openCreateFormDialog, setOpenCreateFormDialog] = useState(false);
+  const [openCreateFieldFormDialog, setOpenCreateFieldFormDialog] = useState(false);
+
   const [modules, setModules] = useState([]);
 
   const handleOpenCreateFormDialog = () => setOpenCreateFormDialog(true);
+  const handleOpenCreateFieldFormDialog = () => setOpenCreateFieldFormDialog(true);
   const handleCloseCreateFormDialog = () => setOpenCreateFormDialog(false);
+  const handleCloseCreateFieldFormDialog = () => setOpenCreateFieldFormDialog(false);
+
 
  
   /**
@@ -276,6 +289,28 @@ const QuestionaireList = () => {
     }
   }, [isMounted, setQuestionaires, user, projectId, module]);
 
+  const getfieldForms = useCallback(async () => {
+    try {
+      let clientId;
+      if (user.roles === 'Owner') {
+        clientId = user.id;
+      } else {
+        clientId = user.clientId;
+      }
+      const data = await FieldFormsApi.getAllProjectForms(projectId, clientId);
+      if (isMounted && data) {
+        if (data.status === 200) {
+          toast.success('Field Forms  have been retrieved', { duration: 5000 });
+          setFieldForms(data.data);
+        } else {
+          toast.error(data.message, { duration: 7000 });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted, setFieldForms, user, projectId]);
+
   const fetchProjectDetails = useCallback(async () => {
     try {
       const data = await projectsApi.fetchProjectDetails(projectId);
@@ -298,6 +333,11 @@ const QuestionaireList = () => {
   useEffect(() => {
     fetchProjectDetails();
   }, []);
+
+  useEffect(() => {
+    getfieldForms();
+  },
+  []);
 
   const getSectorModules = useCallback(async () => {
     try {
@@ -360,6 +400,24 @@ const QuestionaireList = () => {
   const sortedCustomers = applySort(filteredCustomers, sort);
   const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
 
+
+  const handleSortChangeField = (event) => {
+    setSortField(event.target.value);
+  };
+
+  const handlePageChangeField = (event, newPage) => {
+    setPageField(newPage);
+  };
+
+  const handleRowsPerPageChangeField = (event) => {
+    setRowsPerPageField(parseInt(event.target.value, 10));
+  };
+  
+    // Usually query is done on backend with indexing solutions
+    const filteredFieldForms = applyFilters(fieldForms, filters);
+    const sortedFieldForms = applySort(filteredFieldForms, sortField);
+    const paginatedFieldForms = applyPagination(sortedFieldForms, pageField, rowsPerPageField);
+
   return (
     <>
       <Head>
@@ -404,8 +462,9 @@ const QuestionaireList = () => {
           </Stack>
 
 
-
+          <TabContext value={currentTab}>
           <Card>
+        
             <Tabs
               indicatorColor="primary"
               onChange={handleTabsChange}
@@ -424,6 +483,7 @@ const QuestionaireList = () => {
               ))}
             </Tabs>
             <Divider />
+            <TabPanel value='forms' index={0}  sx={{ px:0}}>
             <Box
               sx={{
                 alignItems: 'center',
@@ -519,7 +579,106 @@ const QuestionaireList = () => {
               rowsPerPage={rowsPerPage}
               page={page}
             />
+           </TabPanel>
+           <TabPanel value='field' index={1} sx={{ px:0}}>
+           <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexWrap: 'wrap',
+                m: -1.5,
+                px: 3
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleQueryChange}
+                sx={{
+                  flexGrow: 1,
+                  m: 1.5
+                }}
+              >
+                <TextField
+                  defaultValue=""
+                  fullWidth
+                  inputProps={{ ref: queryRef }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  placeholder="Search"
+                />
+              </Box>
+              <Button
+                startIcon={<CloudDownloadIcon fontSize="small" />}
+                sx={{ m: 1 }}
+                variant="contained"
+                onClick={handleOpenImportData}
+              >
+                Import
+              </Button>
+              <ExcelDataImport
+                open={openImportData}
+                handleClose={handleCloseImportData}
+                excelFile={excelFile}
+                setExcelFile={setExcelFile}
+                getRootProps={getRootProps}
+                getInputProps={getInputProps}
+                handleCreateUploadFormToDatabase={handleCreateUploadFormToDatabase}
+                isDragActive={isDragActive} />
+              <Button
+                startIcon={<AddTaskRounded fontSize="small" />}
+                sx={{ m: 1 }}
+                variant="contained"
+              >
+                Create From Template
+              </Button>
+              <Button
+                startIcon={<AddCircleOutlineIcon fontSize="small" />}
+                sx={{ m: 1 }}
+                variant="contained"
+                onClick={handleOpenCreateFieldFormDialog}
+              >
+                Create Field Form
+              </Button>
+              <CreateNewFieldFormDialog
+                open={openCreateFieldFormDialog}
+                handleClose={handleCloseCreateFieldFormDialog}
+                user={user}
+              />
+              <TextField
+                label="Sort By"
+                name="sortField"
+                onChange={handleSortChangeField}
+                select
+                SelectProps={{ native: true }}
+                sx={{ m: 1.5 }}
+                value={sort}
+              >
+                {sortOptions.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Box>
+           <FieldFormListTable
+            questionaires={paginatedFieldForms}
+            questionairesCount={filteredFieldForms.length}
+            onPageChange={handlePageChangeField}
+            onRowsPerPageChange={handleRowsPerPageChangeField}
+            rowsPerPage={rowsPerPageField}
+            page={pageField}
+           />
+           </TabPanel>
           </Card>
+          </TabContext>
         </Container>
       </Box>
     </>
