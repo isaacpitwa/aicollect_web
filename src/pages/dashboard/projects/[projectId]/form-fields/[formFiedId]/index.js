@@ -22,12 +22,11 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 // import { Auth } from '../../../../../../../../components/authentication/auth-guard';
 import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
-import { QuestionaireDetailsTable } from '../../../../../../components/dashboard/projectDetails/questionairesDetails/questionaire-list-table';
-import {QuestionaireResponseSummaryTable} from '../../../../../../components/dashboard/projectDetails/questionairesDetails/QuestionaireReponseSummary';
+import { FieldDetailsTable } from '../../../../../../components/dashboard/projectDetails/fieldforms/FieldDetailsTable';
+import {FieldResponseSummaryTable} from '../../../../../../components/dashboard/projectDetails/fieldforms/FieldResponseSummaryTable';
 import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
-import {FormsApi} from '../../../../../../api/forms-api'
 import { FieldFormsApi } from '../../../../../../api/fieldform-api';
 const tabs = [
   {
@@ -175,14 +174,14 @@ const FieldFormDetails = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   //   []);
 
-  const fetchFormResponses = async ()=>{
-    const { questionaireId} = router.query
-    const apiReponses = await FieldFormsApi.getFormResponses(questionaireId);
+  const fetchFieldFormResponses = async ()=>{
+    const { formFiedId} = router.query
+    const apiReponses = await FieldFormsApi.getFieldResponses(formFiedId);
     setResponses(apiReponses);
   }
 
   useEffect(() => {
-    fetchFormResponses()
+    fetchFieldFormResponses()
     },[])
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
@@ -338,7 +337,7 @@ const FieldFormDetails = () => {
               </TextField>
             </Box>  
             <TabPanel value='summary' index={0}>
-            <QuestionaireResponseSummaryTable
+            <FieldResponseSummaryTable
               customers={paginatedCustomers}
               customersCount={filteredCustomers.length}
               onPageChange={handlePageChange}
@@ -349,7 +348,7 @@ const FieldFormDetails = () => {
             />
             </TabPanel>
             <TabPanel value='all' index={1}>
-            <QuestionaireDetailsTable
+            <FieldDetailsTable
               customers={paginatedCustomers}
               customersCount={filteredCustomers.length}
               onPageChange={handlePageChange}

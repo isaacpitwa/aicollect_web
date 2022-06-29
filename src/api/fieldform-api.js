@@ -98,6 +98,33 @@ class FieldForms {
         return error;
       }
     }
+
+      
+    /**
+     * @function getFieldResponses
+     * @desc Responsible for fetching  questionaire Responses
+     * @arg {String} formId - Form/questionaire  Id.
+     * @returns {array} data-  Returns the collection of reposnes for  the form
+     * @author Isaac Pitwa <isaacpitwa256@gmail.com>
+     * @version 1.0.0
+     */
+     async getFieldResponses(formId) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/fields/responses/${formId}`, {
+          headers: {
+            'Content-Type': 'Application/json',
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
+        const data = await response.json();
+        if (data && data.status === 200) {
+          return data.data;
+        }
+      } catch (error) {
+        console.log(error)
+        return error;
+      }
+    }
   }
   
   export const FieldFormsApi = new FieldForms();
