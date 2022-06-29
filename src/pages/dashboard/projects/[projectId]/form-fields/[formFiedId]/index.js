@@ -175,14 +175,14 @@ const FieldFormDetails = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   //   []);
 
-  const fetchFormResponses = async ()=>{
-    const { questionaireId} = router.query
-    const apiReponses = await FieldFormsApi.getFormResponses(questionaireId);
+  const fetchFieldFormResponses = async ()=>{
+    const { formFiedId} = router.query
+    const apiReponses = await FieldFormsApi.getFieldResponses(formFiedId);
     setResponses(apiReponses);
   }
 
   useEffect(() => {
-    fetchFormResponses()
+    fetchFieldFormResponses()
     },[])
   const handleTabsChange = (event, value) => {
     const updatedFilters = {

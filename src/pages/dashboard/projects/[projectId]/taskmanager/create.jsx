@@ -52,6 +52,7 @@ import { useAuth } from '../../../../../hooks/use-auth';
 // API
 import { projectsApi } from '../../../../../api/projects-api';
 import { FormsApi } from '../../../../../api/forms-api';
+import { FieldFormsApi } from '../../../../../api/fieldform-api';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -90,11 +91,15 @@ const CreateTask = () => {
   });
 
   const [questionaires, setQuestionaires] = useState([]);
+  const [fieldForms, setFieldForms] = useState([]);
+
   const [team, setTeam] = useState([]);
   // Members to render in select Field
   const [projectMembers, setProjectMembers] = useState([]);
   // Questionaires to render in Select Field
   const [questionairesList, setQuestionairesList] = useState([]);
+  const [fieldFormList, setFieldFormList] = useState([]);
+
   const [excelFile, setExcelFile] = useState(null);
   const [schedule, setSchedule] = useState([]);
   const [fileError, setFileError] = useState(null);
@@ -122,6 +127,10 @@ const CreateTask = () => {
     {
       label: 'Assign Questionaire',
       description: `Add questionaires to the tasks.`,
+    },
+    {
+      label: 'Assign Field Form',
+      description: `Add Field Regstartion Forms to the tasks.`,
     },
   ];
 
@@ -158,11 +167,35 @@ const CreateTask = () => {
     }
   }, [setQuestionairesList, projectId, user]);
 
+
+    // Get Project Questionaires
+    const fetchFieldForms = useCallback(async () => {
+      try {
+        let clientId;
+        if (user.roles === 'Owner') {
+          clientId = user.id;
+        } else {
+          clientId = user.clientId;
+        }
+        const data = await FieldFormsApi.getAllProjectForms(projectId, clientId);
+        if (data.data) {
+          setFieldFormList(data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }, [setFieldFormList, projectId, user]);
+
   useEffect(() => {
     fetchProjectTeam();
   }, []);
+
   useEffect(() => {
     fetchQuestionaires();
+  }, []);
+
+  useEffect(() => {
+    fetchFieldForms();
   }, []);
 
   const handleChangeQuestionaires = (event) => {
@@ -174,6 +207,17 @@ const CreateTask = () => {
       typeof value === 'string' ? value.split(',') : value,
     );
   };
+
+  const handleChangeFieldForm = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFieldForms(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   const handleChangeTeam = (event) => {
     const {
       target: { value },
@@ -287,6 +331,7 @@ const CreateTask = () => {
         ...taskInformation,
         questionaire: questionaires.map((item) => item._id),
         team: formattedTeam,
+        fieldForm: fieldForms.map((item) => item._id),
         schedule,
         project: projectId,
         createdBy: {
@@ -656,6 +701,47 @@ const CreateTask = () => {
                                   MenuProps={MenuProps}
                                 >
                                   {questionairesList.map((name) => (
+                                    <MenuItem
+                                      key={name}
+                                      value={name}
+                                      style={getStyles(name, questionaires, theme)}
+                                    >
+                                      {name.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      )
+                    }
+                    {
+                      activeStep === 3 && (
+                        <Box sx={{ mb: 2 }}>
+                          <Grid container spacing={2}>
+                            <Grid item md={12} mt={3} sm={12}>
+                              <FormControl fullWidth>
+                                <InputLabel id="select-fieldForm">Field Registartion Forms</InputLabel>
+                                <Select
+                                  labelId="select-fieldForm"
+                                  id="select-fieldForm"
+                                  multiple
+                                  value={fieldForms}
+                                  onChange={handleChangeFieldForm}
+                                  input={<OutlinedInput id="select-fieldForm" label="Chip" />}
+                                  renderValue={(selected) => (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                      {selected.map((value) => (
+                                        <Chip
+                                          key={value}
+                                          label={value.name} />
+                                      ))}
+                                    </Box>
+                                  )}
+                                  MenuProps={MenuProps}
+                                >
+                                  {fieldFormList.map((name) => (
                                     <MenuItem
                                       key={name}
                                       value={name}
