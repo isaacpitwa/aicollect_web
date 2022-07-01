@@ -76,7 +76,7 @@ export const FieldDetailsTable = (props) => {
     { field: "Latitude", headName: "Latitude", width: 150 },
     { field: "Longitude", headName: "Longitude", width: 150 },
     { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
-    { field: "Code", headName: "Code", width: 150 },
+    { field: "ID", headName: "ID", width: 150 },
     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
   ];
 
@@ -119,7 +119,7 @@ export const FieldDetailsTable = (props) => {
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
       "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
-      "Code": response.code? response.code: 'N/A',
+      "ID": response.code? response.code.toUpperCase(): 'N/A',
       "Name Of Respondent": response.person ? response.person: 'N/A',
     }
     // Loop sections

@@ -14,7 +14,7 @@ import {
   Tabs,
   TextField,
   Typography,
-  
+
 } from '@mui/material';
 import { TabPanel, TabContext } from '@mui/lab';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -23,11 +23,14 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
 import { FieldDetailsTable } from '../../../../../../components/dashboard/projectDetails/fieldforms/FieldDetailsTable';
-import {FieldResponseSummaryTable} from '../../../../../../components/dashboard/projectDetails/fieldforms/FieldResponseSummaryTable';
+import { FieldResponseSummaryTable } from '../../../../../../components/dashboard/projectDetails/fieldforms/FieldResponseSummaryTable';
 import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
 import { FieldFormsApi } from '../../../../../../api/fieldform-api';
+import { projectsApi } from '../../../../../../api/projects-api';
+import { fi } from 'date-fns/locale';
+
 const tabs = [
   {
     label: 'Summary',
@@ -111,16 +114,16 @@ const applySort = (customers, sort) => {
   const stabilizedThis = customers.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
@@ -145,6 +148,12 @@ const FieldFormDetails = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
+  const [project, setProject] = useState(null);
+  const [fieldForm, setFieldForm] = useState(null);
+
+  const { projectId, formFiedId } = router.query;
+
+
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
@@ -152,37 +161,55 @@ const FieldFormDetails = () => {
     isReturning: null
   });
 
+  const fetchProjectDetails = useCallback(async () => {
+    try {
+      const data = await projectsApi.fetchProjectDetails(projectId);
+      if (data?.status === 200) {
+        setProject(data.data);
+      } else {
+        toast.error(data?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setProject, projectId]);
+
+
+  const fetchFieldFormDetails = useCallback(async () => {
+    try {
+      const data = await projectsApi.fetchFieldFormDetails(formFiedId);
+      if (data?.status === 200) {
+        setFieldForm(data.data);
+      } else {
+        toast.error(data?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setFieldForm, formFiedId]);
+
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  // const getCustomers = useCallback(async () => {
-  //   try {
-  //     const data = await customerApi.getCustomers();
+  useEffect(() => {
+    fetchProjectDetails();
+  }, []);
 
-  //     if (isMounted()) {
-  //       setCustomers(data);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, [isMounted]);
+  useEffect(() => {
+    fetchFieldFormDetails();
+  }, []);
 
-  // useEffect(() => {
-  //     getCustomers();
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []);
 
-  const fetchFieldFormResponses = async ()=>{
-    const { formFiedId} = router.query
+  const fetchFieldFormResponses = async () => {
+    const { formFiedId } = router.query
     const apiReponses = await FieldFormsApi.getFieldResponses(formFiedId);
     setResponses(apiReponses);
   }
 
   useEffect(() => {
     fetchFieldFormResponses()
-    },[])
+  }, [])
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
       ...filters,
@@ -228,7 +255,7 @@ const FieldFormDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Questionaire Repsonses
+          Dashboard: Field Information
         </title>
       </Head>
       <Box
@@ -246,118 +273,123 @@ const FieldFormDetails = () => {
               spacing={3}
             >
               <Grid item>
-                <Typography variant="h4">
-                  Project XYZ Reponses
+                <Typography variant="h9">
+                  <NextLink
+                    href={`/dashboard/projects/${project&& project._id}`}
+                    passHref
+                    
+                  ><a style={{color:'white', textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
+                 
                 </Typography>
               </Grid>
-              
+
             </Grid>
-            
+
           </Box>
 
-          
+
 
           <Card>
-          <TabContext value={currentTab}>
-            <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs>
-            <Divider />
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexWrap: 'wrap',
-                m: -1.5,
-                p: 3
-              }}
-            >
+            <TabContext value={currentTab}>
+              <Tabs
+                indicatorColor="primary"
+                onChange={handleTabsChange}
+                scrollButtons="auto"
+                sx={{ px: 3 }}
+                textColor="primary"
+                value={currentTab}
+                variant="scrollable"
+              >
+                {tabs.map((tab) => (
+                  <Tab
+                    key={tab.value}
+                    label={tab.label}
+                    value={tab.value}
+                  />
+                ))}
+              </Tabs>
+              <Divider />
               <Box
-                component="form"
-                onSubmit={handleQueryChange}
                 sx={{
-                  flexGrow: 1,
-                  m: 1.5
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  m: -1.5,
+                  p: 3
                 }}
               >
-                <TextField
-                  defaultValue=""
-                  fullWidth
-                  inputProps={{ ref: queryRef }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    )
+                <Box
+                  component="form"
+                  onSubmit={handleQueryChange}
+                  sx={{
+                    flexGrow: 1,
+                    m: 1.5
                   }}
-                  placeholder="Search"
-                />
+                >
+                  <TextField
+                    defaultValue=""
+                    fullWidth
+                    inputProps={{ ref: queryRef }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    placeholder="Search"
+                  />
+                </Box>
+                <Button
+                  role="link"
+                  href="/dashboard/projects/43/questionaire/6/map"
+                  startIcon={<CloudDownloadIcon fontSize="small" />}
+                  sx={{ m: 1 }}
+                  variant="contained"
+                >
+                  View Map
+                </Button>
+                <TextField
+                  label="Sort By"
+                  name="sort"
+                  onChange={handleSortChange}
+                  select
+                  SelectProps={{ native: true }}
+                  sx={{ m: 1.5 }}
+                  value={sort}
+                >
+                  {sortOptions.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
               </Box>
-              <Button
-              role="link"
-              href="/dashboard/projects/43/questionaire/6/map"
-                startIcon={<CloudDownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-                variant="contained"
-              >
-                View Map
-              </Button>
-              <TextField
-                label="Sort By"
-                name="sort"
-                onChange={handleSortChange}
-                select
-                SelectProps={{ native: true }}
-                sx={{ m: 1.5 }}
-                value={sort}
-              >
-                {sortOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Box>  
-            <TabPanel value='summary' index={0}>
-            <FieldResponseSummaryTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              responses = {responses}
-            />
-            </TabPanel>
-            <TabPanel value='all' index={1}>
-            <FieldDetailsTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              responses = {responses}
-            />
-            </TabPanel>
+              <TabPanel value='summary' index={0}>
+                <FieldResponseSummaryTable
+                  customers={paginatedCustomers}
+                  customersCount={filteredCustomers.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  responses={responses}
+                />
+              </TabPanel>
+              <TabPanel value='all' index={1}>
+                <FieldDetailsTable
+                  customers={paginatedCustomers}
+                  customersCount={filteredCustomers.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  responses={responses}
+                />
+              </TabPanel>
             </TabContext>
           </Card>
         </Container>
