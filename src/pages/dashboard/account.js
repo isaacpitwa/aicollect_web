@@ -14,10 +14,6 @@ import { useAuth } from '../../hooks/use-auth';
 
 const tabs = [
   { label: 'General', value: 'general' },
-  // { label: 'Billing', value: 'billing' },
-  // { label: 'Logs', value: 'logs' },
-  // { label: 'Notifications', value: 'notifications' },
-  // { label: 'Security', value: 'security' }
 ];
 
 const Account = () => {
