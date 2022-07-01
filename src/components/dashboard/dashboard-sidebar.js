@@ -16,6 +16,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 // import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 // import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
 import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
 import { Home as HomeIcon } from "../../icons/home";
@@ -143,9 +144,9 @@ const getSections = (t,user) => user ? [
     title: t("Settings"),
     items: [
       {
-        title: t("General"),
-        path: "/dashboard/account",
-        icon: <UsersIcon fontSize="small" />,
+        title: t("Organisation Profile"),
+        path: "/dashboard/organisation/profile",
+        icon: <LocationCityIcon fontSize="small" />,
       },
       {
         title: t("Billing"),

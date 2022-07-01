@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Container, Divider, Tab, Tabs, Typography } from '@mui/material';
-import { AuthGuard } from '../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../components/dashboard/dashboard-layout';
-import { AccountBillingSettings } from '../../components/dashboard/account/account-billing-settings';
-import { AccountGeneralSettings } from '../../components/dashboard/account/account-general-settings';
-import { AccountNotificationsSettings } from '../../components/dashboard/account/account-notifications-settings';
-import { AccountTeamSettings } from '../../components/dashboard/account/account-team-settings';
-import { AccountLogs } from '../../components/dashboard/account/account-logs';
-import { AccountSecuritySettings } from '../../components/dashboard/account/account-security-settings';
-import { gtm } from '../../lib/gtm';
-import { useAuth } from '../../hooks/use-auth';
+import { AuthGuard } from '../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { AccountBillingSettings } from '../../../components/dashboard/account/account-billing-settings';
+import { AccountGeneralSettings } from '../../../components/dashboard/account/account-general-settings';
+import { AccountNotificationsSettings } from '../../../components/dashboard/account/account-notifications-settings';
+import { AccountLogs } from '../../../components/dashboard/account/account-logs';
+import { AccountSecuritySettings } from '../../../components/dashboard/account/account-security-settings';
+import { gtm } from '../../../lib/gtm';
+import { useAuth } from '../../../hooks/use-auth';
 
 const tabs = [
   { label: 'General', value: 'general' },
@@ -20,7 +19,7 @@ const tabs = [
   // { label: 'Security', value: 'security' }
 ];
 
-const Account = () => {
+const OrganisationProfile = () => {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState('general');
 
@@ -42,7 +41,7 @@ const Account = () => {
       <Box
         component="main"
         sx={{
-          flexGrow: 1,
+          flexGrow: 1, 
           py: 8
         }}
       >
@@ -79,7 +78,7 @@ const Account = () => {
   );
 };
 
-Account.getLayout = (page) => (
+OrganisationProfile.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
@@ -87,4 +86,4 @@ Account.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default Account;
+export default OrganisationProfile;

@@ -73,7 +73,7 @@ const columns = [
   { field: "Longitude", headName: "Longitude", width: 150 },
   { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
   { field: "Field Name", headName: "Field Name", width: 150 },
-  { field: "Code", headName: "Code", width: 150 },
+  { field: "ID", headName: "ID", width: 150 },
   { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
 ];
 
@@ -115,8 +115,8 @@ const columns = [
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
       "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
-      "Field Name": response.field.name ? response.field.name: 'N/A',
-      "Code": response.code? response.code: 'N/A',
+      "Field Name": response.name ? response.name: 'N/A',
+      "ID": response.code? response.code.toUpperCase(): 'N/A',
       "Name Of Respondent": response.person ? response.person: 'N/A',
     }
     // Loop sections

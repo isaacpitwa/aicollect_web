@@ -51,6 +51,24 @@ class ProjectsApi {
     }
   }
 
+
+  async fetchFieldFormDetails(fieldFormId) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/fields/${fieldFormId}`, {
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+      const data = await response.json();
+      if (data?.status) {
+        return data
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async updateProject(projectDetails) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/update`, {
