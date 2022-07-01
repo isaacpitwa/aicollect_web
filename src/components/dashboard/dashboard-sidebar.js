@@ -15,6 +15,7 @@ import {
 import AppsIcon from '@mui/icons-material/Apps';
 // import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 // import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
 import { ChartPie as ChartPieIcon } from "../../icons/chart-pie";
 import { Home as HomeIcon } from "../../icons/home";
@@ -149,7 +150,7 @@ const getSections = (t,user) => user ? [
       {
         title: t("Billing"),
         path: "/dashboard/finance/billing",
-        icon: <UsersIcon fontSize="small" />,
+        icon: <MonetizationOnIcon fontSize="small" />,
       },
     ].filter((item)=>roleRoutes[user.roles].test(item.path)),
   },
