@@ -28,10 +28,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useRouter } from 'next/router'
+
 
 export const UserEditForm = (props) => {
   const { customer, updateUser, ...other } = props;
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       firstname: customer.firstname || '',
@@ -88,23 +91,22 @@ export const UserEditForm = (props) => {
     }
   });
 
-  const deleteUser = () => {
+  const deleteUser = async() => {
     try {
       // NOTE: Make API request
       // await wait(500);
       const data = await userApi.deleteUser(customer.id);
-      if (Array.isArray(data)) {
-        helpers.setStatus({ success: true });
-        helpers.setSubmitting(false);
-        toast.success('User Details have been updated!');
+      if (data.status === 200) {
+        setOpen(false)
+        toast.success('User  has been deleted!');
+        router.back();
       }
       
     } catch (err) {
       console.error(err);
       toast.error('Something went wrong!');
-      helpers.setStatus({ success: false });
-      helpers.setErrors({ submit: err.message });
-      helpers.setSubmitting(false);
+      setOpen(false)
+      
     }
   }
 

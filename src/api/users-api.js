@@ -110,7 +110,7 @@ class UserApi {
       });
       const data = await response.json();
       if (data.status === 200) {
-        return data.data;
+        return data;
       }
       if (data.status === 401) {
         return "Unauthenticated";
