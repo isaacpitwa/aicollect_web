@@ -66,14 +66,15 @@ const columns = [
       );
     }
   },
-  { field: "Code", headName: "Code", width: 150 },
-  { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
+
   { field: "Submitted By", headName: "SubmittedBy", width: 150 },
   { field: "Date Submitted", headName: "date", width: 150 },
   { field: "Time Spent", headName: "timespent", width: 150 },
   { field: "Latitude", headName: "Latitude", width: 150 },
   { field: "Longitude", headName: "Longitude", width: 150 },
   { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
+  { field: "Code", headName: "Code", width: 150 },
+  { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
 ];
 
   // Reset selected customers when customers change
@@ -114,7 +115,7 @@ const columns = [
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
       "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
-      "Code": response.region? `${response.region.prefix } ${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
+      "Code": response.region? `${response.region.prefix }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
       "Name Of Respondent": response.person ? response.person: 'N/A',
     }
 
