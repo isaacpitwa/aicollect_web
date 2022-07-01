@@ -97,6 +97,29 @@ class UserApi {
       console.log('user error \n', error);
     }
   }
+
+  async deleteUser(userid) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/delete-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify({id: userid})
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        return data;
+      }
+      if (data.status === 401) {
+        return "Unauthenticated";
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error('Could not process request, try again later');
+    }
+  }
 }
 
 export const userApi = new UserApi();

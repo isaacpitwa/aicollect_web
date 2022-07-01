@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -22,9 +23,18 @@ import {
 } from '@mui/material';
 import { userApi } from '../../../api/users-api';
 import { wait } from '../../../utils/wait';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useRouter } from 'next/router'
+
 
 export const UserEditForm = (props) => {
   const { customer, updateUser, ...other } = props;
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       firstname: customer.firstname || '',
@@ -80,6 +90,25 @@ export const UserEditForm = (props) => {
       }
     }
   });
+
+  const deleteUser = async() => {
+    try {
+      // NOTE: Make API request
+      // await wait(500);
+      const data = await userApi.deleteUser(customer.id);
+      if (data.status === 200) {
+        setOpen(false)
+        toast.success('User  has been deleted!');
+        router.back();
+      }
+      
+    } catch (err) {
+      console.error(err);
+      toast.error('Something went wrong!');
+      setOpen(false)
+      
+    }
+  }
 
   return (
     <form
@@ -337,11 +366,33 @@ export const UserEditForm = (props) => {
           <Button
             color="error"
             disabled={formik.isSubmitting}
-          >
+            onClick = {() => { setOpen(true) }}
+              >
             Delete user
           </Button>
         </CardActions>
       </Card>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete User?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete user:  {customer.firstname + ' '+ customer.lastname} <br/> WARNING: Account setting for the user will be deleted!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Disagree</Button>
+          <Button onClick={deleteUser} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </form>
   );
 };
