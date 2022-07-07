@@ -76,7 +76,7 @@ export const QuestionaireDetailsTable = (props) => {
     { field: "Latitude", headName: "Latitude", width: 150 },
     { field: "Longitude", headName: "Longitude", width: 150 },
     { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
-    { field: "Code", headName: "Code", width: 150 },
+    { field: "ID", headName: "ID", width: 150 },
     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
   ];
 
@@ -119,7 +119,7 @@ export const QuestionaireDetailsTable = (props) => {
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
       "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
-      "Code": response.region? `${response.region.prefix }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
+      "ID": response.region? `${response.region.prefix }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
       "Name Of Respondent": response.person ? response.person: 'N/A',
     }
     // Loop sections
@@ -221,7 +221,11 @@ export const QuestionaireDetailsTable = (props) => {
           </div>
         );
       }
-    }, { field: "Date Submitted", headName: "date", width: 150 }, { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+    },
+    { field: "Date Submitted", headName: "date", width: 150 },
+     { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+     { field: "ID", headName: "ID", width: 150 },
+     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
 
     ]
     if (responses.length) {
@@ -244,8 +248,11 @@ export const QuestionaireDetailsTable = (props) => {
                     const readyQtns = tab.questions ? tab.questions : [...mustColumns];
                     const readyRes = tab.responses ? tab.responses : [];
                     let response = {
-                      id: readyRes.length,       "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
+                      id: readyRes.length,
+                      "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
                       "Submitted By": responses[res].submittedBy.name,
+                      "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
+                      "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
                     }, qtns = [];
                     for (let k = 0; k < formField.components.length; k++) {
                       const subsectionFormField = formField.components[k];

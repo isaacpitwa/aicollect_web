@@ -28,7 +28,7 @@ import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
 import {FormsApi} from '../../../../../../api/forms-api'
-import { projectsApi } from '../../../../../api/projects-api';
+import { projectsApi } from '../../../../../../api/projects-api';
 
 const tabs = [
   {
@@ -229,8 +229,8 @@ const QuestionaireDetails = () => {
   const fetchFieldFormDetails = useCallback(async () => {
     try {
       const data = await FormsApi.getFormDetails(questionaireId);
-      if (data?.status === 200) {
-        setQuestionaire(data.data);
+      if (data) {
+        setQuestionaire(data);
       } else {
         toast.error(data?.message)
       }
@@ -276,7 +276,13 @@ const QuestionaireDetails = () => {
                     href={`/dashboard/projects/${project&& project._id}`}
                     passHref
                     
-                  ><a style={{color:'white', textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'} {questionaire && questionaire.name} {'>'} Responses
+                  ><a style={{textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'}
+                  
+                  <NextLink
+                    href={`/dashboard/projects/${project&& project._id}/questionaire/${questionaire&& questionaire._id}`}
+                    passHref
+                    
+                  ><a style={{textDecoration:'none'}}>{questionaire && questionaire.name}</a></NextLink> {'>'} Responses
                  
                 </Typography>
               </Grid>
