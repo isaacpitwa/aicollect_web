@@ -78,6 +78,7 @@ export const FieldDetailsTable = (props) => {
     { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
     { field: "ID", headName: "ID", width: 150 },
     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
+    { field: "Field Name", headName: "Field Name", width: 150 },
   ];
 
   // Reset selected customers when customers change
@@ -121,6 +122,7 @@ export const FieldDetailsTable = (props) => {
       "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
       "ID": response.code? response.code.toUpperCase(): 'N/A',
       "Name Of Respondent": response.person ? response.person: 'N/A',
+      "Field Name": response.name ? response.name: 'N/A',
     }
     // Loop sections
     for (let i = 0; i < response.answers.length; i++) {

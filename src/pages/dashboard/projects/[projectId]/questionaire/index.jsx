@@ -440,8 +440,12 @@ const QuestionaireList = () => {
               spacing={3}
             >
               <Grid item>
-                <Typography variant="h4">
-                  {project && project.projectname} - Questionaires
+              <Typography variant="h9">
+                  <NextLink
+                    href={`/dashboard/projects/${project&& project._id}`}
+                    passHref
+                    
+                  ><a style={{color:'white', textDecoration:'none'}}>{project && project.projectname}</a></NextLink>
                 </Typography>
               </Grid>
             </Grid>
