@@ -99,9 +99,9 @@ const FormHeader = () => {
                 <Grid item
                     xs={12}
                     sm={12}
-                    md={12}
-                    lg={12}
-                    xl={4}>
+                    md={8}
+                    lg={8}
+                    xl={8}>
                     <Typography
                         className={classes.formHeader}
                     >
@@ -119,7 +119,7 @@ const FormHeader = () => {
                     xs={12}
                     sm={12}
                     md={4}
-                    lg={8}
+                    lg={4}
                     xl={4}>
                     <Typography
                         className={classes.formHeader}
