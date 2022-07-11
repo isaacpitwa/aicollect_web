@@ -348,7 +348,7 @@ export const UserEditForm = (props) => {
             Update
           </Button>
           <NextLink
-            href="/dashboard/customers/1"
+            href={`/dashboard/users`}
             passHref
           >
             <Button
