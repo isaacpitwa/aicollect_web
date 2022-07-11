@@ -138,6 +138,10 @@ export const QuestionaireDetailsTable = (props) => {
               else if (subsectionFormField.type === 'date') {
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
               }
+              else if (subsectionFormField.type === 'image') {
+                formattedResponse =  subsectionFormField.value ? { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]:  subsectionFormField.value.secure_url}
+                : { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: 'N/A' };
+              }
               else {
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.value }
               }
@@ -147,6 +151,9 @@ export const QuestionaireDetailsTable = (props) => {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item) => item.checked).map((item) => item.label).toString() }
         } else if (formField.type === 'date') {
           formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
+        }
+        else if (formField.type === 'image') {
+          formattedResponse = formField.value ? { ...formattedResponse, [ formField.label]: formField.value.secure_url }: { ...formattedResponse, [ formField.label]: 'N/A'};
         }
         else {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
@@ -175,7 +182,12 @@ export const QuestionaireDetailsTable = (props) => {
                 currentcolumns = [...currentcolumns, { field: `${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
               }
             }
-          } else {
+          } 
+          else if (formField.type === 'image') {
+            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150, renderCell: (params) => params.value ? <img src={params.value}  width={140} height={80} style={{objectFit:'contain'}}/> : 'N/A' 
+          }]
+          }
+          else {
             currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150 }]
 
           }
