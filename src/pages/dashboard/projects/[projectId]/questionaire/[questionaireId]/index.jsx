@@ -28,6 +28,8 @@ import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
 import {FormsApi} from '../../../../../../api/forms-api'
+import { projectsApi } from '../../../../../../api/projects-api';
+
 const tabs = [
   {
     label: 'Summary',
@@ -145,6 +147,11 @@ const QuestionaireDetails = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions[0].value);
+  const { projectId, questionaireId } = router.query;
+  const [project, setProject] = useState(null);
+  const [questionaire, setQuestionaire] = useState(null);
+
+
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
@@ -156,23 +163,6 @@ const QuestionaireDetails = () => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  // const getCustomers = useCallback(async () => {
-  //   try {
-  //     const data = await customerApi.getCustomers();
-
-  //     if (isMounted()) {
-  //       setCustomers(data);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, [isMounted]);
-
-  // useEffect(() => {
-  //     getCustomers();
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []);
 
   const fetchFormResponses = async ()=>{
     const { questionaireId} = router.query
@@ -219,6 +209,41 @@ const QuestionaireDetails = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const fetchProjectDetails = useCallback(async () => {
+    try {
+      const data = await projectsApi.fetchProjectDetails(projectId);
+      if (data?.status === 200) {
+        setProject(data.data);
+      } else {
+        toast.error(data?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setProject, projectId]);
+
+  useEffect(() => {
+    fetchProjectDetails();
+  }, []);
+
+  const fetchFieldFormDetails = useCallback(async () => {
+    try {
+      const data = await FormsApi.getFormDetails(questionaireId);
+      if (data) {
+        setQuestionaire(data);
+      } else {
+        toast.error(data?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setQuestionaire, questionaireId]);
+
+
+  useEffect(() => {
+    fetchFieldFormDetails();
+  }, []);
+
   // Usually query is done on backend with indexing solutions
   const filteredCustomers = applyFilters(customers, filters);
   const sortedCustomers = applySort(filteredCustomers, sort);
@@ -246,8 +271,19 @@ const QuestionaireDetails = () => {
               spacing={3}
             >
               <Grid item>
-                <Typography variant="h4">
-                  Project XYZ Reponses
+              <Typography variant="h9">
+                  <NextLink
+                    href={`/dashboard/projects/${project&& project._id}`}
+                    passHref
+                    
+                  ><a style={{textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'}
+                  
+                  <NextLink
+                    href={`/dashboard/projects/${project&& project._id}/questionaire/${questionaire&& questionaire._id}`}
+                    passHref
+                    
+                  ><a style={{textDecoration:'none'}}>{questionaire && questionaire.name}</a></NextLink> {'>'} Responses
+                 
                 </Typography>
               </Grid>
               

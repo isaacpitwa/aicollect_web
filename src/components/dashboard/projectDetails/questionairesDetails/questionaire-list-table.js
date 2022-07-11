@@ -76,7 +76,7 @@ export const QuestionaireDetailsTable = (props) => {
     { field: "Latitude", headName: "Latitude", width: 150 },
     { field: "Longitude", headName: "Longitude", width: 150 },
     { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
-    { field: "Code", headName: "Code", width: 150 },
+    { field: "ID", headName: "ID", width: 150 },
     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
   ];
 
@@ -119,7 +119,7 @@ export const QuestionaireDetailsTable = (props) => {
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
       "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
-      "Code": response.region? `${response.region.prefix }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
+      "ID": response.region? `${response.region.prefix }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
       "Name Of Respondent": response.person ? response.person: 'N/A',
     }
     // Loop sections
@@ -138,6 +138,10 @@ export const QuestionaireDetailsTable = (props) => {
               else if (subsectionFormField.type === 'date') {
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
               }
+              else if (subsectionFormField.type === 'image') {
+                formattedResponse =  subsectionFormField.value ? { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]:  subsectionFormField.value.secure_url}
+                : { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: 'N/A' };
+              }
               else {
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.value }
               }
@@ -147,6 +151,9 @@ export const QuestionaireDetailsTable = (props) => {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.values.filter((item) => item.checked).map((item) => item.label).toString() }
         } else if (formField.type === 'date') {
           formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
+        }
+        else if (formField.type === 'image') {
+          formattedResponse = formField.value ? { ...formattedResponse, [ formField.label]: formField.value.secure_url }: { ...formattedResponse, [ formField.label]: 'N/A'};
         }
         else {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
@@ -175,7 +182,12 @@ export const QuestionaireDetailsTable = (props) => {
                 currentcolumns = [...currentcolumns, { field: `${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
               }
             }
-          } else {
+          } 
+          else if (formField.type === 'image') {
+            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150, renderCell: (params) => params.value ? <img src={params.value}  width={140} height={80} style={{objectFit:'contain'}}/> : 'N/A' 
+          }]
+          }
+          else {
             currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150 }]
 
           }
@@ -221,7 +233,11 @@ export const QuestionaireDetailsTable = (props) => {
           </div>
         );
       }
-    }, { field: "Date Submitted", headName: "date", width: 150 }, { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+    },
+    { field: "Date Submitted", headName: "date", width: 150 },
+     { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+     { field: "ID", headName: "ID", width: 150 },
+     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
 
     ]
     if (responses.length) {
@@ -244,8 +260,11 @@ export const QuestionaireDetailsTable = (props) => {
                     const readyQtns = tab.questions ? tab.questions : [...mustColumns];
                     const readyRes = tab.responses ? tab.responses : [];
                     let response = {
-                      id: readyRes.length,       "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
+                      id: readyRes.length,
+                      "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
                       "Submitted By": responses[res].submittedBy.name,
+                      "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
+                      "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
                     }, qtns = [];
                     for (let k = 0; k < formField.components.length; k++) {
                       const subsectionFormField = formField.components[k];

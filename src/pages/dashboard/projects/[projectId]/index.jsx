@@ -191,7 +191,7 @@ const ProjectDetails = () => {
       }
     }
   }, [setProject, projectId]);
-
+  
   const getSectorModules = useCallback(async () => {
     try {
       // TODO: Find sectorID

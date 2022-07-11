@@ -165,7 +165,7 @@ const UserDetails = () => {
                 sx={{ m: -1 }}
               >
                 <NextLink
-                  href="/dashboard/customers/1/edit"
+                  href={`/dashboard/users/${customer.id}/edit`}
                   passHref
                 >
                   <Button
@@ -248,7 +248,7 @@ const UserDetails = () => {
                   item
                   xs={12}
                 >
-                  <UserDataManagement id={userId} />
+                  <UserDataManagement id={userId} customer={customer} />
                 </Grid>
               </Grid>
             )}

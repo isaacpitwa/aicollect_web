@@ -72,9 +72,10 @@ const columns = [
   { field: "Latitude", headName: "Latitude", width: 150 },
   { field: "Longitude", headName: "Longitude", width: 150 },
   { field: "GPS Accuracy", headName: "GPSAccuracy", width: 150 },
-  { field: "Field Name", headName: "Field Name", width: 150 },
   { field: "ID", headName: "ID", width: 150 },
   { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
+  { field: "Field Name", headName: "Field Name", width: 150 },
+
 ];
 
   // Reset selected customers when customers change

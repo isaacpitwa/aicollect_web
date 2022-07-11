@@ -132,7 +132,8 @@ const columns = [
               formattedResponse = { ...formattedResponse, [ formField.label+subsectionFormField.label]: subsectionFormField.value }
             }
           }
-        } else {
+        } 
+        else {
           formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
         }
       }

@@ -278,7 +278,7 @@ const FieldFormDetails = () => {
                     href={`/dashboard/projects/${project&& project._id}`}
                     passHref
                     
-                  ><a style={{color:'white', textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
+                  ><a style={{textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
                  
                 </Typography>
               </Grid>
