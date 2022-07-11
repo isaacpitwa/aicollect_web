@@ -206,6 +206,18 @@ const FormProvider = (props) => {
         getFormData(updatedForm.formId);
     }
 
+
+        /**
+     * @function updateRegionsData
+     * @desc This method updates a particular form's Region  data using the Context.
+     * @returns {Void} Nothing is returned.
+     * @author Isaac Pitwa <isaacpitwa256@gmail.com>
+     * @version 1.0.0
+     */
+         const updateRegionFormData = async (regions) => {
+            formData.regions = regions
+        }
+
     /**
      * @function deleteFieldData
      * @desc This method is used to delete any form fields expect a section.
@@ -289,6 +301,7 @@ const FormProvider = (props) => {
                 formFieldValues,
                 setFormFieldValues,
                 deleteFieldData,
+                updateRegionFormData,
             }}
         >
             {props.children}
