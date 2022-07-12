@@ -99,14 +99,13 @@ export const UserEditForm = (props) => {
       if (data.status === 200) {
         setOpen(false)
         toast.success('User  has been deleted!');
-        router.back();
+        router.push('/dashboard/users');
       }
       
     } catch (err) {
       console.error(err);
       toast.error('Something went wrong!');
       setOpen(false)
-      
     }
   }
 
