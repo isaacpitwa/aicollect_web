@@ -23,7 +23,7 @@ export const DashboardLayout = (props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
   const [isTimedOut, setIsTimedOut] = useState(false);
-  const [timeout, setTimeout] = useState(1000 * 60 * 60* 1); //Defines the Session Time out = 1 minute
+  const [timeout, setTimeout] = useState(1000 * 60 * 5 * 1); //Defines the Session Time out = 1 minute
   const router = useRouter()
 
   const  onAction = ()=>{
