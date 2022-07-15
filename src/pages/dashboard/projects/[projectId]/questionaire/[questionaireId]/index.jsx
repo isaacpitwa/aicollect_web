@@ -344,15 +344,20 @@ const QuestionaireDetails = () => {
                   placeholder="Search"
                 />
               </Box>
+              <NextLink
+                    href={`/dashboard/projects/${projectId}/questionaire/${questionaireId}/map`}
+                    passHref
+                    
+                  >
               <Button
               role="link"
-              href="/dashboard/projects/43/questionaire/6/map"
                 startIcon={<CloudDownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
               >
                 View Map
               </Button>
+              </NextLink>
               <TextField
                 label="Sort By"
                 name="sort"
