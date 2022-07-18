@@ -344,7 +344,7 @@ const QuestionaireDetails = () => {
                     placeholder="Search"
                   />
                 </Box>
-                {responses.length>0 && <NextLink
+                 <NextLink
                   href={{
                     pathname:`/dashboard/projects/${projectId}/questionaire/${questionaireId}/map`,
                   }}
@@ -360,7 +360,7 @@ const QuestionaireDetails = () => {
                     View Map
                   </Button>
                 </NextLink>
-                }
+                
                 <TextField
                   label="Sort By"
                   name="sort"
