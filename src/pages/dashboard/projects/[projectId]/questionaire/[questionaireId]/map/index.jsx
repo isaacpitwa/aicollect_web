@@ -138,9 +138,11 @@ const TaskMapArea = ({ questionaireResponses }) => {
   }, []);
 
   const onMarkerClicked = (response, location) => {
-    setShowPopup(!showPopup);
-    console.log(`Marker clicked  Before: ${showPopup}`);
-    setSelectedMarker({ response: response, location: location });
+    if(response.gps) {
+      setSelectedMarker({ response: response, location: location });
+      setShowPopup(!showPopup);
+      console.log(`Marker clicked  Before: ${showPopup}`);
+    }
   }
 
   const toggleDrawer = () => (event) => {
@@ -168,16 +170,15 @@ const TaskMapArea = ({ questionaireResponses }) => {
     // Fly to  location
     if(response.gps) {
       mapRef.current.flyTo({
-        center: [],
+        center: [response.gps.longitude,response.gps.latitude],
         zoom: 20,
         // speed: 1,
         // curve: 1,
         essential: true, // this animation is considered essential with respect to prefers-reduced-motion
         easing: (t) => t,
       });
-      setShowPopup(!showPopup);
-      console.log(`Marker clicked  Before: ${showPopup}`);
       setSelectedMarker({ response: response, location: {longitude: response.gps.longitude, latitude:response.gps.latitude} });
+      setShowPopup(true);
     } else {
       toast.error('No GPS location found for this respondent')
     }
