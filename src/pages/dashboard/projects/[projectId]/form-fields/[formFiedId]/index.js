@@ -340,15 +340,22 @@ const FieldFormDetails = () => {
                     placeholder="Search"
                   />
                 </Box>
-                <Button
-                  role="link"
-                  href="/dashboard/projects/43/questionaire/6/map"
-                  startIcon={<CloudDownloadIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="contained"
+                <NextLink
+                  href={{
+                    pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
+                  }}
+                  passHref
+
                 >
-                  View Map
-                </Button>
+                  <Button
+                    role="link"
+                    startIcon={<CloudDownloadIcon fontSize="small" />}
+                    sx={{ m: 1 }}
+                    variant="contained"
+                  >
+                    View Map
+                  </Button>
+                </NextLink>
                 <TextField
                   label="Sort By"
                   name="sort"
