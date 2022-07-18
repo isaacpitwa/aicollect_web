@@ -368,7 +368,11 @@ const TaskMapArea = ({ questionaireResponses }) => {
                     <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
                       anchor="bottom"
                       onClose={() => setShowPopup(false)}>
-                      You are here
+                      <Box>
+                        <Typography variant="h6" style={{fontSize:'14px'}}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
+                        <Typography variant="h6" style={{fontSize:'14px'}}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>
+                        <Typography variant="h6" style={{fontSize:'14px'}}>REGION: {selectedMarker.response.region.region} </Typography>
+                      </Box>
                     </Popup>)}
                 </Map>
               </Box>
