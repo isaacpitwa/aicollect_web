@@ -401,26 +401,26 @@ const  handleFilterByRegionChange = (event) => {
                 >
                  <Layer {...parkLayer} />
                   {
-                    responses.length > 0 ? responses.map((response, index) => {
-                      return response.gps ?
-                        response.gps.coords ?
-                          <Marker longitude={response.gps.coords.longitude} latitude={response.gps.coords.latitude}
-                            anchor="bottom" key={index} onClick={() => onMarkerClicked({response: response, location: { longitude: response.gps.coords.longitude, latitude: response.gps.coords.latitude }}) }>
-                            <MdLocationPin style={{
-                              color: '#ff0000',
-                              fontSize: '24px',
-                            }} />
-                          </Marker>
-                          :
-                          <Marker longitude={response.gps.longitude} latitude={response.gps.latitude} anchor="bottom" key={index} onClick={() => { onMarkerClicked(response, { longitude: response.gps.longitude, latitude: response.gps.latitude }) }}>
-                            <MdLocationPin style={{
-                              color: '#ff0000',
-                              fontSize: '24px',
-                            }} />
-                          </Marker> : null
+                    // responses.length > 0 ? responses.map((response, index) => {
+                    //   return response.gps ?
+                    //     response.gps.coords ?
+                    //       <Marker longitude={response.gps.coords.longitude} latitude={response.gps.coords.latitude}
+                    //         anchor="bottom" key={index} onClick={() => onMarkerClicked({response: response, location: { longitude: response.gps.coords.longitude, latitude: response.gps.coords.latitude }}) }>
+                    //         <MdLocationPin style={{
+                    //           color: '#ff0000',
+                    //           fontSize: '24px',
+                    //         }} />
+                    //       </Marker>
+                    //       :
+                    //       <Marker longitude={response.gps.longitude} latitude={response.gps.latitude} anchor="bottom" key={index} onClick={() => { onMarkerClicked(response, { longitude: response.gps.longitude, latitude: response.gps.latitude }) }}>
+                    //         <MdLocationPin style={{
+                    //           color: '#ff0000',
+                    //           fontSize: '24px',
+                    //         }} />
+                    //       </Marker> : null
 
-                    }
-                    ) : null
+                    // }
+                    // ) : null
                   }
 
                   {showPopup && (
