@@ -24,9 +24,9 @@ import {
   IconButton,
   TextField,
   InputAdornment,
-  
+  InputLabel,
 } from "@mui/material";
-import Map, { Marker, Popup } from "react-map-gl";
+import Map, { Marker, Popup, Layer } from "react-map-gl";
 import { useRouter } from 'next/router'
 import NextLink from 'next/link';
 import { AuthGuard } from "../../../../../../../components/authentication/auth-guard";
@@ -34,7 +34,7 @@ import { DashboardLayout } from "../../../../../../../components/dashboard/dashb
 import { gtm } from "../../../../../../../lib/gtm";
 import { projectsApi } from '../../../../../../../api/projects-api';
 import { FormsApi } from '../../../../../../../api/forms-api'
-import { MdLocationPin } from 'react-icons/md';
+import { MdLocationPin, MdFilterListAlt } from 'react-icons/md';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { Search as SearchIcon } from '../../../../../../../icons/search';
@@ -46,7 +46,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CssBaseline from '@mui/material/CssBaseline';
 
-const drawerWidth = 280;
+const drawerWidth = 320;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -65,7 +65,18 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
       marginLeft: `${drawerWidth}px`,
     }),
   }),
-);;
+);
+
+const parkLayer = {
+  id: 'landuse_park',
+  type: 'fill',
+  source: 'mapbox',
+  'source-layer': 'landuse',
+  filter: ['==', 'class', 'park'],
+  paint: {
+    'fill-color': '#4E3FC8'
+  }
+};
 
 const TaskMapArea = ({ questionaireResponses }) => {
   const router = useRouter()
@@ -78,6 +89,8 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const [selectedMarker, setSelectedMarker] = useState({});
   const [open, setOpen] = React.useState(false);
   const [filteredResponses, setFilteredResponses] = useState([]);
+  const [filterRegion, setFilterRegion] = useState('');
+  const [filterStatus, setFilterStatus] = useState(false);
 
   const queryRef = useRef(null);
   const mapRef = useRef(null);
@@ -156,7 +169,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const handleSearch = (event) => {
     event.preventDefault();
     const searchValue = queryRef.current?.value;
-    console.log('searchValue: ', searchValue);
     if(searchValue) {
       const results = responses.filter(response => 
         response.person && response.person.toLowerCase().includes(searchValue.toLowerCase())
@@ -184,6 +196,23 @@ const TaskMapArea = ({ questionaireResponses }) => {
     }
   }
 
+const  handleFilterByRegionChange = (event) => {
+  const region  = event.target.value;
+  setFilterRegion(region);
+  if(region) {
+    console.log("Selected region: ", region);
+    const results = responses.filter(response => 
+      response.region && Utils.isInRegion(response, region)
+    );
+    setFilteredResponses(results);
+  }else setFilteredResponses(responses);
+
+  }
+
+  const filter = (event) => {
+    setFilterStatus(!filterStatus);
+  }
+
   return (
     <>
       <Head>
@@ -195,7 +224,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
       </Head>
       <Main open={open}>
       <React.Fragment key={'drawer'}>
-          <IconButton onClick={toggleDrawer()}>
+          <IconButton onClick={toggleDrawer()} style={{position:'fixed'}}>
             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
             <Drawer
@@ -213,19 +242,19 @@ const TaskMapArea = ({ questionaireResponses }) => {
               onClose={toggleDrawer()}
             >
               <Box
-                sx={{ width: 280,padding:2 }}
+                sx={{ width: 320,padding:2 }}
                 role="presentation"
               >
                 <Typography  variant="h6" style={{fontSize:'16px'}}>
                   {questionaire && questionaire.name}
                 </Typography>
-
                 <Box
                 component="form"
                 onSubmit={handleSearch}
                 sx={{
                   flexGrow: 1,
                   my: 1.5,
+                  display: 'flex',
                 }}
               >
                 <TextField
@@ -243,8 +272,31 @@ const TaskMapArea = ({ questionaireResponses }) => {
                   placeholder="Search"
                   onChange={handleSearch}
                 />
+                <IconButton type="button" onClick={filter} ><MdFilterListAlt/> </IconButton>
               </Box>
-
+              {
+                filterStatus && (<Box>
+                  <FormControl fullWidth  size="small">
+                    <InputLabel id="region-select">Filter by Region</InputLabel>
+                    <Select
+                      labelId="region-select"
+                      id="region-select"
+                      value={filterRegion}
+                      label="Filter by Region"
+                      onChange={handleFilterByRegionChange}
+                      size="small"
+                    >
+                    <MenuItem key={'Place holder'} value={''}>Select Region</MenuItem>
+    
+                    {
+                     questionaire && questionaire.regions.map(region => (
+                        <MenuItem key={region.prefix} value={region.prefix}> {Utils.capitalizeFirstLetter(region.region)}</MenuItem>
+                      ))
+                    }
+                    </Select>
+                  </FormControl>
+                  </Box>)
+              }
               <Box sx={{ my: 2,display:'flex',alignItems:'center' }}>
               <MdLocationPin style={{
                               color: '#ff0000',
@@ -289,6 +341,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
         sx={{
           flexGrow: 1,
           py: 2,
+          paddingTop: '32px',
         }}
       >
         <Container maxWidth="xl">
@@ -340,7 +393,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                   ref={mapRef}
                   
                 >
-
+                 <Layer {...parkLayer} />
                   {
                     responses.length > 0 ? responses.map((response, index) => {
                       return response.gps ?
@@ -366,8 +419,10 @@ const TaskMapArea = ({ questionaireResponses }) => {
 
                   {showPopup && (
                     <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
-                      anchor="bottom"
-                      onClose={() => setShowPopup(false)}>
+                      anchor="top"
+                      onClose={() => setShowPopup(false)}
+                      offset={25}
+                      >
                       <Box>
                         <Typography variant="h6" style={{fontSize:'14px'}}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
                         <Typography variant="h6" style={{fontSize:'14px'}}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>
