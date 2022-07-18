@@ -138,9 +138,9 @@ const TaskMapArea = ({ questionaireResponses }) => {
   }, []);
 
   const onMarkerClicked = (response, location) => {
+    setShowPopup(!showPopup);
     console.log(`Marker clicked  Before: ${showPopup}`);
     setSelectedMarker({ response: response, location: location });
-    setShowPopup(!showPopup);
   }
 
   const toggleDrawer = () => (event) => {
@@ -168,13 +168,16 @@ const TaskMapArea = ({ questionaireResponses }) => {
     // Fly to  location
     if(response.gps) {
       mapRef.current.flyTo({
-        center: [response.gps.longitude, response.gps.latitude],
+        center: [],
         zoom: 20,
         // speed: 1,
         // curve: 1,
         essential: true, // this animation is considered essential with respect to prefers-reduced-motion
         easing: (t) => t,
       });
+      setShowPopup(!showPopup);
+      console.log(`Marker clicked  Before: ${showPopup}`);
+      setSelectedMarker({ response: response, location: {longitude: response.gps.longitude, latitude:response.gps.latitude} });
     } else {
       toast.error('No GPS location found for this respondent')
     }
@@ -277,21 +280,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                     </>
                   ))}
                 </List>
-                
-                <List>
-                  {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                      <ListItemButton>
-                        <ListItemIcon>
-                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} >
-                          <Typography variant="caption">{text}</Typography>
-                        </ListItemText>
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
               </Box>
             </Drawer>
           </React.Fragment>
@@ -322,73 +310,18 @@ const TaskMapArea = ({ questionaireResponses }) => {
             </Grid>
           </Box>
           <Grid container display="flex" flexDirection="row" justifyContent="space-around" spacing={3}>
-
-            {/* <Grid item md={4}>
-              <Card elevate={3}>
-                <CardContent>
-                <Typography variant="h6" mb={3}>Boundaries Explorer</Typography>
-                <Grid item>
-                <FormControl fullWidth>
-                  <FormLabel>Country / Territory</FormLabel>
-                  <Select value="kampala">
-                    <MenuItem value="kampala">Kampala</MenuItem>
-                    <MenuItem value="wakiso">Wakiso</MenuItem>
-                  </Select>
-                </FormControl>
-                </Grid>
-                <Grid item mt={3}>
-                <FormControl fullWidth>
-                  <FormLabel>World View for <Typography variant="caption">disputed areas</Typography></FormLabel>
-                  <Select value="">
-                    <MenuItem value="kampala">Kampala</MenuItem>
-                    <MenuItem value="wakiso">Wakiso</MenuItem>
-                  </Select>
-                </FormControl>
-                </Grid>
-                <Grid item mt={3}>
-                <FormControl fullWidth>
-                  <FormLabel>Boundary <Typography variant="caption">by type and levels</Typography></FormLabel>
-                  <Select value="">
-                    <MenuItem value="kampala">Kampala</MenuItem>
-                    <MenuItem value="wakiso">Wakiso</MenuItem>
-                  </Select>
-                </FormControl>
-                </Grid>
-                </CardContent>
-                <CardActions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Typography>35 Boundaries</Typography>
-                  <Switch defaultChecked />
-                </CardActions>
-              </Card>
-            </Grid> */}
             <Grid item md={12} xs={12} sx={{
               paddingLeft: 0,
             }}>
               <Box
                 sx={{
                   backgroundColor: "neatral.100",
-                  // display: 'none',
                   px: 0,
                   py: 0,
                   width: "100vw",
                   height: "90vh",
                 }}
               >
-                {/* <div
-                  style={{
-                    backgroundColor: '#404040',
-                    display: 'inline-block',
-                    padding: "6px",
-                    zIndex: '1 !important',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    margin: 12,
-                    borderRadius: '4px'
-                  }}
-                >
-                  <h4 style={{ color: 'GrayText' }}>Hello there</h4>
-                </div> */}
                 <Map
                   initialViewState={{
                     longitude: centerLocation ? centerLocation.longitude : 32.513311,
