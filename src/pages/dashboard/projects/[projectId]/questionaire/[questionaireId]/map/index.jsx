@@ -41,6 +41,31 @@ import { Search as SearchIcon } from '../../../../../../../icons/search';
 import {ImUser} from 'react-icons/im';
 import { Utils } from "../../../../../../../utils/main";
 import toast from 'react-hot-toast';
+import { styled, useTheme } from '@mui/material/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const drawerWidth = 280;
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    // padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `0`,
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: `${drawerWidth}px`,
+    }),
+  }),
+);;
 
 const TaskMapArea = ({ questionaireResponses }) => {
   const router = useRouter()
@@ -118,11 +143,11 @@ const TaskMapArea = ({ questionaireResponses }) => {
     setShowPopup(!showPopup);
   }
 
-  const toggleDrawer = (open_) => (event) => {
+  const toggleDrawer = () => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-    setOpen(open_);
+    setOpen(!open);
   };
 
 
@@ -140,7 +165,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
   }
 
   const handleRepondentClick =(response)=>{
-    setOpen(false);
     // Fly to  location
     if(response.gps) {
       mapRef.current.flyTo({
@@ -165,38 +189,24 @@ const TaskMapArea = ({ questionaireResponses }) => {
           href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
         />
       </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 2,
-
-        }}
-      >
-        <Container maxWidth="xl">
-          <Box sx={{ mb: 2 }}>
-            <Grid container justifyContent="space-between" spacing={3}>
-              <Grid item>
-                <Typography variant="h6">
-                  <NextLink
-                    href={`/dashboard/projects/${project && project._id}`}
-                    passHref
-
-                  ><a style={{ textDecoration: 'none' }}>{project && project.projectname}</a></NextLink> {'> '}
-                  <NextLink
-                    href={`/dashboard/projects/${project && project._id}/questionaire/${questionaire && questionaire._id}`}
-                    passHref
-
-                  ><a style={{ textDecoration: 'none' }}>{questionaire && questionaire.name}</a></NextLink>
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-          <React.Fragment key={'drawer'}>
-            <Button onClick={toggleDrawer(true)}>more</Button>
+      <Main open={open}>
+      <React.Fragment key={'drawer'}>
+          <IconButton onClick={toggleDrawer()}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
             <Drawer
+             variant="persistent"
               open={open}
-              onClose={toggleDrawer(false)}
+              anchor='left'
+              sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                  width: drawerWidth,
+                  boxSizing: 'border-box',
+                },
+              }}
+              onClose={toggleDrawer()}
             >
               <Box
                 sx={{ width: 280,padding:2 }}
@@ -231,17 +241,18 @@ const TaskMapArea = ({ questionaireResponses }) => {
                 />
               </Box>
 
-              <Box sx={{ my: 2,display:'flex',justifyContent:'center',alignItems:'center' }}>
+              <Box sx={{ my: 2,display:'flex',alignItems:'center' }}>
               <MdLocationPin style={{
                               color: '#ff0000',
                               fontSize: '24px',
                             }} />
-                <Typography variant="h6" style={{fontSize:'14px'}}>All Respondents ({filteredResponses.length})</Typography>
+                <Typography variant="h6" style={{fontSize:'14px',marginLeft:'8px'}}>All Respondents ({filteredResponses.length})</Typography>
 
               </Box>
-
+              <Divider />
                 <List>
                   {filteredResponses.map((response, index) => (
+                    <>
                     <ListItem key={response._id} disablePadding>
                       <ListItemButton onClick={()=>handleRepondentClick(response)}>
                         <ListItemIcon>
@@ -260,10 +271,13 @@ const TaskMapArea = ({ questionaireResponses }) => {
                           </Box>
                         </ListItemText>
                       </ListItemButton>
+                      
                     </ListItem>
+                    <Divider />
+                    </>
                   ))}
                 </List>
-                <Divider />
+                
                 <List>
                   {['All mail', 'Trash', 'Spam'].map((text, index) => (
                     <ListItem key={text} disablePadding>
@@ -281,7 +295,34 @@ const TaskMapArea = ({ questionaireResponses }) => {
               </Box>
             </Drawer>
           </React.Fragment>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 2,
+        }}
+      >
+        <Container maxWidth="xl">
+          <Box sx={{ mb: 2 }}>
+            <Grid container justifyContent="space-between" spacing={3}>
+              <Grid item>
+                <Typography variant="h6">
+                  <NextLink
+                    href={`/dashboard/projects/${project && project._id}`}
+                    passHref
+
+                  ><a style={{ textDecoration: 'none' }}>{project && project.projectname}</a></NextLink> {'> '}
+                  <NextLink
+                    href={`/dashboard/projects/${project && project._id}/questionaire/${questionaire && questionaire._id}`}
+                    passHref
+
+                  ><a style={{ textDecoration: 'none' }}>{questionaire && questionaire.name}</a></NextLink>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
           <Grid container display="flex" flexDirection="row" justifyContent="space-around" spacing={3}>
+
             {/* <Grid item md={4}>
               <Card elevate={3}>
                 <CardContent>
@@ -401,6 +442,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
           </Grid>
         </Container>
       </Box>
+      </Main>
     </>
   );
 };
