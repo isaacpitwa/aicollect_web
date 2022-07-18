@@ -90,6 +90,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const [open, setOpen] = React.useState(false);
   const [filteredResponses, setFilteredResponses] = useState([]);
   const [filterRegion, setFilterRegion] = useState('');
+  const [filterStatus, setFilterStatus] = useState(false);
 
   const queryRef = useRef(null);
   const mapRef = useRef(null);
@@ -208,6 +209,10 @@ const  handleFilterByRegionChange = (event) => {
 
   }
 
+  const filter = (event) => {
+    setFilterStatus(!filterStatus);
+  }
+
   return (
     <>
       <Head>
@@ -267,28 +272,31 @@ const  handleFilterByRegionChange = (event) => {
                   placeholder="Search"
                   onChange={handleSearch}
                 />
-                <IconButton type="submit"><MdFilterListAlt/> </IconButton>
+                <IconButton type="button" onClick={filter} ><MdFilterListAlt/> </IconButton>
               </Box>
-              <Box>
-              <FormControl fullWidth>
-                <InputLabel id="region-select">Filter by Region</InputLabel>
-                <Select
-                  labelId="region-select"
-                  id="region-select"
-                  value={filterRegion}
-                  label="Filter by Region"
-                  onChange={handleFilterByRegionChange}
-                >
-                <MenuItem key={'Place holder'} value={''}>Select Region</MenuItem>
-
-                {
-                 questionaire && questionaire.regions.map(region => (
-                    <MenuItem key={region.prefix} value={region.prefix}> {Utils.capitalizeFirstLetter(region.region)}</MenuItem>
-                  ))
-                }
-                </Select>
-              </FormControl>
-              </Box>
+              {
+                filterStatus && (<Box>
+                  <FormControl fullWidth  size="small">
+                    <InputLabel id="region-select">Filter by Region</InputLabel>
+                    <Select
+                      labelId="region-select"
+                      id="region-select"
+                      value={filterRegion}
+                      label="Filter by Region"
+                      onChange={handleFilterByRegionChange}
+                      size="small"
+                    >
+                    <MenuItem key={'Place holder'} value={''}>Select Region</MenuItem>
+    
+                    {
+                     questionaire && questionaire.regions.map(region => (
+                        <MenuItem key={region.prefix} value={region.prefix}> {Utils.capitalizeFirstLetter(region.region)}</MenuItem>
+                      ))
+                    }
+                    </Select>
+                  </FormControl>
+                  </Box>)
+              }
               <Box sx={{ my: 2,display:'flex',alignItems:'center' }}>
               <MdLocationPin style={{
                               color: '#ff0000',
