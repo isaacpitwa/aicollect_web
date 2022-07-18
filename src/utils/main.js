@@ -16,4 +16,8 @@ export class Utils {
   static formatIdPrefix(response){
    return  response.region ? `${response.region.prefix.toUpperCase() }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A'
   }
+
+  static isInRegion(response, region){
+    return response.region && response.region.prefix === region;
+  }
 }

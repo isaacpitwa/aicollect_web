@@ -24,9 +24,9 @@ import {
   IconButton,
   TextField,
   InputAdornment,
-  
+  InputLabel,
 } from "@mui/material";
-import Map, { Marker, Popup } from "react-map-gl";
+import Map, { Marker, Popup, Layer } from "react-map-gl";
 import { useRouter } from 'next/router'
 import NextLink from 'next/link';
 import { AuthGuard } from "../../../../../../../components/authentication/auth-guard";
@@ -65,7 +65,18 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
       marginLeft: `${drawerWidth}px`,
     }),
   }),
-);;
+);
+
+const parkLayer = {
+  id: 'landuse_park',
+  type: 'fill',
+  source: 'mapbox',
+  'source-layer': 'landuse',
+  filter: ['==', 'class', 'park'],
+  paint: {
+    'fill-color': '#4E3FC8'
+  }
+};
 
 const TaskMapArea = ({ questionaireResponses }) => {
   const router = useRouter()
@@ -78,6 +89,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const [selectedMarker, setSelectedMarker] = useState({});
   const [open, setOpen] = React.useState(false);
   const [filteredResponses, setFilteredResponses] = useState([]);
+  const [filterRegion, setFilterRegion] = useState('');
 
   const queryRef = useRef(null);
   const mapRef = useRef(null);
@@ -156,7 +168,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const handleSearch = (event) => {
     event.preventDefault();
     const searchValue = queryRef.current?.value;
-    console.log('searchValue: ', searchValue);
     if(searchValue) {
       const results = responses.filter(response => 
         response.person && response.person.toLowerCase().includes(searchValue.toLowerCase())
@@ -182,6 +193,19 @@ const TaskMapArea = ({ questionaireResponses }) => {
     } else {
       toast.error('No GPS location found for this respondent')
     }
+  }
+
+const  handleFilterByRegionChange = (event) => {
+  const region  = event.target.value;
+  setFilterRegion(region);
+  if(region) {
+    console.log("Selected region: ", region);
+    const results = responses.filter(response => 
+      response.region && Utils.isInRegion(response, region)
+    );
+    setFilteredResponses(results);
+  }else setFilteredResponses(responses);
+
   }
 
   return (
@@ -219,7 +243,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                 <Typography  variant="h6" style={{fontSize:'16px'}}>
                   {questionaire && questionaire.name}
                 </Typography>
-
                 <Box
                 component="form"
                 onSubmit={handleSearch}
@@ -246,7 +269,26 @@ const TaskMapArea = ({ questionaireResponses }) => {
                 />
                 <IconButton type="submit"><MdFilterListAlt/> </IconButton>
               </Box>
+              <Box>
+              <FormControl fullWidth>
+                <InputLabel id="region-select">Filter by Region</InputLabel>
+                <Select
+                  labelId="region-select"
+                  id="region-select"
+                  value={filterRegion}
+                  label="Filter by Region"
+                  onChange={handleFilterByRegionChange}
+                >
+                <MenuItem key={'Place holder'} value={''}>Select Region</MenuItem>
 
+                {
+                 questionaire && questionaire.regions.map(region => (
+                    <MenuItem key={region.prefix} value={region.prefix}> {Utils.capitalizeFirstLetter(region.region)}</MenuItem>
+                  ))
+                }
+                </Select>
+              </FormControl>
+              </Box>
               <Box sx={{ my: 2,display:'flex',alignItems:'center' }}>
               <MdLocationPin style={{
                               color: '#ff0000',
@@ -343,7 +385,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                   ref={mapRef}
                   
                 >
-
+                 <Layer {...parkLayer} />
                   {
                     responses.length > 0 ? responses.map((response, index) => {
                       return response.gps ?
@@ -369,8 +411,10 @@ const TaskMapArea = ({ questionaireResponses }) => {
 
                   {showPopup && (
                     <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
-                      anchor="bottom"
-                      onClose={() => setShowPopup(false)}>
+                      anchor="top"
+                      onClose={() => setShowPopup(false)}
+                      offset={25}
+                      >
                       <Box>
                         <Typography variant="h6" style={{fontSize:'14px'}}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
                         <Typography variant="h6" style={{fontSize:'14px'}}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>
