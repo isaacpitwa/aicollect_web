@@ -34,7 +34,7 @@ import { DashboardLayout } from "../../../../../../../components/dashboard/dashb
 import { gtm } from "../../../../../../../lib/gtm";
 import { projectsApi } from '../../../../../../../api/projects-api';
 import { FormsApi } from '../../../../../../../api/forms-api'
-import { MdLocationPin } from 'react-icons/md';
+import { MdLocationPin, MdFilterListAlt } from 'react-icons/md';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { Search as SearchIcon } from '../../../../../../../icons/search';
@@ -46,7 +46,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CssBaseline from '@mui/material/CssBaseline';
 
-const drawerWidth = 280;
+const drawerWidth = 320;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -195,7 +195,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
       </Head>
       <Main open={open}>
       <React.Fragment key={'drawer'}>
-          <IconButton onClick={toggleDrawer()}>
+          <IconButton onClick={toggleDrawer()} style={{position:'fixed'}}>
             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
             <Drawer
@@ -213,7 +213,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
               onClose={toggleDrawer()}
             >
               <Box
-                sx={{ width: 280,padding:2 }}
+                sx={{ width: 320,padding:2 }}
                 role="presentation"
               >
                 <Typography  variant="h6" style={{fontSize:'16px'}}>
@@ -226,6 +226,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                 sx={{
                   flexGrow: 1,
                   my: 1.5,
+                  display: 'flex',
                 }}
               >
                 <TextField
@@ -243,6 +244,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                   placeholder="Search"
                   onChange={handleSearch}
                 />
+                <IconButton type="submit"><MdFilterListAlt/> </IconButton>
               </Box>
 
               <Box sx={{ my: 2,display:'flex',alignItems:'center' }}>
@@ -289,6 +291,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
         sx={{
           flexGrow: 1,
           py: 2,
+          paddingTop: '32px',
         }}
       >
         <Container maxWidth="xl">
