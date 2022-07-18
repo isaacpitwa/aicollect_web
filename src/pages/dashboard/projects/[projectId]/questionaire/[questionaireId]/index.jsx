@@ -14,7 +14,7 @@ import {
   Tabs,
   TextField,
   Typography,
-  
+
 } from '@mui/material';
 import { TabPanel, TabContext } from '@mui/lab';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -23,11 +23,11 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { AuthGuard } from '../../../../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../../../../components/dashboard/dashboard-layout';
 import { QuestionaireDetailsTable } from '../../../../../../components/dashboard/projectDetails/questionairesDetails/questionaire-list-table';
-import {QuestionaireResponseSummaryTable} from '../../../../../../components/dashboard/projectDetails/questionairesDetails/QuestionaireReponseSummary';
+import { QuestionaireResponseSummaryTable } from '../../../../../../components/dashboard/projectDetails/questionairesDetails/QuestionaireReponseSummary';
 import { useMounted } from '../../../../../../hooks/use-mounted';
 import { Search as SearchIcon } from '../../../../../../icons/search';
 import { gtm } from '../../../../../../lib/gtm';
-import {FormsApi} from '../../../../../../api/forms-api'
+import { FormsApi } from '../../../../../../api/forms-api'
 import { projectsApi } from '../../../../../../api/projects-api';
 
 const tabs = [
@@ -113,16 +113,16 @@ const applySort = (customers, sort) => {
   const stabilizedThis = customers.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-        const newOrder = comparator(a[0], b[0]);
+    const newOrder = comparator(a[0], b[0]);
 
     if (newOrder !== 0) {
       return newOrder;
     }
 
-        return a[1] - b[1];
+    return a[1] - b[1];
   });
 
-    return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 };
 
 const applyPagination = (customers, page, rowsPerPage) => customers.slice(page * rowsPerPage,
@@ -164,15 +164,15 @@ const QuestionaireDetails = () => {
   }, []);
 
 
-  const fetchFormResponses = async ()=>{
-    const { questionaireId} = router.query
+  const fetchFormResponses = async () => {
+    const { questionaireId } = router.query
     const apiReponses = await FormsApi.getFormResponses(questionaireId);
     setResponses(apiReponses);
   }
 
   useEffect(() => {
     fetchFormResponses()
-    },[])
+  }, [])
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
       ...filters,
@@ -271,134 +271,137 @@ const QuestionaireDetails = () => {
               spacing={3}
             >
               <Grid item>
-              <Typography variant="h9">
+                <Typography variant="h9">
                   <NextLink
-                    href={`/dashboard/projects/${project&& project._id}`}
+                    href={`/dashboard/projects/${project && project._id}`}
                     passHref
-                    
-                  ><a style={{textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'}
-                  
+
+                  ><a style={{ textDecoration: 'none' }}>{project && project.projectname}</a></NextLink> {'>'}
+
                   <NextLink
-                    href={`/dashboard/projects/${project&& project._id}/questionaire/${questionaire&& questionaire._id}`}
+                    href={`/dashboard/projects/${project && project._id}/questionaire/${questionaire && questionaire._id}`}
                     passHref
-                    
-                  ><a style={{textDecoration:'none'}}>{questionaire && questionaire.name}</a></NextLink> {'>'} Responses
-                 
+
+                  ><a style={{ textDecoration: 'none' }}>{questionaire && questionaire.name}</a></NextLink> {'>'} Responses
+
                 </Typography>
               </Grid>
-              
+
             </Grid>
-            
+
           </Box>
 
-          
+
 
           <Card>
-          <TabContext value={currentTab}>
-            <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs>
-            <Divider />
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexWrap: 'wrap',
-                m: -1.5,
-                p: 3
-              }}
-            >
+            <TabContext value={currentTab}>
+              <Tabs
+                indicatorColor="primary"
+                onChange={handleTabsChange}
+                scrollButtons="auto"
+                sx={{ px: 3 }}
+                textColor="primary"
+                value={currentTab}
+                variant="scrollable"
+              >
+                {tabs.map((tab) => (
+                  <Tab
+                    key={tab.value}
+                    label={tab.label}
+                    value={tab.value}
+                  />
+                ))}
+              </Tabs>
+              <Divider />
               <Box
-                component="form"
-                onSubmit={handleQueryChange}
                 sx={{
-                  flexGrow: 1,
-                  m: 1.5
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  m: -1.5,
+                  p: 3
                 }}
               >
-                <TextField
-                  defaultValue=""
-                  fullWidth
-                  inputProps={{ ref: queryRef }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    )
+                <Box
+                  component="form"
+                  onSubmit={handleQueryChange}
+                  sx={{
+                    flexGrow: 1,
+                    m: 1.5
                   }}
-                  placeholder="Search"
-                />
+                >
+                  <TextField
+                    defaultValue=""
+                    fullWidth
+                    inputProps={{ ref: queryRef }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    placeholder="Search"
+                  />
+                </Box>
+                {responses.length>0 && <NextLink
+                  href={{
+                    pathname:`/dashboard/projects/${projectId}/questionaire/${questionaireId}/map`,
+                  }}
+                  passHref
+
+                >
+                  <Button
+                    role="link"
+                    startIcon={<CloudDownloadIcon fontSize="small" />}
+                    sx={{ m: 1 }}
+                    variant="contained"
+                  >
+                    View Map
+                  </Button>
+                </NextLink>
+                }
+                <TextField
+                  label="Sort By"
+                  name="sort"
+                  onChange={handleSortChange}
+                  select
+                  SelectProps={{ native: true }}
+                  sx={{ m: 1.5 }}
+                  value={sort}
+                >
+                  {sortOptions.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
               </Box>
-              <NextLink
-                    href={`/dashboard/projects/${projectId}/questionaire/${questionaireId}/map`}
-                    passHref
-                    
-                  >
-              <Button
-              role="link"
-                startIcon={<CloudDownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-                variant="contained"
-              >
-                View Map
-              </Button>
-              </NextLink>
-              <TextField
-                label="Sort By"
-                name="sort"
-                onChange={handleSortChange}
-                select
-                SelectProps={{ native: true }}
-                sx={{ m: 1.5 }}
-                value={sort}
-              >
-                {sortOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Box>  
-            <TabPanel value='summary' index={0}>
-            <QuestionaireResponseSummaryTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              responses = {responses}
-            />
-            </TabPanel>
-            <TabPanel value='all' index={1}>
-            <QuestionaireDetailsTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              responses = {responses}
-            />
-            </TabPanel>
+              <TabPanel value='summary' index={0}>
+                <QuestionaireResponseSummaryTable
+                  customers={paginatedCustomers}
+                  customersCount={filteredCustomers.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  responses={responses}
+                />
+              </TabPanel>
+              <TabPanel value='all' index={1}>
+                <QuestionaireDetailsTable
+                  customers={paginatedCustomers}
+                  customersCount={filteredCustomers.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  responses={responses}
+                />
+              </TabPanel>
             </TabContext>
           </Card>
         </Container>
