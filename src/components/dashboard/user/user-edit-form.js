@@ -22,7 +22,6 @@ import {
   Typography
 } from '@mui/material';
 import { userApi } from '../../../api/users-api';
-import { wait } from '../../../utils/wait';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
