@@ -7591,6 +7591,11 @@
   "resolved" "https://registry.npmjs.org/space-separated-tokens/-/space-separated-tokens-1.1.5.tgz"
   "version" "1.1.5"
 
+"spherical-geometry-js@^3.0.0":
+  "integrity" "sha512-PvfGTBRSyoAr3KGk/pTkqA7vCMO0lXilnmh6DfiTrO4RhRz++RTbMbUXKcmkmw8olh2wWVVY2qx8sl5hJ+JpVg=="
+  "resolved" "https://registry.npmjs.org/spherical-geometry-js/-/spherical-geometry-js-3.0.0.tgz"
+  "version" "3.0.0"
+
 "split-string@^3.0.1", "split-string@^3.0.2":
   "integrity" "sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw=="
   "resolved" "https://registry.npmjs.org/split-string/-/split-string-3.1.0.tgz"

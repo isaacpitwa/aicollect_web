@@ -44,9 +44,10 @@ import toast from 'react-hot-toast';
 import { styled, useTheme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CssBaseline from '@mui/material/CssBaseline';
 import { FieldFormsApi } from '../../../../../../../api/fieldform-api';
-import { GoogleMap, useJsApiLoader, Polygon, useGoogleMap } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Polygon, InfoWindow } from '@react-google-maps/api';
+import { computeArea ,LatLng} from 'spherical-geometry-js';
+
 const drawerWidth = 320;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -95,7 +96,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const [map, setMap] = useState(null);
 
   const queryRef = useRef(null);
-  const mapRef = useRef(null);
 
   const fetchFieldFormDetails = useCallback(async () => {
     try {
@@ -125,6 +125,15 @@ const TaskMapArea = ({ questionaireResponses }) => {
     const { formFiedId } = router.query
     const apiReponses = await FieldFormsApi.getFieldResponses(formFiedId);
     apiReponses.reverse();
+    apiReponses.map(response => {
+      const cordinates = Utils.getFieldCordinates(response);
+      var latLngs = cordinates.map(function(coord) { 
+        return new LatLng(coord.lat, coord.lng);
+     });
+       response.area = cordinates.length>0 ? `${Math.round(computeArea(latLngs)*0.00025 * 100) / 100 } Acres` : 'Unknown';
+       return response;
+    });
+
     setResponses(apiReponses);
     const sumLongitude = apiReponses.map(response => response.gps ? response.gps.longitude : 0).reduce((a, b) => a + b, 0);
     const sumLatitude = apiReponses.map(response => response.gps ? response.gps.latitude : 0).reduce((a, b) => a + b, 0);
@@ -187,15 +196,17 @@ const TaskMapArea = ({ questionaireResponses }) => {
 
   const handleRepondentClick = (response) => {
     // Fly to  location
-    if (response.gps && map) {
+   const center = Utils.getFieldCenter(response);
+   const fieldCordinates = Utils.getFieldCordinates(response);
+    if (fieldCordinates.length > 0 && map) {
       map.moveCamera({
-        center: { lat: response.gps.latitude, lng: response.gps.longitude },
-        zoom: 18,
+        center: center,
+        zoom: 20,
       })
-      setSelectedMarker({ response: response, location: { longitude: response.gps.longitude, latitude: response.gps.latitude } });
+      setSelectedMarker({ response: response, location: center });
       setShowPopup(true);
     } else {
-      toast.error('No GPS location found for this respondent Or Map not Loaded')
+      toast.error('No GPS location found for this Field Or Map not Loaded')
     }
   }
 
@@ -408,90 +419,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                     height: "90vh",
                   }}
                 >
-                  {/* <Map
-                    initialViewState={{
-                      longitude: centerLocation ? centerLocation.longitude : 32.513311,
-                      latitude: centerLocation ? centerLocation.latitude : 0.3899683,
-                      zoom: 10,
-                      width: "100%",
-
-                    }}
-                    mapboxAccessToken={process.env.NEXT_PUBLIC_GOOGLE_MAP_TOKEN}
-                    mapStyle="mapbox://styles/mapbox/streets-v9"
-                    terrain={{
-                      source: "mapbox-raster-dem",
-                      exaggeration: 2
-                    }}
-                    ref={mapRef}
-
-                  >
-                    <Layer {...parkLayer} />
-                    {
-                      // responses.length > 0 ? responses.map((response, index) => {
-                      //   return response.gps ?
-                      //     response.gps.coords ?
-                      //       <Marker longitude={response.gps.coords.longitude} latitude={response.gps.coords.latitude}
-                      //         anchor="bottom" key={index} onClick={() => onMarkerClicked({response: response, location: { longitude: response.gps.coords.longitude, latitude: response.gps.coords.latitude }}) }>
-                      //         <MdLocationPin style={{
-                      //           color: '#ff0000',
-                      //           fontSize: '24px',
-                      //         }} />
-                      //       </Marker>
-                      //       :
-                      //       <Marker longitude={response.gps.longitude} latitude={response.gps.latitude} anchor="bottom" key={index} onClick={() => { onMarkerClicked(response, { longitude: response.gps.longitude, latitude: response.gps.latitude }) }}>
-                      //         <MdLocationPin style={{
-                      //           color: '#ff0000',
-                      //           fontSize: '24px',
-                      //         }} />
-                      //       </Marker> : null
-
-                      // }
-                      // ) : null
-
-                    }
-                    <Source
-                      id="maine"
-                      type="geojson"
-                      data={
-                        {
-                          type: 'Feature',
-                          geometry: {
-                            type: 'Polygon',
-                            coordinates: [
-                              [32.59157833333334, 0.34258333333333335],
-                              [32.591469999999994, 0.34259833333333334],
-                              [32.59147333333333, 0.34268333333333334],
-                            ]
-                          }
-                        }
-                      }
-
-
-                    />
-                    <Layer
-                      id="maine-fill"
-                      source={'maine'}
-                      type="fill"
-                      paint={{
-                        'fill-color': '#0080ff', // blue color fill
-                        'fill-opacity': 0.5
-                      }}
-                    />
-
-                    {showPopup && (
-                      <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
-                        anchor="top"
-                        onClose={() => setShowPopup(false)}
-                        offset={25}
-                      >
-                        <Box>
-                          <Typography variant="h6" style={{ fontSize: '14px' }}>ID: {selectedMarker.response.code} </Typography>
-                          <Typography variant="h6" style={{ fontSize: '14px' }}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>
-                          <Typography variant="h6" style={{ fontSize: '14px' }}>REGION: {selectedMarker.response.region.region} </Typography>
-                        </Box>
-                      </Popup>)}
-                  </Map> */}
-
                   {isLoaded ?
                     <GoogleMap
                       mapContainerStyle={{
@@ -508,7 +435,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                       {
                         responses.length > 0 ? responses.map((response, index) => {
                           const fieldCordinates = Utils.getFieldCordinates(response);
-                          fieldCordinates.length >0 ? console.log(fieldCordinates): 'No Coordinates';
                           return  fieldCordinates.length> 0?
                             <Polygon
                               paths={[fieldCordinates]}
@@ -516,6 +442,23 @@ const TaskMapArea = ({ questionaireResponses }) => {
                             /> : null
                         }) : null
                       }
+
+                          {
+                            showPopup && 
+                              <InfoWindow
+                              position={selectedMarker.location}
+                            >   
+                            
+                            <Box>
+                              <Typography variant="h6" style={{ fontSize: '14px' }}>ID: {selectedMarker.response.code} </Typography>
+                              <Typography variant="h6" style={{ fontSize: '14px' }}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>
+                              <Typography variant="h6" style={{ fontSize: '14px' }}>REGION: {selectedMarker.response.region.region} </Typography>
+                              <Typography variant="h6" style={{ fontSize: '14px' }}>FIELD NAME: {selectedMarker.response.name.toUpperCase() ?? 'N/A'} </Typography>
+                              <Typography variant="h6" style={{ fontSize: '14px' }}>FIELD SIZE: {selectedMarker.response.area.toUpperCase() ?? 'N/A'} </Typography>
+                            </Box>
+                            </InfoWindow>
+                            
+                          }
 
                     </GoogleMap> :
                     null

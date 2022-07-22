@@ -27,19 +27,41 @@ export class Utils {
       for(let j = 0; j < response.answers[i].components.length; j++){
         const formField = response.answers[i].components[j];
         if(formField.type === 'area-mapping' && formField.label.toLowerCase() === 'Farm Size'.toLocaleLowerCase()){
-          console.log("form  Field Label: ", formField.label.toLowerCase());
-          console.log("form  Field  Length ", Array.from(formField.gpsValues).length);
-          coordinates = Array.from(formField.gpsValues).map((gpsValue) => {
-            console.log("gpsValue: ", gpsValue);
-            return {lat: gpsValue.latitude, lng: gpsValue.longitude}
-          });
-          break;
+          if(typeof formField.gpsValues !== 'string'){ 
+            coordinates = formField.gpsValues.map((gpsValue) => {
+              console.log("Utility gpsValue: ", gpsValue);
+              return {lat: gpsValue.latitude, lng: gpsValue.longitude}
+            });
+            break;
+          }
         }
       }
     }
-    return coordinates.map((gpsValue) => {
-      console.log("gpsValue: ", gpsValue);
-      return {lat: gpsValue['latitude'], lng:gpsValue['longitude']};
-    }); 
+    return coordinates
+  }
+
+  static getFieldCenter(response){
+    let latSum = 0, lngSum =0;
+    let coordinates =[];
+    for(let i = 0; i < response.answers.length; i++){
+      for(let j = 0; j < response.answers[i].components.length; j++){
+        const formField = response.answers[i].components[j];
+        if(formField.type === 'area-mapping' && formField.label.toLowerCase() === 'Farm Size'.toLocaleLowerCase()){
+          if(typeof formField.gpsValues !== 'string'){ 
+            coordinates = formField.gpsValues.map((gpsValue) => {
+              latSum += gpsValue.latitude;
+              lngSum += gpsValue.longitude;
+              return {lat: gpsValue.latitude, lng: gpsValue.longitude}
+            });
+            
+            break;
+          }
+        }
+      }
+    }
+    return {
+      lat: latSum/coordinates.length,
+      lng: lngSum/coordinates.length
+    }
   }
 }
