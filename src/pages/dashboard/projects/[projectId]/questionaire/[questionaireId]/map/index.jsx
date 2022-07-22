@@ -205,7 +205,9 @@ const  handleFilterByRegionChange = (event) => {
       response.region && Utils.isInRegion(response, region)
     );
     setFilteredResponses(results);
-  }else setFilteredResponses(responses);
+  }else 
+    setFilteredResponses(responses);
+  ;
 
   }
 
@@ -396,7 +398,7 @@ const  handleFilterByRegionChange = (event) => {
                 >
                  <Layer {...parkLayer} />
                   {
-                    responses.length > 0 ? responses.map((response, index) => {
+                    filteredResponses.length > 0 ? filteredResponses.map((response, index) => {
                       return response.gps ?
                         response.gps.coords ?
                           <Marker longitude={response.gps.coords.longitude} latitude={response.gps.coords.latitude}
@@ -422,7 +424,7 @@ const  handleFilterByRegionChange = (event) => {
                     <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
                       anchor="top"
                       onClose={() => setShowPopup(false)}
-                      offset={1}
+                      offset={0}
                       >
                       <Box>
                         <Typography variant="h6" style={{fontSize:'14px'}}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
