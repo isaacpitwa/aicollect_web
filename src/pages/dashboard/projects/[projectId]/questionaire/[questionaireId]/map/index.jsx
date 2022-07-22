@@ -383,9 +383,10 @@ const  handleFilterByRegionChange = (event) => {
                     zoom: 10,
                     width: "100%",
                     
+                    
                   }}
                   mapboxAccessToken={process.env.NEXT_PUBLIC_GOOGLE_MAP_TOKEN}
-                  mapStyle="mapbox://styles/mapbox/streets-v9"
+                  mapStyle="mapbox://styles/mapbox/satellite-v9"
                   terrain={{
                     source: "mapbox-raster-dem",
                     exaggeration: 2
