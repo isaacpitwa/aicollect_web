@@ -1613,7 +1613,7 @@
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.5.tgz"
   "version" "2.11.5"
 
-"@react-google-maps/api@2.8.1":
+"@react-google-maps/api@^2.8.1":
   "integrity" "sha512-JH35zv21socmbkEi/xTbNiXO794mGCFHXtxNeNY77ZvP2BtCzj2oXFTwGCslUUb1YMb/Aahka7sk7YR1vBAWOA=="
   "resolved" "https://registry.npmjs.org/@react-google-maps/api/-/api-2.8.1.tgz"
   "version" "2.8.1"

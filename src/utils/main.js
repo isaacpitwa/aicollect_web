@@ -20,4 +20,26 @@ export class Utils {
   static isInRegion(response, region){
     return response.region && response.region.prefix === region;
   }
+
+  static getFieldCordinates(response){
+    let coordinates = [];
+    for(let i = 0; i < response.answers.length; i++){
+      for(let j = 0; j < response.answers[i].components.length; j++){
+        const formField = response.answers[i].components[j];
+        if(formField.type === 'area-mapping' && formField.label.toLowerCase() === 'Farm Size'.toLocaleLowerCase()){
+          console.log("form  Field Label: ", formField.label.toLowerCase());
+          console.log("form  Field  Length ", Array.from(formField.gpsValues).length);
+          coordinates = Array.from(formField.gpsValues).map((gpsValue) => {
+            console.log("gpsValue: ", gpsValue);
+            return {lat: gpsValue.latitude, lng: gpsValue.longitude}
+          });
+          break;
+        }
+      }
+    }
+    return coordinates.map((gpsValue) => {
+      console.log("gpsValue: ", gpsValue);
+      return {lat: gpsValue['latitude'], lng:gpsValue['longitude']};
+    }); 
+  }
 }
