@@ -421,7 +421,7 @@ const  handleFilterByRegionChange = (event) => {
                     <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
                       anchor="top"
                       onClose={() => setShowPopup(false)}
-                      offset={25}
+                      offset={1}
                       >
                       <Box>
                         <Typography variant="h6" style={{fontSize:'14px'}}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
