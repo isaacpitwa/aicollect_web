@@ -251,6 +251,19 @@ const TaskMapArea = ({ questionaireResponses }) => {
     // zIndex: 1,
     fillOpacity: 0.8
   }
+  const selectedOptions = {
+    fillColor: "#28B529",
+    fillOpacity: 1,
+    strokeColor: "#D93025",
+    strokeOpacity: 1,
+    strokeWeight: 2,
+    clickable: false,
+    draggable: false,
+    editable: false,
+    geodesic: false,
+    // zIndex: 1,
+    fillOpacity: 0.8
+  }
 
   const onMapLoad = (map) => {
     setMap(map);
@@ -425,12 +438,13 @@ const TaskMapArea = ({ questionaireResponses }) => {
                         width: "100vw",
                         height: "90vh",
                       }}
-                      center={{
+                      center={ showPopup ? selectedMarker.location :{
                         lat: 0.3438034017562465,
                         lng: 32.59025009716529,
                       }}
-                      zoom={6}
+                      zoom={7}
                       onLoad={onMapLoad}
+                      mapTypeId={'satellite'}
                     >
                       {
                         responses.length > 0 ? responses.map((response, index) => {
@@ -438,7 +452,8 @@ const TaskMapArea = ({ questionaireResponses }) => {
                           return  fieldCordinates.length> 0?
                             <Polygon
                               paths={[fieldCordinates]}
-                              options={options}
+                              options={ selectedMarker.response && (selectedMarker.response._id ===response._id) ? selectedOptions: options}
+                              key={index}
                             /> : null
                         }) : null
                       }
@@ -447,6 +462,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                             showPopup && 
                               <InfoWindow
                               position={selectedMarker.location}
+                              key={selectedMarker.id}
                             >   
                             
                             <Box>
