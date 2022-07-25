@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
+import { Avatar, Box, Chip, Container, Link, Typography,Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
@@ -11,6 +11,7 @@ import { useMounted } from '../../../hooks/use-mounted';
 import { gtm } from '../../../lib/gtm';
 import { getInitials } from '../../../utils/get-initials';
 import { useAuth } from '../../../hooks/use-auth';
+import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 
 
 const AccountEdit = () => {
@@ -67,48 +68,25 @@ const AccountEdit = () => {
             </NextLink>
           </Box>
           <Box
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              overflow: 'hidden'
-            }}
-          >
-            <Avatar
-              src={user.avatar}
-              sx={{
-                height: 64,
-                mr: 2,
-                width: 64
-              }}
-            >
-              {getInitials(`${user.firstname} ${user.lastname}`)}
-            </Avatar>
-            <div>
-              <Typography
-                noWrap
-                variant="h4"
-              >
-                {user.email}
-              </Typography>
-              <Box
                 sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  alignItems: "center",
+                  display: "flex",
+                  px: 3,
+                  py: 2,
                 }}
               >
-                <Typography variant="subtitle2">
-                  user_id:
-                </Typography>
-                <Chip
-                  label={user.id}
-                  size="small"
-                  sx={{ ml: 1 }}
-                />
-              </Box>
-            </div>
+                <Avatar
+                  src={user.Profile?.profileImage ? user.Profile.profileImage : "N/A"}
+                  sx={{
+                    height: 180,
+                    mr: 2,
+                    width: 180,
+                    border: "2px solid #E0E0E0",
+                  }}
+                >
+                  <UserCircleIcon fontSize="small" />
+                </Avatar>
+                <Button>Change Profile Image</Button>
           </Box>
           <Box mt={3}>
             <AccountEditForm customer={user} />

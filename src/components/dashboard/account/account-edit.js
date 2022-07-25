@@ -188,6 +188,7 @@ export const AccountEditForm = (props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   value={formik.values.roles}
+                  disabled={true}
                 >
                   <MenuItem value="Owner">Owner</MenuItem>
                   <MenuItem value="Data Manager">Data Manager</MenuItem>
@@ -303,7 +304,8 @@ export const AccountEditForm = (props) => {
             sx={{
               alignItems: 'center',
               display: 'flex',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              mt: 3
             }}
           >
             <div>
@@ -311,25 +313,25 @@ export const AccountEditForm = (props) => {
                 gutterBottom
                 variant="subtitle1"
               >
-                Is Active
+                Password
               </Typography>
               <Typography
                 color="textSecondary"
                 variant="body2"
                 sx={{ mt: 1 }}
               >
-                Toggling this will make the user Inactive
+                Means that your password is going to be Reset.
               </Typography>
+                <Button
+                variant='outlined'
+                sx={{
+                    mt: 2,
+                }}
+                >Reset & Send Password</Button>
             </div>
-            <Switch
-              checked={formik.values.isActive}
-              color="primary"
-              edge="start"
-              name="isActive"
-              onChange={formik.handleChange}
-              value={formik.values.isActive}
-            />
+            
           </Box>
+          <Divider sx={{ my: 3 }} />
         </CardContent>
         <CardActions
           sx={{
@@ -361,13 +363,6 @@ export const AccountEditForm = (props) => {
               Cancel
             </Button>
           </NextLink>
-          <Button
-            color="error"
-            disabled={formik.isSubmitting}
-            onClick = {() => { setOpen(true) }}
-              >
-            Delete user
-          </Button>
         </CardActions>
       </Card>
       <Dialog
