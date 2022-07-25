@@ -13,9 +13,10 @@ import {
   AccordionSummary,
   Divider,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import NextLink from 'next/link';
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 import dateFormat, { masks } from "dateformat";
+import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { Utils } from "../../../utils/main";
 
 
@@ -54,7 +55,25 @@ export const AccountGeneralSettings = (props) => {
                 <Button>Change Profile Image</Button>
           </Box>
           <Box sx={{px:3}}>
+          <Box style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
           <Typography variant="h6" style={{color:'#707070',fontWeight:'600',marginTop:"36px"}}>Personal Information</Typography>
+          <NextLink
+                  href={`/dashboard/users/${user.id}/edit`}
+                  passHref
+                >
+                  <Button
+                    component="a"
+                    endIcon={(
+                      <PencilAltIcon fontSize="small" />
+                    )}
+                    sx={{ m: 1 }}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Edit
+                  </Button>
+                </NextLink>
+          </Box>
               <Box
                 sx={{
                   display: "flex",
