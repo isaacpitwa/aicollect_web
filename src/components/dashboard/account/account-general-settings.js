@@ -58,7 +58,7 @@ export const AccountGeneralSettings = (props) => {
           <Box style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
           <Typography variant="h6" style={{color:'#707070',fontWeight:'600',marginTop:"36px"}}>Personal Information</Typography>
           <NextLink
-                  href={`/dashboard/users/${user.id}/edit`}
+                  href={`/dashboard/account/edit`}
                   passHref
                 >
                   <Button
