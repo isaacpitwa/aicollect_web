@@ -31,7 +31,7 @@ export const AccountGeneralSettings = (props) => {
 
   return (
     <Box sx={{ mt: 4 }} {...props}>
-      <Card>
+      <Card sx={{my:4}}>
         <CardContent sx={{padding:4}} >
         <Box
                 sx={{
@@ -110,9 +110,13 @@ export const AccountGeneralSettings = (props) => {
               <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Phone</Typography>
                <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{user.phone}</Typography>
               </Box>
-              <Divider  sx={{my:1}}/>
+          </Box>
+        </CardContent>
+      </Card>
 
-              <Typography variant="h6" style={{color:'#707070',fontWeight:'600',marginTop:"36px"}}>System Information</Typography>
+      <Card>
+        <CardContent>
+        <Typography variant="h6" style={{color:'#707070',fontWeight:'600',marginTop:"8px"}}>System Information</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -172,8 +176,6 @@ export const AccountGeneralSettings = (props) => {
               <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Supervisor</Typography>
                <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{ user.supervisor ?? 'N/A'}</Typography>
               </Box>
-              <Divider  sx={{my:1}}/>
-          </Box>
         </CardContent>
       </Card>
     </Box>
