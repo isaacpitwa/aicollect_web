@@ -4,42 +4,24 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { userApi } from '../../../../api/users-api';
-import { AuthGuard } from '../../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../../components/dashboard/dashboard-layout';
-import { UserEditForm } from '../../../../components/dashboard/user/user-edit-form';
-import { useMounted } from '../../../../hooks/use-mounted';
-import { gtm } from '../../../../lib/gtm';
-import { getInitials } from '../../../../utils/get-initials';
+import { AuthGuard } from '../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { AccountEditForm } from '../../../components/dashboard/account/account-edit';
+import { useMounted } from '../../../hooks/use-mounted';
+import { gtm } from '../../../lib/gtm';
+import { getInitials } from '../../../utils/get-initials';
+import { useAuth } from '../../../hooks/use-auth';
 
-const UserEdit = () => {
+
+const AccountEdit = () => {
   const isMounted = useMounted();
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-  const { userId } = router.query;
+  const { user } = useAuth();
   // Log Id
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomer = useCallback(async () => {
-    try {
-      const data = await userApi.getUserDetails(userId);
-
-      if (isMounted()) {
-        setUser(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted, userId]);
-
-  useEffect(() => {
-      getCustomer();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []);
 
   if (!user) {
     return null;
@@ -49,7 +31,7 @@ const UserEdit = () => {
     <>
       <Head>
         <title>
-          Dashboard: User Edit | AiCollect
+          Dashboard: Edit Account | AiCollect
         </title>
       </Head>
       <Box
@@ -63,7 +45,7 @@ const UserEdit = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/users"
+              href="/dashboard/account"
               passHref
             >
               <Link
@@ -79,7 +61,7 @@ const UserEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  Users
+                  Account
                 </Typography>
               </Link>
             </NextLink>
@@ -129,7 +111,7 @@ const UserEdit = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <UserEditForm customer={user} />
+            <AccountEditForm customer={user} />
           </Box>
         </Container>
       </Box>
@@ -137,7 +119,7 @@ const UserEdit = () => {
   );
 };
 
-UserEdit.getLayout = (page) => (
+AccountEdit.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>
       {page}
@@ -145,4 +127,4 @@ UserEdit.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default UserEdit;
+export default AccountEdit;
