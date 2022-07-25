@@ -65,10 +65,6 @@ const Account = () => {
           </Tabs>
           <Divider sx={{ mb: 3 }} />
           {currentTab === 'general' && <AccountGeneralSettings user={user} />}
-          {currentTab === 'billing' && <AccountBillingSettings user={user} />}
-          {currentTab === 'logs' && <AccountLogs user={user} />}
-          {currentTab === 'notifications' && <AccountNotificationsSettings user={user} />}
-          {currentTab === 'security' && <AccountSecuritySettings user={user} />}
         </Container>
       </Box>
     </>

@@ -134,46 +134,6 @@ export const AccountGeneralSettings = (props) => {
           </Grid>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 4 }}>
-        <CardContent>
-          <Accordion
-            expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Typography variant="h6">Cancel Your Subscription</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography sx={{ mb: 3 }} color="GrayText" variant="subtitle1">
-                All data will be after the retention period (learn more). Make
-                sure you back up the information you want to save before
-                continuing. Canceling this subscription will greatly impact your
-                account. Please read further to see what will change.
-              </Typography>
-              <Typography sx={{ mt: 4 }} color="GrayText">
-                SAVE CHANGES You will not be able to:
-              </Typography>
-              <Typography sx={{ mt: 3, mb: 4 }} color="GrayText">
-                <li>
-                  access the apps, choicelists or classification sets your or
-                  members of your organization have created.
-                </li>
-                <li>
-                  access the data you or members of your organization have
-                  created.
-                </li>
-              </Typography>
-              <Button color="error" variant="contained">
-                CANCEL SUBSCRIPTION
-              </Button>
-            </AccordionDetails>
-          </Accordion>
-        </CardContent>
-      </Card>
     </Box>
   );
 };
