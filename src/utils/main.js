@@ -27,7 +27,7 @@ export class Utils {
       for(let j = 0; j < response.answers[i].components.length; j++){
         const formField = response.answers[i].components[j];
         if(formField.type === 'area-mapping' && formField.label.toLowerCase() === 'Farm Size'.toLocaleLowerCase()){
-          if(typeof formField.gpsValues !== 'string'){ 
+          if( formField.gpsValues  && (typeof formField.gpsValues !== 'string')){ 
             coordinates = formField.gpsValues.map((gpsValue) => {
               console.log("Utility gpsValue: ", gpsValue);
               return {lat: gpsValue.latitude, lng: gpsValue.longitude}
@@ -47,7 +47,7 @@ export class Utils {
       for(let j = 0; j < response.answers[i].components.length; j++){
         const formField = response.answers[i].components[j];
         if(formField.type === 'area-mapping' && formField.label.toLowerCase() === 'Farm Size'.toLocaleLowerCase()){
-          if(typeof formField.gpsValues !== 'string'){ 
+          if( formField.gpsValues && (typeof formField.gpsValues !== 'string')){ 
             coordinates = formField.gpsValues.map((gpsValue) => {
               latSum += gpsValue.latitude;
               lngSum += gpsValue.longitude;
