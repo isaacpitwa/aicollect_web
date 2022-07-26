@@ -11,9 +11,14 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Divider,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import NextLink from 'next/link';
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
+import dateFormat, { masks } from "dateformat";
+import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
+import { Utils } from "../../../utils/main";
+
 
 export const AccountGeneralSettings = (props) => {
   const { user } = props;
@@ -22,156 +27,155 @@ export const AccountGeneralSettings = (props) => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  const options = { day: 'numeric' , month: 'long', year: 'numeric', };
 
   return (
     <Box sx={{ mt: 4 }} {...props}>
-      <Card>
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
-              <Box
+      <Card sx={{my:4}}>
+        <CardContent sx={{padding:4}} >
+        <Box
                 sx={{
                   alignItems: "center",
                   display: "flex",
+                  px: 3,
+                  py: 2,
                 }}
               >
                 <Avatar
                   src={user.Profile?.profileImage ? user.Profile.profileImage : "N/A"}
                   sx={{
-                    height: 64,
+                    height: 180,
                     mr: 2,
-                    width: 64,
+                    width: 180,
+                    border: "1px solid #E0E0E0",
                   }}
                 >
                   <UserCircleIcon fontSize="small" />
                 </Avatar>
-                <Button>Change</Button>
-              </Box>
+                <Button>Change Profile Image</Button>
+          </Box>
+          <Box sx={{px:3}}>
+          <Box style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
+          <Typography variant="h6" style={{color:'#707070',fontWeight:'600',marginTop:"36px"}}>Personal Information</Typography>
+          <NextLink
+                  href={`/dashboard/account/edit`}
+                  passHref
+                >
+                  <Button
+                    component="a"
+                    endIcon={(
+                      <PencilAltIcon fontSize="small" />
+                    )}
+                    sx={{ m: 1 }}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Edit
+                  </Button>
+                </NextLink>
+          </Box>
               <Box
                 sx={{
                   display: "flex",
-                  mt: 3,
+                  mt: 1,
                   alignItems: "center",
+                  gap: 5,
                 }}
               >
-                <TextField
-                  defaultValue={user.firstname}
-                  label="First Name"
-                  size="small"
-                  sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                  }}
-                />
-                <Button>Save</Button>
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Name</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{ Utils.capitalizeFirstLetter(user.firstname + ' ' + user.lastname)}</Typography>
               </Box>
+              <Divider  sx={{my:1}}/>
+
               <Box
                 sx={{
                   display: "flex",
-                  mt: 3,
+                  mt: 1,
                   alignItems: "center",
+                  gap: 5,
                 }}
               >
-                <TextField
-                  defaultValue={user.lastname}
-                  label="Full Name"
-                  size="small"
-                  sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                  }}
-                />
-                <Button>Save</Button>
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Email</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{user.email}</Typography>
               </Box>
+              <Divider  sx={{my:1}}/>
               <Box
                 sx={{
                   display: "flex",
-                  mt: 3,
+                  mt: 1,
                   alignItems: "center",
+                  gap: 5,
                 }}
               >
-                <TextField
-                  defaultValue={user.email}
-                  disabled
-                  label="Email Address"
-                  required
-                  size="small"
-                  sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderStyle: "dashed",
-                    },
-                  }}
-                />
-                <Button>Edit</Button>
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Phone</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{user.phone}</Typography>
               </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  mt: 3,
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  label=" Reset Password"
-                  type="password"
-                  required
-                  size="small"
-                  sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                  }}
-                />
-                <Button>Save</Button>
-              </Box>
-              
-              
-            </Grid>
-          </Grid>
+          </Box>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 4 }}>
+
+      <Card>
         <CardContent>
-          <Accordion
-            expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Typography variant="h6">Cancel Your Subscription</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography sx={{ mb: 3 }} color="GrayText" variant="subtitle1">
-                All data will be after the retention period (learn more). Make
-                sure you back up the information you want to save before
-                continuing. Canceling this subscription will greatly impact your
-                account. Please read further to see what will change.
-              </Typography>
-              <Typography sx={{ mt: 4 }} color="GrayText">
-                SAVE CHANGES You will not be able to:
-              </Typography>
-              <Typography sx={{ mt: 3, mb: 4 }} color="GrayText">
-                <li>
-                  access the apps, choicelists or classification sets your or
-                  members of your organization have created.
-                </li>
-                <li>
-                  access the data you or members of your organization have
-                  created.
-                </li>
-              </Typography>
-              <Button color="error" variant="contained">
-                CANCEL SUBSCRIPTION
-              </Button>
-            </AccordionDetails>
-          </Accordion>
+        <Typography variant="h6" style={{color:'#707070',fontWeight:'600',marginTop:"8px"}}>System Information</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 1,
+                  alignItems: "center",
+                  gap: 7,
+                }}
+              >
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Access Level</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{user.roles}</Typography>
+              </Box>
+              <Divider  sx={{my:1}}/>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 1,
+                  alignItems: "center",
+                  gap: 7,
+                }}
+              >
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Organisation</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{ Utils.capitalizeFirstLetter(user.Profile?.companyName)}</Typography>
+              </Box>
+              <Divider  sx={{my:1}}/>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 1,
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Date Of Joining</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{ dateFormat (new Date(user.createdAt),'d/mmm/yyyy')}</Typography>
+              </Box>
+              <Divider  sx={{my:1}}/>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 1,
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Last Accessed</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{dateFormat (Date.now(),'d/mmm/yyyy')}</Typography>
+              </Box>
+              <Divider  sx={{my:1}}/>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 1,
+                  alignItems: "center",
+                  gap: 9,
+                }}
+              >
+              <Typography variant="subtitle1" style={{color:'#707070',fontSize:'18px',fontWeight:'400'}}>Supervisor</Typography>
+               <Typography variant="body1" style={{color:'#707070', fontSize:'18px',fontWeight:'300'}}>{ user.supervisor ?? 'N/A'}</Typography>
+              </Box>
         </CardContent>
       </Card>
     </Box>

@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Container, Divider, Tab, Tabs, Typography } from '@mui/material';
-import { AuthGuard } from '../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../components/dashboard/dashboard-layout';
-import { AccountBillingSettings } from '../../components/dashboard/account/account-billing-settings';
-import { AccountGeneralSettings } from '../../components/dashboard/account/account-general-settings';
-import { AccountNotificationsSettings } from '../../components/dashboard/account/account-notifications-settings';
-import { AccountTeamSettings } from '../../components/dashboard/account/account-team-settings';
-import { AccountLogs } from '../../components/dashboard/account/account-logs';
-import { AccountSecuritySettings } from '../../components/dashboard/account/account-security-settings';
-import { gtm } from '../../lib/gtm';
-import { useAuth } from '../../hooks/use-auth';
+import { AuthGuard } from '../../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { AccountGeneralSettings } from '../../../components/dashboard/account/account-general-settings';
+
+import { gtm } from '../../../lib/gtm';
+import { useAuth } from '../../../hooks/use-auth';
 
 const tabs = [
   { label: 'General', value: 'general' },
@@ -65,10 +61,6 @@ const Account = () => {
           </Tabs>
           <Divider sx={{ mb: 3 }} />
           {currentTab === 'general' && <AccountGeneralSettings user={user} />}
-          {currentTab === 'billing' && <AccountBillingSettings user={user} />}
-          {currentTab === 'logs' && <AccountLogs user={user} />}
-          {currentTab === 'notifications' && <AccountNotificationsSettings user={user} />}
-          {currentTab === 'security' && <AccountSecuritySettings user={user} />}
         </Container>
       </Box>
     </>
