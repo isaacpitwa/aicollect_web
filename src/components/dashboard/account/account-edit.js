@@ -29,7 +29,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useRouter } from 'next/router'
 
-
 export const AccountEditForm = (props) => {
   const { customer, updateUser, ...other } = props;
   const [open, setOpen] = useState(false);
@@ -46,7 +45,7 @@ export const AccountEditForm = (props) => {
       phone: customer.phone || '',
       processor: customer.processor || '',
       isDeleted: customer.isDeleted || false,
-      addedBy: "Stuar Dambi",
+      addedBy: "Rockside Consults",
       submit: null
     },
     validationSchema: Yup.object({
@@ -348,7 +347,7 @@ export const AccountEditForm = (props) => {
             Update
           </Button>
           <NextLink
-            href={`/dashboard/users`}
+            href={`/dashboard/account`}
             passHref
           >
             <Button

@@ -120,6 +120,28 @@ class UserApi {
       throw new Error('Could not process request, try again later');
     }
   }
+
+  async updateUserProfile(userId, updateDetails) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/update-profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify({ userId, ...updateDetails })
+      });
+      const data = await response.json();
+      if (data.status === 401) {
+        return null;
+      }
+      if (data.status === 200) {
+        return data.data;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export const userApi = new UserApi();

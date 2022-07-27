@@ -56,7 +56,8 @@ export const AuthContext = createContext({
   platform: 'JWT',
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  refetchUser: () => Promise.resolve(),
 });
 
 export const AuthProvider = (props) => {
@@ -128,6 +129,29 @@ export const AuthProvider = (props) => {
     return user;
   };
 
+  const refetchUser = async () => {
+    const accessToken = window.localStorage.getItem('accessToken');
+    const user = await authenticationApi.userProfile(accessToken);
+    console.log('User DATA: \n', user);
+    if (user.firstname) {
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: true,
+          user
+        }
+      });
+      router.push(IndexRedirect[user.roles]);
+    } else {
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: false,
+          user: null
+        }
+      });
+    }
+  }
 
   const logout = async () => {
     localStorage.removeItem('accessToken');
@@ -180,6 +204,7 @@ export const AuthProvider = (props) => {
         login,
         logout,
         register,
+        refetchUser,
         authenticateAfterEmailVerify,
         completeUserProfile
       }}
