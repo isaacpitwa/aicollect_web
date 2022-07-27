@@ -19,7 +19,6 @@ import dateFormat, { masks } from "dateformat";
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { Utils } from "../../../utils/main";
 import { userApi } from '../../../api/users-api';
-import { useRouter } from 'next/router'
 import { useAuth } from '../../../hooks/use-auth';
 import toast from 'react-hot-toast';
 
@@ -31,7 +30,6 @@ export const AccountGeneralSettings = (props) => {
   const [expanded, setExpanded] = useState(false);
   const [profileImage, setProfileImage] = useState(user.Profile?.profileImage);
   const [profileSource, setProfileSource] = useState(null);
-  const router = useRouter()
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
