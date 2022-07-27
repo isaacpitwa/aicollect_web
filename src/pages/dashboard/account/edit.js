@@ -67,27 +67,6 @@ const AccountEdit = () => {
               </Link>
             </NextLink>
           </Box>
-          <Box
-                sx={{
-                  alignItems: "center",
-                  display: "flex",
-                  px: 3,
-                  py: 2,
-                }}
-              >
-                <Avatar
-                  src={user.Profile?.profileImage ? user.Profile.profileImage : "N/A"}
-                  sx={{
-                    height: 180,
-                    mr: 2,
-                    width: 180,
-                    border: "2px solid #E0E0E0",
-                  }}
-                >
-                  <UserCircleIcon fontSize="small" />
-                </Avatar>
-                <Button>Change Profile Image</Button>
-          </Box>
           <Box mt={3}>
             <AccountEditForm customer={user} />
           </Box>
