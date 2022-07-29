@@ -23,8 +23,6 @@ import { useAuth } from '../../../hooks/use-auth';
 import toast from 'react-hot-toast';
 
 
-const { CLOUDINARY_NAME, CLOUDINARY_PROFILE_PRESET } = process.env;
-
 export const AccountGeneralSettings = (props) => {
   const { user, refetchUser } = useAuth();
   const [expanded, setExpanded] = useState(false);
