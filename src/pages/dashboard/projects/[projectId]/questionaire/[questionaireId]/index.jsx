@@ -400,6 +400,7 @@ const QuestionaireDetails = () => {
                   rowsPerPage={rowsPerPage}
                   page={page}
                   responses={responses}
+                  questionaire ={questionaire}
                 />
               </TabPanel>
             </TabContext>

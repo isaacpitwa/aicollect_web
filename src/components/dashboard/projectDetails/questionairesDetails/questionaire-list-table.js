@@ -10,6 +10,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useDemoData } from "@mui/x-data-grid-generator";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import { Utils } from "../../../../utils/main";
 
 
 export const QuestionaireDetailsTable = (props) => {
@@ -21,6 +22,7 @@ export const QuestionaireDetailsTable = (props) => {
     page,
     rowsPerPage,
     responses,
+    questionaire,
     ...other
   } = props;
   const [selectedCustomers, setSelectedCustomers] = useState([]);
@@ -114,7 +116,7 @@ export const QuestionaireDetailsTable = (props) => {
     let formattedResponse = {
       id: response._id,
       "Time Spent": response.timeSpentToSubmit,
-      "Submitted By": response.submittedBy.name,
+      "Submitted By":  Utils.capitalizeFirstLetter(response.submittedBy.name),
       "Date Submitted": new Date(response.submittedOn).toLocaleDateString("en-US"),
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
@@ -262,7 +264,7 @@ export const QuestionaireDetailsTable = (props) => {
                     let response = {
                       id: readyRes.length,
                       "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
-                      "Submitted By": responses[res].submittedBy.name,
+                      "Submitted By":  Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
                       "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
                       "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
                     }, qtns = [];
@@ -332,6 +334,7 @@ export const QuestionaireDetailsTable = (props) => {
         </Button>
       </Box>
       {/* <Scrollbar> */}
+      <Button variant="contained" onClick={()=>{ setSelectedDepTab({notSelected:true})}}>{ questionaire ?questionaire.name :'Unknown'}</Button>
       <div style={{ height: 500, width: "100%" }}>
         {
           selectedDepTab.notSelected ? <DataGrid
