@@ -12,7 +12,7 @@ export function DataGridToolbar() {
     function exceljsPreProcess({ workbook, worksheet }) {
         workbook.created = new Date(); // Add metadata
         worksheet.name = 'All Responses'; // Modify worksheet name
-        worksheet.columns.shift();
+        worksheet.columns = worksheet.columns.shift();
       }
     return (
       <GridToolbarContainer style={{display:"flex",justifyContent:"space-between"}}>
@@ -43,7 +43,7 @@ export function DataGridToolbarWithDependacy() {
         worksheet.columns.shift();
         if(details.depedancyTabs){
             details.depedancyTabs.forEach(tab => {
-                tab.columns.shift();
+                worksheet.columns =  tab.columns.shift();
                 const sheet = workbook.addWorksheet(tab.name, {
                     headerFooter:{firstHeader: tab.name, firstFooter: tab.name},
 
