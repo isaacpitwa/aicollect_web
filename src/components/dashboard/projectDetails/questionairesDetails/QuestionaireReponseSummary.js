@@ -6,6 +6,12 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import { Utils } from "../../../../utils/main";
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
+
+import {DataGridToolbar} from '../../data-grid-toolbar'
 
 
 export const QuestionaireResponseSummaryTable = (props) => {
@@ -110,7 +116,7 @@ const columns = [
     let formattedResponse = {
       id: response._id,
       "Time Spent": response.timeSpentToSubmit,
-      "Submitted By": response.submittedBy.name,
+      "Submitted By":  Utils.capitalizeFirstLetter(response.submittedBy.name),
       "Date Submitted": new Date(response.submittedOn).toLocaleDateString("en-US"),
       "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
       "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
@@ -174,17 +180,18 @@ const columns = [
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 500, width: "100%" }}>
-        <DataGrid
+      <div style={{ height: "64vh", width: "100%" }}>
+        <DataGridPremium
           rows={formattedResponses.reverse()}
           columns={tableColumns}
           components={{
-            Toolbar: GridToolbar,
+            Toolbar: DataGridToolbar,
           }}
           filterModel={filterModel}
           onFilterModelChange={(newFilterModel) =>
             setFilterModel(newFilterModel)
           }
+          pagination
         />
       </div>
       {/* </Scrollbar> */}
