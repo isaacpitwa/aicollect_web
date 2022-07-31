@@ -175,16 +175,16 @@ export const QuestionaireDetailsTable = (props) => {
               //  loop through sub-section Formfields
               for (let k = 0; k < formField.components.length; k++) {
                 const subsectionFormField = formField.components[k];
-                currentcolumns = [...currentcolumns, { field: `${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label.split(' ').join(''), width: 150 }]
+                currentcolumns = [...currentcolumns, { field: `${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label, width: 150 }]
               }
             }
           } 
           else if (formField.type === 'image') {
-            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150, renderCell: (params) => params.value ? <img src={params.value}  width={140} height={80} style={{objectFit:'contain'}}/> : 'N/A' 
+            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label, width: 150, renderCell: (params) => params.value ? <img src={params.value}  width={140} height={80} style={{objectFit:'contain'}}/> : 'N/A' 
           }]
           }
           else {
-            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label.split(' ').join(''), width: 150 }]
+            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label, width: 150 }]
 
           }
 
@@ -237,8 +237,8 @@ export const QuestionaireDetailsTable = (props) => {
         );
       }
     },
-    { field: "Date Submitted", headName: "date", width: 150 },
-     { field: "Submitted By", headName: "SubmittedBy", width: 150 },
+    { field: "Date Submitted", headName: "Date Submitted", width: 150 },
+     { field: "Submitted By", headName: "Submitted By", width: 150 },
      { field: "ID", headName: "ID", width: 150 },
      { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
 
@@ -271,7 +271,7 @@ export const QuestionaireDetailsTable = (props) => {
                       }, qtns = [];
                       for (let k = 0; k < formField.components.length; k++) {
                         const subsectionFormField = formField.components[k];
-                        qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label.split(' ').join(''), width: 180 });
+                        qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label, width: 180 });
                         if (subsectionFormField.type === 'select-box') {
                           response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
                         }
