@@ -71,7 +71,7 @@ export function DataGridToolbarWithDependacy() {
           excelOptions={{
             includeHeaders:true,
             fileName: "Responses For Questionaire",
-            exceljsPreProcess:exceljsPreProcess,
+            exceljsPreProcess,
           }}
           />
         </Box>
