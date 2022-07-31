@@ -20,6 +20,7 @@ import { store } from '../store';
 import { createTheme } from '../theme';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import '../i18n';
+import { ExcelExportProvider } from '../contexts/export-context';
 
 Router.events.on('routeChangeStart', nProgress.start);
 Router.events.on('routeChangeError', nProgress.done);
@@ -50,6 +51,7 @@ const App = (props) => {
       <ReduxProvider store={store}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <AuthProvider>
+            <ExcelExportProvider>
             <SettingsProvider>
               <SettingsConsumer>
                 {({ settings }) => (
@@ -76,6 +78,7 @@ const App = (props) => {
                 )}
               </SettingsConsumer>
             </SettingsProvider>
+            </ExcelExportProvider>
           </AuthProvider>
         </LocalizationProvider>
       </ReduxProvider>
