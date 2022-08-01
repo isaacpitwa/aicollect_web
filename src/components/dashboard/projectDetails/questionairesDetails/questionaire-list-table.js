@@ -199,7 +199,9 @@ export const QuestionaireDetailsTable = (props) => {
     console.log("Executing Set function");
     await  setDetails({
        depedancyTabs:[...currentTabs.map((tab)=>{ return {name:tab.title, rows :[...tab.responses].reverse(), columns: tab.questions}})
-     ]})
+     ],
+     questionaire: questionaire.name
+    })
    }
 
   const getDependancyTabs = () => {

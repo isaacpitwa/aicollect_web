@@ -39,13 +39,13 @@ export function DataGridToolbarWithDependacy() {
     const { details } = useExcelExport()
     function exceljsPreProcess({ workbook, worksheet }) {
         workbook.created = new Date(); // Add metadata
+        worksheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true };
         worksheet.name = 'All Responses'; // Modify worksheet name
         worksheet.columns.shift();
         worksheet.views = [
           {state: 'frozen', ySplit: 1,}
         ];
-        worksheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true };
-
+       
         if(details.depedancyTabs){
             details.depedancyTabs.forEach(tab => {
                 const sheet = workbook.addWorksheet(tab.name, {
@@ -76,7 +76,7 @@ export function DataGridToolbarWithDependacy() {
           <GridToolbarExport
           excelOptions={{
             includeHeaders:true,
-            fileName: "Responses For Questionaire",
+            fileName:  details.questionaire ?? "Responses For Questionaire",
             exceljsPreProcess,
           }}
           />
