@@ -79,7 +79,7 @@ export function DataGridToolbarWithDependacy() {
           <GridToolbarExport
           excelOptions={{
             includeHeaders:true,
-            fileName:  details.questionaire ?? "Responses For Questionaire",
+            fileName:  details?.questionaire ?? "Responses For Questionaire",
             exceljsPreProcess,
             exceljsPostProcess,
           }}
