@@ -1595,7 +1595,7 @@
     "react-transition-group" "^4.4.2"
     "rifm" "^0.12.1"
 
-"@mui/x-license-pro@5.15.0":
+"@mui/x-license-pro@^5.15.0", "@mui/x-license-pro@5.15.0":
   "integrity" "sha512-fI7Czi1v91zJ3xc10w4fmm5s6hCQa+BrfCgFKreaBzPKsse7hA6zg1FvajN9kOZL1oRyR35/HePd1YSN+114yw=="
   "resolved" "https://registry.npmjs.org/@mui/x-license-pro/-/x-license-pro-5.15.0.tgz"
   "version" "5.15.0"

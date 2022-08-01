@@ -41,13 +41,20 @@ export function DataGridToolbarWithDependacy() {
         workbook.created = new Date(); // Add metadata
         worksheet.name = 'All Responses'; // Modify worksheet name
         worksheet.columns.shift();
+        worksheet.views = [
+          {state: 'frozen', ySplit: 1,}
+        ];
+        worksheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true };
+
         if(details.depedancyTabs){
             details.depedancyTabs.forEach(tab => {
-                worksheet.columns =  tab.columns.shift();
                 const sheet = workbook.addWorksheet(tab.name, {
                     headerFooter:{firstHeader: tab.name, firstFooter: tab.name},
-
+                    views: [
+                      {state: 'frozen',  ySplit: 1,}
+                    ],
                 });
+                tab.columns.shift();
                 sheet.columns = tab.columns.map((column)=>{
                     column.key = column.headName;
                     column.header =column.field;
@@ -55,8 +62,7 @@ export function DataGridToolbarWithDependacy() {
                     return column;
                 });
                 const rows = sheet.addRows([...tab.rows]);
-                console.log(rows);
-                
+                sheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true };                
             });
         }
 
