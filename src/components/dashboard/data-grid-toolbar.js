@@ -39,13 +39,6 @@ export function DataGridToolbarWithDependacy() {
     const { details } = useExcelExport()
     function exceljsPreProcess({ workbook, worksheet }) {
         workbook.created = new Date(); // Add metadata
-        worksheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true };
-        worksheet.name = 'All Responses'; // Modify worksheet name
-        worksheet.columns.shift();
-        worksheet.views = [
-          {state: 'frozen', ySplit: 1,}
-        ];
-       
         if(details.depedancyTabs){
             details.depedancyTabs.forEach(tab => {
                 const sheet = workbook.addWorksheet(tab.name, {
@@ -67,6 +60,16 @@ export function DataGridToolbarWithDependacy() {
         }
 
       }
+      function exceljsPostProcess({ worksheet }) {
+        // Add a text after the data
+        worksheet.name = 'All Responses'; // Modify worksheet name
+        // worksheet.columns = worksheet.columns.shift();
+        console.log("Columns: ",worksheet.columns);
+        worksheet.columns =worksheet.columns.slice(1);
+        console.log("After Remove First Columns: ",worksheet.columns);
+        worksheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true }; 
+        worksheet.views = [{state: 'frozen', ySplit: 1,}];
+      }
 
     return (
       <GridToolbarContainer style={{display:"flex",justifyContent:"space-between"}}>
@@ -78,6 +81,7 @@ export function DataGridToolbarWithDependacy() {
             includeHeaders:true,
             fileName:  details.questionaire ?? "Responses For Questionaire",
             exceljsPreProcess,
+            exceljsPostProcess,
           }}
           />
         </Box>

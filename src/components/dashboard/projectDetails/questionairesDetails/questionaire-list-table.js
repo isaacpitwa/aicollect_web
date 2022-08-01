@@ -356,7 +356,6 @@ export const QuestionaireDetailsTable = (props) => {
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <Button variant="contained" onClick={()=>{ setSelectedDepTab({notSelected:true})}}>{ questionaire ?questionaire.name :'Unknown'}</Button>
       <div style={{ height: "60vh", width: "100%" }}>
         {
           selectedDepTab.notSelected ? <DataGridPremium
@@ -388,8 +387,13 @@ export const QuestionaireDetailsTable = (props) => {
 
       </div>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
+      <Button variant="contained" onClick={()=>{ setSelectedDepTab({notSelected:true})}}
+       style={   selectedDepTab.notSelected ?{
+            
+      }:{opacity:0.7}}>{ questionaire ?questionaire.name :'Unknown'}</Button>
         {
-          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => {selectedDepTab.title === depQtn.title? setSelectedDepTab({ notSelected: true }): setSelectedDepTab(depQtn);}} style={  selectedDepTab.title === depQtn.title?{
+          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => {selectedDepTab.title === depQtn.title? setSelectedDepTab({ notSelected: true }): setSelectedDepTab(depQtn);}}
+           style={  selectedDepTab.title === depQtn.title?{
             
           }:{opacity:0.7}}>{depQtn.title}</Button>))
         }
