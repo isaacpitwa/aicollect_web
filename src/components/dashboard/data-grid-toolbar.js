@@ -39,15 +39,15 @@ export function DataGridToolbarWithDependacy() {
     const { details } = useExcelExport()
     function exceljsPreProcess({ workbook, worksheet }) {
         workbook.created = new Date(); // Add metadata
-        worksheet.name = 'All Responses'; // Modify worksheet name
-        worksheet.columns.shift();
         if(details.depedancyTabs){
             details.depedancyTabs.forEach(tab => {
-                worksheet.columns =  tab.columns.shift();
                 const sheet = workbook.addWorksheet(tab.name, {
                     headerFooter:{firstHeader: tab.name, firstFooter: tab.name},
-
+                    views: [
+                      {state: 'frozen',  ySplit: 1,}
+                    ],
                 });
+                tab.columns.shift();
                 sheet.columns = tab.columns.map((column)=>{
                     column.key = column.headName;
                     column.header =column.field;
@@ -55,11 +55,20 @@ export function DataGridToolbarWithDependacy() {
                     return column;
                 });
                 const rows = sheet.addRows([...tab.rows]);
-                console.log(rows);
-                
+                sheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true };                
             });
         }
 
+      }
+      function exceljsPostProcess({ worksheet }) {
+        // Add a text after the data
+        worksheet.name = 'All Responses'; // Modify worksheet name
+        // worksheet.columns = worksheet.columns.shift();
+        console.log("Columns: ",worksheet.columns);
+        worksheet.columns =worksheet.columns.slice(1);
+        console.log("After Remove First Columns: ",worksheet.columns);
+        worksheet.getRow(1).font = { name: 'Calibri', family: 4, size: 11, bold: true }; 
+        worksheet.views = [{state: 'frozen', ySplit: 1,}];
       }
 
     return (
@@ -70,8 +79,9 @@ export function DataGridToolbarWithDependacy() {
           <GridToolbarExport
           excelOptions={{
             includeHeaders:true,
-            fileName: "Responses For Questionaire",
+            fileName:  details?.questionaire ?? "Responses For Questionaire",
             exceljsPreProcess,
+            exceljsPostProcess,
           }}
           />
         </Box>
