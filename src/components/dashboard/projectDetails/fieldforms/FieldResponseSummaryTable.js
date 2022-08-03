@@ -6,8 +6,11 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
-
+import {DataGridToolbar} from '../../data-grid-toolbar'
 export const FieldResponseSummaryTable = (props) => {
   const {
     customers,
@@ -174,12 +177,12 @@ const columns = [
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 500, width: "100%" }}>
-        <DataGrid
+      <div style={{ height: "64vh", width: "100%" }}>
+        <DataGridPremium
           rows={formattedResponses.reverse()}
           columns={tableColumns}
           components={{
-            Toolbar: GridToolbar,
+            Toolbar: DataGridToolbar,
           }}
           filterModel={filterModel}
           onFilterModelChange={(newFilterModel) =>

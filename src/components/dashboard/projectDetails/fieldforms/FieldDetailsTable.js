@@ -10,7 +10,11 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useDemoData } from "@mui/x-data-grid-generator";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
+import {DataGridToolbar} from '../../data-grid-toolbar'
 
 export const FieldDetailsTable = (props) => {
   const {
@@ -315,25 +319,25 @@ export const FieldDetailsTable = (props) => {
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: "64vh", width: "100%" }}>
         {
-          selectedDepTab.notSelected ? <DataGrid
+          selectedDepTab.notSelected ? 
+          <DataGridPremium
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{
-              Toolbar: GridToolbar,
+              Toolbar: DataGridToolbar,
             }}
             filterModel={filterModel}
             onFilterModelChange={(newFilterModel) =>
               setFilterModel(newFilterModel)
             }
-
           /> :
-            <DataGrid
+            <DataGridPremium
               rows={[...selectedDepTab.responses].reverse()}
               columns={selectedDepTab.questions}
               components={{
-                Toolbar: GridToolbar,
+                Toolbar: DataGridToolbar,
               }}
               filterModel={filterModel}
               onFilterModelChange={(newFilterModel) =>
