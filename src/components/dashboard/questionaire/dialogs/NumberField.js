@@ -149,6 +149,7 @@ const NumberField = (props) => {
             setIsRequired(false)
             setConditional(null)
             setDependency(null)
+            setValidations(null)
             removeConditional()
             handleClose()
         } else {
@@ -174,6 +175,7 @@ const NumberField = (props) => {
             required: isRequired,
             conditional: conditionalData,
             dependency: dependency,
+            validations: validations,
         }
 
         updateFieldInSection(numberFieldData)
@@ -190,6 +192,7 @@ const NumberField = (props) => {
         setTooltip(fieldData?fieldData.tooltip:'')
         setIsRequired(!isRequired)
         setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
+        setDependency(fieldData&&fieldData.validations?fieldData.validations:null)
         handleClose()
     }
 
@@ -394,6 +397,34 @@ const NumberField = (props) => {
                                             onChange={handleIsRequired}
                                         />Required<GeneralTooltip tipData={'A required field must be filled.'}/>
                                     </Typography>
+
+                                    <Typography
+                                        style={{ marginTop: '10px', color: '#000' }}
+                                    >
+                                        Validations
+                                        <GeneralTooltip tipData={'Add Data Restriction  For this Entry.'}/>
+                                    </Typography>
+                                    <Box>
+                                    <Typography
+                                        style={{ marginTop: '10px', color: '#000' }}
+                                    >
+                                        Minimum Value
+                                        <GeneralTooltip tipData={`Add Minimum Data Restriction for ${fieldData.label} `}/>
+                                    </Typography>
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            id="label"
+                                            label={`Minimum Value for ${fieldData.label}`}
+                                            type="number"
+                                            size="small"
+                                            fullWidth
+                                            variant="outlined"
+                                            InputProps={{
+                                                endAdornment: <GeneralTooltip tipData={tooltip}/>,
+                                            }}
+                                        />
+                                    </Box>
                                 </>
                             }
                         </Box>
