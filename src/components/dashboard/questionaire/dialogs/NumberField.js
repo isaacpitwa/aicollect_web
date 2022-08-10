@@ -198,7 +198,7 @@ const NumberField = (props) => {
         setTooltip(fieldData ? fieldData.tooltip : '')
         setIsRequired(!isRequired)
         setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
-        setDependency(fieldData && fieldData.validations ? fieldData.validations : null)
+        setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         handleClose()
     }
 

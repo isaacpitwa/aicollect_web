@@ -143,7 +143,8 @@ const DateField = (props) => {
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            conditional: conditionalLogic()
+            conditional: conditionalLogic(),
+            validations: validations
         }
 
         if(sectionId&&fieldLabel!=='') {
@@ -156,6 +157,7 @@ const DateField = (props) => {
             setIsRequired(false)
             setButtonFocused('Display')
             setConditional(false)
+            setValidations(null)
             handleClose()
         } else {
             setError(true)
@@ -181,7 +183,8 @@ const DateField = (props) => {
                 display: display,
                 when: when,
                 value: compValue.toLowerCase()
-            }
+            },
+            validations: validations
         }
 
         updateFieldInSection(newField)
@@ -199,7 +202,9 @@ const DateField = (props) => {
         setIsRequired(!isRequired)
         setButtonFocused('Display')
         setConditional(false)
+        setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         handleClose()
+        
     }
 
     return (
