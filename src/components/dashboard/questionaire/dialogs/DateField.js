@@ -374,6 +374,7 @@ const DateField = (props) => {
                                                     name='min'
                                                     value={validations && validations.min ? validations.min : null}
                                                     inputFormat='dd/MM/yyyy'
+                                                    maxDate={(validations  && validations.max) ? validations.max : null}
                                                 />
                                             </LocalizationProvider>
                                             
@@ -394,6 +395,7 @@ const DateField = (props) => {
                                                     name='max'
                                                     value={validations ? validations.max : null}
                                                     inputFormat='dd/MM/yyyy'
+                                                    minDate={(validations  && validations.min) ? validations.min : null}
                                                 />
                                             </LocalizationProvider>
                                         </Box>
