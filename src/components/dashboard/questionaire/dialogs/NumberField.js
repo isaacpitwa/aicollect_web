@@ -104,7 +104,18 @@ const NumberField = (props) => {
         setValidations({ ...validations, [e.target.name]: e.target.value });
     }
     const handleDisplayConfigs = (e) => {
-        setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value });
+        if (e.target.name === 'inputMask' && e.target.value) {
+             var value = e.target.value.toString().split('').map((char, index) => {
+                if (/^\d+$/.test(char)) {
+                    return '#'
+                }
+                return char
+            
+             }).join('')
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: value });
+        } else {  
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value })
+        };
     }
     const handleWhen = (e) => {
         setWhen(e.target.value)

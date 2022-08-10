@@ -15,6 +15,7 @@ import {
     FieldTooltip,
     DescriptionCard,
 } from '../../utils';
+import { format } from 'date-fns';
 
 /**
  * @function NumberFieldComp
@@ -53,7 +54,7 @@ const NumberFieldComp = (props) => {
     }
 
     const handleFieldValue = (e) => {
-        setFieldValue(e.target.value)
+        setFieldValue(formatValue(e.target.value))
         if(fieldData.dependency) {
             setDependantId(fieldData.id)
             setDependecyValue(e.target.value)
@@ -74,6 +75,13 @@ const NumberFieldComp = (props) => {
     const fieldStyle = () => {
         return editStatus?classes.section:classes.section2
     };
+    
+    const formatValue = (value) => {
+        if(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) {
+            return value.toString().replace(/\B(?=(\d{18})+(?!\d))/g, " ");
+        }
+        return value.toString().replace(/\B(?=(\d{18})+(?!\d))/g, ",")
+    }
 
     const fieldDisplay = () => {
 
