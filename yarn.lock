@@ -2014,9 +2014,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^17.0.0", "@types/react@^17.0.0 || ^18.0.0", "@types/react@>=16":
-  "integrity" "sha512-bPqwzJRzKtfI0mVYr5R+1o9BOE8UEXefwc1LwcBtfnaAn6OoqMhLa/91VA8aeWfDPJt1kHvYKI8RHcQybZLHHA=="
-  "resolved" "https://registry.npmjs.org/@types/react/-/react-18.0.6.tgz"
-  "version" "18.0.6"
+  "integrity" "sha512-zJ6IYlJ8cYYxiJfUaZOQee4lh99mFihBoqkOSEGV+dFi9leROW6+PgstzQ+w3gWTnUfskALtQPGHK6dYmPj+2A=="
+  "resolved" "https://registry.npmjs.org/@types/react/-/react-17.0.48.tgz"
+  "version" "17.0.48"
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2080,6 +2080,11 @@
   dependencies:
     "@typescript-eslint/types" "4.33.0"
     "eslint-visitor-keys" "^2.0.0"
+
+"@typescript/lib-dom@npm:@types/web":
+  "integrity" "sha512-mNdZig0AZ0ciUlChiZ5xd9t4DVhMEbPf5eMOnDAgNThmhYWyIPPCSIGnag9mL/mnGMkoSW9Cel8UNIjeGeqh5g=="
+  "resolved" "https://registry.npmjs.org/@types/web/-/web-0.0.71.tgz"
+  "version" "0.0.71"
 
 "@webassemblyjs/ast@1.9.0":
   "integrity" "sha512-C6wW5L+b7ogSDVqymbkkvuW9kruN//YisMED04xzeBBqjHa2FYnmvOlS6Xj68xWQRgWvI9cIglsjFowH/RJyEA=="
@@ -6304,7 +6309,7 @@
     "enhanced-resolve" "^5.7.0"
     "escalade" "^3.1.1"
 
-"next@>=10.2.0", "next@12.0.3-canary.7":
+"next@^12.0.3-canary.7", "next@>=10.2.0":
   "integrity" "sha512-MUauz/FdDyyMmMMtgI8h1CEVAnYSsSRfoUNwjhuy0pUmwKNrtuuqb+h7FA1BqQ8pnbk0EzeaXqxg8jtYHt2DkQ=="
   "resolved" "https://registry.npmjs.org/next/-/next-12.0.3-canary.7.tgz"
   "version" "12.0.3-canary.7"
