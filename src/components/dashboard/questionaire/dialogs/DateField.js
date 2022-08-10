@@ -366,9 +366,9 @@ const DateField = (props) => {
                                             </Typography>
                                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                                 <DesktopDatePicker
-                                                    onChange={ onChange={(newValue) => {
-                                                        handleValidations(min,newValue);
-                                                    }}}
+                                                   onChange={(newValue) => {
+                                                        handleValidations('min',newValue);
+                                                    }}
                                                     renderInput={(params) => <TextField {...params} fullWidth/>}
                                                     InputProps={{
                                                         endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
@@ -390,7 +390,7 @@ const DateField = (props) => {
                                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                                 <DesktopDatePicker
                                                     onChange={(newValue) => {
-                                                        handleValidations(max,newValue);
+                                                        handleValidations('max',newValue);
                                                     }}
                                                     renderInput={(params) => <TextField {...params} fullWidth/>}
                                                     InputProps={{
