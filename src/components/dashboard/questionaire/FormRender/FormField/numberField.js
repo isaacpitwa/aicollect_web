@@ -21,7 +21,7 @@ import {
  * @desc This is the Number Field component, it is the Number field displayed in the form.
  * @arg {Object} fieldData - The data of the field which contains all the properties of the Number field.
  * @returns {Component} - Returns a Number field JSX component.
- * @author Atama Zack <atama.zack@gmail.com>
+ * @author Atama Zack <atama.zack@gmail.com>  IsaacPitwa <isaacpitwa256@gmail.com> 
  * @version 1.0.0
  */
 const NumberFieldComp = (props) => {

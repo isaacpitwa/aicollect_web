@@ -59,6 +59,7 @@ const NumberField = (props) => {
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
     const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
+    const [validations, setValidations] = useState(fieldData&&fieldData.validations?fieldData.validations:null)
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -134,6 +135,7 @@ const NumberField = (props) => {
             required: isRequired,
             conditional: conditionalData,
             dependency: dependency,
+            validations: validations,
         }
 
         if(sectionId&&fieldLabel!=='') {
