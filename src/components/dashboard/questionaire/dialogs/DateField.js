@@ -115,8 +115,8 @@ const DateField = (props) => {
         setCompValue(e.target.value)
     }
 
-    const handleValidations = (e) => {
-        setValidations({ ...validations, [e.target.name]: e.target.value });
+    const handleValidations = (key,value) => {
+        setValidations({ ...validations, [key]: value });
     }
     
     const conditionalLogic = () => {
@@ -366,7 +366,9 @@ const DateField = (props) => {
                                             </Typography>
                                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                                 <DesktopDatePicker
-                                                    onChange={handleValidations}
+                                                    onChange={ onChange={(newValue) => {
+                                                        handleValidations(min,newValue);
+                                                    }}}
                                                     renderInput={(params) => <TextField {...params} fullWidth/>}
                                                     InputProps={{
                                                         endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
@@ -387,7 +389,9 @@ const DateField = (props) => {
 
                                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                                 <DesktopDatePicker
-                                                    onChange={handleValidations}
+                                                    onChange={(newValue) => {
+                                                        handleValidations(max,newValue);
+                                                    }}
                                                     renderInput={(params) => <TextField {...params} fullWidth/>}
                                                     InputProps={{
                                                         endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />

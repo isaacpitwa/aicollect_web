@@ -455,7 +455,6 @@ const NumberField = (props) => {
                                                 }}
                                                 onChange={handleValidations}
                                             />
-
                                         </Box>
                                     </>
                             }
