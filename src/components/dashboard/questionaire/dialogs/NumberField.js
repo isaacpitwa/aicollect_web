@@ -42,23 +42,26 @@ const NumberField = (props) => {
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
-    
+
     const [errorTag, setErrorTag] = useState(false)
     const [panelType, setPanelType] = useState('display')
-    const [id] = useState(fieldData?fieldData.id:'')
-    const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
-    const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
+    const [id] = useState(fieldData ? fieldData.id : '')
+    const [parentId] = useState(fieldData ? fieldData.parentId : sectionId)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : subSectionId)
     const [type] = useState(fieldData ? fieldData.type : 'number')
-    const [display, setDisplay] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
+    const [display, setDisplay] = useState(fieldData && fieldData.display ? fieldData.display : 'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
-    const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
-    const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
-    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false)
+    const [conditional, setConditional] = useState(fieldData && fieldData.conditional ? fieldData.conditional : null)
+    const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
+    const [value, setValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
+    const [dependency, setDependency] = useState(fieldData && fieldData.dependency ? fieldData.dependency : null)
+    const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
+    const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -97,6 +100,23 @@ const NumberField = (props) => {
         setDependency(e.target.value)
     }
 
+    const handleValidations = (e) => {
+        setValidations({ ...validations, [e.target.name]: e.target.value });
+    }
+    const handleDisplayConfigs = (e) => {
+        if (e.target.name === 'inputMask' && e.target.value) {
+             var value = e.target.value.toString().split('').map((char, index) => {
+                if (/^\d+$/.test(char)) {
+                    return '#'
+                }
+                return char
+            
+             }).join('')
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: value });
+        } else {  
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value })
+        };
+    }
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -106,14 +126,16 @@ const NumberField = (props) => {
     }
 
     const removeConditional = () => {
-        setWhen(conditional?fieldData.conditional.when:'')
-        setValue(conditional?fieldData.conditional.value:'')
+        setWhen(conditional ? fieldData.conditional.when : '')
+        setValue(conditional ? fieldData.conditional.value : '')
     }
 
     const conditionalData = conditionalLogic({
         when: when,
         value: value
     })
+
+
 
     const removeDependency = () => {
         setDependency(null)
@@ -126,7 +148,7 @@ const NumberField = (props) => {
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
-            display: conditionalData?'hidden':display,
+            display: conditionalData ? 'hidden' : display,
             label: fieldLabel,
             value: fieldValue,
             description: fieldDescription,
@@ -134,9 +156,11 @@ const NumberField = (props) => {
             required: isRequired,
             conditional: conditionalData,
             dependency: dependency,
+            validations: validations,
+            displayConfigs: displayConfigs
         }
 
-        if(sectionId&&fieldLabel!=='') {
+        if (sectionId && fieldLabel !== '') {
             addComponentToSection(newFieldObj)
             setError(false)
             setErrorTag(false)
@@ -147,11 +171,13 @@ const NumberField = (props) => {
             setIsRequired(false)
             setConditional(null)
             setDependency(null)
+            setValidations(null)
+            setDisplayConfigs(null)
             removeConditional()
             handleClose()
         } else {
             setError(true)
-            if(fieldLabel===''){
+            if (fieldLabel === '') {
                 setErrorTag('Label')
             }
         }
@@ -164,7 +190,7 @@ const NumberField = (props) => {
             parentId: parentId,
             subParentId: subParentId,
             type: type,
-            display: conditionalData?'hidden':display,
+            display: conditionalData ? 'hidden' : display,
             label: fieldLabel,
             value: fieldValue,
             description: fieldDescription,
@@ -172,6 +198,8 @@ const NumberField = (props) => {
             required: isRequired,
             conditional: conditionalData,
             dependency: dependency,
+            validations: validations,
+            displayConfigs: displayConfigs
         }
 
         updateFieldInSection(numberFieldData)
@@ -182,12 +210,14 @@ const NumberField = (props) => {
         setError(false)
         setErrorTag(false)
         setPanelType('display')
-        setFieldLabel(fieldData?fieldData.label:'')
-        setFieldValue(fieldData?fieldData.value:'')
-        setFieldDescription(fieldData?fieldData.description:'')
-        setTooltip(fieldData?fieldData.tooltip:'')
+        setFieldLabel(fieldData ? fieldData.label : '')
+        setFieldValue(fieldData ? fieldData.value : '')
+        setFieldDescription(fieldData ? fieldData.description : '')
+        setTooltip(fieldData ? fieldData.tooltip : '')
         setIsRequired(!isRequired)
-        setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
+        setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
+        setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
+        setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
         handleClose()
     }
 
@@ -198,7 +228,7 @@ const NumberField = (props) => {
             fullWidth={true}
             maxWidth={'lg'}
         >
-            <DialogTitle                
+            <DialogTitle
                 style={{
                     backgroundColor: '#5048E5',
                     color: 'white',
@@ -231,40 +261,40 @@ const NumberField = (props) => {
                                 flexDirection: 'column',
                                 alignItems: 'left',
                                 '& > *': {
-                                m: 0,
+                                    m: 0,
                                 },
                             }}
                         >
-                        <ButtonGroup
-                            variant="outlined"
-                            size='small'
-                            aria-label="outlined button group"
-                        >
-                            <Button
-                                variant={panelType === "display" ? "contained" : "outlined"}
-                                onClick={displayPanel}
-                                style={{ borderRadius: '8px 0px 0px 0px' }}
-                            >Display</Button>
-                            <Button
-                                variant={panelType === "conditional" ? "contained" : "outlined"}
-                                onClick={conditionalPanel}
-                            >Conditional</Button>
-                            <Button
-                                variant={panelType === "logic" ? "contained" : "outlined"}
-                                onClick={logicPanel}
-                            >Logic</Button>
-                            <Button
-                                variant={panelType === "dependency" ? "contained" : "outlined"}
-                                onClick={dependencyPanel}
-                                style={{ borderRadius: '0px 8px 0px 0px' }}
-                            >Dependency</Button>
-                        </ButtonGroup>
+                            <ButtonGroup
+                                variant="outlined"
+                                size='small'
+                                aria-label="outlined button group"
+                            >
+                                <Button
+                                    variant={panelType === "display" ? "contained" : "outlined"}
+                                    onClick={displayPanel}
+                                    style={{ borderRadius: '8px 0px 0px 0px' }}
+                                >Display</Button>
+                                <Button
+                                    variant={panelType === "conditional" ? "contained" : "outlined"}
+                                    onClick={conditionalPanel}
+                                >Conditional</Button>
+                                <Button
+                                    variant={panelType === "logic" ? "contained" : "outlined"}
+                                    onClick={logicPanel}
+                                >Logic</Button>
+                                <Button
+                                    variant={panelType === "dependency" ? "contained" : "outlined"}
+                                    onClick={dependencyPanel}
+                                    style={{ borderRadius: '0px 8px 0px 0px' }}
+                                >Dependency</Button>
+                            </ButtonGroup>
                         </Box>
                         <Box
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {panelType==="conditional"?
+                            {panelType === "conditional" ?
                                 <>
                                     <Typography
                                         style={{ marginTop: '20px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}
@@ -303,96 +333,223 @@ const NumberField = (props) => {
                                         onChange={handleValue}
                                     />
                                 </>
-                            :panelType==="dependency"?
-                                <>
-                                    <Typography
-                                        style={{ fontSize: '15px', color: '#5048E5' }}
-                                    >
-                                        For Section/Sub-Section:
-                                    </Typography>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={dependency}
-                                        fullWidth
-                                        size={'small'}
-                                        onChange={handleDependency}
-                                    >
-                                        {getSectionsSubSections(fieldData, componentsData).map((option, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={option.id}
-                                            >
-                                                {option.label} ={'>'} <small>[{option.type}]</small>
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                     <Typography
-                                        style={{ paddingTop: '10px' }}
-                                     >
-                                        <Button
-                                            disabled={dependency?false:true}
-                                            variant='outlined'
-                                            size='small'
-                                            color='error'
-                                            onClick={removeDependency}
+                                : panelType === "dependency" ?
+                                    <>
+                                        <Typography
+                                            style={{ fontSize: '15px', color: '#5048E5' }}
                                         >
-                                            Remove Dependency
-                                        </Button>
-                                     </Typography>
-                                </>
-                            :
-                                <>
-                                    <TextField
-                                        required
-                                        autoFocus
-                                        margin="dense"
-                                        id="label"
-                                        label="Label"
-                                        type="text"
-                                        size="small"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={fieldLabel}
-                                        onChange={handleLabel}
-                                        style={{ marginTop: '15px' }}
-                                    />
-                                    <TextField
-                                        margin="dense"
-                                        id="outlined-multiline-static"
-                                        label="Description (Optional)"
-                                        size="small"
-                                        multiline
-                                        rows={4}
-                                        variant="outlined"
-                                        fullWidth
-                                        value={fieldDescription}
-                                        onChange={handleDescription}
-                                        style={{ marginTop: '25px' }}
-                                    />
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        id="tooltip"
-                                        label="Tooltip (Optional)"
-                                        type="text"
-                                        size="small"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={tooltip}
-                                        onChange={handleTooltip}
-                                        style={{ marginTop: '25px' }}
-                                    />
-                                    <Typography
-                                        style={{ marginTop: '10px', color: '#5048E5' }}
-                                    >
-                                        <Checkbox
+                                            For Section/Sub-Section:
+                                        </Typography>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={dependency}
+                                            fullWidth
                                             size={'small'}
-                                            checked={isRequired}
-                                            onChange={handleIsRequired}
-                                        />Required<GeneralTooltip tipData={'A required field must be filled.'}/>
-                                    </Typography>
-                                </>
+                                            onChange={handleDependency}
+                                        >
+                                            {getSectionsSubSections(fieldData, componentsData).map((option, index) => (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={option.id}
+                                                >
+                                                    {option.label} ={'>'} <small>[{option.type}]</small>
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                        <Typography
+                                            style={{ paddingTop: '10px' }}
+                                        >
+                                            <Button
+                                                disabled={dependency ? false : true}
+                                                variant='outlined'
+                                                size='small'
+                                                color='error'
+                                                onClick={removeDependency}
+                                            >
+                                                Remove Dependency
+                                            </Button>
+                                        </Typography>
+                                    </>
+                                    :
+                                    <>
+                                        <TextField
+                                            required
+                                            autoFocus
+                                            margin="dense"
+                                            id="label"
+                                            label="Label"
+                                            type="text"
+                                            size="small"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={fieldLabel}
+                                            onChange={handleLabel}
+                                            style={{ marginTop: '15px' }}
+                                        />
+                                        <TextField
+                                            margin="dense"
+                                            id="outlined-multiline-static"
+                                            label="Description (Optional)"
+                                            size="small"
+                                            multiline
+                                            rows={4}
+                                            variant="outlined"
+                                            fullWidth
+                                            value={fieldDescription}
+                                            onChange={handleDescription}
+                                            style={{ marginTop: '25px' }}
+                                        />
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            id="tooltip"
+                                            label="Tooltip (Optional)"
+                                            type="text"
+                                            size="small"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={tooltip}
+                                            onChange={handleTooltip}
+                                            style={{ marginTop: '25px' }}
+                                        />
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#5048E5' }}
+                                        >
+                                            <Checkbox
+                                                size={'small'}
+                                                checked={isRequired}
+                                                onChange={handleIsRequired}
+                                            />Required<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        </Typography>
+
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#000' }}
+                                        >
+                                            Validations
+                                           (Optional)
+                                        </Typography>
+                                        <Box style={{padding: '8px 16px'}}>
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Minimum Value
+                                                <GeneralTooltip tipData={`Add Minimum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="number"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='min'
+                                                value={validations ? validations.min : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    min: 0,
+                                                    max: (validations  && validations.max) ? validations.max : null,
+                                                }}
+                                                onChange={handleValidations}
+                                                
+                                            />
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Maximum Value
+                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="number"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='max'
+                                                value={validations ? validations.max : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    min: (validations  && validations.min) ? validations.min : null,
+                                                }}
+                                                onChange={handleValidations}
+                                            />
+
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Minimum Length
+                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="number"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='minLength'
+                                                value={validations ? validations.minLength : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    max: (validations  && validations.maxLength) ? validations.maxLength : null,
+                                                }}
+                                                onChange={handleValidations}
+                                            />
+
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Maximum Length
+                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="number"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='maxLength'
+                                                value={validations ? validations.maxLength : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    min: (validations  && validations.minLength) ? validations.minLength : null,
+                                                }}
+                                                onChange={handleValidations}
+                                            />
+                                        </Box>
+
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#000' }}
+                                        >
+                                            Formating
+                                           (Optional)
+                                        </Typography>
+                                        <Box style={{padding: '8px 16px'}}>
+                                        <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Mask Data
+                                                <GeneralTooltip tipData={`Add Data Formating } `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="text"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='inputMask'
+                                                value={displayConfigs ? displayConfigs.inputMask : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                }}
+                                                onChange={handleDisplayConfigs}
+                                                
+                                            />
+                                        </Box>
+                                    </>
                             }
                         </Box>
                     </Grid>
@@ -420,11 +577,11 @@ const NumberField = (props) => {
                         color="error"
                     >Cancel</Button>
                     <Button
-                        onClick={fieldData?handleUpdate:addNumberField}
+                        onClick={fieldData ? handleUpdate : addNumberField}
                         variant="outlined"
                         size='small'
                         color="success"
-                    >{fieldData?"Save Changes":"Add Field"}</Button>
+                    >{fieldData ? "Save Changes" : "Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

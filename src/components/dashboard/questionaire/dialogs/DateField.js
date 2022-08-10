@@ -16,6 +16,9 @@ import {
     MenuItem
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import { FormContext } from '../context';
 import {
@@ -26,6 +29,8 @@ import {
     FieldError,
 } from '../utils/ErrorCards';
 import DatefieldPreview from '../previews/DatefieldPreview';
+import GeneralTooltip from '../previews/GeneralTooltip'
+
 
 // This is the field for type=TextField
 const DateField = (props) => {
@@ -54,6 +59,8 @@ const DateField = (props) => {
     const [display, setDisplay] = useState(fieldData&&fieldData.conditional?fieldData.conditional.display:'')
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [compValue, setCompValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+    const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
+
 
     useEffect(() => {
 
@@ -108,6 +115,10 @@ const DateField = (props) => {
         setCompValue(e.target.value)
     }
 
+    const handleValidations = (key,value) => {
+        setValidations({ ...validations, [key]: value });
+    }
+    
     const conditionalLogic = () => {
         if(display!==''&&when!==''&&compValue!==''){
             return {
@@ -132,7 +143,8 @@ const DateField = (props) => {
             label: fieldLabel,
             description: fieldDescription,
             tooltip: tooltip,
-            conditional: conditionalLogic()
+            conditional: conditionalLogic(),
+            validations: validations
         }
 
         if(sectionId&&fieldLabel!=='') {
@@ -145,6 +157,7 @@ const DateField = (props) => {
             setIsRequired(false)
             setButtonFocused('Display')
             setConditional(false)
+            setValidations(null)
             handleClose()
         } else {
             setError(true)
@@ -170,7 +183,8 @@ const DateField = (props) => {
                 display: display,
                 when: when,
                 value: compValue.toLowerCase()
-            }
+            },
+            validations: validations
         }
 
         updateFieldInSection(newField)
@@ -188,7 +202,9 @@ const DateField = (props) => {
         setIsRequired(!isRequired)
         setButtonFocused('Display')
         setConditional(false)
+        setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         handleClose()
+        
     }
 
     return (
@@ -346,6 +362,52 @@ const DateField = (props) => {
                                             onChange={handleIsRequired}
                                         />Required <FieldTooltip tooltip={'A required field must be filled.'}/>
                                     </Typography>
+                                    <Box style={{padding: '8px 16px'}}>
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Minimum Value
+                                                <GeneralTooltip tipData={`Add Minimum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <DesktopDatePicker
+                                                   onChange={(newValue) => {
+                                                        handleValidations('min',newValue);
+                                                    }}
+                                                    renderInput={(params) => <TextField {...params} fullWidth/>}
+                                                    InputProps={{
+                                                        endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                                                    }}
+                                                    name='min'
+                                                    value={validations && validations.min ? validations.min : null}
+                                                    inputFormat='dd/MM/yyyy'
+                                                    maxDate={(validations  && validations.max) ? new Date(validations.max) : null}
+                                                />
+                                            </LocalizationProvider>
+                                            
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Maximum Value
+                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <DesktopDatePicker
+                                                    onChange={(newValue) => {
+                                                        handleValidations('max',newValue);
+                                                    }}
+                                                    renderInput={(params) => <TextField {...params} fullWidth/>}
+                                                    InputProps={{
+                                                        endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                                                    }}
+                                                    name='max'
+                                                    value={validations ? validations.max : null}
+                                                    inputFormat='dd/MM/yyyy'
+                                                    minDate={(validations  && validations.min) ? new Date(validations.min) : null}
+                                                />
+                                            </LocalizationProvider>
+                                        </Box>
                                 </>
                             }
                         </Box>
