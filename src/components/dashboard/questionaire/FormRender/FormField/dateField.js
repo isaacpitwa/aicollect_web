@@ -25,7 +25,7 @@ import {
  * @desc This is the Date Field component, it is the Date field displayed in the form.
  * @arg {Object} fieldData - The data of the field which contains all the properties of the Date field.
  * @returns {Component} - Returns a Date field JSX component.
- * @author Atama Zack <atama.zack@gmail.com>
+ * @author Atama Zack <atama.zack@gmail.com> |   Isaac Pitwa <isaacpitwa256@gmail.com>
  * @version 1.0.0
  */
 const DatefieldComp = (props) => {
@@ -43,7 +43,7 @@ const DatefieldComp = (props) => {
     const { fieldData } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [fieldValue, setFieldValue] = useState(fieldData.value?fieldData.value:new Date().toLocaleDateString());
+    const [fieldValue, setFieldValue] = useState(fieldData.value?fieldData.value: (fieldData.validations && fieldData.validations.min)?fieldData.validations.min:new Date().toLocaleDateString());
     const [dateFieldDialog, setDateFieldDialog] = useState(false);
 
     const handleDateField = () => {
@@ -111,6 +111,9 @@ const DatefieldComp = (props) => {
                         InputProps={{
                             endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
                         }}
+                        inputFormat='dd/MM/yyyy'
+                        minDate={( fieldData.validations && fieldData.validations.min)? new Date(fieldData.validations.min): null}
+                        maxDate={( fieldData.validations && fieldData.validations.max)? new Date(fieldData.validations.max): null}
 					/>
 				</LocalizationProvider>
             </Grid>

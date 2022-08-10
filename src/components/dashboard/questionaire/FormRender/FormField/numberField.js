@@ -15,13 +15,15 @@ import {
     FieldTooltip,
     DescriptionCard,
 } from '../../utils';
+import { format } from 'date-fns';
+import NumberFormat from 'react-number-format';
 
 /**
  * @function NumberFieldComp
  * @desc This is the Number Field component, it is the Number field displayed in the form.
  * @arg {Object} fieldData - The data of the field which contains all the properties of the Number field.
  * @returns {Component} - Returns a Number field JSX component.
- * @author Atama Zack <atama.zack@gmail.com>
+ * @author Atama Zack <atama.zack@gmail.com>  IsaacPitwa <isaacpitwa256@gmail.com> 
  * @version 1.0.0
  */
 const NumberFieldComp = (props) => {
@@ -74,6 +76,21 @@ const NumberFieldComp = (props) => {
     const fieldStyle = () => {
         return editStatus?classes.section:classes.section2
     };
+    
+
+    const placeholder = () => {
+        if(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) {
+            var result = fieldData.displayConfigs.inputMask.split('').map(function(item, index) {
+                if(item === '#') {
+                    return '-'
+                } else {
+                    return item
+                }
+            }).join('');
+            return result
+        }
+       return  fieldData.label;
+    }
 
     const fieldDisplay = () => {
 
@@ -108,19 +125,23 @@ const NumberFieldComp = (props) => {
                         />
                     </Typography>
                     : ""}
-                    <TextField
+                    <Typography>{fieldData.label}</Typography>
+                    <NumberFormat 
+                        format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask:null}
+                        mask="_" 
                         required={fieldData.required}
-                        fullWidth
-                        variant="outlined"
-                        type={'number'}
-                        label={fieldData.label}
                         value={fieldValue}
                         onChange={handleFieldValue}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
-                        style={formStyles.textfield}
-                        InputProps={{
-                            endAdornment: <FieldTooltip tipData={fieldData.tooltip}/>
+                        style={{
+                            width: '100%',
+                            height:'48px',
+                            borderRadius: '4px',
+                            border: '1px solid #ced4da',
+                            padding: '0px 10px',
+                            marginBottom: '10px',
+                            marginTop: '4px',
                         }}
+                        placeholder={ placeholder() }
                     />
             </Grid>
         )
