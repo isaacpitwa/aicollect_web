@@ -60,6 +60,8 @@ const NumberField = (props) => {
     const [value, setValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
     const [dependency, setDependency] = useState(fieldData && fieldData.dependency ? fieldData.dependency : null)
     const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
+    const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -101,7 +103,9 @@ const NumberField = (props) => {
     const handleValidations = (e) => {
         setValidations({ ...validations, [e.target.name]: e.target.value });
     }
-
+    const handleDisplayConfigs = (e) => {
+        setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value });
+    }
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -142,6 +146,7 @@ const NumberField = (props) => {
             conditional: conditionalData,
             dependency: dependency,
             validations: validations,
+            displayConfigs: displayConfigs
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -156,6 +161,7 @@ const NumberField = (props) => {
             setConditional(null)
             setDependency(null)
             setValidations(null)
+            setDisplayConfigs(null)
             removeConditional()
             handleClose()
         } else {
@@ -182,6 +188,7 @@ const NumberField = (props) => {
             conditional: conditionalData,
             dependency: dependency,
             validations: validations,
+            displayConfigs: displayConfigs
         }
 
         updateFieldInSection(numberFieldData)
@@ -199,6 +206,7 @@ const NumberField = (props) => {
         setIsRequired(!isRequired)
         setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
         setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
+        setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
         handleClose()
     }
 
@@ -454,6 +462,80 @@ const NumberField = (props) => {
                                                     min: (validations  && validations.min) ? validations.min : null,
                                                 }}
                                                 onChange={handleValidations}
+                                            />
+
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Minimum Length
+                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="number"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='minLength'
+                                                value={validations ? validations.minLength : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    max: (validations  && validations.maxLength) ? validations.maxLength : null,
+                                                }}
+                                                onChange={handleValidations}
+                                            />
+
+                                            <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Maximum Length
+                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="number"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='maxLength'
+                                                value={validations ? validations.maxLength : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    min: (validations  && validations.minLength) ? validations.minLength : null,
+                                                }}
+                                                onChange={handleValidations}
+                                            />
+                                        </Box>
+
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#000' }}
+                                        >
+                                            Formating
+                                           (Optional)
+                                        </Typography>
+                                        <Box style={{padding: '8px 16px'}}>
+                                        <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Mask Data
+                                                <GeneralTooltip tipData={`Add Data Formating } `} />
+                                            </Typography>
+                                            <TextField
+                                                margin="dense"
+                                                id="label"
+                                                type="text"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                name='inputMask'
+                                                value={displayConfigs ? displayConfigs.inputMask : null}
+                                                InputProps={{
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                }}
+                                                onChange={handleDisplayConfigs}
+                                                
                                             />
                                         </Box>
                                     </>
