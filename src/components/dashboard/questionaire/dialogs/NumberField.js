@@ -427,9 +427,12 @@ const NumberField = (props) => {
                                                 name='min'
                                                 value={validations ? validations.min : null}
                                                 InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    min: 0,
+                                                    max: (validations  && validations.max) ? validations.max : null,
                                                 }}
                                                 onChange={handleValidations}
+                                                
                                             />
                                             <Typography
                                                 style={{ marginTop: '10px', color: '#000' }}
@@ -447,7 +450,8 @@ const NumberField = (props) => {
                                                 name='max'
                                                 value={validations ? validations.max : null}
                                                 InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />
+                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
+                                                    min: (validations  && validations.min) ? validations.min : null,
                                                 }}
                                                 onChange={handleValidations}
                                             />
