@@ -16,6 +16,7 @@ import {
     DescriptionCard,
 } from '../../utils';
 import { format } from 'date-fns';
+import NumberFormat from 'react-number-format';
 
 /**
  * @function NumberFieldComp
@@ -54,7 +55,7 @@ const NumberFieldComp = (props) => {
     }
 
     const handleFieldValue = (e) => {
-        setFieldValue(formatValue(e.target.value))
+        setFieldValue(e.target.value)
         if(fieldData.dependency) {
             setDependantId(fieldData.id)
             setDependecyValue(e.target.value)
@@ -76,12 +77,6 @@ const NumberFieldComp = (props) => {
         return editStatus?classes.section:classes.section2
     };
     
-    const formatValue = (value) => {
-        if(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) {
-            return value.toString().replace(/\B(?=(\d{18})+(?!\d))/g, " ");
-        }
-        return value.toString().replace(/\B(?=(\d{18})+(?!\d))/g, ",")
-    }
 
     const fieldDisplay = () => {
 
@@ -116,6 +111,25 @@ const NumberFieldComp = (props) => {
                         />
                     </Typography>
                     : ""}
+                    <Typography>{fieldData.label}</Typography>
+                    <NumberFormat 
+                        format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask:null}
+                        mask="_" 
+                        required={fieldData.required}
+                        value={fieldValue}
+                        onChange={handleFieldValue}
+                        style={{
+                            width: '100%',
+                            height:'48px',
+                            borderRadius: '4px',
+                            border: '1px solid #ced4da',
+                            padding: '0px 10px',
+                            marginBottom: '10px',
+                            marginTop: '4px',
+                        }}
+                        
+                        placeholder={ (fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask:fieldData.label}
+                    />
                     <TextField
                         required={fieldData.required}
                         fullWidth
