@@ -25,7 +25,7 @@ import {
  * @desc This is the Date Field component, it is the Date field displayed in the form.
  * @arg {Object} fieldData - The data of the field which contains all the properties of the Date field.
  * @returns {Component} - Returns a Date field JSX component.
- * @author Atama Zack <atama.zack@gmail.com>
+ * @author Atama Zack <atama.zack@gmail.com> |   Isaac Pitwa <isaacpitwa256@gmail.com>
  * @version 1.0.0
  */
 const DatefieldComp = (props) => {

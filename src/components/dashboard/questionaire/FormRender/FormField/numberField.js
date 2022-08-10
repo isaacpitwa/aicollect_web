@@ -78,6 +78,20 @@ const NumberFieldComp = (props) => {
     };
     
 
+    const placeholder = () => {
+        if(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) {
+            var result = fieldData.displayConfigs.inputMask.split('').map(function(item, index) {
+                if(item === '#') {
+                    return '-'
+                } else {
+                    return item
+                }
+            }).join('');
+            return result
+        }
+       return  fieldData.label;
+    }
+
     const fieldDisplay = () => {
 
         return (
@@ -127,8 +141,7 @@ const NumberFieldComp = (props) => {
                             marginBottom: '10px',
                             marginTop: '4px',
                         }}
-                        
-                        placeholder={ (fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask:fieldData.label}
+                        placeholder={ placeholder() }
                     />
             </Grid>
         )
