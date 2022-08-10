@@ -130,20 +130,6 @@ const NumberFieldComp = (props) => {
                         
                         placeholder={ (fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask:fieldData.label}
                     />
-                    <TextField
-                        required={fieldData.required}
-                        fullWidth
-                        variant="outlined"
-                        type={'number'}
-                        label={fieldData.label}
-                        value={fieldValue}
-                        onChange={handleFieldValue}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
-                        style={formStyles.textfield}
-                        InputProps={{
-                            endAdornment: <FieldTooltip tipData={fieldData.tooltip}/>
-                        }}
-                    />
             </Grid>
         )
     }
