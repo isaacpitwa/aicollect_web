@@ -56,7 +56,8 @@ const NumberfieldPreview = (props) => {
                             ''
                         }
                     </Box>
-                </Grid> : <MultipleValuesPreview {...props} component={<TextField
+                </Grid> 
+                : <MultipleValuesPreview {...props} component={<TextField
                     required={isRequired}
                     autoFocus
                     margin="dense"
@@ -69,7 +70,8 @@ const NumberfieldPreview = (props) => {
                     InputProps={{
                         endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
                     }}
-
+                    multipleValuesData={multipleValuesData}
+                    
                 />} />}
         </>
     )

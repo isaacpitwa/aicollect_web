@@ -13,6 +13,7 @@ import { FormContext } from '../../context';
 import EmailField from '../../dialogs/EmailField';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
+import MultipleValuesField from './MultipleValuesField';
 
 /**
  * @function EmailFieldComp
@@ -25,14 +26,16 @@ import GeneralTooltip from '../../previews/GeneralTooltip';
 const EmailFieldComp = (props) => {
 
     const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);
-    
+
     const { fieldData, fieldResponses } = props;
 
     const [error, setError] = useState(false);
     const [display, setDisplay] = useState('hidden');
-    const [fieldValue, setFieldValue] = useState(fieldData?fieldData.value:'');
+    const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '');
     const [emailFieldDialog, setEmailFieldDialog] = useState(false)
-    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
+    const [dependantField] = useState(fieldData.conditional ? fieldResponses.find(item => item.fieldId === fieldData.conditional.when) : false)
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handlEmail = (e) => {
         const pattern = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -60,34 +63,34 @@ const EmailFieldComp = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        dependantField&&dependantField.value===fieldData.conditional.value?
+        dependantField && dependantField.value === fieldData.conditional.value ?
             <Grid
                 style={{ display: 'block' }}
                 container
                 className={classes.section}
             >
                 <TextField
-                    error={!error&&fieldValue!==''}
+                    error={!error && fieldValue !== ''}
                     fullWidth
                     type={'email'}
                     variant={'outlined'}
                     label={fieldData.label}
                     value={fieldValue}
                     onChange={handlEmail}
-                    helperText={!error&&fieldValue!==''?'Invalid Email Format':<DescriptionCard description={fieldData.description} helperText={true}/>}
+                    helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
                     style={formStyles.textfield}
                     InputProps={{
-                        endAdornment: fieldData.tooltip != '' ?<GeneralTooltip tipData={fieldData.tooltip} />:false
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
                     }}
                 />
             </Grid>
-        :
+            :
             <Grid
                 style={{ display: 'block' }}
                 container
                 onMouseOver={() => { setDisplay('visible') }}
                 onMouseOut={() => { setDisplay('hidden') }}
-                className={editStatus?classes.section:classes.section2}
+                className={editStatus ? classes.section : classes.section2}
             >
                 <EmailField
                     open={emailFieldDialog}
@@ -109,22 +112,49 @@ const EmailFieldComp = (props) => {
                             className={smallBtn.deleteBtn}
                         />
                     </Typography>
-                : ''}
-                <TextField
-                    required={fieldData.required}
-                    fullWidth
-                    type={'email'}
-                    variant={'outlined'}
-                    label={fieldData.label}
-                    value={fieldValue}
-                    onChange={handlEmail}
-                    error={!error&&fieldValue!==''}
-                    helperText={!error&&fieldValue!==''?'Invalid Email Format':<DescriptionCard description={fieldData.description} helperText={true}/>}
-                    style={formStyles.textfield}
-                    InputProps={{
-                        endAdornment: fieldData.tooltip != '' ?<GeneralTooltip tipData={fieldData.tooltip} />:false
-                    }}
-                />
+                    : ''}
+
+                {
+                    multipleValues ?
+                        <MultipleValuesField  {...props} component={
+                            <TextField
+                                required={fieldData.required}
+                                fullWidth
+                                type={'email'}
+                                variant={'outlined'}
+                                label={fieldData.label}
+                                // value={fieldValue}
+                                onChange={handlEmail}
+                                error={!error && fieldValue !== ''}
+                                helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
+                                style={formStyles.textfield}
+                                InputProps={{
+                                    endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                                }}
+                            />
+                        }
+                            onChange={setMultipleValuesData}
+                            multipleValuesData={multipleValuesData}
+                            multipleValues={multipleValues}
+                        />
+                        : <TextField
+                            required={fieldData.required}
+                            fullWidth
+                            type={'email'}
+                            variant={'outlined'}
+                            label={fieldData.label}
+                            value={fieldValue}
+                            onChange={handlEmail}
+                            error={!error && fieldValue !== ''}
+                            helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
+                            style={formStyles.textfield}
+                            InputProps={{
+                                endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                            }}
+                        />
+
+                }
+
             </Grid>
     )
 }

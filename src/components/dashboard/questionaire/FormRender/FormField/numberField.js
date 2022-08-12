@@ -148,7 +148,7 @@ const NumberFieldComp = (props) => {
                                 format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
                                 mask="_"
                                 required={fieldData.required}
-                                value={fieldValue}
+                                // value={fieldValue}
                                 onChange={handleFieldValue}
                                 style={{
                                     width: '100%',

@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const MultipleValuesPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired, component,onChange,multipleValuesData,multipleValues } = props
+    const { fieldLabel, fieldDescription, tooltip, isRequired, component,onChange,multipleValuesData } = props
     return (
              <Grid
             item

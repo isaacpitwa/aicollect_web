@@ -6,13 +6,15 @@ import {
     TextField
 } from '@mui/material'
 import GeneralTooltip from './GeneralTooltip'
+import MultipleValuesPreview from './multipleValues'
 
 const EmailfieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired } = props
+    const { fieldLabel, fieldDescription, tooltip, isRequired,multipleValues } = props
 
     return (
-        <Grid
+        <>
+         { !multipleValues ?<Grid
             item
             xs={12}
             md={6}
@@ -53,7 +55,25 @@ const EmailfieldPreview = (props) => {
                 }
             </Box>
         </Grid>
-
+        : <MultipleValuesPreview {...props} component={
+            <TextField
+            required={isRequired}
+            autoFocus
+            margin="dense"
+            id="label"
+            label={fieldLabel ? fieldLabel : 'Label'}
+            type="email"
+            size="small"
+            fullWidth
+            variant="outlined"
+            InputProps={{
+                endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
+            }}
+            multipleValuesData={multipleValuesData}
+        />
+    } />
+        }
+        </>
     )
 }
 
