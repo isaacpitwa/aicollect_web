@@ -17,6 +17,7 @@ import {
 } from '../../utils';
 import { format } from 'date-fns';
 import NumberFormat from 'react-number-format';
+import MultipleValuesField from './MultipleValuesField';
 
 /**
  * @function NumberFieldComp
@@ -45,6 +46,9 @@ const NumberFieldComp = (props) => {
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');
     const [numberFieldDialog, setNumberFieldDialog] = useState(false)
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
+
 
     const handleNumberField = () => {
         setError(false)
@@ -56,7 +60,7 @@ const NumberFieldComp = (props) => {
 
     const handleFieldValue = (e) => {
         setFieldValue(e.target.value)
-        if(fieldData.dependency) {
+        if (fieldData.dependency) {
             setDependantId(fieldData.id)
             setDependecyValue(e.target.value)
         }
@@ -74,14 +78,13 @@ const NumberFieldComp = (props) => {
     const smallBtn = smallBtns();
 
     const fieldStyle = () => {
-        return editStatus?classes.section:classes.section2
+        return editStatus ? classes.section : classes.section2
     };
-    
 
     const placeholder = () => {
-        if(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) {
-            var result = fieldData.displayConfigs.inputMask.split('').map(function(item, index) {
-                if(item === '#') {
+        if (fieldData.displayConfigs && fieldData.displayConfigs.inputMask) {
+            var result = fieldData.displayConfigs.inputMask.split('').map(function (item, index) {
+                if (item === '#') {
                     return '-'
                 } else {
                     return item
@@ -89,11 +92,23 @@ const NumberFieldComp = (props) => {
             }).join('');
             return result
         }
-       return  fieldData.label;
+        return fieldData.label;
     }
 
-    const fieldDisplay = () => {
+    const withValueLimit = ({ floatValue }) => (fieldData.validations ?
+        (fieldData.validations.max ? floatValue <= fieldData.validations.max : true
+            && fieldData.validations.min ? floatValue >= fieldData.validations.min : true)
+        : true);
+        
+    const withValueCap = (inputObj) => {
+        const { value } = inputObj;
+        if (fieldData.validations && fieldData.validations.max) {
+            return value <= fieldData.validations.max;
+        }
+        return false;
+    };
 
+    const fieldDisplay = () => {
         return (
             <Grid
                 container
@@ -102,14 +117,14 @@ const NumberFieldComp = (props) => {
                 className={fieldStyle()}
                 style={{ display: 'block' }}
             >
-                {editStatus?
+                {editStatus ?
                     <NumberField
                         open={numberFieldDialog}
                         fieldData={fieldData}
                         handleClose={handleClose}
                     />
-                : "" }
-                {editStatus?
+                    : ""}
+                {editStatus ?
                     <Typography
                         className={smallBtn.fieldBtns}
                         style={{ visibility: display }}
@@ -125,34 +140,67 @@ const NumberFieldComp = (props) => {
                         />
                     </Typography>
                     : ""}
-                    <Typography>{fieldData.label}</Typography>
-                    <NumberFormat 
-                        format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask:null}
-                        mask="_" 
-                        required={fieldData.required}
-                        value={fieldValue}
-                        onChange={handleFieldValue}
-                        style={{
-                            width: '100%',
-                            height:'48px',
-                            borderRadius: '4px',
-                            border: '1px solid #ced4da',
-                            padding: '0px 10px',
-                            marginBottom: '10px',
-                            marginTop: '4px',
-                        }}
-                        placeholder={ placeholder() }
-                    />
+                <Typography>{fieldData.label}</Typography>
+
+                {
+                    multipleValues ?
+                        <MultipleValuesField  {...props} component={
+                            <NumberFormat
+                                format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
+                                mask="_"
+                                required={fieldData.required}
+                                // value={fieldValue}
+                                onChange={handleFieldValue}
+                                style={{
+                                    width: '100%',
+                                    height: '48px',
+                                    borderRadius: '4px',
+                                    border: '1px solid #ced4da',
+                                    padding: '0px 10px',
+                                    marginBottom: '10px',
+                                    marginTop: '4px',
+                                }}
+                                // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
+                                placeholder={placeholder()}
+                            // isAllowed={withValueCap}
+                            />
+                        }
+                            onChange={setMultipleValuesData}
+                            multipleValuesData={multipleValuesData}
+                            multipleValues={multipleValues}
+                        />
+                        : <NumberFormat
+                            format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
+                            mask="_"
+                            required={fieldData.required}
+                            value={fieldValue}
+                            onChange={handleFieldValue}
+                            style={{
+                                width: '100%',
+                                height: '48px',
+                                borderRadius: '4px',
+                                border: '1px solid #ced4da',
+                                padding: '0px 10px',
+                                marginBottom: '10px',
+                                marginTop: '4px',
+                            }}
+                            // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
+                            placeholder={placeholder()}
+                        // isAllowed={withValueCap}
+                        />
+
+                }
+                {!withValueCap ? <Typography style={{ color: 'red' }}>Value is greater than the maximum value</Typography> : null}
             </Grid>
         )
     }
 
     return (
-        !fieldData.display||fieldData.display==='visible'||conditionalDisplay(fieldData)?
+        !fieldData.display || fieldData.display === 'visible' || conditionalDisplay(fieldData) ?
             fieldDisplay()
-        : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
-        : ""
+            : fieldData.display === 'hidden' && editStatus ?
+                fieldDisplay()
+                : ""
     )
 }
 

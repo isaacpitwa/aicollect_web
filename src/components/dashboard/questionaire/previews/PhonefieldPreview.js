@@ -10,7 +10,7 @@ import GeneralTooltip from './GeneralTooltip'
 
 const PhonefieldPreview = (props) => {
 
-    const { defaultCountry, fieldLabel, fieldDescription, tooltip } = props
+    const { defaultCountry, fieldLabel, fieldDescription, tooltip, multipleValues } = props
 
     const [value, setValue] = useState('')
 
@@ -20,6 +20,7 @@ const PhonefieldPreview = (props) => {
 
 
     return (
+        <>
         <Grid
             item
             xs={12}
@@ -59,7 +60,7 @@ const PhonefieldPreview = (props) => {
                 }
             </Box>
         </Grid>
-
+                </>
     )
 }
 

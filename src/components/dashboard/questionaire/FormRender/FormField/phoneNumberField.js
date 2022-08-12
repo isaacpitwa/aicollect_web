@@ -15,6 +15,7 @@ import { FormContext } from '../../context';
 import PhoneField from '../../dialogs/PhoneField';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
+import MultipleValuesField from './MultipleValuesField';
 
 /**
  * @function PhoneNumberField
@@ -39,6 +40,9 @@ const PhoneNumberField = (props) => {
 
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
+
 
     const handlePhoneField = () => {
         setError(false)
@@ -63,17 +67,17 @@ const PhoneNumberField = (props) => {
         <Grid
             key={fieldData.id}
             container
-            onMouseOver={()=>{setDisplay('visible')}}
-            onMouseOut={()=>{setDisplay('hidden')}}
-            className={editStatus?classes.section:classes.section2}
+            onMouseOver={() => { setDisplay('visible') }}
+            onMouseOut={() => { setDisplay('hidden') }}
+            className={editStatus ? classes.section : classes.section2}
         >
-            {editStatus?
+            {editStatus ?
                 <>
                     <PhoneField open={phoneFieldDialog} fieldData={fieldData} handleClose={handleClose} />
                     <Typography
                         className={smallBtn.fieldBtns}
                         style={{ visibility: display }}
-						align={'right'}
+                        align={'right'}
                     >
                         <EditIcon
                             onClick={handlePhoneField}
@@ -85,19 +89,42 @@ const PhoneNumberField = (props) => {
                         />
                     </Typography>
                 </>
-            : '' }
-            <MuiPhoneNumber
-                fullWidth
-                margin="dense"
-                variant='outlined'
-                defaultCountry={'ug'}
-                label={fieldData.label}
-                style={formStyles.textfield}
-                helperText={<DescriptionCard description={fieldData.description} helperText={true}/>}
-                InputProps={{
-                    endAdornment: fieldData.tooltip != '' ?<GeneralTooltip tipData={fieldData.tooltip} />:false
-                }}
-            />
+                : ''}
+
+            {
+                multipleValues ?
+                    <MultipleValuesField  {...props} component={
+                        <MuiPhoneNumber
+                            fullWidth
+                            margin="dense"
+                            variant='outlined'
+                            defaultCountry={'ug'}
+                            label={fieldData.label}
+                            style={formStyles.textfield}
+                            helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                            InputProps={{
+                                endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                            }}
+                        />
+                    }
+                        onChange={setMultipleValuesData}
+                        multipleValuesData={multipleValuesData}
+                        multipleValues={multipleValues}
+                    />
+                    : <MuiPhoneNumber
+                        fullWidth
+                        margin="dense"
+                        variant='outlined'
+                        defaultCountry={'ug'}
+                        label={fieldData.label}
+                        style={formStyles.textfield}
+                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                        InputProps={{
+                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                        }}
+                    />
+
+            }
         </Grid>
     )
 }
