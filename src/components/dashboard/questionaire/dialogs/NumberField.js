@@ -13,7 +13,8 @@ import {
     Typography,
     Select,
     MenuItem,
-    Checkbox
+    Checkbox,
+    fabClasses
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -61,6 +62,7 @@ const NumberField = (props) => {
     const [dependency, setDependency] = useState(fieldData && fieldData.dependency ? fieldData.dependency : null)
     const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
     const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
 
 
     const handleLabel = (event) => {
@@ -141,6 +143,10 @@ const NumberField = (props) => {
         setDependency(null)
     }
 
+   const  handleMultipleValues = (e) => {
+        setMultipleValues(!multipleValues);
+    }
+
     const addNumberField = () => {
 
         let newFieldObj = {
@@ -157,7 +163,8 @@ const NumberField = (props) => {
             conditional: conditionalData,
             dependency: dependency,
             validations: validations,
-            displayConfigs: displayConfigs
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -173,6 +180,7 @@ const NumberField = (props) => {
             setDependency(null)
             setValidations(null)
             setDisplayConfigs(null)
+            setMultipleValues(false)
             removeConditional()
             handleClose()
         } else {
@@ -199,7 +207,8 @@ const NumberField = (props) => {
             conditional: conditionalData,
             dependency: dependency,
             validations: validations,
-            displayConfigs: displayConfigs
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
         }
 
         updateFieldInSection(numberFieldData)
@@ -218,6 +227,7 @@ const NumberField = (props) => {
         setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
         setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+        setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
         handleClose()
     }
 
@@ -422,7 +432,15 @@ const NumberField = (props) => {
                                                 onChange={handleIsRequired}
                                             />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                         </Typography>
-
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#5048E5' }}
+                                        >
+                                            <Checkbox
+                                                size={'small'}
+                                                checked={multipleValues}
+                                                onChange={handleMultipleValues}
+                                            />Multiple Values<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        </Typography>
                                         <Typography
                                             style={{ marginTop: '10px', color: '#000' }}
                                         >
@@ -558,6 +576,7 @@ const NumberField = (props) => {
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
+                        multipleValues={multipleValues}
                     />
                 </Grid>
             </DialogContent>

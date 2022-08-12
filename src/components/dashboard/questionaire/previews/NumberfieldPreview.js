@@ -7,13 +7,15 @@ import {
 } from '@mui/material'
 
 import GeneralTooltip from './GeneralTooltip'
+import MultipleValuesPreview from './multipleValues'
 
 const NumberfieldPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired } = props
+    const { fieldLabel, fieldDescription, tooltip, isRequired, multipleValues } = props
 
     return (
-        <Grid
+        <>
+    { !multipleValues ?    <Grid
             item
             xs={12}
             md={6}
@@ -53,8 +55,8 @@ const NumberfieldPreview = (props) => {
                     ''
                 }
             </Box>
-        </Grid>
-
+        </Grid>: <MultipleValuesPreview {...props} />}
+        </>
     )
 }
 
