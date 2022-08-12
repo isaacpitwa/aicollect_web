@@ -202,7 +202,7 @@ const PhoneField_ = (props) => {
             multipleValuesData: multipleValuesData
         }
 
-        updateFieldInSection(textFieldData)
+        updateFieldInSection(newField)
         handleClose()
 
     }
