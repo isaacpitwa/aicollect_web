@@ -99,6 +99,7 @@ const NumberFieldComp = (props) => {
         (fieldData.validations.max ? floatValue <= fieldData.validations.max : true
             && fieldData.validations.min ? floatValue >= fieldData.validations.min : true)
         : true);
+        
     const withValueCap = (inputObj) => {
         const { value } = inputObj;
         if (fieldData.validations && fieldData.validations.max) {

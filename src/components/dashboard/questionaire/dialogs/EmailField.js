@@ -196,20 +196,7 @@ const EmailField = (props) => {
     const handleMultipleValues = (e) => {
         if (!multipleValues) {
             setMultipleValuesData([
-                <TextField
-                    required={isRequired}
-                    autoFocus
-                    margin="dense"
-                    id="label"
-                    label={fieldLabel ? fieldLabel : 'Label'}
-                    type="email"
-                    size="small"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                        endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
-                    }}
-                />
+                1
             ])
         }
         setMultipleValues(!multipleValues);

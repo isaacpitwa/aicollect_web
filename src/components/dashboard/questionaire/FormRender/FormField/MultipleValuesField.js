@@ -48,7 +48,7 @@ const MultipleValuesField = (props) => {
              <Box sx={{borderBottom:'1px solid #D8DEE4',padding:'8px'}}>
                  <Button variant="contained" startIcon={<AddIcon />} size='small'
                  onClick={()=>{
-                     multipleValuesData.push(component)
+                     multipleValuesData.push(multipleValuesData.length+1)
                      onChange(multipleValuesData)
                  }}>
                      Add Another

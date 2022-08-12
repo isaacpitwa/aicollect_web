@@ -76,6 +76,7 @@ class Forms {
   }
 
   async addFieldsToNewForm(formData) {
+    localStorage.setItem('formData', formData);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/update`, {
         method: 'POST',
