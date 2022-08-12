@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const MultipleValuesPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired, component } = props
+    const { fieldLabel, fieldDescription, tooltip, isRequired, component,onChange,multipleValuesData,multipleValues } = props
 
     return (
              <Grid
@@ -35,7 +35,10 @@ const MultipleValuesPreview = (props) => {
                    <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4'}}>
                         <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}>
                                 <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}>
-                                    {component}
+                                    {
+                                      multipleValuesData.map((item,index)=>item)
+                                    
+                                    }
                                         {fieldDescription!=''?
                                             <Typography
                                                 style={{ fontSize: '14px', color: '#5048e598' }}
@@ -55,7 +58,11 @@ const MultipleValuesPreview = (props) => {
                                     
                         </Box>
                         <Box sx={{borderBottom:'1px solid #D8DEE4',padding:'8px'}}>
-                            <Button variant="contained" startIcon={<AddIcon />} size='small'>
+                            <Button variant="contained" startIcon={<AddIcon />} size='small'
+                            onClick={()=>{
+                                multipleValuesData.push(component)
+                                onChange(multipleValuesData)
+                            }}>
                                 Add Another
                             </Button>
                         </Box>

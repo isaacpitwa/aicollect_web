@@ -64,7 +64,7 @@ const NumberField = (props) => {
     const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
     const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
     const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
-
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -145,6 +145,24 @@ const NumberField = (props) => {
     }
 
    const  handleMultipleValues = (e) => {
+        if(!multipleValues) {
+            setMultipleValuesData([
+                <TextField
+                        required={isRequired}
+                        autoFocus
+                        margin="dense"
+                        id="label"
+                        label={fieldLabel?fieldLabel:'Label'}
+                        type="number"
+                        size="small"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                        }}
+                    />
+            ])
+        }
         setMultipleValues(!multipleValues);
     }
 
@@ -589,7 +607,11 @@ const NumberField = (props) => {
                             endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
                         }}
                     />
-                 }/> 
+                 } 
+                 onChange={setMultipleValuesData}
+                 multipleValuesData = {multipleValuesData}
+                 multipleValues={multipleValues}
+                 /> 
                  : <NumberfieldPreview
                         fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
