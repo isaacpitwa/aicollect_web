@@ -20,10 +20,11 @@ import {
     TextField,
     Select,
     MenuItem,
-    InputLabel, 
+    InputLabel,
     FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import MuiPhoneNumber from 'material-ui-phone-number'
 
 import { FormContext } from '../context';
 import {
@@ -35,6 +36,7 @@ import {
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import PhonefieldPreview from '../previews/PhonefieldPreview';
+import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
 const PhoneField_ = (props) => {
@@ -49,23 +51,27 @@ const PhoneField_ = (props) => {
     } = useContext(FormContext)
 
     const { open, fieldData, handleClose } = props
-    
+
     const [errorTag, setErrorTag] = useState(false)
     const [panelType, setPanelType] = useState('display')
-    const [id] = useState(fieldData?fieldData.id:'')
-    const [parentId] = useState(fieldData?fieldData.parentId:sectionId)
-    const [subParentId] = useState(fieldData?fieldData.subParentId:subSectionId)
+    const [id] = useState(fieldData ? fieldData.id : '')
+    const [parentId] = useState(fieldData ? fieldData.parentId : sectionId)
+    const [subParentId] = useState(fieldData ? fieldData.subParentId : subSectionId)
     const [type] = useState(fieldData ? fieldData.type : 'phone-number')
-    const [display] = useState(fieldData&&fieldData.display?fieldData.display:'visible')
+    const [display] = useState(fieldData && fieldData.display ? fieldData.display : 'visible')
     const [fieldLabel, setFieldLabel] = useState(fieldData ? fieldData.label : '')
     const [fieldValue, setFieldValue] = useState(fieldData ? fieldData.value : '')
     const [fieldDescription, setFieldDescription] = useState(fieldData ? fieldData.description : '')
     const [tooltip, setTooltip] = useState(fieldData ? fieldData.tooltip : '')
-    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false )
-    const [dependency, setDependency] = useState(fieldData&&fieldData.dependency?fieldData.dependency:null)
-    const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
-    const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
-    const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+    const [isRequired, setIsRequired] = useState(fieldData ? fieldData.required : false)
+    const [dependency, setDependency] = useState(fieldData && fieldData.dependency ? fieldData.dependency : null)
+    const [conditional, setConditional] = useState(fieldData && fieldData.conditional ? fieldData.conditional : null)
+    const [when, setWhen] = useState(fieldData && fieldData.conditional ? fieldData.conditional.when : '')
+    const [value, setValue] = useState(fieldData && fieldData.conditional ? fieldData.conditional.value : '')
+    const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
+    const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -94,7 +100,23 @@ const PhoneField_ = (props) => {
     const logicPanel = (e) => {
         setPanelType("logic")
     }
+    const handleValidations = (e) => {
+        setValidations({ ...validations, [e.target.name]: e.target.value });
+    }
+    const handleDisplayConfigs = (e) => {
+        if (e.target.name === 'inputMask' && e.target.value) {
+            var value = e.target.value.toString().split('').map((char, index) => {
+                if (/^\d+$/.test(char)) {
+                    return '#'
+                }
+                return char
 
+            }).join('')
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: value });
+        } else {
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value })
+        };
+    }
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -104,8 +126,8 @@ const PhoneField_ = (props) => {
     }
 
     const removeConditional = () => {
-        setWhen(conditional?fieldData.conditional.when:'')
-        setValue(conditional?fieldData.conditional.value:'')
+        setWhen(conditional ? fieldData.conditional.when : '')
+        setValue(conditional ? fieldData.conditional.value : '')
     }
 
     const conditionalData = conditionalLogic({
@@ -120,7 +142,7 @@ const PhoneField_ = (props) => {
             parentId: sectionId,
             subParentId: subSectionId,
             type: type,
-            display: conditionalData?'hidden':display,
+            display: conditionalData ? 'hidden' : display,
             label: fieldLabel,
             value: fieldValue,
             description: fieldDescription,
@@ -128,9 +150,13 @@ const PhoneField_ = (props) => {
             required: isRequired,
             dependency: dependency,
             conditional: conditionalData,
+            validations: validations,
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
-        if(sectionId&&fieldLabel!=='') {
+        if (sectionId && fieldLabel !== '') {
             addComponentToSection(newFieldObj)
             setError(false)
             setErrorTag(false)
@@ -141,11 +167,15 @@ const PhoneField_ = (props) => {
             setIsRequired(false)
             setDependency(null)
             setConditional(null)
+            setValidations(null)
+            setDisplayConfigs(null)
+            setMultipleValues(false)
+            setMultipleValuesData([])
             removeConditional()
             handleClose()
         } else {
             setError(true)
-            if(fieldLabel===''){
+            if (fieldLabel === '') {
                 setErrorTag('Label')
             }
         }
@@ -158,7 +188,7 @@ const PhoneField_ = (props) => {
             parentId: parentId,
             subParentId: subParentId,
             type: type,
-            display: conditionalData?'hidden':display,
+            display: conditionalData ? 'hidden' : display,
             label: fieldLabel,
             value: fieldValue,
             description: fieldDescription,
@@ -166,6 +196,10 @@ const PhoneField_ = (props) => {
             required: isRequired,
             dependency: dependency,
             conditional: conditionalData,
+            validations: validations,
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         updateFieldInSection(textFieldData)
@@ -177,15 +211,40 @@ const PhoneField_ = (props) => {
         setError(false)
         setErrorTag(false)
         setPanelType('display')
-        setFieldLabel(fieldData?fieldData.label:'')
-        setFieldValue(fieldData?fieldData.value:'')
-        setFieldDescription(fieldData?fieldData.description:'')
-        setTooltip(fieldData?fieldData.tooltip:'')
+        setFieldLabel(fieldData ? fieldData.label : '')
+        setFieldValue(fieldData ? fieldData.value : '')
+        setFieldDescription(fieldData ? fieldData.description : '')
+        setTooltip(fieldData ? fieldData.tooltip : '')
         setIsRequired(!isRequired)
-        setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
+        setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
         removeConditional()
+        setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
+        setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+        setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+        setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
         handleClose()
     };
+
+    const handleMultipleValues = (e) => {
+        if (!multipleValues) {
+            setMultipleValuesData([
+                <MuiPhoneNumber
+                    fullWidth
+                    size={'small'}
+                    label={fieldLabel ? fieldLabel : 'Phone Number'}
+                    margin="dense"
+                    variant='outlined'
+                    defaultCountry={'ug'}
+                    onChange={setValue}
+                    InputProps={{
+                        endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
+                    }}
+                />
+            ])
+        }
+        setMultipleValues(!multipleValues);
+    }
+
 
     const DialogModes = () => {
 
@@ -196,21 +255,21 @@ const PhoneField_ = (props) => {
                 aria-label="outlined button group"
             >
                 <Button
-                    variant={panelType==="display"?"contained":"outlined"}
+                    variant={panelType === "display" ? "contained" : "outlined"}
                     onClick={displayPanel}
                     style={{ borderRadius: '8px 0px 0px 0px' }}
                 >Display</Button>
                 <Button
-                    variant={panelType==="conditional"?"contained":"outlined"}
+                    variant={panelType === "conditional" ? "contained" : "outlined"}
                     onClick={conditionalPanel}
                 >Conditional</Button>
                 <Button
                     disabled
-                    variant={panelType==="logic"?"contained":"outlined"}
+                    variant={panelType === "logic" ? "contained" : "outlined"}
                     onClick={logicPanel}
                     style={{ borderRadius: '0px 8px 0px 0px' }}
                 >Logic</Button>
-            </ButtonGroup>            
+            </ButtonGroup>
         )
     };
 
@@ -221,7 +280,7 @@ const PhoneField_ = (props) => {
             fullWidth={true}
             maxWidth={'lg'}
         >
-            <DialogTitle                
+            <DialogTitle
                 style={{
                     backgroundColor: '#5048E5',
                     color: 'white',
@@ -229,7 +288,7 @@ const PhoneField_ = (props) => {
                 }}
             >
                 Phone Number Component
-                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose}/>
+                <CancelIcon color='error' style={{ float: 'right', cursor: 'pointer' }} onClick={handleClose} />
             </DialogTitle>
             <DialogContent>
                 <Grid container>
@@ -239,7 +298,7 @@ const PhoneField_ = (props) => {
                         md={6}
                         style={{ padding: '20px' }}
                     >
-                        <FieldError errorTag={errorTag}/>
+                        <FieldError errorTag={errorTag} />
                         <Box
                             sx={{
                                 display: 'flex',
@@ -249,14 +308,14 @@ const PhoneField_ = (props) => {
                                     m: 0,
                                 },
                             }}
-                            >
+                        >
                             {DialogModes()}
                         </Box>
                         <Box
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {panelType==='conditional'?
+                            {panelType === 'conditional' ?
                                 <>
                                     <Typography style={{ fontSize: '18px', marginTop: '20px', color: '#5048E5' }}>
                                         When the form component:
@@ -288,7 +347,7 @@ const PhoneField_ = (props) => {
                                         onChange={handleValue}
                                     />
                                 </>
-                            :
+                                :
                                 <>
                                     <TextField
                                         autoFocus
@@ -333,17 +392,50 @@ const PhoneField_ = (props) => {
                                             onChange={handleIsRequired}
                                         />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                     </Typography>
+                                    <Typography
+                                        style={{ marginTop: '10px', color: '#5048E5' }}
+                                    >
+                                        <Checkbox
+                                            size={'small'}
+                                            checked={multipleValues}
+                                            onChange={handleMultipleValues}
+                                        />Multiple Values<GeneralTooltip tipData={'A required field must be filled.'} />
+                                    </Typography>
                                 </>
                             }
                         </Box>
                     </Grid>
-                    <PhonefieldPreview
-                        defaultCountry={'ug'}
-                        fieldLabel={fieldLabel}
-                        fieldDescription={fieldDescription}
-                        tooltip={tooltip}
-                        isRequired={isRequired}
-                    />
+                    {
+                        multipleValues ?
+                            <MultipleValuesPreview  {...props} component={
+                                <MuiPhoneNumber
+                                    fullWidth
+                                    size={'small'}
+                                    label={fieldLabel ? fieldLabel : 'Phone Number'}
+                                    margin="dense"
+                                    variant='outlined'
+                                    defaultCountry={'ug'}
+                                    onChange={setValue}
+                                    InputProps={{
+                                        endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
+                                    }}
+                                />
+                            }
+                                onChange={setMultipleValuesData}
+                                multipleValuesData={multipleValuesData}
+                                multipleValues={multipleValues}
+                            />
+                            : <PhonefieldPreview
+                                defaultCountry={'ug'}
+                                fieldLabel={fieldLabel}
+                                fieldDescription={fieldDescription}
+                                tooltip={tooltip}
+                                isRequired={isRequired}
+                                multipleValues={multipleValues}
+                            />
+
+                    }
+
                 </Grid>
             </DialogContent>
             <DialogActions>
@@ -362,11 +454,11 @@ const PhoneField_ = (props) => {
                         color="error"
                     >Cancel</Button>
                     <Button
-                        onClick={fieldData?handleUpdate:addPhoneField}
+                        onClick={fieldData ? handleUpdate : addPhoneField}
                         variant="outlined"
                         size='small'
                         color="success"
-                    >{fieldData?"Save Changes":"Add Field"}</Button>
+                    >{fieldData ? "Save Changes" : "Add Field"}</Button>
                 </Grid>
             </DialogActions>
         </Dialog>

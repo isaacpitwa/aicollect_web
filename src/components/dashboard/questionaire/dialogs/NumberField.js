@@ -13,7 +13,8 @@ import {
     Typography,
     Select,
     MenuItem,
-    Checkbox
+    Checkbox,
+    fabClasses
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -28,6 +29,7 @@ import {
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
+import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
 const NumberField = (props) => {
@@ -61,7 +63,8 @@ const NumberField = (props) => {
     const [dependency, setDependency] = useState(fieldData && fieldData.dependency ? fieldData.dependency : null)
     const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
     const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
-
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -141,6 +144,28 @@ const NumberField = (props) => {
         setDependency(null)
     }
 
+   const  handleMultipleValues = (e) => {
+        if(!multipleValues) {
+            setMultipleValuesData([
+                <TextField
+                        required={isRequired}
+                        autoFocus
+                        margin="dense"
+                        id="label"
+                        label={fieldLabel?fieldLabel:'Label'}
+                        type="number"
+                        size="small"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                        }}
+                    />
+            ])
+        }
+        setMultipleValues(!multipleValues);
+    }
+
     const addNumberField = () => {
 
         let newFieldObj = {
@@ -157,7 +182,9 @@ const NumberField = (props) => {
             conditional: conditionalData,
             dependency: dependency,
             validations: validations,
-            displayConfigs: displayConfigs
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData,
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -173,6 +200,8 @@ const NumberField = (props) => {
             setDependency(null)
             setValidations(null)
             setDisplayConfigs(null)
+            setMultipleValues(false)
+            setMultipleValuesData([])
             removeConditional()
             handleClose()
         } else {
@@ -199,7 +228,9 @@ const NumberField = (props) => {
             conditional: conditionalData,
             dependency: dependency,
             validations: validations,
-            displayConfigs: displayConfigs
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         updateFieldInSection(numberFieldData)
@@ -218,6 +249,8 @@ const NumberField = (props) => {
         setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
         setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+        setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+        setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
         handleClose()
     }
 
@@ -422,7 +455,15 @@ const NumberField = (props) => {
                                                 onChange={handleIsRequired}
                                             />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                         </Typography>
-
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#5048E5' }}
+                                        >
+                                            <Checkbox
+                                                size={'small'}
+                                                checked={multipleValues}
+                                                onChange={handleMultipleValues}
+                                            />Multiple Values<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        </Typography>
                                         <Typography
                                             style={{ marginTop: '10px', color: '#000' }}
                                         >
@@ -553,12 +594,36 @@ const NumberField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <NumberfieldPreview
+                 {  
+                 multipleValues  ? 
+                 <MultipleValuesPreview  {...props} component={
+                    <TextField
+                        required={isRequired}
+                        autoFocus
+                        margin="dense"
+                        label={fieldLabel?fieldLabel:'Label'}
+                        type="number"
+                        size="small"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                        }}
+                    />
+                 } 
+                 onChange={setMultipleValuesData}
+                 multipleValuesData = {multipleValuesData}
+                 multipleValues={multipleValues}
+                 /> 
+                 : <NumberfieldPreview
                         fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
+                        multipleValues={multipleValues}
                     />
+                    
+                    }
                 </Grid>
             </DialogContent>
             <DialogActions>

@@ -28,6 +28,7 @@ import {
 } from '../utils/ErrorCards';
 import FieldDialog from './';
 import TextfieldPreview from '../previews/TextfieldPreview';
+import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
 const TextField_ = (props) => {
@@ -59,6 +60,8 @@ const TextField_ = (props) => {
     const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -121,6 +124,8 @@ const TextField_ = (props) => {
             required: isRequired,
             dependency: dependency,
             conditional: conditionalData,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         if(sectionId&&fieldLabel!=='') {
@@ -134,6 +139,8 @@ const TextField_ = (props) => {
             setIsRequired(false)
             setDependency(null)
             setConditional(null)
+            setMultipleValues(false)
+            setMultipleValuesData([])
             removeConditional()
             handleClose()
         } else {
@@ -159,6 +166,8 @@ const TextField_ = (props) => {
             required: isRequired,
             dependency: dependency,
             conditional: conditionalData,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         updateFieldInSection(textFieldData)
@@ -176,9 +185,20 @@ const TextField_ = (props) => {
         setTooltip(fieldData?fieldData.tooltip:'')
         setIsRequired(!isRequired)
         setDependency(fieldData&&fieldData.dependency?fieldData.dependency:null)
+        setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+        setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
         removeConditional()
         handleClose()
     };
+
+    const handleMultipleValues = (e) => {
+        if (!multipleValues) {
+            setMultipleValuesData([
+                1
+            ])
+        }
+        setMultipleValues(!multipleValues);
+    }
 
     return (
         <FieldDialog
@@ -213,6 +233,10 @@ const TextField_ = (props) => {
             cancel={cancel}
             addField={addField}
             updateField={updateField}
+            multipleValues={multipleValues}
+            handleMultipleValues={handleMultipleValues}
+            setMultipleValuesData={setMultipleValuesData}
+            multipleValuesData={multipleValuesData}
         />
     )
 }
