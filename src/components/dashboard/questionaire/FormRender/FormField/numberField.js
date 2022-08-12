@@ -17,6 +17,7 @@ import {
 } from '../../utils';
 import { format } from 'date-fns';
 import NumberFormat from 'react-number-format';
+import MultipleValuesField from './MultipleValuesField';
 
 /**
  * @function NumberFieldComp
@@ -45,6 +46,9 @@ const NumberFieldComp = (props) => {
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');
     const [numberFieldDialog, setNumberFieldDialog] = useState(false)
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
+
 
     const handleNumberField = () => {
         setError(false)
@@ -136,7 +140,11 @@ const NumberFieldComp = (props) => {
                     </Typography>
                     : ""}
                 <Typography>{fieldData.label}</Typography>
-                <NumberFormat
+                
+                {  
+                 multipleValues  ? 
+                 <MultipleValuesField  {...props} component={
+                    <NumberFormat
                     format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
                     mask="_"
                     required={fieldData.required}
@@ -155,6 +163,32 @@ const NumberFieldComp = (props) => {
                     placeholder={placeholder()}
                     // isAllowed={withValueCap}
                 />
+                 } 
+                 onChange={setMultipleValuesData}
+                 multipleValuesData = {multipleValuesData}
+                 multipleValues={multipleValues}
+                 /> 
+                 : <NumberFormat
+                 format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
+                 mask="_"
+                 required={fieldData.required}
+                 value={fieldValue}
+                 onChange={handleFieldValue}
+                 style={{
+                     width: '100%',
+                     height: '48px',
+                     borderRadius: '4px',
+                     border: '1px solid #ced4da',
+                     padding: '0px 10px',
+                     marginBottom: '10px',
+                     marginTop: '4px',
+                 }}
+                 // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
+                 placeholder={placeholder()}
+                 // isAllowed={withValueCap}
+             />
+                    
+                    }
                 {!withValueCap? <Typography style={{ color: 'red' }}>Value is greater than the maximum value</Typography>:null}
             </Grid>
         )
