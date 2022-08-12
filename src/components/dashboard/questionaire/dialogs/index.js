@@ -20,6 +20,7 @@ import {
     MenuItem
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import GeneralTooltip from '../previews/GeneralTooltip';
 
 import { FormContext } from '../context';
 import {
@@ -31,6 +32,7 @@ import {
 import {
     FieldError,
 } from '../utils/ErrorCards';
+import MultipleValuesPreview from '../previews/multipleValues';
 
 /**
  * @function FieldDialog
@@ -82,10 +84,15 @@ const FieldDialog = (props) => {
         cancel,
         addField,
         updateField,
+        multipleValues,
+        handleMultipleValues,
+        setMultipleValuesData,
+        multipleValuesData,
     } = props;
 
     const mainClass = dialogStyles();
     const modeBtnClass = modeBtnStyles();
+    
     return (
         <Dialog
             open={open}
@@ -324,29 +331,44 @@ const FieldDialog = (props) => {
                                             onChange={handleIsRequired}
                                         />Required<FieldTooltip tooltip={fieldData.tooltip} />
                                     </Typography>
+                                    <Typography
+                                        style={{ marginTop: '10px', color: '#5048E5' }}
+                                    >
+                                        <Checkbox
+                                            size={'small'}
+                                            checked={multipleValues}
+                                            onChange={handleMultipleValues}
+                                        />Multiple Values<GeneralTooltip tipData={'A required field must be filled.'} />
+                                    </Typography>
                                 </>
                             }
                         </Box>
                     </Grid>
 
                     {/* FIELD PREVIEW */}
-                    <Grid
-                        item
-                        xs={12}
-                        md={6}
-                        style={{ padding: '30px 20px' }}
-                    >
-                        <Typography
-                            style={{ backgroundColor: '#5048E5', padding: '5px 10px', color: 'white', marginTop: '2px', borderRadius: '8px 8px 0px 0px' }}
-                            size='small'
-                        >
-                            <strong>Preview</strong>
-                        </Typography>
-                        <Box
-                            component="form"
-                            style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
-                        >
-                        <TextField
+                    {
+                        multipleValues ?
+                            <MultipleValuesPreview  {...props} component={
+                                <TextField
+                                    required={isRequired}
+                                    autoFocus
+                                    margin="dense"
+                                    id="label"
+                                    label={fieldLabel ? fieldLabel : 'Label'}
+                                    type="email"
+                                    size="small"
+                                    fullWidth
+                                    variant="outlined"
+                                    InputProps={{
+                                        endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
+                                    }}
+                                />
+                            }
+                                onChange={setMultipleValuesData}
+                                multipleValuesData={multipleValuesData}
+                                multipleValues={multipleValues}
+                            />
+                            : <TextField
                             required={isRequired}
                             fullWidth
                             variant="outlined"
@@ -359,8 +381,8 @@ const FieldDialog = (props) => {
                                 endAdornment: <FieldTooltip tooltip={tooltip}/>
                             }}
                         />
-                        </Box>
-                    </Grid>
+
+                    }
                 </Grid>
             </DialogContent>
             <DialogActions>

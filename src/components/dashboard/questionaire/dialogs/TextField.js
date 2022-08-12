@@ -191,6 +191,15 @@ const TextField_ = (props) => {
         handleClose()
     };
 
+    const handleMultipleValues = (e) => {
+        if (!multipleValues) {
+            setMultipleValuesData([
+                1
+            ])
+        }
+        setMultipleValues(!multipleValues);
+    }
+
     return (
         <FieldDialog
             open={open}
@@ -224,6 +233,10 @@ const TextField_ = (props) => {
             cancel={cancel}
             addField={addField}
             updateField={updateField}
+            multipleValues={multipleValues}
+            handleMultipleValues={handleMultipleValues}
+            setMultipleValuesData={setMultipleValuesData}
+            multipleValuesData={multipleValuesData}
         />
     )
 }
