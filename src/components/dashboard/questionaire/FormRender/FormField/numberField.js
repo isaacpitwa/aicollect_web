@@ -17,7 +17,6 @@ import {
 } from '../../utils';
 import { format } from 'date-fns';
 import NumberFormat from 'react-number-format';
-import { isNonNullChain } from 'typescript';
 
 /**
  * @function NumberFieldComp

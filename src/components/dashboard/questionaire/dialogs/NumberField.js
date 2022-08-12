@@ -184,6 +184,7 @@ const NumberField = (props) => {
             validations: validations,
             displayConfigs: displayConfigs,
             multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData,
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -200,6 +201,7 @@ const NumberField = (props) => {
             setValidations(null)
             setDisplayConfigs(null)
             setMultipleValues(false)
+            setMultipleValuesData([])
             removeConditional()
             handleClose()
         } else {
@@ -228,6 +230,7 @@ const NumberField = (props) => {
             validations: validations,
             displayConfigs: displayConfigs,
             multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         updateFieldInSection(numberFieldData)
@@ -247,6 +250,7 @@ const NumberField = (props) => {
         setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
         setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+        setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
         handleClose()
     }
 
@@ -597,7 +601,6 @@ const NumberField = (props) => {
                         required={isRequired}
                         autoFocus
                         margin="dense"
-                        id="label"
                         label={fieldLabel?fieldLabel:'Label'}
                         type="number"
                         size="small"

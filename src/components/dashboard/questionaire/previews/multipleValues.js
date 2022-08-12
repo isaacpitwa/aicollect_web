@@ -14,7 +14,6 @@ import AddIcon from '@mui/icons-material/Add';
 const MultipleValuesPreview = (props) => {
 
     const { fieldLabel, fieldDescription, tooltip, isRequired, component,onChange,multipleValuesData,multipleValues } = props
-
     return (
              <Grid
             item
@@ -35,9 +34,9 @@ const MultipleValuesPreview = (props) => {
                    <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4'}}>
                    {
                                       multipleValuesData.map((item,index)=>
-                                      <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}>
-                                      <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}>
-                                            {item}
+                                      <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}  key={`Container ${index}`}>
+                                      <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}  key={`Container2 ${index}`}>
+                                            {component}
                                               {fieldDescription!=''?
                                                   <Typography
                                                       style={{ fontSize: '14px', color: '#5048e598' }}
