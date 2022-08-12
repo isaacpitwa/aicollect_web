@@ -368,7 +368,8 @@ const FieldDialog = (props) => {
                                 multipleValuesData={multipleValuesData}
                                 multipleValues={multipleValues}
                             />
-                            : <TextField
+                            : 
+                            <TextField
                             required={isRequired}
                             fullWidth
                             variant="outlined"

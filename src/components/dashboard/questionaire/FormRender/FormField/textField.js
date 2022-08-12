@@ -15,6 +15,7 @@ import {
     FieldTooltip,
     DescriptionCard,
 } from '../../utils';
+import MultipleValuesField from './MultipleValuesField';
 
 /**
  * @function TextFieldComp
@@ -41,6 +42,8 @@ const TextFieldComp = (props) => {
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');
     const [textFieldDialog, setTextFieldDialog] = useState(false);
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleTextField = () => {
         setError(false)
@@ -99,7 +102,11 @@ const TextFieldComp = (props) => {
                         />
                     </Typography>
                 : ""}
-                <TextField
+
+{
+                    multipleValues ?
+                        <MultipleValuesField  {...props} component={
+                            <TextField
                     required={fieldData.required}
                     fullWidth
                     variant="outlined"
@@ -112,6 +119,27 @@ const TextFieldComp = (props) => {
                         endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
                     }}
                 />
+                        }
+                            onChange={setMultipleValuesData}
+                            multipleValuesData={multipleValuesData}
+                            multipleValues={multipleValues}
+                        />
+                        : <TextField
+                        required={fieldData.required}
+                        fullWidth
+                        variant="outlined"
+                        type={'text'}
+                        label={fieldData.label}
+                        value={fieldValue}
+                        onChange={handleFieldValue}
+                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                        InputProps={{
+                            endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
+                        }}
+                    />
+
+                }
+                
             </Grid>
         )
     }
