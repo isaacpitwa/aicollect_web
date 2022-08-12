@@ -33,30 +33,36 @@ const MultipleValuesPreview = (props) => {
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
                    <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4'}}>
-                        <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}>
-                                <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}>
-                                    {
-                                      multipleValuesData.map((item,index)=>item)
+                   {
+                                      multipleValuesData.map((item,index)=>
+                                      <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}>
+                                      <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}>
+                                            {item}
+                                              {fieldDescription!=''?
+                                                  <Typography
+                                                      style={{ fontSize: '14px', color: '#5048e598' }}
+                                                  >
+                                                      <i>{fieldDescription}</i>
+                                                  </Typography>
+                                              :
+                                                  ''
+                                              }
+                                      </Box>
+                                      <CancelIcon
+                                          color='action'
+                                          style={{ float: 'right', cursor: 'pointer' }}
+                                          sx={{marginLeft:'16px'}}
+                                          onClick={()=>{
+                                              multipleValuesData.splice(index,1)
+                                              onChange(multipleValuesData)
+                                          }}
+                                      />
+                                          
+                              </Box>)
                                     
-                                    }
-                                        {fieldDescription!=''?
-                                            <Typography
-                                                style={{ fontSize: '14px', color: '#5048e598' }}
-                                            >
-                                                <i>{fieldDescription}</i>
-                                            </Typography>
-                                        :
-                                            ''
-                                        }
-                                </Box>
-                                <CancelIcon
-                                    color='action'
-                                    style={{ float: 'right', cursor: 'pointer' }}
-                                    onClick={()=>{}}
-                                    sx={{marginLeft:'16px'}}
-                                />
-                                    
-                        </Box>
+                        }
+                    
+                        
                         <Box sx={{borderBottom:'1px solid #D8DEE4',padding:'8px'}}>
                             <Button variant="contained" startIcon={<AddIcon />} size='small'
                             onClick={()=>{
