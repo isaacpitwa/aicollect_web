@@ -15,7 +15,8 @@ const NumberfieldPreview = (props) => {
 
     return (
         <>
-    { !multipleValues ?    <Grid
+    { !multipleValues ?    
+     <Grid
             item
             xs={12}
             md={6}
@@ -55,7 +56,21 @@ const NumberfieldPreview = (props) => {
                     ''
                 }
             </Box>
-        </Grid>: <MultipleValuesPreview {...props} />}
+        </Grid>: <MultipleValuesPreview {...props}  component={<TextField
+                                        required={isRequired}
+                                        autoFocus
+                                        margin="dense"
+                                        id="label"
+                                        label={fieldLabel?fieldLabel:'Label'}
+                                        type="number"
+                                        size="small"
+                                        fullWidth
+                                        variant="outlined"
+                                        InputProps={{
+                                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                                        }}
+                                        
+                                    />}/>}
         </>
     )
 }

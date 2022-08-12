@@ -29,6 +29,7 @@ import {
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
+import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
 const NumberField = (props) => {
@@ -571,13 +572,33 @@ const NumberField = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <NumberfieldPreview
+                 {  
+                 multipleValues  ? 
+                 <MultipleValuesPreview  {...props} component={
+                    <TextField
+                        required={isRequired}
+                        autoFocus
+                        margin="dense"
+                        id="label"
+                        label={fieldLabel?fieldLabel:'Label'}
+                        type="number"
+                        size="small"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                        }}
+                    />
+                 }/> 
+                 : <NumberfieldPreview
                         fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
                         multipleValues={multipleValues}
                     />
+                    
+                    }
                 </Grid>
             </DialogContent>
             <DialogActions>

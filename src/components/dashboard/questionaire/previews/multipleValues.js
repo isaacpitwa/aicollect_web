@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const MultipleValuesPreview = (props) => {
 
-    const { fieldLabel, fieldDescription, tooltip, isRequired, multipleValues } = props
+    const { fieldLabel, fieldDescription, tooltip, isRequired, component } = props
 
     return (
              <Grid
@@ -35,21 +35,7 @@ const MultipleValuesPreview = (props) => {
                    <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4'}}>
                         <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}>
                                 <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}>
-                                <TextField
-                                        required={isRequired}
-                                        autoFocus
-                                        margin="dense"
-                                        id="label"
-                                        label={fieldLabel?fieldLabel:'Label'}
-                                        type="number"
-                                        size="small"
-                                        fullWidth
-                                        variant="outlined"
-                                        InputProps={{
-                                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                                        }}
-                                        
-                                    />
+                                    {component}
                                         {fieldDescription!=''?
                                             <Typography
                                                 style={{ fontSize: '14px', color: '#5048e598' }}
