@@ -86,7 +86,6 @@ const FieldDialog = (props) => {
 
     const mainClass = dialogStyles();
     const modeBtnClass = modeBtnStyles();
-
     return (
         <Dialog
             open={open}
