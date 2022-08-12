@@ -24,6 +24,7 @@ import {
     FormControl
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import MuiPhoneNumber from 'material-ui-phone-number'
 
 import { FormContext } from '../context';
 import {
@@ -35,6 +36,7 @@ import {
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip';
 import PhonefieldPreview from '../previews/PhonefieldPreview';
+import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
 const PhoneField_ = (props) => {
@@ -66,6 +68,10 @@ const PhoneField_ = (props) => {
     const [conditional, setConditional] = useState(fieldData&&fieldData.conditional?fieldData.conditional:null)
     const [when, setWhen] = useState(fieldData&&fieldData.conditional?fieldData.conditional.when:'')
     const [value, setValue] = useState(fieldData&&fieldData.conditional?fieldData.conditional.value:'')
+    const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
+    const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -94,7 +100,23 @@ const PhoneField_ = (props) => {
     const logicPanel = (e) => {
         setPanelType("logic")
     }
-
+    const handleValidations = (e) => {
+        setValidations({ ...validations, [e.target.name]: e.target.value });
+    }
+    const handleDisplayConfigs = (e) => {
+        if (e.target.name === 'inputMask' && e.target.value) {
+             var value = e.target.value.toString().split('').map((char, index) => {
+                if (/^\d+$/.test(char)) {
+                    return '#'
+                }
+                return char
+            
+             }).join('')
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: value });
+        } else {  
+            setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value })
+        };
+    }
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -186,6 +208,27 @@ const PhoneField_ = (props) => {
         removeConditional()
         handleClose()
     };
+
+    const  handleMultipleValues = (e) => {
+        if(!multipleValues) {
+            setMultipleValuesData([
+                <MuiPhoneNumber
+                    fullWidth
+                    size={'small'}
+                    label={fieldLabel?fieldLabel:'Phone Number'}
+                    margin="dense"
+                    variant='outlined'
+                    defaultCountry={'ug'}
+                    onChange={setValue}
+                    InputProps={{
+                        endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                      }}
+                    />
+            ])
+        }
+        setMultipleValues(!multipleValues);
+    }
+
 
     const DialogModes = () => {
 
@@ -333,17 +376,50 @@ const PhoneField_ = (props) => {
                                             onChange={handleIsRequired}
                                         />Required<GeneralTooltip tipData={'A required field must be filled.'} />
                                     </Typography>
+                                    <Typography
+                                            style={{ marginTop: '10px', color: '#5048E5' }}
+                                        >
+                                            <Checkbox
+                                                size={'small'}
+                                                checked={multipleValues}
+                                                onChange={handleMultipleValues}
+                                            />Multiple Values<GeneralTooltip tipData={'A required field must be filled.'} />
+                                        </Typography>
                                 </>
                             }
                         </Box>
                     </Grid>
-                    <PhonefieldPreview
+                    {  
+                 multipleValues  ? 
+                 <MultipleValuesPreview  {...props} component={
+                    <MuiPhoneNumber
+                        fullWidth
+                        size={'small'}
+                        label={fieldLabel?fieldLabel:'Phone Number'}
+                        margin="dense"
+                        variant='outlined'
                         defaultCountry={'ug'}
-                        fieldLabel={fieldLabel}
-                        fieldDescription={fieldDescription}
-                        tooltip={tooltip}
-                        isRequired={isRequired}
+                        onChange={setValue}
+                        InputProps={{
+                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
+                        }}
                     />
+                 } 
+                 onChange={setMultipleValuesData}
+                 multipleValuesData = {multipleValuesData}
+                 multipleValues={multipleValues}
+                 /> 
+                 : <PhonefieldPreview
+                 defaultCountry={'ug'}
+                 fieldLabel={fieldLabel}
+                 fieldDescription={fieldDescription}
+                 tooltip={tooltip}
+                 isRequired={isRequired}
+                 multipleValues={multipleValues}
+             />
+                    
+                    }
+                    
                 </Grid>
             </DialogContent>
             <DialogActions>
