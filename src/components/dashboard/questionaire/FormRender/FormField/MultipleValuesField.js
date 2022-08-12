@@ -14,7 +14,7 @@ const MultipleValuesField = (props) => {
 
     const { fieldLabel, fieldDescription, tooltip, isRequired, component,onChange,multipleValuesData,multipleValues } = props
     return (
-        <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4'}}>
+        <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4',width:'100%'}}>
         {
                            multipleValuesData.map((item,index)=>
                            <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}  key={`Container ${index}`}>

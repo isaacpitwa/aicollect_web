@@ -150,6 +150,10 @@ const PhoneField_ = (props) => {
             required: isRequired,
             dependency: dependency,
             conditional: conditionalData,
+            validations: validations,
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -163,6 +167,10 @@ const PhoneField_ = (props) => {
             setIsRequired(false)
             setDependency(null)
             setConditional(null)
+            setValidations(null)
+            setDisplayConfigs(null)
+            setMultipleValues(false)
+            setMultipleValuesData([])
             removeConditional()
             handleClose()
         } else {
@@ -188,6 +196,10 @@ const PhoneField_ = (props) => {
             required: isRequired,
             dependency: dependency,
             conditional: conditionalData,
+            validations: validations,
+            displayConfigs: displayConfigs,
+            multipleValues: multipleValues,
+            multipleValuesData: multipleValuesData
         }
 
         updateFieldInSection(textFieldData)
@@ -206,6 +218,10 @@ const PhoneField_ = (props) => {
         setIsRequired(!isRequired)
         setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
         removeConditional()
+        setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
+        setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
+        setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
+        setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
         handleClose()
     };
 

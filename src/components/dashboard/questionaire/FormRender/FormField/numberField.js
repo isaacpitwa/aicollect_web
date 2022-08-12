@@ -95,17 +95,17 @@ const NumberFieldComp = (props) => {
         return fieldData.label;
     }
 
-    const withValueLimit = ({floatValue}) => (fieldData.validations ?
-     (fieldData.validations.max ? floatValue <= fieldData.validations.max : true 
-     && fieldData.validations.min ? floatValue >= fieldData.validations.min : true)
-     : true);
-     const withValueCap = (inputObj) => {
+    const withValueLimit = ({ floatValue }) => (fieldData.validations ?
+        (fieldData.validations.max ? floatValue <= fieldData.validations.max : true
+            && fieldData.validations.min ? floatValue >= fieldData.validations.min : true)
+        : true);
+    const withValueCap = (inputObj) => {
         const { value } = inputObj;
-        if(fieldData.validations && fieldData.validations.max){
+        if (fieldData.validations && fieldData.validations.max) {
             return value <= fieldData.validations.max;
         }
         return false;
-      };
+    };
 
     const fieldDisplay = () => {
         return (
@@ -140,56 +140,56 @@ const NumberFieldComp = (props) => {
                     </Typography>
                     : ""}
                 <Typography>{fieldData.label}</Typography>
-                
-                {  
-                 multipleValues  ? 
-                 <MultipleValuesField  {...props} component={
-                    <NumberFormat
-                    format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
-                    mask="_"
-                    required={fieldData.required}
-                    value={fieldValue}
-                    onChange={handleFieldValue}
-                    style={{
-                        width: '100%',
-                        height: '48px',
-                        borderRadius: '4px',
-                        border: '1px solid #ced4da',
-                        padding: '0px 10px',
-                        marginBottom: '10px',
-                        marginTop: '4px',
-                    }}
-                    // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
-                    placeholder={placeholder()}
-                    // isAllowed={withValueCap}
-                />
-                 } 
-                 onChange={setMultipleValuesData}
-                 multipleValuesData = {multipleValuesData}
-                 multipleValues={multipleValues}
-                 /> 
-                 : <NumberFormat
-                 format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
-                 mask="_"
-                 required={fieldData.required}
-                 value={fieldValue}
-                 onChange={handleFieldValue}
-                 style={{
-                     width: '100%',
-                     height: '48px',
-                     borderRadius: '4px',
-                     border: '1px solid #ced4da',
-                     padding: '0px 10px',
-                     marginBottom: '10px',
-                     marginTop: '4px',
-                 }}
-                 // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
-                 placeholder={placeholder()}
-                 // isAllowed={withValueCap}
-             />
-                    
-                    }
-                {!withValueCap? <Typography style={{ color: 'red' }}>Value is greater than the maximum value</Typography>:null}
+
+                {
+                    multipleValues ?
+                        <MultipleValuesField  {...props} component={
+                            <NumberFormat
+                                format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
+                                mask="_"
+                                required={fieldData.required}
+                                value={fieldValue}
+                                onChange={handleFieldValue}
+                                style={{
+                                    width: '100%',
+                                    height: '48px',
+                                    borderRadius: '4px',
+                                    border: '1px solid #ced4da',
+                                    padding: '0px 10px',
+                                    marginBottom: '10px',
+                                    marginTop: '4px',
+                                }}
+                                // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
+                                placeholder={placeholder()}
+                            // isAllowed={withValueCap}
+                            />
+                        }
+                            onChange={setMultipleValuesData}
+                            multipleValuesData={multipleValuesData}
+                            multipleValues={multipleValues}
+                        />
+                        : <NumberFormat
+                            format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
+                            mask="_"
+                            required={fieldData.required}
+                            value={fieldValue}
+                            onChange={handleFieldValue}
+                            style={{
+                                width: '100%',
+                                height: '48px',
+                                borderRadius: '4px',
+                                border: '1px solid #ced4da',
+                                padding: '0px 10px',
+                                marginBottom: '10px',
+                                marginTop: '4px',
+                            }}
+                            // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
+                            placeholder={placeholder()}
+                        // isAllowed={withValueCap}
+                        />
+
+                }
+                {!withValueCap ? <Typography style={{ color: 'red' }}>Value is greater than the maximum value</Typography> : null}
             </Grid>
         )
     }
