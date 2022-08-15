@@ -352,7 +352,6 @@ const PhoneField_ = (props) => {
                                     <TextField
                                         autoFocus
                                         margin="dense"
-                                        id="label"
                                         label="Label"
                                         type="text"
                                         size="small"
