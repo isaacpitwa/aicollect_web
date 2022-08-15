@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box,
 } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,6 +15,7 @@ import EmailField from '../../dialogs/EmailField';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import MultipleValuesField from './MultipleValuesField';
+import styles from '../../styles/gridfield.module.css';
 
 /**
  * @function EmailFieldComp
@@ -87,22 +89,33 @@ const EmailFieldComp = (props) => {
             :
 
             forGrid ?
-                <TextField
-                    required={fieldData.required}
-                    fullWidth
-                    type={'email'}
-                    variant={'outlined'}
-                    label={ !forGrid ? fieldData.label:''}
-                    size={'small'}
-                    // value={fieldValue}
-                    onChange={handlEmail}
-                    error={!error && fieldValue !== ''}
-                    helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
-                    style={formStyles.textfield}
-                    InputProps={{
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                    }}
+               (
+                <Box sx={{
+                    padding: ' 4px 0.5rem',
+                    border:'1px solid #ced4da'
+                }}>
+                     <TextField
+                        required={fieldData.required}
+                        fullWidth
+                        type={'email'}
+                        variant={'outlined'}
+                        label={ !forGrid ? fieldData.label:''}
+                        size={'small'}
+                        // value={fieldValue}
+                        onChange={handlEmail}
+                        error={!error && fieldValue !== ''}
+                        helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
+                        style={formStyles.textfield}
+                        InputProps={{
+                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                            style: {
+                                border:'1px solid #ced4da',
+                                borderRadius: '4px'
+                            }
+                        }}
             />
+                </Box>
+               )
             :
             <Grid
                 style={{ display: 'block' }}

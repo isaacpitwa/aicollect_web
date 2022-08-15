@@ -124,10 +124,10 @@ const DataGridField = (props) => {
                     : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
-                <Box sx={{display:'flex', alignItems:'stretch',gap:'8px', width:'100%'}}>
+                <Box sx={{display:'flex', alignItems:'stretch', width:'100%'}}>
                     {fieldData.components.map((field, index) => (
                         <Box>
-                           <Typography key={index} sx={{fontWeight:'600', color:'#000'}}>{field.label}</Typography>
+                           <Box sx={{padding:'8px 14px', border:'1px solid #ced4da'}}><Typography key={index} sx={{fontWeight:'600', color:'#000'}}>{field.label}</Typography></Box>
                            <FormField key={index} fieldData={field} forGrid={true}/>
                         </Box>
                     ))}

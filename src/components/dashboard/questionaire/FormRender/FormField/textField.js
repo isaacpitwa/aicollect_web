@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles'
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box,
 } from "@mui/material"
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -74,7 +75,10 @@ const TextFieldComp = (props) => {
 
     const fieldDisplay = () => {
         return forGrid ?
-            <TextField
+        <Box sx={{
+            padding: '4px 0.5rem',
+            border:'1px solid #ced4da'
+        }}> <TextField
                 required={fieldData.required}
                 fullWidth
                 variant="outlined"
@@ -84,9 +88,13 @@ const TextFieldComp = (props) => {
                 onChange={handleFieldValue}
                 helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                 InputProps={{
-                    endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                    endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />,
+                    style: {
+                        border:'1px solid #ced4da',
+                        borderRadius: '4px'
+                    }
                 }}
-            /> : (
+            /></Box> : (
 
                 <Grid
                     container
