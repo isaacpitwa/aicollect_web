@@ -69,102 +69,102 @@ const TextFieldComp = (props) => {
     const smallBtn = smallBtns();
 
     const fieldStyle = () => {
-        return editStatus?classes.section:classes.section2
+        return editStatus ? classes.section : classes.section2
     };
 
     const fieldDisplay = () => {
-        return  forGrid? <TextField
-            required={fieldData.required}
-            fullWidth
-            variant="outlined"
-            type={'text'}
-            label={ fieldData.label}
-            size={'small'}
-            value={fieldValue}
-            onChange={handleFieldValue}
-            helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-            InputProps={{
-                endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
-            }}
-            />: (
-            
-            <Grid
-                container
-                onMouseOver={() => { setDisplay('visible') }}
-                onMouseOut={() => { setDisplay('hidden') }}
-                className={fieldStyle()}
-                style={{ display: 'block' }}
-            >
-                {editStatus?
-                    <Typography
-                        className={smallBtn.fieldBtns}
-                        style={{ visibility: display }}
-                        align={'right'}
-                    >
-                        <TextField_
-                            open={textFieldDialog}
-                            fieldData={fieldData}
-                            handleClose={handleClose}
-                        />
-                        <EditIcon
-                            onClick={handleTextField}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon
-                            onClick={deleteField}
-                            className={smallBtn.deleteBtn}
-                        />
-                    </Typography>
-                : ""}
+        return forGrid ?
+            <TextField
+                required={fieldData.required}
+                fullWidth
+                variant="outlined"
+                type={'text'}
+                size={'small'}
+                value={fieldValue}
+                onChange={handleFieldValue}
+                helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                InputProps={{
+                    endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                }}
+            /> : (
 
-{
-                    multipleValues ?
-                        <MultipleValuesField  {...props} component={
-                            <TextField
-                            required={fieldData.required}
-                            fullWidth
-                            variant="outlined"
-                            type={'text'}
-                            label={  !forGrid ? fieldData.label:''}
-                            value={fieldValue}
-                            onChange={handleFieldValue}
-                            helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                            InputProps={{
-                                endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
-                            }}
+                <Grid
+                    container
+                    onMouseOver={() => { setDisplay('visible') }}
+                    onMouseOut={() => { setDisplay('hidden') }}
+                    className={fieldStyle()}
+                    style={{ display: 'block' }}
+                >
+                    {editStatus ?
+                        <Typography
+                            className={smallBtn.fieldBtns}
+                            style={{ visibility: display }}
+                            align={'right'}
+                        >
+                            <TextField_
+                                open={textFieldDialog}
+                                fieldData={fieldData}
+                                handleClose={handleClose}
                             />
-                        }
-                            onChange={setMultipleValuesData}
-                            multipleValuesData={multipleValuesData}
-                            multipleValues={multipleValues}
-                        />
-                        : <TextField
-                        required={fieldData.required}
-                        fullWidth
-                        variant="outlined"
-                        type={'text'}
-                        label={ !forGrid ? fieldData.label:''}
-                        value={fieldValue}
-                        size={'small'}
-                        onChange={handleFieldValue}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                        InputProps={{
-                            endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
-                        }}
-                    />
+                            <EditIcon
+                                onClick={handleTextField}
+                                className={smallBtn.editBtn}
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                            />
+                        </Typography>
+                        : ""}
 
-                }
-                
-            </Grid>
-        )
+                    {
+                        multipleValues ?
+                            <MultipleValuesField  {...props} component={
+                                <TextField
+                                    required={fieldData.required}
+                                    fullWidth
+                                    variant="outlined"
+                                    type={'text'}
+                                    label={!forGrid ? fieldData.label : ''}
+                                    value={fieldValue}
+                                    onChange={handleFieldValue}
+                                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                                    InputProps={{
+                                        endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                                    }}
+                                />
+                            }
+                                onChange={setMultipleValuesData}
+                                multipleValuesData={multipleValuesData}
+                                multipleValues={multipleValues}
+                            />
+                            : <TextField
+                                required={fieldData.required}
+                                fullWidth
+                                variant="outlined"
+                                type={'text'}
+                                label={!forGrid ? fieldData.label : ''}
+                                value={fieldValue}
+                                size={'small'}
+                                onChange={handleFieldValue}
+                                helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                                InputProps={{
+                                    endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                                }}
+                            />
+
+                    }
+
+                </Grid>
+            )
     }
 
     return (
-        fieldData.display==='visible'||conditionalDisplay(fieldData)?
+        fieldData.display === 'visible' || conditionalDisplay(fieldData) ?
             fieldDisplay()
-        : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
-        : ""
+            : fieldData.display === 'hidden' && editStatus ?
+                fieldDisplay()
+                : ""
     )
 }
 
