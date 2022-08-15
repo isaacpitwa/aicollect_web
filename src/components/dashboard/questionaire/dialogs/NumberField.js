@@ -479,7 +479,6 @@ const NumberField = (props) => {
                                             </Typography>
                                             <TextField
                                                 margin="dense"
-                                                id="label"
                                                 type="number"
                                                 size="small"
                                                 fullWidth
@@ -502,7 +501,6 @@ const NumberField = (props) => {
                                             </Typography>
                                             <TextField
                                                 margin="dense"
-                                                id="label"
                                                 type="number"
                                                 size="small"
                                                 fullWidth
@@ -524,7 +522,6 @@ const NumberField = (props) => {
                                             </Typography>
                                             <TextField
                                                 margin="dense"
-                                                id="label"
                                                 type="number"
                                                 size="small"
                                                 fullWidth
@@ -546,7 +543,6 @@ const NumberField = (props) => {
                                             </Typography>
                                             <TextField
                                                 margin="dense"
-                                                id="label"
                                                 type="number"
                                                 size="small"
                                                 fullWidth
