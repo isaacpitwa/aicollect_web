@@ -14,6 +14,8 @@ import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import FormField from '.';
 import { Box } from '@mui/system';
+import { getRowEl } from '@mui/x-data-grid/utils/domUtils';
+import MultipleValuesField from './MultipleValuesField';
 
 /**
  * @function DataGridField
@@ -43,14 +45,25 @@ const DataGridField = (props) => {
 
     const [display, setDisplay] = useState('hidden');
     const [subSectionDialog, setSubSectionDialog] = useState(false)
+    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [1]);
 
     const handleSubSection = () => {
         setSubSectionDialog(true)
     }
+    const getRowComponent = () => {
+        return (<Box sx={{ display: 'flex', alignItems: 'stretch', width: '100%' }}>
+            {fieldData.components.map((field, index) => (
+                <Box key={index}>
+                    <FormField key={index} fieldData={field} forGrid={true} />
+                </Box>
+            ))}
+        </Box>)
+
+    };
 
     const getSectionIds = () => {
-        if(editStatus){
-            if(subSectionId===fieldData.id) {
+        if (editStatus) {
+            if (subSectionId === fieldData.id) {
                 setError(false)
                 setSubSectionId(null)
             } else {
@@ -64,18 +77,18 @@ const DataGridField = (props) => {
 
     const deleteField = () => {
         deleteFieldData(fieldData);
-    };   
+    };
 
     const handleClose = () => {
         setSubSectionDialog(false)
     };
-    
+
     const classes = formStyles();
     const smallBtn = smallBtns();
 
     const subSectionStyle = () => {
-        if(editStatus) {
-            if(subSectionId===fieldData.id) {
+        if (editStatus) {
+            if (subSectionId === fieldData.id) {
                 return classes.subSection3
             } else {
                 return classes.subSection
@@ -93,23 +106,23 @@ const DataGridField = (props) => {
                 container
                 onClick={getSectionIds}
                 className={subSectionStyle()}
-                style={{border:0,paddingTop:'8px'}}
+                style={{ border: 0, paddingTop: '8px' }}
             >
                 <Typography
-                    onMouseOver={() => { setDisplay('visible'); } }
-                    onMouseOut={() => { setDisplay('hidden'); } }
-                    // className={classes.subSectionLabel}
+                    onMouseOver={() => { setDisplay('visible'); }}
+                    onMouseOut={() => { setDisplay('hidden'); }}
+                // className={classes.subSectionLabel}
                 >
-                    {editStatus?
+                    {editStatus ?
                         <DataGridDialog
                             open={subSectionDialog}
                             fieldData={fieldData}
                             handleClose={handleClose}
                         />
-                    : "" }
+                        : ""}
                     {fieldData.label}
-                    {fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
-                    {editStatus?
+                    {fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false}
+                    {editStatus ?
                         <small
                             className={smallBtn.sectionBtns}
                             style={{ visibility: display }}
@@ -123,32 +136,38 @@ const DataGridField = (props) => {
                                 className={smallBtn.deleteBtn}
                             />
                         </small>
-                    : "" }
+                        : ""}
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
-                
-                <Box sx={{display:'flex', alignItems:'stretch', width:'100%'}}>
+
+                <Box sx={{ display: 'flex', alignItems: 'stretch', width: '100%' }}>
                     {fieldData.components.map((field, index) => (
                         <Box>
-                           <Box sx={{padding:'8px 14px', border:'1px solid #ced4da'}}><Typography key={index} sx={{fontWeight:'600', color:'#000'}}>{field.label}</Typography></Box>
-                           <FormField key={index} fieldData={field} forGrid={true}/>
+                            <Box sx={{ padding: '8px 14px', border: '1px solid #ced4da' }}><Typography key={index} sx={{ fontWeight: '600', color: '#000' }}>{field.label}</Typography></Box>
+                            {/* <FormField key={index} fieldData={field} forGrid={true}/> */}
                         </Box>
                     ))}
+                    
                 </Box>
-            </Grid>        
+                <MultipleValuesField
+                        onChange={setMultipleValuesData}
+                        multipleValuesData={multipleValuesData}
+                        {...props} component={getRowComponent()}
+                    />
+            </Grid>
         )
     }
 
     return (
-        fieldData.display==='visible'||conditionalDisplay(fieldData)?
+        fieldData.display === 'visible' || conditionalDisplay(fieldData) ?
             fieldDisplay(fieldData.id)
-        : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay(fieldData.id)
-        : fieldData.dependency===dependantId&&dependecyValue>0?
-            [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
-                fieldDisplay(index)
-            ))
-        : ""
+            : fieldData.display === 'hidden' && editStatus ?
+                fieldDisplay(fieldData.id)
+                : fieldData.dependency === dependantId && dependecyValue > 0 ?
+                    [...Array(parseInt(dependecyValue)).keys()].map((field, index) => (
+                        fieldDisplay(index)
+                    ))
+                    : ""
     )
 }
 
