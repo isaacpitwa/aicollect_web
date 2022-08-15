@@ -73,7 +73,21 @@ const TextFieldComp = (props) => {
     };
 
     const fieldDisplay = () => {
-        return (
+        return  forGrid? <TextField
+            required={fieldData.required}
+            fullWidth
+            variant="outlined"
+            type={'text'}
+            label={ fieldData.label}
+            size={'small'}
+            value={fieldValue}
+            onChange={handleFieldValue}
+            helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+            InputProps={{
+                endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
+            }}
+            />: (
+            
             <Grid
                 container
                 onMouseOver={() => { setDisplay('visible') }}
@@ -107,18 +121,18 @@ const TextFieldComp = (props) => {
                     multipleValues ?
                         <MultipleValuesField  {...props} component={
                             <TextField
-                    required={fieldData.required}
-                    fullWidth
-                    variant="outlined"
-                    type={'text'}
-                    label={  !forGrid ? fieldData.label:''}
-                    value={fieldValue}
-                    onChange={handleFieldValue}
-                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                    InputProps={{
-                        endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
-                    }}
-                />
+                            required={fieldData.required}
+                            fullWidth
+                            variant="outlined"
+                            type={'text'}
+                            label={  !forGrid ? fieldData.label:''}
+                            value={fieldValue}
+                            onChange={handleFieldValue}
+                            helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                            InputProps={{
+                                endAdornment: <FieldTooltip tooltip={fieldData.tooltip}/>
+                            }}
+                            />
                         }
                             onChange={setMultipleValuesData}
                             multipleValuesData={multipleValuesData}
@@ -131,6 +145,7 @@ const TextFieldComp = (props) => {
                         type={'text'}
                         label={ !forGrid ? fieldData.label:''}
                         value={fieldValue}
+                        size={'small'}
                         onChange={handleFieldValue}
                         helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
                         InputProps={{

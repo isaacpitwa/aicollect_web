@@ -85,6 +85,25 @@ const EmailFieldComp = (props) => {
                 />
             </Grid>
             :
+
+            forGrid ?
+                <TextField
+                    required={fieldData.required}
+                    fullWidth
+                    type={'email'}
+                    variant={'outlined'}
+                    label={ !forGrid ? fieldData.label:''}
+                    size={'small'}
+                    // value={fieldValue}
+                    onChange={handlEmail}
+                    error={!error && fieldValue !== ''}
+                    helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
+                    style={formStyles.textfield}
+                    InputProps={{
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                    }}
+            />
+            :
             <Grid
                 style={{ display: 'block' }}
                 container
