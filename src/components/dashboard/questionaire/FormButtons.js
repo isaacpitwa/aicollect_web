@@ -32,6 +32,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import GridViewIcon from '@mui/icons-material/GridView';
 import MapIcon from '@mui/icons-material/Map';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import GestureIcon from '@mui/icons-material/Gesture';
@@ -61,6 +62,7 @@ import DateField from './dialogs/DateField';
 import LocationField from './dialogs/LocationField';
 import AreaMappingField from './dialogs/AreaMappingField';
 import { FormContext } from './context';
+import DataGrid from './dialogs/DataGrid';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -94,6 +96,7 @@ const FormButtons = () => {
     const [locationDialog, setLocationDialog] = useState(false)
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [dateDialog, setDateDialog] = useState(false)
+    const [dataGridDialog, setDataGridDialog] = useState(false)
 
     const handleSection = () => {
         setSectionDialog(true)
@@ -101,6 +104,10 @@ const FormButtons = () => {
 
     const handleSubSection = () => {
         setSubSectionDialog(true)
+    }
+
+    const handleDataGrid = () => {
+        setDataGridDialog(true)
     }
 
     const handleTextField = () => {
@@ -211,6 +218,11 @@ const FormButtons = () => {
             icon: <DateRangeIcon/>,
             func: handleDateField
         },
+        {
+            name: 'Data Grid',
+            icon: <GridViewIcon/>,
+            func: handleDataGrid
+        },
     ]
 
     const AdvancedFields = [
@@ -292,6 +304,7 @@ const FormButtons = () => {
         setDateDialog(false)
         setLocationDialog(false)
         setAreaMappingDialog(false)
+        setDataGridDialog(false)
     }
 
     const classes = formStyles();
@@ -305,6 +318,12 @@ const FormButtons = () => {
             />
             <SubSection
                 open={subSectionDialog}
+                fieldData={false}
+                handleClose={handleClose}
+            />
+
+            <DataGrid
+                open={dataGridDialog}
                 fieldData={false}
                 handleClose={handleClose}
             />
