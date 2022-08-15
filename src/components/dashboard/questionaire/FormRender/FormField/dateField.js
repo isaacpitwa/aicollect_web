@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box
 } from "@mui/material";
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -40,7 +41,7 @@ const DatefieldComp = (props) => {
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData } = props;
+    const { fieldData, forGrid } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState(fieldData.value?fieldData.value: (fieldData.validations && fieldData.validations.min)?fieldData.validations.min:new Date().toLocaleDateString());
@@ -71,6 +72,31 @@ const DatefieldComp = (props) => {
 
     const fieldDisplay = () => {
         return (
+            forGrid ?
+            <Box sx={{
+                padding: '6px 0.5rem',
+                border: '1px solid #ced4da'
+            }}>
+                <DesktopDatePicker
+						value={fieldValue}
+						onChange={(newValue) => {
+							setFieldValue(newValue);
+						}}
+						renderInput={(params) => <TextField {...params} fullWidth   size="small" />}
+                        size="small"
+                        InputProps={{
+                            endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />,
+                            style: {
+                                border:'1px solid #ced4da',
+                                borderRadius: '4px'
+                            }
+                        }}
+                        inputFormat='dd/MM/yyyy'
+                        minDate={( fieldData.validations && fieldData.validations.min)? new Date(fieldData.validations.min): null}
+                        maxDate={( fieldData.validations && fieldData.validations.max)? new Date(fieldData.validations.max): null}
+					/>
+            </Box>
+            :
             <Grid
                 container
                 onMouseOver={() => { setDisplay('visible') }}
