@@ -151,7 +151,7 @@ const NumberField = (props) => {
                         required={isRequired}
                         autoFocus
                         margin="dense"
-                        id="label"
+                        key={uuidv4()}
                         label={fieldLabel?fieldLabel:'Label'}
                         type="number"
                         size="small"

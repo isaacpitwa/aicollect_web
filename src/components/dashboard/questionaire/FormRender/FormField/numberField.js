@@ -150,6 +150,7 @@ const NumberFieldComp = (props) => {
                                 mask="_"
                                 required={fieldData.required}
                                 // value={fieldValue}
+                                key={fieldData.id}
                                 onChange={handleFieldValue}
                                 style={{
                                     width: '100%',
