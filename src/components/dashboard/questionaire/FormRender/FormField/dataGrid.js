@@ -93,7 +93,7 @@ const DataGridField = (props) => {
                 container
                 onClick={getSectionIds}
                 className={subSectionStyle()}
-                style={{border:0}}
+                style={{border:0,paddingTop:'8px'}}
             >
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }
@@ -126,6 +126,7 @@ const DataGridField = (props) => {
                     : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
+                
                 <Box sx={{display:'flex', alignItems:'stretch', width:'100%'}}>
                     {fieldData.components.map((field, index) => (
                         <Box>
