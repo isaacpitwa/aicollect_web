@@ -37,7 +37,7 @@ const TextFieldComp = (props) => {
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData } = props;
+    const { fieldData, forGrid } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');
@@ -111,7 +111,7 @@ const TextFieldComp = (props) => {
                     fullWidth
                     variant="outlined"
                     type={'text'}
-                    label={fieldData.label}
+                    label={  !forGrid ? fieldData.label:''}
                     value={fieldValue}
                     onChange={handleFieldValue}
                     helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
@@ -129,7 +129,7 @@ const TextFieldComp = (props) => {
                         fullWidth
                         variant="outlined"
                         type={'text'}
-                        label={fieldData.label}
+                        label={ !forGrid ? fieldData.label:''}
                         value={fieldValue}
                         onChange={handleFieldValue}
                         helperText={<DescriptionCard description={fieldData.description} helperText={true} />}

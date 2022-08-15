@@ -38,10 +38,10 @@ const NumberFieldComp = (props) => {
         editStatus,
         setDependantId,
         setDependecyValue,
-        deleteFieldData
+        deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData } = props;
+    const { fieldData,forGrid } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');
@@ -92,7 +92,7 @@ const NumberFieldComp = (props) => {
             }).join('');
             return result
         }
-        return fieldData.label;
+        return forGrid ? '': fieldData.label;
     }
 
     const withValueLimit = ({ floatValue }) => (fieldData.validations ?
@@ -140,7 +140,11 @@ const NumberFieldComp = (props) => {
                         />
                     </Typography>
                     : ""}
-                <Typography>{fieldData.label}</Typography>
+               { 
+               !forGrid ?
+               <Typography>{fieldData.label}</Typography>:
+               ''
+            }
 
                 {
                     multipleValues ?

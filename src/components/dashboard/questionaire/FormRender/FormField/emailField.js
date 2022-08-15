@@ -27,7 +27,7 @@ const EmailFieldComp = (props) => {
 
     const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);
 
-    const { fieldData, fieldResponses } = props;
+    const { fieldData, fieldResponses,forGrid } = props;
 
     const [error, setError] = useState(false);
     const [display, setDisplay] = useState('hidden');
@@ -122,7 +122,7 @@ const EmailFieldComp = (props) => {
                                 fullWidth
                                 type={'email'}
                                 variant={'outlined'}
-                                label={fieldData.label}
+                                label={ !forGrid ? fieldData.label:''}
                                 // value={fieldValue}
                                 onChange={handlEmail}
                                 error={!error && fieldValue !== ''}
@@ -142,7 +142,7 @@ const EmailFieldComp = (props) => {
                             fullWidth
                             type={'email'}
                             variant={'outlined'}
-                            label={fieldData.label}
+                            label={ !forGrid ? fieldData.label:''}
                             value={fieldValue}
                             onChange={handlEmail}
                             error={!error && fieldValue !== ''}

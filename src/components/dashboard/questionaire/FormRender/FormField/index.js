@@ -17,16 +17,16 @@ import DataGridField from './dataGrid'
 const FormField = (props) => {
 
     const { fieldData, forGrid } = props
-    
+
     switch (fieldData.type) {
         case 'sub-section':
             return <SubSectionField fieldData={fieldData} />
         case 'data-grid':
-            return <DataGridField fieldData={fieldData}  />
+            return <DataGridField fieldData={fieldData} />
         case 'text':
             return <TextField fieldData={fieldData} forGrid={forGrid} />
         case 'text-area':
-            return <TextAreaField fieldData={fieldData}  forGrid={forGrid}/>
+            return <TextAreaField fieldData={fieldData} forGrid={forGrid} />
         case 'number':
             return <NumberField fieldData={fieldData} forGrid={forGrid} />
         case 'select-box':
@@ -40,13 +40,13 @@ const FormField = (props) => {
         case 'phone-number':
             return <PhoneNumberField fieldData={fieldData} forGrid={forGrid} />
         case 'image':
-            return <ImageField fieldData={fieldData} forGrid={forGrid}  />
+            return <ImageField fieldData={fieldData} forGrid={forGrid} />
         case 'location':
-            return <LocationField fieldData={fieldData} forGrid={forGrid}/>
+            return <LocationField fieldData={fieldData} forGrid={forGrid} />
         case 'date':
             return <DateField fieldData={fieldData} forGrid={forGrid} />
         case 'area-mapping':
-            return <AreaMappingField fieldData={fieldData}  forGrid={forGrid} />
+            return <AreaMappingField fieldData={fieldData} forGrid={forGrid} />
     }
 }
 
