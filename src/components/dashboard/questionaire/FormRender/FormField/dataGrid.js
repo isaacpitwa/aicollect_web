@@ -142,7 +142,7 @@ const DataGridField = (props) => {
 
                 <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4',width:'100%'}}>
                     <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4'}}>
-                        <Box sx={{ display:'flex',borderRight:'1px solid #D8DEE4',padding:'0 8px',width:"80%"}} >
+                        <Box sx={{ display:'flex',borderRight:'1px solid #D8DEE4',paddingLeft:'8px',width:"80%"}} >
                             {fieldData.components.map((field, index) => (
                             <Box sx={{ padding: '8px 14px', border: '1px solid #ced4da',width:'100%' }}><Typography key={index} sx={{ fontWeight: '600', color: '#000',fontSize:'14px' }}>{field.label}</Typography></Box>
                             ))}
