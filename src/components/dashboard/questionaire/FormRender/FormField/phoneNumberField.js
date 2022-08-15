@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box
 } from "@mui/material";
 import MuiPhoneNumber from 'material-ui-phone-number';
 import 'react-phone-number-input/style.css';
@@ -36,7 +37,7 @@ const PhoneNumberField = (props) => {
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData } = props;
+    const { fieldData, forGrid } = props;
 
     const [phoneFieldDialog, setPhoneFieldDialog] = useState(false)
     const [display, setDisplay] = useState('hidden');
@@ -64,37 +65,76 @@ const PhoneNumberField = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        <Grid
-            key={fieldData.id}
-            container
-            onMouseOver={() => { setDisplay('visible') }}
-            onMouseOut={() => { setDisplay('hidden') }}
-            className={editStatus ? classes.section : classes.section2}
-        >
-            {editStatus ?
-                <>
-                    <PhoneField open={phoneFieldDialog} fieldData={fieldData} handleClose={handleClose} />
-                    <Typography
-                        className={smallBtn.fieldBtns}
-                        style={{ visibility: display }}
-                        align={'right'}
-                    >
-                        <EditIcon
-                            onClick={handlePhoneField}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon
-                            onClick={deleteField}
-                            className={smallBtn.deleteBtn}
-                        />
-                    </Typography>
-                </>
-                : ''}
+        forGrid ?
+            <Box sx={{
+                padding: '6px 0.5rem',
+                border: '1px solid #ced4da'
+            }}>
+                <MuiPhoneNumber
+                    fullWidth
+                    // margin="dense"
+                    variant='outlined'
+                    defaultCountry={'ug'}
+                    // style={formStyles.textfield}
+                    size='small'
+                    InputProps={{
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                        style: {
+                            border:'1px solid #ced4da',
+                            borderRadius: '4px'
+                        }
+                    }}
+                    
+                />
+            </Box> :
+            <Grid
+                key={fieldData.id}
+                container
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}
+                className={editStatus ? classes.section : classes.section2}
+            >
+                {editStatus ?
+                    <>
+                        <PhoneField open={phoneFieldDialog} fieldData={fieldData} handleClose={handleClose} />
+                        <Typography
+                            className={smallBtn.fieldBtns}
+                            style={{ visibility: display }}
+                            align={'right'}
+                        >
+                            <EditIcon
+                                onClick={handlePhoneField}
+                                className={smallBtn.editBtn}
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                            />
+                        </Typography>
+                    </>
+                    : ''}
 
-            {
-                multipleValues ?
-                    <MultipleValuesField  {...props} component={
-                        <MuiPhoneNumber
+                {
+                    multipleValues ?
+                        <MultipleValuesField  {...props} component={
+                            <MuiPhoneNumber
+                                fullWidth
+                                margin="dense"
+                                variant='outlined'
+                                defaultCountry={'ug'}
+                                label={fieldData.label}
+                                style={formStyles.textfield}
+                                helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                                InputProps={{
+                                    endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
+                                }}
+                            />
+                        }
+                            onChange={setMultipleValuesData}
+                            multipleValuesData={multipleValuesData}
+                            multipleValues={multipleValues}
+                        />
+                        : <MuiPhoneNumber
                             fullWidth
                             margin="dense"
                             variant='outlined'
@@ -106,26 +146,9 @@ const PhoneNumberField = (props) => {
                                 endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
                             }}
                         />
-                    }
-                        onChange={setMultipleValuesData}
-                        multipleValuesData={multipleValuesData}
-                        multipleValues={multipleValues}
-                    />
-                    : <MuiPhoneNumber
-                        fullWidth
-                        margin="dense"
-                        variant='outlined'
-                        defaultCountry={'ug'}
-                        label={fieldData.label}
-                        style={formStyles.textfield}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                        InputProps={{
-                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false
-                        }}
-                    />
 
-            }
-        </Grid>
+                }
+            </Grid>
     )
 }
 
