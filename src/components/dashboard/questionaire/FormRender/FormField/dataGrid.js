@@ -9,17 +9,18 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
-import SubSection from '../../dialogs/SubSection';
+import DataGridDialog from '../../dialogs/DataGrid';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import FormField from '.';
+import { Box } from '@mui/system';
 
 /**
- * @function SubSectionField
- * @desc This is the Sub-Section Field component, it is the Sub-Section field displayed in the form.
- * @arg {Object} fieldData - The data of the field which contains all the properties of the Sub-Section field.
- * @returns {Component} - Returns a Sub-Section field JSX component.
- * @author Atama Zack <atama.zack@gmail.com>
+ * @function DataGridField
+ * @desc This is the DataGridFieldField component, it is the DataGridField field displayed in the form.
+ * @arg {Object} fieldData - The data of the field which contains all the properties of the DataGridFieldfield.
+ * @returns {Component} - Returns a DataGridField field JSX component.
+ * @author Isaac Pitwa <isaacpitwa@gmail.com>
  * @version 1.0.0
  */
 const DataGridField = (props) => {
@@ -99,7 +100,7 @@ const DataGridField = (props) => {
                     className={classes.subSectionLabel}
                 >
                     {editStatus?
-                        <SubSection
+                        <DataGridDialog
                             open={subSectionDialog}
                             fieldData={fieldData}
                             handleClose={handleClose}
@@ -123,9 +124,14 @@ const DataGridField = (props) => {
                     : "" }
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
-                {fieldData.components.map((field, index) => (
-                    <FormField key={index} fieldData={field} />
-                ))}
+                <Box sx={{display:'flex', alignItems:'stretch',gap:'8px', width:'100%'}}>
+                    {fieldData.components.map((field, index) => (
+                        <Box>
+                           <Typography key={index} sx={{fontWeight:'600', color:'#000'}}>{field.label}</Typography>
+                           <FormField key={index} fieldData={field} forGrid={true}/>
+                        </Box>
+                    ))}
+                </Box>
             </Grid>        
         )
     }
