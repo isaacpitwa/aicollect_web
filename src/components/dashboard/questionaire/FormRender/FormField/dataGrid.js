@@ -93,11 +93,12 @@ const DataGridField = (props) => {
                 container
                 onClick={getSectionIds}
                 className={subSectionStyle()}
+                style={{border:0}}
             >
                 <Typography
                     onMouseOver={() => { setDisplay('visible'); } }
                     onMouseOut={() => { setDisplay('hidden'); } }
-                    className={classes.subSectionLabel}
+                    // className={classes.subSectionLabel}
                 >
                     {editStatus?
                         <DataGridDialog
@@ -106,7 +107,8 @@ const DataGridField = (props) => {
                             handleClose={handleClose}
                         />
                     : "" }
-                    {fieldData.label}{fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
+                    {fieldData.label}
+                    {fieldData.tooltip!=''?<GeneralTooltip tipData={fieldData.tooltip}/>:false}
                     {editStatus?
                         <small
                             className={smallBtn.sectionBtns}
