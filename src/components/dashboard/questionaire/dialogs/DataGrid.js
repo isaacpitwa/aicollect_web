@@ -26,6 +26,7 @@ import {
     FieldError,
 } from '../utils/ErrorCards';
 import SubSectionPreview from '../previews/SubSectionPreview'
+import DataGridPreview from '../previews/DataGridPreview';
 
 // This is the field for type=TextField
 const DataGrid = (props) => {
@@ -300,9 +301,9 @@ const DataGrid = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <SubSectionPreview
-                        sectionLabel={fieldLabel}
-                        sectionDescription={fieldDescription}
+                    <DataGridPreview
+                        dataGridLabel={fieldLabel}
+                        dataGridDescription={fieldDescription}
                         tooltip={tooltip}
                     />
                 </Grid>

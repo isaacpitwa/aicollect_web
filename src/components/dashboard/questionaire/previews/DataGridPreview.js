@@ -8,7 +8,7 @@ import GeneralTooltip from './GeneralTooltip'
 
 const DataGridPreview = (props) => {
 
-    const { sectionLabel, sectionDescription, tooltip } = props
+    const { dataGridLabel, dataGridDescription, tooltip } = props
 
     return (
         <Grid
@@ -27,20 +27,20 @@ const DataGridPreview = (props) => {
                 component="form"
                 style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 0px 8px 8px', marginTop: '-1px', minHeight: '200px' }}
             >
-                {sectionLabel!=''?
+                {dataGridLabel!=''?
                     <Typography
                         style={{ fontSize: '18px', borderBottom: '1px #5048E5 solid', color: '#5048E5' }}
                     >
-                        {sectionLabel}<GeneralTooltip tipData={tooltip}/>
+                        {dataGridLabel}<GeneralTooltip tipData={tooltip}/>
                     </Typography>
                 :
                     ''
                 }
-                {sectionDescription!=''?
+                {dataGridDescription!=''?
                     <Typography
                         style={{ fontSize: '14px', color: '#5048e598' }}
                     >
-                        <i>{sectionDescription}</i>
+                        <i>{dataGridDescription}</i>
                     </Typography>
                 :
                     ''
