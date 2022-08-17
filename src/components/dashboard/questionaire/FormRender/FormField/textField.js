@@ -94,7 +94,8 @@ const TextFieldComp = (props) => {
                         borderRadius: '4px'
                     }
                 }}
-            /></Box> : (
+            />
+            </Box> : (
 
                 <Grid
                     container
