@@ -76,7 +76,9 @@ const DatefieldComp = (props) => {
                 <Box sx={{
                     padding: '6px 0.5rem',
                     border: '1px solid #ced4da'
-                }}>
+                }}
+                    onMouseOver={() => { setDisplay('visible') }}
+                    onMouseOut={() => { setDisplay('hidden') }}>
                     {
                         editStatus ? <Typography
                             className={smallBtn.fieldBtns}
