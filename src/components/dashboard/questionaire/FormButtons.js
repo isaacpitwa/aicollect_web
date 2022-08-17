@@ -61,6 +61,7 @@ import ImageField from './dialogs/ImageField';
 import DateField from './dialogs/DateField';
 import LocationField from './dialogs/LocationField';
 import AreaMappingField from './dialogs/AreaMappingField';
+import CalculatedField from './dialogs/CalculatedField';
 import { FormContext } from './context';
 import DataGrid from './dialogs/DataGrid';
 
@@ -97,6 +98,7 @@ const FormButtons = () => {
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [dateDialog, setDateDialog] = useState(false)
     const [dataGridDialog, setDataGridDialog] = useState(false)
+    const [calculatedFieldDialog, setCalculatedFieldDialog] = useState(false)
 
     const handleSection = () => {
         setSectionDialog(true)
@@ -156,6 +158,10 @@ const FormButtons = () => {
 
     const handleAreaMappingField = () => {
         setAreaMappingDialog(true)
+    }
+
+    const handleCalculatedField = () => {
+        setCalculatedFieldDialog(true)
     }
 
     const defaultFunction = (name) => {
@@ -222,6 +228,11 @@ const FormButtons = () => {
             name: 'Data Grid',
             icon: <GridViewIcon/>,
             func: handleDataGrid
+        },
+        {
+            name: 'Calculated Field',
+            icon: <CalculateIcon/>,
+            func: handleCalculatedField
         },
     ]
 
@@ -305,6 +316,7 @@ const FormButtons = () => {
         setLocationDialog(false)
         setAreaMappingDialog(false)
         setDataGridDialog(false)
+        setCalculatedFieldDialog(false)
     }
 
     const classes = formStyles();
@@ -342,6 +354,11 @@ const FormButtons = () => {
                 fieldData={false}
                 handleClose={handleClose}
             />
+            <CalculatedField
+            open={calculatedFieldDialog}
+            fieldData={false}
+            handleClose={handleClose}/>
+            
             <SelectBoxField
                 open={selectBoxDialog}
                 fieldData={false}
