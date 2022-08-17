@@ -77,8 +77,36 @@ const TextFieldComp = (props) => {
         return forGrid ?
         <Box sx={{
             padding: '4px 0.5rem',
-            border:'1px solid #ced4da'
-        }}> <TextField
+            border:'1px solid #ced4da',
+            display:'block'
+        }}
+        onMouseOver={() => { setDisplay('visible') }}
+        onMouseOut={() => { setDisplay('hidden') }}
+        > 
+            {
+                editStatus ? <Typography
+                className={smallBtn.fieldBtns}
+                style={{ visibility: display , margin:'0',paddingTop:'0',fontSize:'unset' }}
+                align={'right'}
+            >
+                <TextField_
+                    open={textFieldDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
+                <EditIcon
+                    onClick={handleTextField}
+                    className={smallBtn.editBtn}
+                    style={{width:'14px', height:'14px',margin:'0',marginRight:'5px'}}
+                />
+                <HighlightOffIcon
+                    onClick={deleteField}
+                    className={smallBtn.deleteBtn}
+                    style={{width:'14px', height:'14px',margin:'0'}}
+                />
+            </Typography>: null
+            }
+            <TextField
                 required={fieldData.required}
                 fullWidth
                 variant="outlined"
