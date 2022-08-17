@@ -76,14 +76,16 @@ const ImageField = (props) => {
             (
                 <Box sx={{
                     padding: ' 4px 0.5rem',
-                    border: '1px solid #ced4da'
+                    border: '1px solid #ced4da',
+                    width: '100%',
+                    height: '100%',
                 }}
                     onMouseOver={() => { setDisplay('visible') }}
                     onMouseOut={() => { setDisplay('hidden') }}>
                     {editStatus ?
                         <Typography
                             className={smallBtn.fieldBtns}
-                            style={{ visibility: display }}
+                            style={{ visibility: display,paddingTop:'0',fontSize:'unset' }}
                             align={'right'}
                         >
                             <EditIcon
@@ -107,8 +109,10 @@ const ImageField = (props) => {
                     onChange={handleFieldValue}
                     size={'small'}
                     InputProps={{
-                        startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,
-                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                        // startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,
+                        // endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                        style:{ width: '100%', border:'1px solid #ced4da',
+					borderRadius: '4px',fontSize:'14px' },
                     }}
                 />
                 </Box>
