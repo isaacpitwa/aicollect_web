@@ -29,7 +29,6 @@ export class Utils {
         if(formField.type === 'area-mapping' && formField.label.toLowerCase() === 'Farm Size'.toLocaleLowerCase()){
           if( formField.gpsValues  && (typeof formField.gpsValues !== 'string')){ 
             coordinates = formField.gpsValues.map((gpsValue) => {
-              console.log("Utility gpsValue: ", gpsValue);
               return {lat: gpsValue.latitude, lng: gpsValue.longitude}
             });
             break;
