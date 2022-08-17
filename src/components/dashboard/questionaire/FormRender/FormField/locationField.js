@@ -176,7 +176,10 @@ const LocationField = (props) => {
 							`GPS Coordinates: [ Latitude = ${gpsValues.coordinates.lat}, Longititude = ${gpsValues.coordinates.lng} ]`
 							: 'No GPS Coordinates added.'
 					}
-					style={{ width: '100%' }}
+					style={{ width: '100%', border:'1px solid #ced4da',
+					borderRadius: '4px' }}
+					size='small'
+					
 					endAdornment={
 						<InputAdornment position="end">
 							<IconButton
