@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box,
 } from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -34,12 +35,12 @@ const ImageField = (props) => {
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData, fieldResponses } = props;
+    const { fieldData, fieldResponses, forGrid } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [value, setValue] = useState(fieldData.value?fieldData.value:'');
+    const [value, setValue] = useState(fieldData.value ? fieldData.value : '');
     const [imageFieldDialog, setImageFieldDialog] = useState(false);
-    const [dependantField] = useState(fieldData.conditional?fieldResponses.find(item => item.fieldId === fieldData.conditional.when):false)
+    const [dependantField] = useState(fieldData.conditional ? fieldResponses.find(item => item.fieldId === fieldData.conditional.when) : false)
 
     useEffect(() => {
     }, [fieldResponses])
@@ -71,41 +72,83 @@ const ImageField = (props) => {
     const smallBtn = smallBtns();
 
     return (
-        <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
-            <ImageFieldDialog
-                open={imageFieldDialog}
-                fieldData={fieldData}
-                handleClose={handleClose}
-            />
-            {editStatus?
-                <Typography
-                    className={smallBtn.fieldBtns}
-                    style={{ visibility: display }}
-                    align={'right'}
-                >
-                    <EditIcon
-                        onClick={handleImageField}
-                        className={smallBtn.editBtn}
-                    />
-                    <HighlightOffIcon
-                        onClick={deleteField}
-                        className={smallBtn.deleteBtn}
-                    />
-                </Typography>
-            : '' }
-            <TextField
-                fullWidth
-                type={'file'}
-                variant={'outlined'}
-                label={fieldData.label}
-                onChange={handleFieldValue}
-                helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-                InputProps={{
-                    startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,
-                    endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+        forGrid ?
+            (
+                <Box sx={{
+                    padding: ' 4px 0.5rem',
+                    border: '1px solid #ced4da'
                 }}
-            />
-        </Grid>
+                    onMouseOver={() => { setDisplay('visible') }}
+                    onMouseOut={() => { setDisplay('hidden') }}>
+                    {editStatus ?
+                        <Typography
+                            className={smallBtn.fieldBtns}
+                            style={{ visibility: display }}
+                            align={'right'}
+                        >
+                            <EditIcon
+                                onClick={handleImageField}
+                                className={smallBtn.editBtn}
+                                style={{ width: '14px', height: '14px', margin: '0', marginRight: '5px' }}
+
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                                style={{ width: '14px', height: '14px', margin: '0' }}
+                            />
+                        </Typography>
+                        :
+                        ''}
+                    <TextField
+                    fullWidth
+                    type={'file'}
+                    variant={'outlined'}
+                    onChange={handleFieldValue}
+                    size={'small'}
+                    InputProps={{
+                        startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                    }}
+                />
+                </Box>
+            )
+            :
+            <Grid key={fieldData.id} container onMouseOver={() => { setDisplay('visible') }} onMouseOut={() => { setDisplay('hidden') }} className={editStatus ? classes.section : classes.section2}>
+                <ImageFieldDialog
+                    open={imageFieldDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
+                {editStatus ?
+                    <Typography
+                        className={smallBtn.fieldBtns}
+                        style={{ visibility: display }}
+                        align={'right'}
+                    >
+                        <EditIcon
+                            onClick={handleImageField}
+                            className={smallBtn.editBtn}
+                        />
+                        <HighlightOffIcon
+                            onClick={deleteField}
+                            className={smallBtn.deleteBtn}
+                        />
+                    </Typography>
+                    : ''}
+                <TextField
+                    fullWidth
+                    type={'file'}
+                    variant={'outlined'}
+                    label={fieldData.label}
+                    onChange={handleFieldValue}
+                    helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                    InputProps={{
+                        startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,
+                        endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                    }}
+                />
+            </Grid>
     )
 }
 

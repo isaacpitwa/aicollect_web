@@ -186,9 +186,9 @@ const LocationField = (props) => {
 								aria-label="toggle password visibility"
 								onClick={addLocation}
 								edge="end"
-								style={{ fontSize: '14px' }}
+								style={{ fontSize: '10px' }}
 							>
-								<AddLocationAltIcon /> Add Location
+								<AddLocationAltIcon  /> Add Location
 							</IconButton>
 						</InputAdornment>
 					}
