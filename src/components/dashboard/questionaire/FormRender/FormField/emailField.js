@@ -93,7 +93,32 @@ const EmailFieldComp = (props) => {
                 <Box sx={{
                     padding: ' 4px 0.5rem',
                     border:'1px solid #ced4da'
-                }}>
+                }} 
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}>
+                     {
+                editStatus ? <Typography
+                className={smallBtn.fieldBtns}
+                style={{ visibility: display , margin:'0',paddingTop:'0',fontSize:'unset' }}
+                align={'right'}
+            >
+                 <EmailField
+                    open={emailFieldDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
+                <EditIcon
+                    onClick={openDialog}
+                    className={smallBtn.editBtn}
+                    style={{width:'14px', height:'14px',margin:'0',marginRight:'5px'}}
+                />
+                <HighlightOffIcon
+                    onClick={deleteField}
+                    className={smallBtn.deleteBtn}
+                    style={{width:'14px', height:'14px',margin:'0'}}
+                />
+            </Typography>: null
+            }
                      <TextField
                         required={fieldData.required}
                         fullWidth

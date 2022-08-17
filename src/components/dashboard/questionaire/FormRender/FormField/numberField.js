@@ -115,7 +115,34 @@ const NumberFieldComp = (props) => {
         <Box sx={{
             padding: '5px 0.5rem',
             border:'1px solid #ced4da'
-        }}> <NumberFormat
+        }}
+        onMouseOver={() => { setDisplay('visible') }}
+        onMouseOut={() => { setDisplay('hidden') }}> 
+            {
+                editStatus ? <Typography
+                className={smallBtn.fieldBtns}
+                style={{ visibility: display , margin:'0',paddingTop:'0',fontSize:'unset' }}
+                align={'right'}
+            >
+                 <NumberField
+                        open={numberFieldDialog}
+                        fieldData={fieldData}
+                        handleClose={handleClose}
+                    />
+                <EditIcon
+                    onClick={handleNumberField}
+                    className={smallBtn.editBtn}
+                    style={{width:'14px', height:'14px',margin:'0',marginRight:'5px'}}
+                />
+                <HighlightOffIcon
+                    onClick={deleteField}
+                    className={smallBtn.deleteBtn}
+                    style={{width:'14px', height:'14px',margin:'0'}}
+                />
+            </Typography>: null
+            }
+        
+        <NumberFormat
             format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
             mask="_"
             required={fieldData.required}
