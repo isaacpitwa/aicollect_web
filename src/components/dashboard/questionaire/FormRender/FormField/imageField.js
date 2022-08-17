@@ -112,7 +112,7 @@ const ImageField = (props) => {
                         // startAdornment: <AddPhotoAlternateIcon style={{ color: '#5F768A', marginRight: '10px' }} />,
                         // endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
                         style:{ width: '100%', border:'1px solid #ced4da',
-					borderRadius: '4px',fontSize:'14px' },
+					    borderRadius: '4px',fontSize:'14px' },
                     }}
                 />
                 </Box>
