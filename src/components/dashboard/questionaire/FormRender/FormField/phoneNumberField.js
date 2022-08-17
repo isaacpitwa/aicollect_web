@@ -69,7 +69,29 @@ const PhoneNumberField = (props) => {
             <Box sx={{
                 padding: '6px 0.5rem',
                 border: '1px solid #ced4da'
-            }}>
+            }}
+            onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}>
+                 {
+                editStatus ? <Typography
+                className={smallBtn.fieldBtns}
+                style={{ visibility: display , margin:'0',paddingTop:'0',fontSize:'unset' }}
+                align={'right'}
+            >
+                <PhoneField open={phoneFieldDialog} fieldData={fieldData} handleClose={handleClose} />
+
+                <EditIcon
+                    onClick={handlePhoneField}
+                    className={smallBtn.editBtn}
+                    style={{width:'14px', height:'14px',margin:'0',marginRight:'5px'}}
+                />
+                <HighlightOffIcon
+                    onClick={deleteField}
+                    className={smallBtn.deleteBtn}
+                    style={{width:'14px', height:'14px',margin:'0'}}
+                />
+            </Typography>: null
+            }
                 <MuiPhoneNumber
                     fullWidth
                     // margin="dense"
