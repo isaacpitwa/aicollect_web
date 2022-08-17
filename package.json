@@ -57,6 +57,7 @@
     "formik": "^2.2.7",
     "gray-matter": "^4.0.3",
     "i18next": "^19.8.7",
+    "iconv-lite": "^0.6.3",
     "mapbox-gl": "^2.7.0",
     "material-ui-phone-number": "^3.0.0",
     "moment": "^2.29.3",
