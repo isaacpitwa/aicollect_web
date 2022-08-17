@@ -53,7 +53,7 @@ const DataGridField = (props) => {
     const getRowComponent = () => {
         return (<Box sx={{ display: 'flex', alignItems: 'stretch', width: '100%' }}>
             {fieldData.components.map((field, index) => (
-                <Box key={index}  sx={{width:'100%'}}>
+                <Box key={index} sx={{ width: '100%' }}>
                     <FormField key={index} fieldData={field} forGrid={true} />
                 </Box>
             ))}
@@ -140,24 +140,24 @@ const DataGridField = (props) => {
                 </Typography>
                 <DescriptionCard description={fieldData.description} helperText={false} />
 
-                <Box sx={{display:'flex', flexDirection:'column', border:'1px solid #D8DEE4',width:'100%'}}>
-                    <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4'}}>
-                        <Box sx={{ display:'flex',borderRight:'1px solid #D8DEE4',paddingLeft:'8px',width:"80%"}} >
+                <Box sx={{ display: 'flex', flexDirection: 'column', border: '1px solid #D8DEE4', width: '100%' }}>
+                    <Box sx={{ display: "flex", borderBottom: '1px solid #D8DEE4' }}>
+                        <Box sx={{ display: 'flex', borderRight: '1px solid #D8DEE4', paddingLeft: '8px', width: "80%" }} >
                             {fieldData.components.map((field, index) => (
-                            <Box sx={{ padding: '8px 14px', border: '1px solid #ced4da',width:'100%' }} key={index}>
-                                <Typography key={index} sx={{ fontWeight: '600', color: '#000',fontSize:'14px' }}>{field.label}</Typography>
-                            </Box>
+                                <Box sx={{ padding: '8px 14px', border: '1px solid #ced4da', width: '100%' }} key={index}>
+                                    <Typography key={index} sx={{ fontWeight: '600', color: '#000', fontSize: '14px' }}>{field.label}</Typography>
+                                </Box>
                             ))}
                         </Box>
-                    <Box sx={{ padding: '8px 0px', border: '1px solid #ced4da', width:'20%' }}><Typography sx={{ fontWeight: '600', color: '#000' }}>&nbsp;</Typography></Box>
-                        
+                        <Box sx={{ padding: '8px 0px', border: '1px solid #ced4da', width: '20%' }}><Typography sx={{ fontWeight: '600', color: '#000' }}>&nbsp;</Typography></Box>
+
                     </Box>
                 </Box>
                 <MultipleValuesField
-                        onChange={setMultipleValuesData}
-                        multipleValuesData={multipleValuesData}
-                        {...props} component={getRowComponent()}
-                    />
+                    onChange={setMultipleValuesData}
+                    multipleValuesData={multipleValuesData}
+                    {...props} component={getRowComponent()}
+                />
             </Grid>
         )
     }
