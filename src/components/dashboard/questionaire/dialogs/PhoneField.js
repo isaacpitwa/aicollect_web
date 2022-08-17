@@ -235,6 +235,7 @@ const PhoneField_ = (props) => {
                     margin="dense"
                     variant='outlined'
                     defaultCountry={'ug'}
+                    key={uuidv4()}
                     onChange={setValue}
                     InputProps={{
                         endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,

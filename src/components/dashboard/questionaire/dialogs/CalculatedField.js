@@ -32,7 +32,7 @@ import NumberfieldPreview from '../previews/NumberfieldPreview'
 import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
-const NumberField = (props) => {
+const CalculatedFieldDialog = (props) => {
 
     const {
         setError,
@@ -649,4 +649,4 @@ const NumberField = (props) => {
     )
 }
 
-export default NumberField
+export default CalculatedFieldDialog;

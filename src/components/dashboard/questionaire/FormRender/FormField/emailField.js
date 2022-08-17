@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box,
 } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,6 +15,7 @@ import EmailField from '../../dialogs/EmailField';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import MultipleValuesField from './MultipleValuesField';
+import styles from '../../styles/gridfield.module.css';
 
 /**
  * @function EmailFieldComp
@@ -27,7 +29,7 @@ const EmailFieldComp = (props) => {
 
     const { setFieldResponses, editStatus, deleteFieldData } = useContext(FormContext);
 
-    const { fieldData, fieldResponses } = props;
+    const { fieldData, fieldResponses,forGrid } = props;
 
     const [error, setError] = useState(false);
     const [display, setDisplay] = useState('hidden');
@@ -85,6 +87,61 @@ const EmailFieldComp = (props) => {
                 />
             </Grid>
             :
+
+            forGrid ?
+               (
+                <Box sx={{
+                    padding: ' 4px 0.5rem',
+                    border:'1px solid #ced4da'
+                }} 
+                onMouseOver={() => { setDisplay('visible') }}
+                onMouseOut={() => { setDisplay('hidden') }}>
+                     {
+                editStatus ? <Typography
+                className={smallBtn.fieldBtns}
+                style={{ visibility: display , margin:'0',paddingTop:'0',fontSize:'unset' }}
+                align={'right'}
+            >
+                 <EmailField
+                    open={emailFieldDialog}
+                    fieldData={fieldData}
+                    handleClose={handleClose}
+                />
+                <EditIcon
+                    onClick={openDialog}
+                    className={smallBtn.editBtn}
+                    style={{width:'14px', height:'14px',margin:'0',marginRight:'5px'}}
+                />
+                <HighlightOffIcon
+                    onClick={deleteField}
+                    className={smallBtn.deleteBtn}
+                    style={{width:'14px', height:'14px',margin:'0'}}
+                />
+            </Typography>: null
+            }
+                     <TextField
+                        required={fieldData.required}
+                        fullWidth
+                        type={'email'}
+                        variant={'outlined'}
+                        label={ !forGrid ? fieldData.label:''}
+                        size={'small'}
+                        // value={fieldValue}
+                        onChange={handlEmail}
+                        error={!error && fieldValue !== ''}
+                        helperText={!error && fieldValue !== '' ? 'Invalid Email Format' : <DescriptionCard description={fieldData.description} helperText={true} />}
+                        style={formStyles.textfield}
+                        InputProps={{
+                            endAdornment: fieldData.tooltip != '' ? <GeneralTooltip tipData={fieldData.tooltip} /> : false,
+                            style: {
+                                border:'1px solid #ced4da',
+                                borderRadius: '4px'
+                            }
+                        }}
+            />
+                </Box>
+               )
+            :
             <Grid
                 style={{ display: 'block' }}
                 container
@@ -122,7 +179,7 @@ const EmailFieldComp = (props) => {
                                 fullWidth
                                 type={'email'}
                                 variant={'outlined'}
-                                label={fieldData.label}
+                                label={ !forGrid ? fieldData.label:''}
                                 // value={fieldValue}
                                 onChange={handlEmail}
                                 error={!error && fieldValue !== ''}
@@ -142,7 +199,7 @@ const EmailFieldComp = (props) => {
                             fullWidth
                             type={'email'}
                             variant={'outlined'}
-                            label={fieldData.label}
+                            label={ !forGrid ? fieldData.label:''}
                             value={fieldValue}
                             onChange={handlEmail}
                             error={!error && fieldValue !== ''}

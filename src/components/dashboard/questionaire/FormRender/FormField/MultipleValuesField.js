@@ -18,27 +18,27 @@ const MultipleValuesField = (props) => {
         {
                            multipleValuesData.map((item,index)=>
                            <Box sx={{display:"flex", borderBottom:'1px solid #D8DEE4',alignItems:'center'}}  key={`Container ${index}`}>
-                           <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}  key={`Container2 ${index}`}>
-                                 {component}
-                                   {fieldDescription!=''?
-                                       <Typography
-                                           style={{ fontSize: '14px', color: '#5048e598' }}
-                                       >
-                                           <i>{fieldDescription}</i>
-                                       </Typography>
-                                   :
-                                       ''
-                                   }
-                           </Box>
-                           <CancelIcon
-                               color='action'
-                               style={{ float: 'right', cursor: 'pointer' }}
-                               sx={{marginLeft:'16px'}}
-                               onClick={()=>{
-                                   multipleValuesData.splice(index,1)
-                                   onChange(multipleValuesData)
-                               }}
-                           />
+                                <Box sx={{ borderRight:'1px solid #D8DEE4', width:"80%",padding:'0 8px'}}  key={`Container2 ${index}`}>
+                                        {component}
+                                        {fieldDescription!=''?
+                                            <Typography
+                                                style={{ fontSize: '14px', color: '#5048e598' }}
+                                            >
+                                                <i>{fieldDescription}</i>
+                                            </Typography>
+                                        :
+                                            ''
+                                        }
+                                </Box>
+                                <CancelIcon
+                                    color='action'
+                                    style={{ float: 'right', cursor: 'pointer' }}
+                                    sx={{marginLeft:'16px'}}
+                                    onClick={()=>{
+                                        multipleValuesData.splice(index,1)
+                                        onChange(multipleValuesData)
+                                    }}
+                                />
                                
                    </Box>)
                          

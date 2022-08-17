@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box,
 } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -38,10 +39,10 @@ const NumberFieldComp = (props) => {
         editStatus,
         setDependantId,
         setDependecyValue,
-        deleteFieldData
+        deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData } = props;
+    const { fieldData,forGrid } = props;
 
     const [display, setDisplay] = useState('hidden');
     const [fieldValue, setFieldValue] = useState('');
@@ -92,7 +93,7 @@ const NumberFieldComp = (props) => {
             }).join('');
             return result
         }
-        return fieldData.label;
+        return forGrid ? '': fieldData.label;
     }
 
     const withValueLimit = ({ floatValue }) => (fieldData.validations ?
@@ -109,7 +110,57 @@ const NumberFieldComp = (props) => {
     };
 
     const fieldDisplay = () => {
-        return (
+        return forGrid? 
+        (
+        <Box sx={{
+            padding: '5px 0.5rem',
+            border:'1px solid #ced4da'
+        }}
+        onMouseOver={() => { setDisplay('visible') }}
+        onMouseOut={() => { setDisplay('hidden') }}> 
+            {
+                editStatus ? <Typography
+                className={smallBtn.fieldBtns}
+                style={{ visibility: display , margin:'0',paddingTop:'0',fontSize:'unset' }}
+                align={'right'}
+            >
+                 <NumberField
+                        open={numberFieldDialog}
+                        fieldData={fieldData}
+                        handleClose={handleClose}
+                    />
+                <EditIcon
+                    onClick={handleNumberField}
+                    className={smallBtn.editBtn}
+                    style={{width:'14px', height:'14px',margin:'0',marginRight:'5px'}}
+                />
+                <HighlightOffIcon
+                    onClick={deleteField}
+                    className={smallBtn.deleteBtn}
+                    style={{width:'14px', height:'14px',margin:'0'}}
+                />
+            </Typography>: null
+            }
+        
+        <NumberFormat
+            format={(fieldData.displayConfigs && fieldData.displayConfigs.inputMask) ? fieldData.displayConfigs.inputMask : null}
+            mask="_"
+            required={fieldData.required}
+            value={fieldValue}
+            onChange={handleFieldValue}
+            style={{
+                width: '100%',
+                border:'1px solid #ced4da',
+                borderRadius: '4px',
+                marginBottom: '2px'
+            }}
+            // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
+            placeholder={placeholder()}
+             // isAllowed={withValueCap}
+             customInput={TextField}
+             size="small"
+    /></Box>)
+        :(
             <Grid
                 container
                 onMouseOver={() => { setDisplay('visible') }}
@@ -140,7 +191,11 @@ const NumberFieldComp = (props) => {
                         />
                     </Typography>
                     : ""}
-                <Typography>{fieldData.label}</Typography>
+               { 
+               !forGrid ?
+               <Typography>{fieldData.label}</Typography>:
+               ''
+            }
 
                 {
                     multipleValues ?
@@ -150,6 +205,7 @@ const NumberFieldComp = (props) => {
                                 mask="_"
                                 required={fieldData.required}
                                 // value={fieldValue}
+                                key={fieldData.id}
                                 onChange={handleFieldValue}
                                 style={{
                                     width: '100%',
