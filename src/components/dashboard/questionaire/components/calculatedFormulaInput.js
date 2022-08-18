@@ -45,7 +45,6 @@ function Suggestions({ field, handleFormula }) {
     )
     const handleClickAway = useCallback(() => {
         setHasSuggestions(false)
-        // field.current?.focus()
     }, [field, setHasSuggestions])
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
