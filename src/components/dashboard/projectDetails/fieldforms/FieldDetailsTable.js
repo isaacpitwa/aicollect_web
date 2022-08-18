@@ -25,6 +25,7 @@ export const FieldDetailsTable = (props) => {
     page,
     rowsPerPage,
     responses,
+    questionaire,
     ...other
   } = props;
   const [selectedCustomers, setSelectedCustomers] = useState([]);

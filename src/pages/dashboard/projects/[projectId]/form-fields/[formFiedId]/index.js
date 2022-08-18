@@ -355,6 +355,7 @@ const FieldFormDetails = () => {
                   rowsPerPage={rowsPerPage}
                   page={page}
                   responses={responses}
+                  questionaire ={fieldForm}
                 />
               </TabPanel>
             </TabContext>
