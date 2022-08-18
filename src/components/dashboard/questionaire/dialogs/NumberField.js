@@ -86,7 +86,7 @@ const NumberField = (props) => {
     }
 
     const handleFormula = (equation) => {
-        setFormula(equation)
+setFormula(equation)
     }
     const displayPanel = (e) => {
         setPanelType("display")
@@ -610,7 +610,7 @@ const NumberField = (props) => {
                                                 Formula
                                             <GeneralTooltip tipData={`Add Calculated Value  Formula} `} />
                                             </Typography>
-                                            <CalculatedFormulaInput handleFormula={handleFormula}/>
+                                            <CalculatedFormulaInput handleFormula={handleFormula} defaultValue={formula}/>
                                         </Box>
                                     </>
                             }

@@ -36,7 +36,7 @@ function Suggestions({ field, handleFormula }) {
     const handleClick = useCallback(
         ({band, id}) => {
             const currentValue = value.split('@')[0];
-            handleFormula(currentValue+id);
+            handleFormula({value:currentValue+id, display: value + band});
             setValue(value + band)
             setHasSuggestions(false)
             field.current?.focus()
@@ -100,6 +100,7 @@ function SuggestionsField(props) {
     const textFieldRef = createRef()
     const setHasSuggestions = useSetRecoilState(suggestionsState)
     const [value, setValue] = useRecoilState(inputState)
+
     const handleChange = useCallback(
         (event) => {
             setValue(event.target.value)
@@ -110,13 +111,20 @@ function SuggestionsField(props) {
         [setHasSuggestions, setValue]
     )
 
+    if(props.defaultValue){
+        setValue(props.defaultValue)
+    }
+
     return (
 
         <Box display="inline-block" sx={{ width: '100%' }}>
+            {
+                props.defaultValue ?<Typography>{props.defaultValue.display}</Typography>:''
+            }
             <TextField
                 inputRef={textFieldRef}
                 label="Type @ to select question"
-                value={value}
+                value={value.display}
                 onChange={handleChange}
                 margin="dense"
                 id="label"
@@ -135,7 +143,7 @@ export default function CalculatedFormulaInput(props) {
     return (
         <RecoilRoot>
             <CssBaseline />
-            <SuggestionsField  handleFormula={props.handleFormula}/>
+            <SuggestionsField  handleFormula={props.handleFormula} defaultValue={props.defaultValue}/>
         </RecoilRoot>
 
     )
