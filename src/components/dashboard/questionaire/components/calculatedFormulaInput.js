@@ -44,7 +44,7 @@ function Suggestions({ field }) {
     )
     const handleClickAway = useCallback(() => {
         setHasSuggestions(false)
-        field.current?.focus()
+        // field.current?.focus()
     }, [field, setHasSuggestions])
 
     console.log('formData: ', formData);
@@ -71,7 +71,7 @@ function Suggestions({ field }) {
                                                                         key={index3}
                                                                         onClick={() => handleClick(subsection.label.replace(/\s/g, ''))}
                                                                     >
-                                                                        {subsection.label}
+                                                                       &nbsp;&nbsp;{subsection.label}
                                                                     </ListItemButton>
                                                                 )
                                                             })
@@ -94,16 +94,6 @@ function Suggestions({ field }) {
                             )
                             : <Typography>Loading...</Typography>
                     }
-
-                    <ListItemButton onClick={() => handleClick('Mötley Crüe')}>
-                        Mötley Crüe
-                    </ListItemButton>
-                    <ListItemButton onClick={() => handleClick('Deep Purple')}>
-                        Deep Purple
-                    </ListItemButton>
-                    <ListItemButton onClick={() => handleClick('Scorpions')}>
-                        Scorpions
-                    </ListItemButton>
                 </List>
             </Fade>
         </ClickAwayListener>
@@ -132,14 +122,13 @@ function SuggestionsField() {
                 label="Type @ to select question"
                 value={value}
                 onChange={handleChange}
-                autoFocus={false}
                 margin="dense"
                 id="label"
-                type="text"
                 size="small"
                 fullWidth
                 variant="outlined"
                 name='Formula'
+                multiline
             />
             <Suggestions field={textFieldRef} />
         </Box>
