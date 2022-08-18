@@ -18,7 +18,6 @@ import {
 
 import {DataGridToolbar,DataGridToolbarWithDependacy} from '../../data-grid-toolbar'
 import { useExcelExport } from "../../../../hooks/excel-export";
-import { ta } from "date-fns/locale";
 export const QuestionaireDetailsTable = (props) => {
   const {
     customers,
