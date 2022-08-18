@@ -318,28 +318,6 @@ const FieldFormDetails = () => {
                   p: 3
                 }}
               >
-                <Box
-                  component="form"
-                  onSubmit={handleQueryChange}
-                  sx={{
-                    flexGrow: 1,
-                    m: 1.5
-                  }}
-                >
-                  <TextField
-                    defaultValue=""
-                    fullWidth
-                    inputProps={{ ref: queryRef }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon fontSize="small" />
-                        </InputAdornment>
-                      )
-                    }}
-                    placeholder="Search"
-                  />
-                </Box>
                 <NextLink
                   href={{
                     pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
@@ -356,24 +334,6 @@ const FieldFormDetails = () => {
                     View Map
                   </Button>
                 </NextLink>
-                <TextField
-                  label="Sort By"
-                  name="sort"
-                  onChange={handleSortChange}
-                  select
-                  SelectProps={{ native: true }}
-                  sx={{ m: 1.5 }}
-                  value={sort}
-                >
-                  {sortOptions.map((option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
               </Box>
               <TabPanel value='summary' index={0}>
                 <FieldResponseSummaryTable
