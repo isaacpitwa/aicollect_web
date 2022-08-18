@@ -13,10 +13,11 @@ import {
     Typography,
     Select,
     MenuItem,
-    Checkbox,
-    fabClasses
+    CssBaseline
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { RecoilRoot } from 'recoil'
+
 
 import { FormContext } from '../context';
 import {
@@ -29,6 +30,7 @@ import {
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
+import CalculatedFormulaInput from '../components/calculatedFormulaInput'
 
 // This is the field for type=TextField
 const CalculatedFieldDialog = (props) => {
@@ -221,7 +223,7 @@ const CalculatedFieldDialog = (props) => {
                     padding: '20px 40px'
                 }}
             >
-                Number Field Component
+               Calculated Field  Component
                 <CancelIcon
                     color='error'
                     style={{ float: 'right', cursor: 'pointer' }}
@@ -360,6 +362,7 @@ const CalculatedFieldDialog = (props) => {
                                     </>
                                     :
                                     <>
+
                                         <TextField
                                             required
                                             autoFocus
@@ -400,6 +403,11 @@ const CalculatedFieldDialog = (props) => {
                                             onChange={handleTooltip}
                                             style={{ marginTop: '25px' }}
                                         />
+                                        <Typography>Calcuation Formula</Typography>
+                                        <RecoilRoot>
+                                            <CssBaseline />
+                                        <CalculatedFormulaInput/>
+                                        </RecoilRoot>
                                     </>
                             }
                         </Box>

@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { createRef, useCallback } from 'react'
-import { atom, RecoilRoot, useRecoilState, useSetRecoilState } from 'recoil'
+import { atom, useRecoilState, useSetRecoilState } from 'recoil'
 
 const suggestionsState = atom({
     key: 'Band Suggestions Visible?',
@@ -73,18 +73,16 @@ export default function SuggestionsField() {
     )
 
     return (
-        <RecoilRoot>
-            <CssBaseline />
-            <Box p={4} display="inline-block">
-                <TextField
-                    inputRef={textFieldRef}
-                    label="Type @"
-                    value={value}
-                    onChange={handleChange}
-                />
-                <Suggestions field={textFieldRef} />
-            </Box>
-        </RecoilRoot>
+
+        <Box p={4} display="inline-block">
+            <TextField
+                inputRef={textFieldRef}
+                label="Type @"
+                value={value}
+                onChange={handleChange}
+            />
+            <Suggestions field={textFieldRef} />
+        </Box>
     )
 }
 
