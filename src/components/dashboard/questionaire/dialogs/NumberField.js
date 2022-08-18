@@ -66,6 +66,8 @@ const NumberField = (props) => {
     const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
     const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
     const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
+    const [formula, setFormula] = useState(fieldData && fieldData.formula ? fieldData.formula : null)
+
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -83,6 +85,9 @@ const NumberField = (props) => {
         setIsRequired(!isRequired)
     }
 
+    const handleFormula = (equation) => {
+        setFormula(equation)
+    }
     const displayPanel = (e) => {
         setPanelType("display")
     }
@@ -186,6 +191,7 @@ const NumberField = (props) => {
             displayConfigs: displayConfigs,
             multipleValues: multipleValues,
             multipleValuesData: multipleValuesData,
+            formula: formula,
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -203,6 +209,7 @@ const NumberField = (props) => {
             setDisplayConfigs(null)
             setMultipleValues(false)
             setMultipleValuesData([])
+            setFormula(null)
             removeConditional()
             handleClose()
         } else {
@@ -231,7 +238,8 @@ const NumberField = (props) => {
             validations: validations,
             displayConfigs: displayConfigs,
             multipleValues: multipleValues,
-            multipleValuesData: multipleValuesData
+            multipleValuesData: multipleValuesData,
+            formula: formula,
         }
 
         updateFieldInSection(numberFieldData)
@@ -252,6 +260,7 @@ const NumberField = (props) => {
         setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
         setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
         setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
+        setFormula(fieldData && fieldData.formula ? fieldData.formula : null)
         handleClose()
     }
 
@@ -601,7 +610,7 @@ const NumberField = (props) => {
                                                 Formula
                                             <GeneralTooltip tipData={`Add Calculated Value  Formula} `} />
                                             </Typography>
-                                            <CalculatedFormulaInput/>
+                                            <CalculatedFormulaInput handleFormula={handleFormula}/>
                                         </Box>
                                     </>
                             }

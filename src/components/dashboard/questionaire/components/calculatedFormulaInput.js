@@ -25,17 +25,18 @@ const inputState = atom({
 })
 
 
-function Suggestions({ field }) {
+function Suggestions({ field, handleFormula }) {
     const [hasSuggestions, setHasSuggestions] = useRecoilState(suggestionsState)
     const [value, setValue] = useRecoilState(inputState)
     const {
         isLoaded,
         formData,
-        formFieldValues,
     } = useContext(FormContext)
 
     const handleClick = useCallback(
-        (band) => {
+        ({band, id}) => {
+            const currentValue = value.split('@')[0];
+            handleFormula(currentValue+id);
             setValue(value + band)
             setHasSuggestions(false)
             field.current?.focus()
@@ -46,9 +47,6 @@ function Suggestions({ field }) {
         setHasSuggestions(false)
         // field.current?.focus()
     }, [field, setHasSuggestions])
-
-    console.log('formData: ', formData);
-    console.log('formFieldValues: ', formFieldValues);
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
             <Fade in={hasSuggestions}>
@@ -69,7 +67,7 @@ function Suggestions({ field }) {
                                                                 return (
                                                                     <ListItemButton
                                                                         key={index3}
-                                                                        onClick={() => handleClick(subsection.label.replace(/\s/g, ''))}
+                                                                        onClick={() => handleClick({band:subsection.label.replace(/\s/g, ''),id:subsection.id})}
                                                                     >
                                                                        &nbsp;&nbsp;{subsection.label}
                                                                     </ListItemButton>
@@ -80,7 +78,7 @@ function Suggestions({ field }) {
                                                     )
                                                 }
                                                 else {
-                                                    return (<ListItemButton key={index2} onClick={() => handleClick(formfield.label.replace(/\s/g, ''))}>
+                                                    return (<ListItemButton key={index2} onClick={() => handleClick({band:formfield.label.replace(/\s/g, ''),id:formfield.id})}>
                                                         {formfield.label}
                                                     </ListItemButton>)
                                                 }
@@ -99,11 +97,10 @@ function Suggestions({ field }) {
         </ClickAwayListener>
     )
 }
-function SuggestionsField() {
+function SuggestionsField(props) {
     const textFieldRef = createRef()
     const setHasSuggestions = useSetRecoilState(suggestionsState)
     const [value, setValue] = useRecoilState(inputState)
-
     const handleChange = useCallback(
         (event) => {
             setValue(event.target.value)
@@ -130,16 +127,16 @@ function SuggestionsField() {
                 name='Formula'
                 multiline
             />
-            <Suggestions field={textFieldRef} />
+            <Suggestions field={textFieldRef} handleFormula={props.handleFormula} />
         </Box>
     )
 }
 
-export default function CalculatedFormulaInput() {
+export default function CalculatedFormulaInput(props) {
     return (
         <RecoilRoot>
             <CssBaseline />
-            <SuggestionsField />
+            <SuggestionsField  handleFormula={props.handleFormula}/>
         </RecoilRoot>
 
     )
