@@ -318,6 +318,15 @@ const FieldFormDetails = () => {
                   p: 3
                 }}
               >
+                 <Box
+                  component="form"
+                  onSubmit={handleQueryChange}
+                  sx={{
+                    flexGrow: 1,
+                    m: 1.5
+                  }}
+                >
+                </Box>
                 <NextLink
                   href={{
                     pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
