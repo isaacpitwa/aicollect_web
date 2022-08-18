@@ -98,7 +98,6 @@ const FormButtons = () => {
     const [areaMappingDialog, setAreaMappingDialog] = useState(false)
     const [dateDialog, setDateDialog] = useState(false)
     const [dataGridDialog, setDataGridDialog] = useState(false)
-    const [calculatedFieldDialog, setCalculatedFieldDialog] = useState(false)
 
     const handleSection = () => {
         setSectionDialog(true)
@@ -160,9 +159,6 @@ const FormButtons = () => {
         setAreaMappingDialog(true)
     }
 
-    const handleCalculatedField = () => {
-        setCalculatedFieldDialog(true)
-    }
 
     const defaultFunction = (name) => {
         console.log(`${name} Dialog Method`)
@@ -224,16 +220,7 @@ const FormButtons = () => {
             icon: <DateRangeIcon/>,
             func: handleDateField
         },
-        {
-            name: 'Data Grid',
-            icon: <GridViewIcon/>,
-            func: handleDataGrid
-        },
-        {
-            name: 'Calculated Field',
-            icon: <CalculateIcon/>,
-            func: handleCalculatedField
-        },
+
     ]
 
     const AdvancedFields = [
@@ -293,9 +280,9 @@ const FormButtons = () => {
             func: false
         },
         {
-            name: 'Calculated Field',
-            icon: <CalculateIcon/>,
-            func: false
+            name: 'Data Grid',
+            icon: <GridViewIcon/>,
+            func: handleDataGrid
         },
     ]
 
@@ -316,7 +303,6 @@ const FormButtons = () => {
         setLocationDialog(false)
         setAreaMappingDialog(false)
         setDataGridDialog(false)
-        setCalculatedFieldDialog(false)
     }
 
     const classes = formStyles();
@@ -354,11 +340,7 @@ const FormButtons = () => {
                 fieldData={false}
                 handleClose={handleClose}
             />
-            <CalculatedField
-            open={calculatedFieldDialog}
-            fieldData={false}
-            handleClose={handleClose}/>
-            
+
             <SelectBoxField
                 open={selectBoxDialog}
                 fieldData={false}

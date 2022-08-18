@@ -242,6 +242,7 @@ const NumberFieldComp = (props) => {
                             }}
                             // maxLength={(fieldData.validations && fieldData.validations.maxLength) ? fieldData.validations.maxLength : null}
                             placeholder={placeholder()}
+                            disabled={fieldData.formula}
                         // isAllowed={withValueCap}
                         />
 
