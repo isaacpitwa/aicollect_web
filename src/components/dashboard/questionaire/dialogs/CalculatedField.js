@@ -29,7 +29,6 @@ import {
 } from '../utils/ErrorCards';
 import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
-import MultipleValuesPreview from '../previews/multipleValues';
 
 // This is the field for type=TextField
 const CalculatedFieldDialog = (props) => {
@@ -63,8 +62,6 @@ const CalculatedFieldDialog = (props) => {
     const [dependency, setDependency] = useState(fieldData && fieldData.dependency ? fieldData.dependency : null)
     const [validations, setValidations] = useState(fieldData && fieldData.validations ? fieldData.validations : null)
     const [displayConfigs, setDisplayConfigs] = useState(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
-    const [multipleValues, setMultipleValues] = useState(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
-    const [multipleValuesData, setMultipleValuesData] = useState(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
 
     const handleLabel = (event) => {
         setFieldLabel(event.target.value);
@@ -103,23 +100,7 @@ const CalculatedFieldDialog = (props) => {
         setDependency(e.target.value)
     }
 
-    const handleValidations = (e) => {
-        setValidations({ ...validations, [e.target.name]: e.target.value });
-    }
-    const handleDisplayConfigs = (e) => {
-        if (e.target.name === 'inputMask' && e.target.value) {
-             var value = e.target.value.toString().split('').map((char, index) => {
-                if (/^\d+$/.test(char)) {
-                    return '#'
-                }
-                return char
-            
-             }).join('')
-            setDisplayConfigs({ ...displayConfigs, [e.target.name]: value });
-        } else {  
-            setDisplayConfigs({ ...displayConfigs, [e.target.name]: e.target.value })
-        };
-    }
+
     const handleWhen = (e) => {
         setWhen(e.target.value)
     }
@@ -144,27 +125,7 @@ const CalculatedFieldDialog = (props) => {
         setDependency(null)
     }
 
-   const  handleMultipleValues = (e) => {
-        if(!multipleValues) {
-            setMultipleValuesData([
-                <TextField
-                        required={isRequired}
-                        autoFocus
-                        margin="dense"
-                        key={uuidv4()}
-                        label={fieldLabel?fieldLabel:'Label'}
-                        type="number"
-                        size="small"
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{
-                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                        }}
-                    />
-            ])
-        }
-        setMultipleValues(!multipleValues);
-    }
+
 
     const addNumberField = () => {
 
@@ -183,8 +144,6 @@ const CalculatedFieldDialog = (props) => {
             dependency: dependency,
             validations: validations,
             displayConfigs: displayConfigs,
-            multipleValues: multipleValues,
-            multipleValuesData: multipleValuesData,
         }
 
         if (sectionId && fieldLabel !== '') {
@@ -200,8 +159,6 @@ const CalculatedFieldDialog = (props) => {
             setDependency(null)
             setValidations(null)
             setDisplayConfigs(null)
-            setMultipleValues(false)
-            setMultipleValuesData([])
             removeConditional()
             handleClose()
         } else {
@@ -229,8 +186,6 @@ const CalculatedFieldDialog = (props) => {
             dependency: dependency,
             validations: validations,
             displayConfigs: displayConfigs,
-            multipleValues: multipleValues,
-            multipleValuesData: multipleValuesData
         }
 
         updateFieldInSection(numberFieldData)
@@ -249,8 +204,6 @@ const CalculatedFieldDialog = (props) => {
         setDependency(fieldData && fieldData.dependency ? fieldData.dependency : null)
         setValidations(fieldData && fieldData.validations ? fieldData.validations : null)
         setDisplayConfigs(fieldData && fieldData.displayConfigs ? fieldData.displayConfigs : null)
-        setMultipleValues(fieldData && fieldData.multipleValues ? fieldData.multipleValues : false)
-        setMultipleValuesData(fieldData && fieldData.multipleValuesData ? fieldData.multipleValuesData : [])
         handleClose()
     }
 
@@ -327,7 +280,8 @@ const CalculatedFieldDialog = (props) => {
                             component="form"
                             style={{ padding: '20px', border: '1px #5048E5 solid', borderRadius: '0px 8px 8px 8px', marginTop: '-1px' }}
                         >
-                            {panelType === "conditional" ?
+                            {
+                            panelType === "conditional" ?
                                 <>
                                     <Typography
                                         style={{ marginTop: '20px', fontSize: '15px', marginTop: '20px', color: '#5048E5' }}
@@ -446,180 +400,17 @@ const CalculatedFieldDialog = (props) => {
                                             onChange={handleTooltip}
                                             style={{ marginTop: '25px' }}
                                         />
-                                        <Typography
-                                            style={{ marginTop: '10px', color: '#5048E5' }}
-                                        >
-                                            <Checkbox
-                                                size={'small'}
-                                                checked={isRequired}
-                                                onChange={handleIsRequired}
-                                            />Required<GeneralTooltip tipData={'A required field must be filled.'} />
-                                        </Typography>
-                                        <Typography
-                                            style={{ marginTop: '10px', color: '#5048E5' }}
-                                        >
-                                            <Checkbox
-                                                size={'small'}
-                                                checked={multipleValues}
-                                                onChange={handleMultipleValues}
-                                            />Multiple Values<GeneralTooltip tipData={'A required field must be filled.'} />
-                                        </Typography>
-                                        <Typography
-                                            style={{ marginTop: '10px', color: '#000' }}
-                                        >
-                                            Validations
-                                           (Optional)
-                                        </Typography>
-                                        <Box style={{padding: '8px 16px'}}>
-                                            <Typography
-                                                style={{ marginTop: '10px', color: '#000' }}
-                                            >
-                                                Minimum Value
-                                                <GeneralTooltip tipData={`Add Minimum Data Restriction for ${fieldData.label} `} />
-                                            </Typography>
-                                            <TextField
-                                                margin="dense"
-                                                type="number"
-                                                size="small"
-                                                fullWidth
-                                                variant="outlined"
-                                                name='min'
-                                                value={validations ? validations.min : null}
-                                                InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
-                                                    min: 0,
-                                                    max: (validations  && validations.max) ? validations.max : null,
-                                                }}
-                                                onChange={handleValidations}
-                                                
-                                            />
-                                            <Typography
-                                                style={{ marginTop: '10px', color: '#000' }}
-                                            >
-                                                Maximum Value
-                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
-                                            </Typography>
-                                            <TextField
-                                                margin="dense"
-                                                type="number"
-                                                size="small"
-                                                fullWidth
-                                                variant="outlined"
-                                                name='max'
-                                                value={validations ? validations.max : null}
-                                                InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
-                                                    min: (validations  && validations.min) ? validations.min : null,
-                                                }}
-                                                onChange={handleValidations}
-                                            />
-
-                                            <Typography
-                                                style={{ marginTop: '10px', color: '#000' }}
-                                            >
-                                                Minimum Length
-                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
-                                            </Typography>
-                                            <TextField
-                                                margin="dense"
-                                                type="number"
-                                                size="small"
-                                                fullWidth
-                                                variant="outlined"
-                                                name='minLength'
-                                                value={validations ? validations.minLength : null}
-                                                InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
-                                                    max: (validations  && validations.maxLength) ? validations.maxLength : null,
-                                                }}
-                                                onChange={handleValidations}
-                                            />
-
-                                            <Typography
-                                                style={{ marginTop: '10px', color: '#000' }}
-                                            >
-                                                Maximum Length
-                                                <GeneralTooltip tipData={`Add Maximum Data Restriction for ${fieldData.label} `} />
-                                            </Typography>
-                                            <TextField
-                                                margin="dense"
-                                                type="number"
-                                                size="small"
-                                                fullWidth
-                                                variant="outlined"
-                                                name='maxLength'
-                                                value={validations ? validations.maxLength : null}
-                                                InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
-                                                    min: (validations  && validations.minLength) ? validations.minLength : null,
-                                                }}
-                                                onChange={handleValidations}
-                                            />
-                                        </Box>
-
-                                        <Typography
-                                            style={{ marginTop: '10px', color: '#000' }}
-                                        >
-                                            Formating
-                                           (Optional)
-                                        </Typography>
-                                        <Box style={{padding: '8px 16px'}}>
-                                        <Typography
-                                                style={{ marginTop: '10px', color: '#000' }}
-                                            >
-                                                Mask Data
-                                                <GeneralTooltip tipData={`Add Data Formating } `} />
-                                            </Typography>
-                                            <TextField
-                                                margin="dense"
-                                                id="label"
-                                                type="text"
-                                                size="small"
-                                                fullWidth
-                                                variant="outlined"
-                                                name='inputMask'
-                                                value={displayConfigs ? displayConfigs.inputMask : null}
-                                                InputProps={{
-                                                    endAdornment: <GeneralTooltip tipData={tooltip} />,
-                                                }}
-                                                onChange={handleDisplayConfigs}
-                                                
-                                            />
-                                        </Box>
                                     </>
                             }
                         </Box>
                     </Grid>
-                 {  
-                 multipleValues  ? 
-                 <MultipleValuesPreview  {...props} component={
-                    <TextField
-                        required={isRequired}
-                        autoFocus
-                        margin="dense"
-                        label={fieldLabel?fieldLabel:'Label'}
-                        type="number"
-                        size="small"
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{
-                            endAdornment: tooltip!=''?<GeneralTooltip tipData={tooltip}/>:false,
-                        }}
-                    />
-                 } 
-                 onChange={setMultipleValuesData}
-                 multipleValuesData = {multipleValuesData}
-                 multipleValues={multipleValues}
-                 /> 
-                 : <NumberfieldPreview
+                 <NumberfieldPreview
                         fieldLabel={fieldLabel}
                         fieldDescription={fieldDescription}
                         tooltip={tooltip}
                         isRequired={isRequired}
-                        multipleValues={multipleValues}
                     />
                     
-                    }
                 </Grid>
             </DialogContent>
             <DialogActions>
