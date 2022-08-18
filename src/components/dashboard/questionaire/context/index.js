@@ -40,6 +40,7 @@ const FormProvider = (props) => {
     const [conditionalId, setConditionalId] = useState("");
     const [conditionalValue, setConditionalValue] = useState("");
     const [formFieldValues, setFormFieldValues] = useState([]);
+    const [formQuestions, setFormQuestions] = useState([]);
 
     /**
      * @function getFormData
@@ -81,6 +82,50 @@ const FormProvider = (props) => {
         setFormFieldValues(getFieldsValues(data.formFields));
         setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}));
     }
+
+
+        /**
+     * @function getFormQuestions
+     * @desc This method gets a particular form's data using the form API.
+     * @returns {Void} Nothing is returned.
+     * @author Isaac Pitwa <isaacpitwa256@gmail.com>
+     * @version 1.0.0
+     */
+
+    const getFormQuestions =  (data) => {
+            // Loop through sections
+    for (let i = 0; i < data.formFields.length; i++) {
+        // Loop through  Form fields and subsections
+        for (let j = 0; j < data.formFields[i].components.length; j++) {
+          if (data.formFields[i].components[j].type === 'sub-section') {
+            for (
+              let k = 0;
+              k < data.formFields[i].components[j].components.length;
+              k++
+            ) {
+              /*
+              update the formfield with corresponding form Value
+            */
+              data.formFields[i].components[j].components[k] = this.updateInput(
+                data.formFields[i].components[j].components[k],
+                '',
+                true,
+              );
+            }
+          } else {
+            /*
+              update the formfield with corresponding form Value
+            */
+              data.formFields[i].components[j] = this.updateInput(
+                data.formFields[i].components[j],
+              '',
+              true,
+            );
+          }
+        }
+      }
+    
+    };
 
     /**
      * @function addDependency
@@ -160,6 +205,9 @@ const FormProvider = (props) => {
         setComponentsData(newComponentsData)
         setFormFieldValues(getFieldsValues(newComponentsData))
     }
+
+
+
 
     /**
      * @function updateFieldInSection

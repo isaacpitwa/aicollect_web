@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { createRef, useCallback } from 'react'
-import { atom, useRecoilState, useSetRecoilState } from 'recoil'
+import { atom,RecoilRoot, useRecoilState, useSetRecoilState } from 'recoil'
 
 const suggestionsState = atom({
     key: 'Band Suggestions Visible?',
@@ -56,8 +56,7 @@ function Suggestions({ field }) {
         </ClickAwayListener>
     )
 }
-
-export default function SuggestionsField() {
+function SuggestionsField() {
     const textFieldRef = createRef()
     const setHasSuggestions = useSetRecoilState(suggestionsState)
     const [value, setValue] = useRecoilState(inputState)
@@ -74,15 +73,33 @@ export default function SuggestionsField() {
 
     return (
 
-        <Box p={4} display="inline-block">
+        <Box display="inline-block" sx={{width:'100%'}}>
             <TextField
                 inputRef={textFieldRef}
-                label="Type @"
+                label="Type @ to select question"
                 value={value}
                 onChange={handleChange}
+                autoFocus={false}
+                margin="dense"
+                id="label"
+                type="text"
+                size="small"
+                fullWidth
+                variant="outlined"
+                name='Formula'
             />
             <Suggestions field={textFieldRef} />
         </Box>
+    )
+}
+
+export default function  CalculatedFormulaInput (){
+    return (
+        <RecoilRoot>
+            <CssBaseline />
+            <SuggestionsField />
+        </RecoilRoot>
+
     )
 }
 

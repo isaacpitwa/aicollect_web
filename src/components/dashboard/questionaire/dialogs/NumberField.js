@@ -30,6 +30,7 @@ import {
 import GeneralTooltip from '../previews/GeneralTooltip'
 import NumberfieldPreview from '../previews/NumberfieldPreview'
 import MultipleValuesPreview from '../previews/multipleValues';
+import CalculatedFormulaInput from '../components/calculatedFormulaInput';
 
 // This is the field for type=TextField
 const NumberField = (props) => {
@@ -585,6 +586,22 @@ const NumberField = (props) => {
                                                 onChange={handleDisplayConfigs}
                                                 
                                             />
+                                        </Box>
+
+                                        <Typography
+                                            style={{ marginTop: '10px', color: '#000' }}
+                                        >
+                                            Calculated value
+                                           (Optional)
+                                        </Typography>
+                                        <Box style={{padding: '8px 16px'}}>
+                                        <Typography
+                                                style={{ marginTop: '10px', color: '#000' }}
+                                            >
+                                                Formula
+                                            <GeneralTooltip tipData={`Add Calculated Value  Formula} `} />
+                                            </Typography>
+                                            <CalculatedFormulaInput/>
                                         </Box>
                                     </>
                             }

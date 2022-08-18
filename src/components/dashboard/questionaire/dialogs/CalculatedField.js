@@ -13,10 +13,8 @@ import {
     Typography,
     Select,
     MenuItem,
-    CssBaseline
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { RecoilRoot } from 'recoil'
 
 
 import { FormContext } from '../context';
@@ -376,6 +374,8 @@ const CalculatedFieldDialog = (props) => {
                                             value={fieldLabel}
                                             onChange={handleLabel}
                                             style={{ marginTop: '15px' }}
+                                            key={uuidv4()}
+
                                         />
                                         <TextField
                                             margin="dense"
@@ -389,6 +389,8 @@ const CalculatedFieldDialog = (props) => {
                                             value={fieldDescription}
                                             onChange={handleDescription}
                                             style={{ marginTop: '25px' }}
+                                            key={uuidv4()}
+
                                         />
                                         <TextField
                                             autoFocus
@@ -402,12 +404,11 @@ const CalculatedFieldDialog = (props) => {
                                             value={tooltip}
                                             onChange={handleTooltip}
                                             style={{ marginTop: '25px' }}
+                                            key={uuidv4()}
+
                                         />
                                         <Typography>Calcuation Formula</Typography>
-                                        <RecoilRoot>
-                                            <CssBaseline />
                                         <CalculatedFormulaInput/>
-                                        </RecoilRoot>
                                     </>
                             }
                         </Box>
