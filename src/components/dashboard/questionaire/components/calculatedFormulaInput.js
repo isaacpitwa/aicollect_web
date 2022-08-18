@@ -118,9 +118,6 @@ function SuggestionsField(props) {
     return (
 
         <Box display="inline-block" sx={{ width: '100%' }}>
-            {
-                props.defaultValue ?<Typography>{props.defaultValue.display}</Typography>:''
-            }
             <TextField
                 inputRef={textFieldRef}
                 label="Type @ to select question"
