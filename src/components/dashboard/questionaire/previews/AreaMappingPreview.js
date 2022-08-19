@@ -4,7 +4,6 @@ import {
     Box,
     Grid,
     Typography,
-    TextField
 } from '@mui/material'
 
 import AreaMappingImg from '../../../../../public/static/form/areaMap1.jpg';
