@@ -61,7 +61,6 @@ import ImageField from './dialogs/ImageField';
 import DateField from './dialogs/DateField';
 import LocationField from './dialogs/LocationField';
 import AreaMappingField from './dialogs/AreaMappingField';
-import CalculatedField from './dialogs/CalculatedField';
 import { FormContext } from './context';
 import DataGrid from './dialogs/DataGrid';
 

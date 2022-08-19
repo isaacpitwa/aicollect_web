@@ -1,4 +1,3 @@
-import SectionField from './sectionField'
 import SubSectionField from './subSectionField'
 import TextField from './textField'
 import TextAreaField from './textAreaField'
