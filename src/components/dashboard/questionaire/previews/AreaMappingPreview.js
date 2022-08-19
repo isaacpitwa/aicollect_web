@@ -6,7 +6,7 @@ import {
     Typography,
 } from '@mui/material'
 
-import AreaMappingImg from '../../../../../public/static/form/areaMap1.jpg';
+// import AreaMappingImg from '../../../../../public/static/form/areaMap1.jpg';
 import {
     DescriptionCard,
 } from '../utils';
@@ -47,10 +47,10 @@ const TextfieldPreview = (props) => {
                     }}
                     align='center'
                 >
-                    <Image
+                    {/* <Image
                         src={AreaMappingImg}
                         alt="Area Mapping Image"
-                    />
+                    /> */}
                 </Box>
                 {fieldDescription!=''?
                     <DescriptionCard description={fieldDescription} helperText={true}/>
