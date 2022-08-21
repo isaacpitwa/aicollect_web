@@ -266,7 +266,7 @@ const FieldFormDetails = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 4, mx:2, }}>
             <Grid
               container
               justifyContent="space-between"
@@ -314,8 +314,7 @@ const FieldFormDetails = () => {
                   alignItems: 'center',
                   display: 'flex',
                   flexWrap: 'wrap',
-                  m: -1.5,
-                  p: 3
+                  justifyContent:'flex-end',
                 }}
               >
                  <Box
@@ -327,6 +326,7 @@ const FieldFormDetails = () => {
                   }}
                 >
                 </Box>
+
                 <NextLink
                   href={{
                     pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,

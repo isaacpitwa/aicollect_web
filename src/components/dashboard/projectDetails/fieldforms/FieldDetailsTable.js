@@ -338,7 +338,7 @@ export const FieldDetailsTable = (props) => {
             columns={tableColumns}
             components={{
               Toolbar: DataGridToolbarWithDependacy,
-            }}
+              }}
             filterModel={filterModel}
             onFilterModelChange={(newFilterModel) =>
               setFilterModel(newFilterModel)
