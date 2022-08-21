@@ -13,7 +13,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { FormContext } from '../../context';
-import AreaMappingImg from '../../../../../../public/static/form/areaMap1.jpg';
+// import AreaMappingImg from '../../../../../../public/static/form/areaMap1.jpg';
 
 /**
  * @function AreaMappingField
@@ -69,14 +69,14 @@ const AreaMappingField = (props) => {
                 xl={6}
                 style={{ padding: '0px 10px' }}
             >
-                    <Image
+                    {/* <Image
                         src={AreaMappingImg}
                         alt="Area Mapping Image"
                         style={{
                             width: '100%',
                             borderRadius: '8px',
                         }}
-                    />
+                    /> */}
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={6} xl={6}>
                 <Typography variant="h5">
