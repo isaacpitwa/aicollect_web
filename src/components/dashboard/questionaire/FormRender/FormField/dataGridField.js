@@ -14,7 +14,6 @@ import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import FormField from '.';
 import { Box } from '@mui/system';
-import { getRowEl } from '@mui/x-data-grid/utils/domUtils';
 import MultipleValuesField from './MultipleValuesField';
 
 /**

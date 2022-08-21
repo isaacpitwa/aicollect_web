@@ -11,7 +11,7 @@ import ImageField from './imageField'
 import LocationField from './locationField'
 import DateField from './dateField'
 import AreaMappingField from './areaMappingField'
-import DataGridField from './dataGrid'
+import DataGridField from './dataGridField'
 
 const FormField = (props) => {
 
