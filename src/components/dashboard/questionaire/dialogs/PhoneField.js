@@ -202,7 +202,7 @@ const PhoneField_ = (props) => {
             multipleValuesData: multipleValuesData
         }
 
-        updateFieldInSection(textFieldData)
+        updateFieldInSection(newField)
         handleClose()
 
     }
@@ -235,6 +235,7 @@ const PhoneField_ = (props) => {
                     margin="dense"
                     variant='outlined'
                     defaultCountry={'ug'}
+                    key={uuidv4()}
                     onChange={setValue}
                     InputProps={{
                         endAdornment: tooltip != '' ? <GeneralTooltip tipData={tooltip} /> : false,
@@ -352,7 +353,6 @@ const PhoneField_ = (props) => {
                                     <TextField
                                         autoFocus
                                         margin="dense"
-                                        id="label"
                                         label="Label"
                                         type="text"
                                         size="small"

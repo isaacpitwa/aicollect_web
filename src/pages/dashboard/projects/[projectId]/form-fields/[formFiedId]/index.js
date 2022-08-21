@@ -317,6 +317,16 @@ const FieldFormDetails = () => {
                   justifyContent:'flex-end',
                 }}
               >
+                 <Box
+                  component="form"
+                  onSubmit={handleQueryChange}
+                  sx={{
+                    flexGrow: 1,
+                    m: 1.5
+                  }}
+                >
+                </Box>
+
                 <NextLink
                   href={{
                     pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
@@ -333,7 +343,6 @@ const FieldFormDetails = () => {
                     View Map
                   </Button>
                 </NextLink>
-              
               </Box>
               <TabPanel value='summary' index={0}>
                 <FieldResponseSummaryTable
@@ -355,6 +364,7 @@ const FieldFormDetails = () => {
                   rowsPerPage={rowsPerPage}
                   page={page}
                   responses={responses}
+                  questionaire ={fieldForm}
                 />
               </TabPanel>
             </TabContext>

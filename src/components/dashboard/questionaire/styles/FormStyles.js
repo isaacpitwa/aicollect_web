@@ -243,6 +243,10 @@ export const dialogStyles = makeStyles({
         borderRadius: '0px 8px 8px 8px',
         marginTop: '-1px',
     },
+    gridTextField: {
+        padding: '8px',
+        border: '1px #5048E5 solid',
+    }
 });
 
 export const modeBtnStyles = makeStyles({

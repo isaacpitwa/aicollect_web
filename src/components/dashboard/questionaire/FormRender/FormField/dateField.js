@@ -4,7 +4,8 @@ import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
     TextField,
-    Typography
+    Typography,
+    Box
 } from "@mui/material";
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -40,10 +41,10 @@ const DatefieldComp = (props) => {
         deleteFieldData,
     } = useContext(FormContext);
 
-    const { fieldData } = props;
+    const { fieldData, forGrid } = props;
 
     const [display, setDisplay] = useState('hidden');
-    const [fieldValue, setFieldValue] = useState(fieldData.value?fieldData.value: (fieldData.validations && fieldData.validations.min)?fieldData.validations.min:new Date().toLocaleDateString());
+    const [fieldValue, setFieldValue] = useState(fieldData.value ? fieldData.value : (fieldData.validations && fieldData.validations.min) ? fieldData.validations.min : new Date().toLocaleDateString());
     const [dateFieldDialog, setDateFieldDialog] = useState(false);
 
     const handleDateField = () => {
@@ -66,66 +67,117 @@ const DatefieldComp = (props) => {
     const smallBtn = smallBtns();
 
     const fieldStyle = () => {
-        return editStatus?classes.section:classes.section2
+        return editStatus ? classes.section : classes.section2
     };
 
     const fieldDisplay = () => {
         return (
-            <Grid
-                container
-                onMouseOver={() => { setDisplay('visible') }}
-                onMouseOut={() => { setDisplay('hidden') }}
-                className={fieldStyle()}
-                style={{ display: 'block' }}
-            >
-                {editStatus?
-                    <Typography
-                        className={smallBtn.fieldBtns}
-                        style={{ visibility: display }}
-                        align={'right'}
-                    >
-                        <DateField
-                            open={dateFieldDialog}
-                            fieldData={fieldData}
-                            handleClose={handleClose}
-                        />
-                        <EditIcon
-                            onClick={handleDateField}
-                            className={smallBtn.editBtn}
-                        />
-                        <HighlightOffIcon
-                            onClick={deleteField}
-                            className={smallBtn.deleteBtn}
-                        />
-                    </Typography>
-                : ""}
-				<LocalizationProvider dateAdapter={AdapterDateFns}>
-					<DesktopDatePicker
-						label={fieldData.label}
-						value={fieldValue}
-                        helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
-						onChange={(newValue) => {
-							setFieldValue(newValue);
-						}}
-						renderInput={(params) => <TextField {...params} fullWidth/>}
+            forGrid ?
+                <Box sx={{
+                    padding: '6px 0.5rem',
+                    border: '1px solid #ced4da'
+                }}
+                    onMouseOver={() => { setDisplay('visible') }}
+                    onMouseOut={() => { setDisplay('hidden') }}>
+                    {
+                        editStatus ? <Typography
+                            className={smallBtn.fieldBtns}
+                            style={{ visibility: display, margin: '0', paddingTop: '0', fontSize: 'unset' }}
+                            align={'right'}
+                        >
+                            <DateField
+                                open={dateFieldDialog}
+                                fieldData={fieldData}
+                                handleClose={handleClose}
+                            />
+                            <EditIcon
+                                onClick={handleDateField}
+                                className={smallBtn.editBtn}
+                                style={{ width: '14px', height: '14px', margin: '0', marginRight: '5px' }}
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                                style={{ width: '14px', height: '14px', margin: '0' }}
+                            />
+                        </Typography> : null
+                    }
+
+                    <DesktopDatePicker
+                        value={fieldValue}
+                        onChange={(newValue) => {
+                            setFieldValue(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} fullWidth size="small" />}
+                        size="small"
                         InputProps={{
-                            endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                            endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />,
+                            style: {
+                                border: '1px solid #ced4da',
+                                borderRadius: '4px'
+                            }
                         }}
                         inputFormat='dd/MM/yyyy'
-                        minDate={( fieldData.validations && fieldData.validations.min)? new Date(fieldData.validations.min): null}
-                        maxDate={( fieldData.validations && fieldData.validations.max)? new Date(fieldData.validations.max): null}
-					/>
-				</LocalizationProvider>
-            </Grid>
+                        minDate={(fieldData.validations && fieldData.validations.min) ? new Date(fieldData.validations.min) : null}
+                        maxDate={(fieldData.validations && fieldData.validations.max) ? new Date(fieldData.validations.max) : null}
+                    />
+                </Box>
+                :
+                <Grid
+                    container
+                    onMouseOver={() => { setDisplay('visible') }}
+                    onMouseOut={() => { setDisplay('hidden') }}
+                    className={fieldStyle()}
+                    style={{ display: 'block' }}
+                >
+                    {editStatus ?
+                        <Typography
+                            className={smallBtn.fieldBtns}
+                            style={{ visibility: display }}
+                            align={'right'}
+                        >
+                            <DateField
+                                open={dateFieldDialog}
+                                fieldData={fieldData}
+                                handleClose={handleClose}
+                            />
+                            <EditIcon
+                                onClick={handleDateField}
+                                className={smallBtn.editBtn}
+                            />
+                            <HighlightOffIcon
+                                onClick={deleteField}
+                                className={smallBtn.deleteBtn}
+                            />
+                        </Typography>
+                        : ""}
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
+                            label={fieldData.label}
+                            value={fieldValue}
+                            helperText={<DescriptionCard description={fieldData.description} helperText={true} />}
+                            onChange={(newValue) => {
+                                setFieldValue(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} fullWidth />}
+                            InputProps={{
+                                endAdornment: <FieldTooltip tooltip={fieldData.tooltip} />
+                            }}
+                            inputFormat='dd/MM/yyyy'
+                            minDate={(fieldData.validations && fieldData.validations.min) ? new Date(fieldData.validations.min) : null}
+                            maxDate={(fieldData.validations && fieldData.validations.max) ? new Date(fieldData.validations.max) : null}
+                        />
+                    </LocalizationProvider>
+                </Grid>
         )
     }
 
     return (
-        !fieldData.display||fieldData.display==='visible'||conditionalDisplay(fieldData)?
+        !fieldData.display || fieldData.display === 'visible' || conditionalDisplay(fieldData) ?
             fieldDisplay()
-        : fieldData.display==='hidden'&&editStatus?
-            fieldDisplay()
-        : ""
+            : fieldData.display === 'hidden' && editStatus ?
+                fieldDisplay()
+                : ""
     )
 }
 

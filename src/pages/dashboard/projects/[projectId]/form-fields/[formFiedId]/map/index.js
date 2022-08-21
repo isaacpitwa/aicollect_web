@@ -35,8 +35,6 @@ import { gtm } from "../../../../../../../lib/gtm";
 import { projectsApi } from '../../../../../../../api/projects-api';
 import { FormsApi } from '../../../../../../../api/forms-api'
 import { MdLocationPin, MdFilterListAlt } from 'react-icons/md';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { Search as SearchIcon } from '../../../../../../../icons/search';
 import { ImUser } from 'react-icons/im';
 import { Utils } from "../../../../../../../utils/main";
@@ -94,8 +92,13 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const [filterRegion, setFilterRegion] = useState('');
   const [filterStatus, setFilterStatus] = useState(false);
   const [map, setMap] = useState(null);
+  const [polygons, setPolygons] = useState([]);
+  const [polygonPaths, setPolygonPaths] = useState([]);
 
   const queryRef = useRef(null);
+  // Define refs for Polygon instance and listeners
+  const polygonsRef = useRef([]);
+  const listenersRef = useRef([]);
 
   const fetchFieldFormDetails = useCallback(async () => {
     try {
@@ -268,15 +271,46 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const onMapLoad = (map) => {
     setMap(map);
   }
+  // // Call setPath with new edited path
+
+  const onEdit = useCallback((index) => {
+    console.log("onEdit", index);
+    console.log("Polugon",polygonsRef.current[index])
+    if (polygons[index]) {
+      const nextPath = polygons[index]
+        .getPath()
+        .getArray()
+        .map(latLng => {
+          return { lat: latLng.lat(), lng: latLng.lng() };
+        });
+        polygonPaths[index] = nextPath;
+        setPolygonPaths(polygonPaths);
+    }
+  }, []);
+
+  // // Bind refs to current Polygon and listeners
+  const onLoad = useCallback(
+    (polygon) => {
+      polygonsRef.current.push(polygon);
+      console.log("onLoad Componenets", polygonsRef.current.length);
+      polygons.push(polygon);
+      setPolygons(polygons);
+      const path = polygon.getPath();
+      console.log('onLoad Path', path);
+      listenersRef.current.push(
+        path.addListener("set_at", onEdit),
+        path.addListener("insert_at", onEdit),
+        path.addListener("remove_at", onEdit)
+      );
+    },
+    [onEdit]
+  );
+
 
   return (
     <>
       <Head>
-        <title>Dashboard: Questionaire - Map </title>
-        <link
-          rel="stylesheet"
-          href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
-        />
+        <title>{`Dashboard: ${questionaire ? questionaire.name : ''} - Map` } </title>
       </Head>
       <Main open={open}>
         <React.Fragment key={'drawer'}>
@@ -454,6 +488,10 @@ const TaskMapArea = ({ questionaireResponses }) => {
                               paths={[fieldCordinates]}
                               options={ selectedMarker.response && (selectedMarker.response._id ===response._id) ? selectedOptions: options}
                               key={index}
+                              ref={el => polygonsRef.current[index] = el}
+                              editable
+                              // onMouseUp={onEdit(index)}
+                              onLoad={onLoad}
                             /> : null
                         }) : null
                       }
@@ -464,7 +502,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                               position={selectedMarker.location}
                               key={selectedMarker.id}
                             >   
-                            
                             <Box>
                               <Typography variant="h6" style={{ fontSize: '14px' }}>ID: {selectedMarker.response.code} </Typography>
                               <Typography variant="h6" style={{ fontSize: '14px' }}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>

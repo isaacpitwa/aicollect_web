@@ -6,8 +6,6 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Utils } from "../../../../utils/main";
@@ -18,7 +16,6 @@ import {
 
 import {DataGridToolbar,DataGridToolbarWithDependacy} from '../../data-grid-toolbar'
 import { useExcelExport } from "../../../../hooks/excel-export";
-import { ta } from "date-fns/locale";
 export const QuestionaireDetailsTable = (props) => {
   const {
     customers,
