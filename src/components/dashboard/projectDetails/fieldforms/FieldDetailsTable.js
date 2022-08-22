@@ -12,9 +12,11 @@ import {
   DataGridPremium,
 } from '@mui/x-data-grid-premium';
 
-import {DataGridToolbar,DataGridToolbarWithDependacy} from '../../data-grid-toolbar'
-import { useExcelExport } from "../../../../hooks/excel-export";
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
+import {DataGridToolbar} from '../../data-grid-toolbar'
 export const FieldDetailsTable = (props) => {
   const {
     customers,
@@ -337,7 +339,7 @@ export const FieldDetailsTable = (props) => {
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{
-              Toolbar: DataGridToolbarWithDependacy,
+              Toolbar: DataGridToolbar,
             }}
             filterModel={filterModel}
             onFilterModelChange={(newFilterModel) =>
@@ -345,18 +347,18 @@ export const FieldDetailsTable = (props) => {
             }
             pagination
           /> :
-          <DataGridPremium
-          rows={[...selectedDepTab.responses].reverse()}
-          columns={selectedDepTab.questions}
-          components={{
-            Toolbar: DataGridToolbar,
-          }}
-          filterModel={filterModel}
-          onFilterModelChange={(newFilterModel) =>
-            setFilterModel(newFilterModel)
-          }
-          pagination
-        />
+            <DataGridPremium
+              rows={[...selectedDepTab.responses].reverse()}
+              columns={selectedDepTab.questions}
+              components={{
+                Toolbar: DataGridToolbar,
+              }}
+              filterModel={filterModel}
+              onFilterModelChange={(newFilterModel) =>
+                setFilterModel(newFilterModel)
+              }
+              pagination
+            />
         }
 
       </div>

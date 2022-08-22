@@ -353,7 +353,7 @@ export const QuestionaireDetailsTable = (props) => {
       {/* <Scrollbar> */}
       <div style={{ height: "60vh", width: "100%" }}>
         {
-          selectedDepTab.notSelected ? <DataGridPremium
+         !formattedResponses.length > 0 ? 'Loading...' : selectedDepTab.notSelected ? <DataGridPremium
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{
