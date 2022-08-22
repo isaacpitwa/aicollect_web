@@ -3,7 +3,8 @@ import formStyles from '../../styles/FormStyles';
 import { smallBtns } from '../../styles/FormStyles';
 import {
     Grid,
-    Typography
+    Typography,
+    Box
 } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,8 +14,6 @@ import DataGridDialog from '../../dialogs/DataGrid';
 import { DescriptionCard } from '../../utils';
 import GeneralTooltip from '../../previews/GeneralTooltip';
 import FormField from '.';
-import { Box } from '@mui/system';
-import { getRowEl } from '@mui/x-data-grid/utils/domUtils';
 import MultipleValuesField from './MultipleValuesField';
 
 /**
