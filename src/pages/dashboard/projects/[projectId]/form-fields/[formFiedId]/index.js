@@ -9,11 +9,10 @@ import {
   Container,
   Divider,
   Grid,
-  InputAdornment,
   Tab,
   Tabs,
-  TextField,
   Typography,
+  CircularProgress
 
 } from '@mui/material';
 import { TabPanel, TabContext } from '@mui/lab';
@@ -133,7 +132,7 @@ const FieldFormDetails = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
   const router = useRouter()
-  const [responses, setResponses] = useState([]);
+  const [responses, setResponses] = useState(null);
   const [customers, setCustomers] = useState([
     {
       id: 1,
@@ -358,8 +357,9 @@ const FieldFormDetails = () => {
                       responses={responses}
                     />
                   ) : (
-                    <Typography variant="h6">Loading...</Typography>
-                  )
+                    <Box sx={{ display: 'flex',justifyContent:'center',alignItems:'center', width:'100%',height:'50vh' }}>
+                      <CircularProgress />
+                    </Box>)
                 }
 
               </TabPanel>
@@ -377,7 +377,9 @@ const FieldFormDetails = () => {
                       responses={responses}
                     />
                   ) : (
-                    <Typography variant="h6">Loading...</Typography>
+                    <Box sx={{ display: 'flex',justifyContent:'center',alignItems:'center', width:'100%',height:'50vh' }}>
+                      <CircularProgress />
+                    </Box>
                   )
                 }
 
