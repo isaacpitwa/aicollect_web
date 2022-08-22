@@ -5,6 +5,9 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
 import {
   DataGridPremium,
