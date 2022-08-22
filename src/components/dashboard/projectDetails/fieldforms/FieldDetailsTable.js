@@ -12,10 +12,6 @@ import {
   DataGridPremium,
 } from '@mui/x-data-grid-premium';
 
-import {
-  DataGridPremium,
-} from '@mui/x-data-grid-premium';
-
 import {DataGridToolbar} from '../../data-grid-toolbar'
 export const FieldDetailsTable = (props) => {
   const {
