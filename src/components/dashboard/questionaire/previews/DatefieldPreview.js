@@ -7,7 +7,7 @@ import {
 } from '@mui/material'
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import { DescriptionCard } from '../utils';
