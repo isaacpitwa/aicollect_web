@@ -275,11 +275,11 @@ const FieldFormDetails = () => {
               <Grid item>
                 <Typography variant="h9">
                   <NextLink
-                    href={`/dashboard/projects/${project&& project._id}`}
+                    href={`/dashboard/projects/${project && project._id}`}
                     passHref
-                    
-                  ><a style={{textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
-                 
+
+                  ><a style={{ textDecoration: 'none' }}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
+
                 </Typography>
               </Grid>
 
@@ -329,7 +329,7 @@ const FieldFormDetails = () => {
                 </Box>
                 <NextLink
                   href={{
-                    pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
+                    pathname: `/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
                   }}
                   passHref
 
@@ -346,26 +346,41 @@ const FieldFormDetails = () => {
 
               </Box>
               <TabPanel value='summary' index={0}>
-                <FieldResponseSummaryTable
-                  customers={paginatedCustomers}
-                  customersCount={filteredCustomers.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  responses={responses}
-                />
+                {
+                  responses ? (
+                    <FieldResponseSummaryTable
+                      customers={paginatedCustomers}
+                      customersCount={filteredCustomers.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      responses={responses}
+                    />
+                  ) : (
+                    <Typography variant="h6">Loading...</Typography>
+                  )
+                }
+
               </TabPanel>
               <TabPanel value='all' index={1}>
-                <FieldDetailsTable
-                  customers={paginatedCustomers}
-                  customersCount={filteredCustomers.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  responses={responses}
-                />
+
+                {
+                  responses ? (
+                    <FieldDetailsTable
+                      customers={paginatedCustomers}
+                      customersCount={filteredCustomers.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      responses={responses}
+                    />
+                  ) : (
+                    <Typography variant="h6">Loading...</Typography>
+                  )
+                }
+
               </TabPanel>
             </TabContext>
           </Card>
