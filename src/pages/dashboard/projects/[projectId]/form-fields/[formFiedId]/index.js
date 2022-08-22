@@ -317,7 +317,7 @@ const FieldFormDetails = () => {
                   p: 3
                 }}
               >
-                <Box
+                 <Box
                   component="form"
                   onSubmit={handleQueryChange}
                   sx={{

@@ -491,7 +491,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                               ref={el => polygonsRef.current[index] = el}
                               editable
                               // onMouseUp={onEdit(index)}
-                              // onLoad={onLoad}
+                              onLoad={onLoad}
                             /> : null
                         }) : null
                       }
@@ -502,7 +502,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                               position={selectedMarker.location}
                               key={selectedMarker.id}
                             >   
-                            
                             <Box>
                               <Typography variant="h6" style={{ fontSize: '14px' }}>ID: {selectedMarker.response.code} </Typography>
                               <Typography variant="h6" style={{ fontSize: '14px' }}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>

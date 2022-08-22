@@ -161,6 +161,9 @@ const FormProvider = (props) => {
         setFormFieldValues(getFieldsValues(newComponentsData))
     }
 
+
+
+
     /**
      * @function updateFieldInSection
      * @desc This method edits a particular field that exists in the form being built.

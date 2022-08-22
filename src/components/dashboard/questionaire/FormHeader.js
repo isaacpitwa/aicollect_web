@@ -1,15 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import { styled } from '@mui/material/styles';
 import formStyles from './styles/FormStyles';
 import {
-    Paper,
     Button,
     Grid,
     Stack,
     Chip,
-    AccordionSummary,
-    AccordionDetails,
     TextField,
     Typography
 } from '@mui/material';

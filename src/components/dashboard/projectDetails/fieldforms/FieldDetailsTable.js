@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from 'next/link';
 import PropTypes from "prop-types";
-import { Box, Button, Checkbox, IconButton, responsiveFontSizes } from "@mui/material";
+import { Box, Button, Checkbox, IconButton,  } from "@mui/material";
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
 import {
   DataGridPremium,
@@ -23,9 +26,11 @@ export const FieldDetailsTable = (props) => {
     page,
     rowsPerPage,
     responses,
+    questionaire,
     ...other
   } = props;
   const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const { setDetails } = useExcelExport();
 
   const [filterModel, setFilterModel] = useState({
     items: [
@@ -91,7 +96,9 @@ export const FieldDetailsTable = (props) => {
       }
       if (responses.length) {
         setTableColumns(getColumns());
+        const tabs = getDependancyTabs()
         setDepedancyQtns(getDependancyTabs())
+        updateExporter(tabs)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,6 +197,15 @@ export const FieldDetailsTable = (props) => {
 
     return currentcolumns;
   }
+
+  const updateExporter = async (currentTabs) =>{
+    console.log("Executing Set function");
+    await  setDetails({
+       depedancyTabs:[...currentTabs.map((tab)=>{ return {name:tab.title, rows :[...tab.responses].reverse(), columns: tab.questions}})
+     ],
+     questionaire: questionaire.name
+    })
+   }
 
   const getDependancyTabs = () => {
     let currentTabs = [];
@@ -317,7 +333,7 @@ export const FieldDetailsTable = (props) => {
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: "60vh", width: "100%" }}>
         {
           selectedDepTab.notSelected ? <DataGridPremium
             rows={formattedResponses.reverse()}
