@@ -9,11 +9,10 @@ import {
   Container,
   Divider,
   Grid,
-  InputAdornment,
   Tab,
   Tabs,
-  TextField,
   Typography,
+  CircularProgress
 
 } from '@mui/material';
 import { TabPanel, TabContext } from '@mui/lab';
@@ -132,7 +131,7 @@ const QuestionaireDetails = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
   const router = useRouter()
-  const [responses, setResponses] = useState([]);
+  const [responses, setResponses] = useState(null);
   const [customers, setCustomers] = useState([
     {
       id: 1,
@@ -331,9 +330,9 @@ const QuestionaireDetails = () => {
                   }}
                 >
                 </Box>
-                 <NextLink
+                <NextLink
                   href={{
-                    pathname:`/dashboard/projects/${projectId}/questionaire/${questionaireId}/map`,
+                    pathname: `/dashboard/projects/${projectId}/questionaire/${questionaireId}/map`,
                   }}
                   passHref
 
@@ -349,27 +348,43 @@ const QuestionaireDetails = () => {
                 </NextLink>
               </Box>
               <TabPanel value='summary' index={0}>
-                <QuestionaireResponseSummaryTable
-                  customers={paginatedCustomers}
-                  customersCount={filteredCustomers.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  responses={responses}
-                />
+                {
+                  responses ? (
+                    <QuestionaireResponseSummaryTable
+                      customers={paginatedCustomers}
+                      customersCount={filteredCustomers.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      responses={responses}
+                    />
+                  ) : (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '50vh' }}>
+                      <CircularProgress />
+                    </Box>)
+                }
+
               </TabPanel>
               <TabPanel value='all' index={1}>
-                <QuestionaireDetailsTable
-                  customers={paginatedCustomers}
-                  customersCount={filteredCustomers.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  responses={responses}
-                  questionaire ={questionaire}
-                />
+                {
+                  responses ? (
+                    <QuestionaireDetailsTable
+                      customers={paginatedCustomers}
+                      customersCount={filteredCustomers.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      responses={responses}
+                      questionaire={questionaire}
+                    />
+                  ) : (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '50vh' }}>
+                      <CircularProgress />
+                    </Box>)
+                }
+
               </TabPanel>
             </TabContext>
           </Card>

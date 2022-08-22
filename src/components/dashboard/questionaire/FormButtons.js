@@ -62,7 +62,7 @@ import DateField from './dialogs/DateField';
 import LocationField from './dialogs/LocationField';
 import AreaMappingField from './dialogs/AreaMappingField';
 import { FormContext } from './context';
-import DataGrid from './dialogs/DataGrid';
+import DataGridDialog from './dialogs/DataGridDialog';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -319,7 +319,7 @@ const FormButtons = () => {
                 handleClose={handleClose}
             />
 
-            <DataGrid
+            <DataGridDialog
                 open={dataGridDialog}
                 fieldData={false}
                 handleClose={handleClose}

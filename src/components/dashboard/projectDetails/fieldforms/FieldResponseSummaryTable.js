@@ -14,7 +14,6 @@ import {
 } from '@mui/x-data-grid-premium';
 
 import {DataGridToolbar} from '../../data-grid-toolbar'
-
 export const FieldResponseSummaryTable = (props) => {
   const {
     customers,
@@ -181,7 +180,7 @@ const columns = [
         </Button>
       </Box>
       {/* <Scrollbar> */}
-      <div style={{ height: "60vh", width: "100%" }}>
+      <div style={{ height: 500, width: "100%" }}>
         <DataGridPremium
           rows={formattedResponses.reverse()}
           columns={tableColumns}

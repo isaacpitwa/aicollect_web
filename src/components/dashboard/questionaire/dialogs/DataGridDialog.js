@@ -25,11 +25,10 @@ import {
 import {
     FieldError,
 } from '../utils/ErrorCards';
-import SubSectionPreview from '../previews/SubSectionPreview'
 import DataGridPreview from '../previews/DataGridPreview';
 
 // This is the field for type=TextField
-const DataGrid = (props) => {
+const DataGridDialog = (props) => {
 
     const {
         setError,
@@ -335,4 +334,4 @@ const DataGrid = (props) => {
     )
 }
 
-export default DataGrid
+export default DataGridDialog

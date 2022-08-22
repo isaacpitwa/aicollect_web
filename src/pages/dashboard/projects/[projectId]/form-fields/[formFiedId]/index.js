@@ -9,11 +9,10 @@ import {
   Container,
   Divider,
   Grid,
-  InputAdornment,
   Tab,
   Tabs,
-  TextField,
   Typography,
+  CircularProgress
 
 } from '@mui/material';
 import { TabPanel, TabContext } from '@mui/lab';
@@ -133,7 +132,7 @@ const FieldFormDetails = () => {
   const isMounted = useMounted();
   const queryRef = useRef(null);
   const router = useRouter()
-  const [responses, setResponses] = useState([]);
+  const [responses, setResponses] = useState(null);
   const [customers, setCustomers] = useState([
     {
       id: 1,
@@ -275,11 +274,11 @@ const FieldFormDetails = () => {
               <Grid item>
                 <Typography variant="h9">
                   <NextLink
-                    href={`/dashboard/projects/${project&& project._id}`}
+                    href={`/dashboard/projects/${project && project._id}`}
                     passHref
-                    
-                  ><a style={{textDecoration:'none'}}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
-                 
+
+                  ><a style={{ textDecoration: 'none' }}>{project && project.projectname}</a></NextLink> {'>'} {fieldForm && fieldForm.name} {'>'} Responses
+
                 </Typography>
               </Grid>
 
@@ -329,7 +328,7 @@ const FieldFormDetails = () => {
 
                 <NextLink
                   href={{
-                    pathname:`/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
+                    pathname: `/dashboard/projects/${projectId}/form-fields/${formFiedId}/map`,
                   }}
                   passHref
 
@@ -343,29 +342,47 @@ const FieldFormDetails = () => {
                     View Map
                   </Button>
                 </NextLink>
+
               </Box>
               <TabPanel value='summary' index={0}>
-                <FieldResponseSummaryTable
-                  customers={paginatedCustomers}
-                  customersCount={filteredCustomers.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  responses={responses}
-                />
+                {
+                  responses ? (
+                    <FieldResponseSummaryTable
+                      customers={paginatedCustomers}
+                      customersCount={filteredCustomers.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      responses={responses}
+                    />
+                  ) : (
+                    <Box sx={{ display: 'flex',justifyContent:'center',alignItems:'center', width:'100%',height:'50vh' }}>
+                      <CircularProgress />
+                    </Box>)
+                }
+
               </TabPanel>
               <TabPanel value='all' index={1}>
-                <FieldDetailsTable
-                  customers={paginatedCustomers}
-                  customersCount={filteredCustomers.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  responses={responses}
-                  questionaire ={fieldForm}
-                />
+
+                {
+                  responses ? (
+                    <FieldDetailsTable
+                      customers={paginatedCustomers}
+                      customersCount={filteredCustomers.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      responses={responses}
+                    />
+                  ) : (
+                    <Box sx={{ display: 'flex',justifyContent:'center',alignItems:'center', width:'100%',height:'50vh' }}>
+                      <CircularProgress />
+                    </Box>
+                  )
+                }
+
               </TabPanel>
             </TabContext>
           </Card>

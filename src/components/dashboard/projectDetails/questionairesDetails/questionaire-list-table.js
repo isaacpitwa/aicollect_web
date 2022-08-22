@@ -10,9 +10,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Utils } from "../../../../utils/main";
 
-import {
-  DataGridPremium,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium} from '@mui/x-data-grid-premium';
 
 import {DataGridToolbar,DataGridToolbarWithDependacy} from '../../data-grid-toolbar'
 import { useExcelExport } from "../../../../hooks/excel-export";
@@ -355,7 +353,7 @@ export const QuestionaireDetailsTable = (props) => {
       {/* <Scrollbar> */}
       <div style={{ height: "60vh", width: "100%" }}>
         {
-          selectedDepTab.notSelected ? <DataGridPremium
+         !formattedResponses.length > 0 ? 'Loading...' : selectedDepTab.notSelected ? <DataGridPremium
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{
