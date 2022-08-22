@@ -6,12 +6,14 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
+import {DataGridToolbar} from '../../data-grid-toolbar'
 export const FieldDetailsTable = (props) => {
   const {
     customers,
@@ -317,29 +319,29 @@ export const FieldDetailsTable = (props) => {
       {/* <Scrollbar> */}
       <div style={{ height: 500, width: "100%" }}>
         {
-          selectedDepTab.notSelected ? <DataGrid
+          selectedDepTab.notSelected ? <DataGridPremium
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{
-              Toolbar: GridToolbar,
+              Toolbar: DataGridToolbar,
             }}
             filterModel={filterModel}
             onFilterModelChange={(newFilterModel) =>
               setFilterModel(newFilterModel)
             }
-
+            pagination
           /> :
-            <DataGrid
+            <DataGridPremium
               rows={[...selectedDepTab.responses].reverse()}
               columns={selectedDepTab.questions}
               components={{
-                Toolbar: GridToolbar,
+                Toolbar: DataGridToolbar,
               }}
               filterModel={filterModel}
               onFilterModelChange={(newFilterModel) =>
                 setFilterModel(newFilterModel)
               }
-
+              pagination
             />
         }
 

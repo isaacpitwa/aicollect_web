@@ -18,7 +18,6 @@ import {
 
 import {DataGridToolbar,DataGridToolbarWithDependacy} from '../../data-grid-toolbar'
 import { useExcelExport } from "../../../../hooks/excel-export";
-import { ta } from "date-fns/locale";
 export const QuestionaireDetailsTable = (props) => {
   const {
     customers,
@@ -358,7 +357,7 @@ export const QuestionaireDetailsTable = (props) => {
       {/* <Scrollbar> */}
       <div style={{ height: "60vh", width: "100%" }}>
         {
-          selectedDepTab.notSelected ? <DataGridPremium
+         !formattedResponses.length > 0 ? 'Loading...' : selectedDepTab.notSelected ? <DataGridPremium
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{

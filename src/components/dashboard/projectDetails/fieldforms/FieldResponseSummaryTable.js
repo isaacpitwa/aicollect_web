@@ -3,11 +3,14 @@ import PropTypes from "prop-types";
 import { Box, Button, Checkbox, IconButton, responsiveFontSizes } from "@mui/material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
+import {
+  DataGridPremium,
+} from '@mui/x-data-grid-premium';
 
+import {DataGridToolbar} from '../../data-grid-toolbar'
 export const FieldResponseSummaryTable = (props) => {
   const {
     customers,
@@ -175,16 +178,17 @@ const columns = [
       </Box>
       {/* <Scrollbar> */}
       <div style={{ height: 500, width: "100%" }}>
-        <DataGrid
+        <DataGridPremium
           rows={formattedResponses.reverse()}
           columns={tableColumns}
           components={{
-            Toolbar: GridToolbar,
+            Toolbar: DataGridToolbar,
           }}
           filterModel={filterModel}
           onFilterModelChange={(newFilterModel) =>
             setFilterModel(newFilterModel)
           }
+          pagination
         />
       </div>
       {/* </Scrollbar> */}
