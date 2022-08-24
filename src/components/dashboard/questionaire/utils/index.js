@@ -217,13 +217,20 @@ export const getSectionsSubSections = (field, componentsData) => {
     let sectionSubsection = [];
     let sections = [];
     let subSections = field.subParentId===null?section.components.filter(subField=>subField.type==='sub-section'):[];
+    let dataGrids = field.subParentId===null?section.components.filter(subField=>subField.type==='data-grid'):[];
+
     if(subSections) sectionSubsection.push(...subSections);
+    if(dataGrids) sectionSubsection.push(...dataGrids);
     if(field) {
         // sections = componentsData.filter(section=>section.id!==field.parentId);
         // if(sections) sectionSubsection.push(...sections);
         if(field.subParentId) {
             subSections = section.components.filter(subField=>subField.type==='sub-section'&&subField.id!==field.subParentId);
             if(subSections) sectionSubsection.push(...subSections);
+        }
+        if(field.subParentId) {
+            dataGrids = section.components.filter(subField=>subField.type==='data-grid'&&subField.id!==field.subParentId);
+            if(dataGrids) sectionSubsection.push(...dataGrids);
         }
         return sectionSubsection;
     } else {
