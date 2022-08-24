@@ -9,7 +9,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-import { Box } from '@mui/system'
+import { Box, display } from '@mui/system'
 import React, { createRef, useCallback, useContext } from 'react'
 import { atom, RecoilRoot, useRecoilState, useSetRecoilState } from 'recoil'
 import { FormContext } from '../context'
@@ -44,8 +44,8 @@ function Suggestions({ field, handleFormula }) {
     const handleClick = useCallback(
         ({band, id}) => {
             const formFieldKey = makeid();
-            handleFormula({value:value.value+formFieldKey, display: `${value.display}@${band}`,storage:{...value.storage,[formFieldKey]:id}});
-            setValue(`${value.display}@${band}` )
+            handleFormula({value: value.value ?value.value+formFieldKey: formFieldKey, display: `${value.display}@${band}`,storage:{...value.storage,[formFieldKey]:id}});
+            setValue({...value,display:`${value.display}@${band}`} )
             setHasSuggestions(false)
             field.current?.focus()
         },
@@ -111,12 +111,12 @@ function SuggestionsField(props) {
 
     const handleChange = useCallback(
         (event) => { 
-            setValue(event.target.value)
-            const newChars = event.target.value.substring(value.display.length)
+            const newChars = event.target.value.substring(value.display ?value.display.length:0)
+            setValue({...value, display:event.target.value })
             if(event.target.value && newChars){
                 if(!newChars.includes('@')){
                     props.handleFormula({
-                        value: value.value+newChars, display: event.target.value ,storage:{...value.storage}});
+                        value: value.value ?value.value+newChars: newChars, display: event.target.value ,storage:{...value.storage}});
                 }
             }else{
                 props.handleFormula(null);
