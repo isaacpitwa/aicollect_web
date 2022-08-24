@@ -23,7 +23,13 @@ const inputState = atom({
     key: 'Suggestable Input Bands',
     default: '',
 })
-
+const  makeid =() =>{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  }
 
 function Suggestions({ field, handleFormula }) {
     const [hasSuggestions, setHasSuggestions] = useRecoilState(suggestionsState)
@@ -33,22 +39,13 @@ function Suggestions({ field, handleFormula }) {
         formData,
     } = useContext(FormContext)
 
-   const  makeid =() =>{
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      
-        for (var i = 0; i < 5; i++)
-          text += possible.charAt(Math.floor(Math.random() * possible.length));
-      
-        return text;
-      }
+
 
     const handleClick = useCallback(
         ({band, id}) => {
-            const currentValue = value.display.split('@')[0];
             const formFieldKey = makeid();
-            handleFormula({value:currentValue+formFieldKey, display: value.display + band,storage:{...value.storage,[formFieldKey]:id}});
-            setValue(value.display + band)
+            handleFormula({value:value.value+formFieldKey, display: `${value.display}@${band}`,storage:{...value.storage,[formFieldKey]:id}});
+            setValue(`${value.display}@${band}` )
             setHasSuggestions(false)
             field.current?.focus()
         },
@@ -113,11 +110,17 @@ function SuggestionsField(props) {
     const [value, setValue] = useRecoilState(inputState)
 
     const handleChange = useCallback(
-        (event) => {
+        (event) => { 
             setValue(event.target.value)
-            const currentValue = value.display.split('@')[0];
-            props.handleFormula({value:currentValue, display: event.target.value ,storage:{...value.storage}});
-           
+            const newChars = event.target.value.substring(value.display.length)
+            if(event.target.value && newChars){
+                if(!newChars.includes('@')){
+                    props.handleFormula({
+                        value: value.value+newChars, display: event.target.value ,storage:{...value.storage}});
+                }
+            }else{
+                props.handleFormula(null);
+            }
             if (event.target.value.match(/@$/)) {
                 setHasSuggestions(true)
             } else setHasSuggestions(false)
