@@ -6,8 +6,9 @@ import {
     TextField
 } from '@mui/material'
 
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider } from '@mui/x-date-pickers'
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import { DescriptionCard } from '../utils';

@@ -16,8 +16,9 @@ import {
     MenuItem
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider } from '@mui/x-date-pickers'
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import { FormContext } from '../context';
