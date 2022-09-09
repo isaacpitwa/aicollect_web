@@ -301,18 +301,19 @@ export const QuestionaireDetailsTable = (props) => {
                     console.log("===> Tab Gotten  and Added: ", currentTabs.length );
                   currentTabs = currentTabs.map((tab) => {
                     if (tab.title === formField.label) {
-                      const readyQtns = tab.questions ? tab.questions : [...mustColumns];
-                      const readyRes = tab.responses ? tab.responses : [];
-                      let response = {
-                        id: readyRes.length,
-                        "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
-                        "Submitted By":  Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
-                        "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
-                        "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
-                      }, qtns = [];
-                      for (let k = 0; k < formField.multipleValuesData.length; k++) {
-                        for(let l=0;l<formField.multipleValuesData[k].length;l++){
-                          const subsectionFormField = formField.multipleValuesData[k][l];
+                      for (let z = 0; z < formField.multipleValuesData.length; z++) {
+                        const readyQtns = tab.questions ? tab.questions : [...mustColumns];
+                        const readyRes = tab.responses ? tab.responses : [];
+                        let response = {
+                          id: readyRes.length,
+                          "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
+                          "Submitted By":  Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
+                          "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
+                          "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
+                        }, qtns = [];
+                        for(let l=0;l<formField.multipleValuesData[z].length;l++){
+                          const subsectionFormField = formField.multipleValuesData[z][l];
+                          console.log(`subsection FormField: ${subsectionFormField.id} Value: ${subsectionFormField.value}`,)
                           qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label, width: 180 });
                           if (subsectionFormField.type === 'select-box') {
                             response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
@@ -324,9 +325,12 @@ export const QuestionaireDetailsTable = (props) => {
                             response = { ...response, [subsectionFormField.label]: subsectionFormField.value };
                           }
                         }
+                        console.log("Response Added: ",response);
+                        tab.questions = [...readyQtns, ...qtns].filter((value, index, self) => index === self.findIndex((t) => (t.field === value.field)))
+                        tab.responses = [...readyRes, { ...response }]
+                        console.log('Responses After Adding : ',tab.responses)
                       }
-                      tab.questions = [...readyQtns, ...qtns].filter((value, index, self) => index === self.findIndex((t) => (t.field === value.field)))
-                      tab.responses = [...readyRes, { ...response }]
+                     
                       return tab;
                     }
                     return tab
