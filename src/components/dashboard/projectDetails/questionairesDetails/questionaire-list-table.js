@@ -290,7 +290,7 @@ export const QuestionaireDetailsTable = (props) => {
   
                 }
               }
-              if (formField.type === 'data-grid' && formField.multipleValuesData && formField.multipleValuesData.length >0 && formField.display === 'visible') {
+              else if (formField.type === 'data-grid' && formField.multipleValuesData && formField.multipleValuesData.length >0 && formField.display === 'visible') {
                 if (formField.components) {  
                   //  loop through sub-section Formfields
                   console.log("===> Tab Gotten : ", formField.label);
