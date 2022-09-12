@@ -147,7 +147,12 @@ export const QuestionaireDetailsTable = (props) => {
           formattedResponse = formField.value ? { ...formattedResponse, [ formField.label]: formField.value.secure_url }: { ...formattedResponse, [ formField.label]: 'N/A'};
         }
         else {
-          formattedResponse = { ...formattedResponse, [formField.label]: formField.value }
+          if(formField.multipleValues){
+            console.log("Found value with Multiple Fields values: Label",formField.label);
+            const value = formField.multipleValuesData.map((child)=> child.value).join(',')
+            console.log("Value Found: ",value);
+          }
+          formattedResponse = { ...formattedResponse, [formField.label]:  formField.multipleValues ? formField.multipleValuesData.map((child)=> child.value?? 'N/A').join(',') : formField.value }
         }
       }
     }
