@@ -34,7 +34,7 @@ const MultipleValuesPreview = (props) => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', border: '1px solid #D8DEE4' }}>
                     {
                         multipleValuesData.map((item, index) => {
-                            component.props.key = index;
+                            // component.props.key = index;
                             return (
                                 <Box sx={{ display: "flex", borderBottom: '1px solid #D8DEE4', alignItems: 'center' }} key={`Container ${index}`}>
                                     <Box sx={{ borderRight: '1px solid #D8DEE4', width: "80%", padding: '0 8px' }} key={`Container2 ${index}`}>

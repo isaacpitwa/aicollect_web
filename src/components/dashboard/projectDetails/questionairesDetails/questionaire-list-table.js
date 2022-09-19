@@ -10,9 +10,9 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Utils } from "../../../../utils/main";
 
-import { DataGridPremium} from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
-import {DataGridToolbar,DataGridToolbarWithDependacy} from '../../data-grid-toolbar'
+import { DataGridToolbar, DataGridToolbarWithDependacy } from '../../data-grid-toolbar'
 import { useExcelExport } from "../../../../hooks/excel-export";
 export const QuestionaireDetailsTable = (props) => {
   const {
@@ -84,7 +84,7 @@ export const QuestionaireDetailsTable = (props) => {
     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
   ];
 
- 
+
 
   const handleSelectAllCustomers = (event) => {
     setSelectedCustomers(
@@ -105,13 +105,13 @@ export const QuestionaireDetailsTable = (props) => {
     let formattedResponse = {
       id: response._id,
       "Time Spent": response.timeSpentToSubmit,
-      "Submitted By":  Utils.capitalizeFirstLetter(response.submittedBy.name),
+      "Submitted By": Utils.capitalizeFirstLetter(response.submittedBy.name),
       "Date Submitted": new Date(response.submittedOn).toLocaleDateString("en-US"),
-      "Latitude": response.gps ?  Math.round(response.gps.latitude * 10000000) / 10000000: 'N/A',
-      "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000: 'N/A',
-      "GPS Accuracy": response.gps? Math.round(response.gps.accuracy * 10) / 10: 'N/A',
-      "ID": response.region? `${response.region.prefix }-${ String(response.prefix_id ).padStart(5, '0')}`: 'N/A',
-      "Name Of Respondent": response.person ? response.person: 'N/A',
+      "Latitude": response.gps ? Math.round(response.gps.latitude * 10000000) / 10000000 : 'N/A',
+      "Longitude": response.gps ? Math.round(response.gps.longitude * 10000000) / 10000000 : 'N/A',
+      "GPS Accuracy": response.gps ? Math.round(response.gps.accuracy * 10) / 10 : 'N/A',
+      "ID": response.region ? `${response.region.prefix}-${String(response.prefix_id).padStart(5, '0')}` : 'N/A',
+      "Name Of Respondent": response.person ? response.person : 'N/A',
     }
     // Loop sections
     for (let i = 0; i < response.answers.length; i++) {
@@ -130,8 +130,8 @@ export const QuestionaireDetailsTable = (props) => {
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: new Date(subsectionFormField.value).toLocaleDateString("en-US") }
               }
               else if (subsectionFormField.type === 'image') {
-                formattedResponse =  subsectionFormField.value ? { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]:  subsectionFormField.value.secure_url}
-                : { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: 'N/A' };
+                formattedResponse = subsectionFormField.value ? { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.value.secure_url }
+                  : { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: 'N/A' };
               }
               else {
                 formattedResponse = { ...formattedResponse, [subsectionFormField.label + `-(${formField.label})`]: subsectionFormField.value }
@@ -144,15 +144,15 @@ export const QuestionaireDetailsTable = (props) => {
           formattedResponse = { ...formattedResponse, [formField.label]: new Date(formField.value).toLocaleDateString("en-US") }
         }
         else if (formField.type === 'image') {
-          formattedResponse = formField.value ? { ...formattedResponse, [ formField.label]: formField.value.secure_url }: { ...formattedResponse, [ formField.label]: 'N/A'};
+          formattedResponse = formField.value ? { ...formattedResponse, [formField.label]: formField.value.secure_url } : { ...formattedResponse, [formField.label]: 'N/A' };
         }
         else {
-          if(formField.multipleValues){
-            console.log("Found value with Multiple Fields values: Label",formField.label);
-            const value = formField.multipleValuesData.map((child)=> child.value).join(',')
-            console.log("Value Found: ",value);
+          if (formField.multipleValues) {
+            console.log("Found value with Multiple Fields values: Label", formField.label);
+            const value = formField.multipleValuesData.map((child) => child.value)
+            console.log("Value Found: ", value);
           }
-          formattedResponse = { ...formattedResponse, [formField.label]:  formField.multipleValues ? formField.multipleValuesData.map((child)=> child.value?? 'N/A').join(',') : formField.value }
+          formattedResponse = { ...formattedResponse, [formField.label]: formField.multipleValues ? formField.multipleValuesData.map((child) => child.value ?? 'N/A').join(',') : formField.value }
         }
       }
     }
@@ -178,10 +178,11 @@ export const QuestionaireDetailsTable = (props) => {
                 currentcolumns = [...currentcolumns, { field: `${subsectionFormField.label}-(${formField.label})`, headName: subsectionFormField.label, width: 150 }]
               }
             }
-          } 
+          }
           else if (formField.type === 'image') {
-            currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label, width: 150, renderCell: (params) => params.value ? <img src={params.value}  width={140} height={80} style={{objectFit:'contain'}}/> : 'N/A' 
-          }]
+            currentcolumns = [...currentcolumns, {
+              field: formField.label, headName: formField.label, width: 150, renderCell: (params) => params.value ? <img src={params.value} width={140} height={80} style={{ objectFit: 'contain' }} /> : 'N/A'
+            }]
           }
           else {
             currentcolumns = [...currentcolumns, { field: formField.label, headName: formField.label, width: 150 }]
@@ -195,14 +196,14 @@ export const QuestionaireDetailsTable = (props) => {
     return currentcolumns;
   }
 
-  const updateExporter = async (currentTabs) =>{
+  const updateExporter = async (currentTabs) => {
     console.log("Executing Set function");
-    await  setDetails({
-       depedancyTabs:[...currentTabs.map((tab)=>{ return {name:tab.title, rows :[...tab.responses].reverse(), columns: tab.questions}})
-     ],
-     questionaire: questionaire.name
+    await setDetails({
+      depedancyTabs: [...currentTabs.map((tab) => { return { name: tab.title, rows: [...tab.responses].reverse(), columns: tab.questions } })
+      ],
+      questionaire: questionaire.name
     })
-   }
+  }
 
   const getDependancyTabs = () => {
     let currentTabs = [];
@@ -240,39 +241,85 @@ export const QuestionaireDetailsTable = (props) => {
       }
     },
     { field: "Date Submitted", headName: "Date Submitted", width: 150 },
-     { field: "Submitted By", headName: "Submitted By", width: 150 },
-     { field: "ID", headName: "ID", width: 150 },
-     { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
+    { field: "Submitted By", headName: "Submitted By", width: 150 },
+    { field: "ID", headName: "ID", width: 150 },
+    { field: "Name Of Respondent", headName: "Name Of Respondent", width: 150 },
 
     ]
-      if (responses.length) {
-        for (let res = 0; res < responses.length; res++) {
-          for (let i = 0; i < responses[res].answers.length; i++) {
-            // loop through formfields
-            for (let j = 0; j < responses[res].answers[i].components.length; j++) {
-              const formField = responses[res].answers[i].components[j];
-              if (formField.type === 'sub-section' && formField.dependency !== null && formField.display === 'visible') {
-                if (formField.components) {
-                  //  loop through sub-section Formfields
-                  console.log("===> Tab Gotten : ", formField.label);
-                  currentTabs = [...currentTabs, { title: `${formField.label.split('-')[0]}` }].filter((value, index, self) =>
-                    index === self.findIndex((t) => (
-                      t.title === value.title
-                    )));
-                    console.log("===> Tab Gotten  and Added: ", currentTabs.length );
-                  currentTabs = currentTabs.map((tab) => {
-                    if (tab.title === formField.label.split('-')[0]) {
+    if (responses.length) {
+      for (let res = 0; res < responses.length; res++) {
+        for (let i = 0; i < responses[res].answers.length; i++) {
+          // loop through formfields
+          for (let j = 0; j < responses[res].answers[i].components.length; j++) {
+            const formField = responses[res].answers[i].components[j];
+            if (formField.type === 'sub-section' && formField.dependency !== null && formField.display === 'visible') {
+              if (formField.components) {
+                //  loop through sub-section Formfields
+                console.log("===> Tab Gotten : ", formField.label);
+                currentTabs = [...currentTabs, { title: `${formField.label.split('-')[0]}` }].filter((value, index, self) =>
+                  index === self.findIndex((t) => (
+                    t.title === value.title
+                  )));
+                console.log("===> Tab Gotten  and Added: ", currentTabs.length);
+                currentTabs = currentTabs.map((tab) => {
+                  if (tab.title === formField.label.split('-')[0]) {
+                    const readyQtns = tab.questions ? tab.questions : [...mustColumns];
+                    const readyRes = tab.responses ? tab.responses : [];
+                    let response = {
+                      id: readyRes.length,
+                      "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
+                      "Submitted By": Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
+                      "ID": responses[res].region ? `${responses[res].region.prefix}-${String(responses[res].prefix_id).padStart(5, '0')}` : 'N/A',
+                      "Name Of Respondent": responses[res].person ? responses[res].person : 'N/A',
+                    }, qtns = [];
+                    for (let k = 0; k < formField.components.length; k++) {
+                      const subsectionFormField = formField.components[k];
+                      qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label, width: 180 });
+                      if (subsectionFormField.type === 'select-box') {
+                        response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
+                      }
+                      else if (subsectionFormField.type === 'date') {
+                        response = { ...response, [subsectionFormField.label]: new Date(subsectionFormField.value).toLocaleDateString("en-US") };
+                      }
+                      else {
+                        response = { ...response, [subsectionFormField.label]: subsectionFormField.value };
+                      }
+                    }
+                    tab.questions = [...readyQtns, ...qtns].filter((value, index, self) => index === self.findIndex((t) => (t.field === value.field)))
+                    tab.responses = [...readyRes, { ...response }]
+                    return tab;
+                  }
+                  return tab
+                });
+
+
+
+              }
+            }
+            else if (formField.type === 'data-grid' && formField.multipleValuesData && formField.multipleValuesData.length > 0 && formField.display === 'visible') {
+              if (formField.components) {
+                //  loop through sub-section Formfields
+                console.log("===> Tab Gotten : ", formField.label);
+                currentTabs = [...currentTabs, { title: `${formField.label}` }].filter((value, index, self) =>
+                  index === self.findIndex((t) => (
+                    t.title === value.title
+                  )));
+                console.log("===> Tab Gotten  and Added: ", currentTabs.length);
+                currentTabs = currentTabs.map((tab) => {
+                  if (tab.title === formField.label) {
+                    for (let z = 0; z < formField.multipleValuesData.length; z++) {
                       const readyQtns = tab.questions ? tab.questions : [...mustColumns];
                       const readyRes = tab.responses ? tab.responses : [];
                       let response = {
                         id: readyRes.length,
                         "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
-                        "Submitted By":  Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
-                        "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
-                        "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
+                        "Submitted By": Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
+                        "ID": responses[res].region ? `${responses[res].region.prefix}-${String(responses[res].prefix_id).padStart(5, '0')}` : 'N/A',
+                        "Name Of Respondent": responses[res].person ? responses[res].person : 'N/A',
                       }, qtns = [];
-                      for (let k = 0; k < formField.components.length; k++) {
-                        const subsectionFormField = formField.components[k];
+                      for (let l = 0; l < formField.multipleValuesData[z].length; l++) {
+                        const subsectionFormField = formField.multipleValuesData[z][l];
+                        console.log(`subsection FormField: ${subsectionFormField.id} Value: ${subsectionFormField.value}`,)
                         qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label, width: 180 });
                         if (subsectionFormField.type === 'select-box') {
                           response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
@@ -284,73 +331,27 @@ export const QuestionaireDetailsTable = (props) => {
                           response = { ...response, [subsectionFormField.label]: subsectionFormField.value };
                         }
                       }
+                      console.log("Response Added: ", response);
                       tab.questions = [...readyQtns, ...qtns].filter((value, index, self) => index === self.findIndex((t) => (t.field === value.field)))
                       tab.responses = [...readyRes, { ...response }]
-                      return tab;
+                      console.log('Responses After Adding : ', tab.responses)
                     }
-                    return tab
-                  });
-  
-  
-  
-                }
-              }
-              else if (formField.type === 'data-grid' && formField.multipleValuesData && formField.multipleValuesData.length >0 && formField.display === 'visible') {
-                if (formField.components) {  
-                  //  loop through sub-section Formfields
-                  console.log("===> Tab Gotten : ", formField.label);
-                  currentTabs = [...currentTabs, { title: `${formField.label}` }].filter((value, index, self) =>
-                    index === self.findIndex((t) => (
-                      t.title === value.title
-                    )));
-                    console.log("===> Tab Gotten  and Added: ", currentTabs.length );
-                  currentTabs = currentTabs.map((tab) => {
-                    if (tab.title === formField.label) {
-                      for (let z = 0; z < formField.multipleValuesData.length; z++) {
-                        const readyQtns = tab.questions ? tab.questions : [...mustColumns];
-                        const readyRes = tab.responses ? tab.responses : [];
-                        let response = {
-                          id: readyRes.length,
-                          "Date Submitted": new Date(responses[res].submittedOn).toLocaleDateString("en-US"),
-                          "Submitted By":  Utils.capitalizeFirstLetter(responses[res].submittedBy.name),
-                          "ID": responses[res].region? `${responses[res].region.prefix }-${ String(responses[res].prefix_id ).padStart(5, '0')}`: 'N/A',
-                          "Name Of Respondent": responses[res].person ? responses[res].person: 'N/A',
-                        }, qtns = [];
-                        for(let l=0;l<formField.multipleValuesData[z].length;l++){
-                          const subsectionFormField = formField.multipleValuesData[z][l];
-                          console.log(`subsection FormField: ${subsectionFormField.id} Value: ${subsectionFormField.value}`,)
-                          qtns.push({ field: subsectionFormField.label, headName: subsectionFormField.label, width: 180 });
-                          if (subsectionFormField.type === 'select-box') {
-                            response = { ...response, [subsectionFormField.label]: subsectionFormField.values.filter((item) => item.checked).map((item) => item.label).toString() };
-                          }
-                          else if (subsectionFormField.type === 'date') {
-                            response = { ...response, [subsectionFormField.label]: new Date(subsectionFormField.value).toLocaleDateString("en-US") };
-                          }
-                          else {
-                            response = { ...response, [subsectionFormField.label]: subsectionFormField.value };
-                          }
-                        }
-                        console.log("Response Added: ",response);
-                        tab.questions = [...readyQtns, ...qtns].filter((value, index, self) => index === self.findIndex((t) => (t.field === value.field)))
-                        tab.responses = [...readyRes, { ...response }]
-                        console.log('Responses After Adding : ',tab.responses)
-                      }
-                     
-                      return tab;
-                    }
-                    return tab
-                  });
-  
-  
-  
-                }
+
+                    return tab;
+                  }
+                  return tab
+                });
+
+
+
               }
             }
           }
         }
-  
-  
       }
+
+
+    }
     return currentTabs;
   }
 
@@ -366,8 +367,8 @@ export const QuestionaireDetailsTable = (props) => {
   const [depedancyQtns, setDepedancyQtns] = useState([]);
   const [selectedDepTab, setSelectedDepTab] = useState({ notSelected: true });
 
-   // Reset selected customers when customers change
-   useEffect(
+  // Reset selected customers when customers change
+  useEffect(
     () => {
       if (selectedCustomers.length) {
         setSelectedCustomers([]);
@@ -382,7 +383,7 @@ export const QuestionaireDetailsTable = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customers]
   );
-  
+
   return (
     <div {...other}>
       <Box
@@ -408,11 +409,11 @@ export const QuestionaireDetailsTable = (props) => {
       {/* <Scrollbar> */}
       <div style={{ height: "60vh", width: "100%" }}>
         {
-         !formattedResponses.length > 0 ? 'Loading...' : selectedDepTab.notSelected ? <DataGridPremium
+          !formattedResponses.length > 0 ? 'Loading...' : selectedDepTab.notSelected ? <DataGridPremium
             rows={formattedResponses.reverse()}
             columns={tableColumns}
             components={{
-              Toolbar: DataGridToolbarWithDependacy ,
+              Toolbar: DataGridToolbarWithDependacy,
             }}
             filterModel={filterModel}
             onFilterModelChange={(newFilterModel) =>
@@ -437,15 +438,15 @@ export const QuestionaireDetailsTable = (props) => {
 
       </div>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
-      <Button variant="contained" onClick={()=>{ setSelectedDepTab({notSelected:true})}}
-       style={   selectedDepTab.notSelected ?{
-            
-      }:{opacity:0.7}}>{ questionaire ?questionaire.name :'Unknown'}</Button>
+        <Button variant="contained" onClick={() => { setSelectedDepTab({ notSelected: true }) }}
+          style={selectedDepTab.notSelected ? {
+
+          } : { opacity: 0.7 }}>{questionaire ? questionaire.name : 'Unknown'}</Button>
         {
-          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => {selectedDepTab.title === depQtn.title? setSelectedDepTab({ notSelected: true }): setSelectedDepTab(depQtn);}}
-           style={  selectedDepTab.title === depQtn.title?{
-            
-          }:{opacity:0.7}}>{depQtn.title}</Button>))
+          depedancyQtns.map(((depQtn) => <Button key={depQtn.title} onClick={() => { selectedDepTab.title === depQtn.title ? setSelectedDepTab({ notSelected: true }) : setSelectedDepTab(depQtn); }}
+            style={selectedDepTab.title === depQtn.title ? {
+
+            } : { opacity: 0.7 }}>{depQtn.title}</Button>))
         }
       </ButtonGroup>
       {/* </Scrollbar> */}

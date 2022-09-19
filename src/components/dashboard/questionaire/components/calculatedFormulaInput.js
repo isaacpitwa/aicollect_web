@@ -44,8 +44,8 @@ function Suggestions({ field, handleFormula }) {
     const handleClick = useCallback(
         ({band, id}) => {
             const formFieldKey = makeid();
-            handleFormula({value: value.value ?value.value+formFieldKey: formFieldKey, display: `${value.display}@${band}`,storage:{...value.storage,[formFieldKey]:id}});
-            setValue({...value,display:`${value.display}@${band}`} )
+            handleFormula({value: value.value ?value.value+formFieldKey: formFieldKey, display: `${value.display}${band}`,storage:{...value.storage,[formFieldKey]:id}});
+            setValue({...value,display:`${value.display}${band}`} )
             setHasSuggestions(false)
             field.current?.focus()
         },
