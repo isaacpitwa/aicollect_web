@@ -83,15 +83,15 @@ const getSections = (t,user) => user ? [
         icon: <UsersIcon fontSize="small" />
       },
       {
-        title: t("Projects"),
-        path: "/dashboard/projects",
-        icon: <AppsIcon fontSize="small" />
-      },
-      {
         title: t("Tasks"),
         path: "/dashboard/tasks",
         icon: <AssignmentIcon fontSize="small" />,
 
+      },
+      {
+        title: t("Projects"),
+        path: "/dashboard/projects",
+        icon: <AppsIcon fontSize="small" />
       },
       // {
       //   title: t('Products'),
