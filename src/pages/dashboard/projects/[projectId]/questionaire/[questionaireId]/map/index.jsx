@@ -395,15 +395,12 @@ const TaskMapArea = ({ questionaireResponses }) => {
                           response.gps.coords ?
                             <Marker longitude={response.gps.coords.longitude} latitude={response.gps.coords.latitude}
                               position={{ lat: response.gps.coords.latitude, lng: response.gps.coords.longitude }}
-                              anchor="bottom"
                               key={index}
                               onClick={() => {
                                 onMarkerClicked({ response: response, location: { longitude: response.gps.coords.longitude, latitude: response.gps.coords.latitude } })
-                              }}>
-                              <MdLocationPin style={{
-                                color: '#ff0000',
-                                fontSize: '24px',
-                              }} />
+                              }}
+                              >
+                             
                             </Marker>
                             :
                             <Marker
