@@ -331,7 +331,7 @@ const TaskList = () => {
               </Tabs>
               <Divider />
 
-              <Box
+              {/* <Box
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
@@ -340,7 +340,7 @@ const TaskList = () => {
                   p: 3
                 }}
               >
-                {/* <Box
+                <Box
                   component="form"
                   onSubmit={handleQueryChange}
                   sx={{
