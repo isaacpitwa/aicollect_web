@@ -340,7 +340,7 @@ const TaskList = () => {
                   p: 3
                 }}
               >
-                <Box
+                {/* <Box
                   component="form"
                   onSubmit={handleQueryChange}
                   sx={{
@@ -380,7 +380,7 @@ const TaskList = () => {
                     </option>
                   ))}
                 </TextField>
-              </Box>
+              </Box> */}
               <Box>
               {
                tasks.length === projects.length && projects.length>0 ?
