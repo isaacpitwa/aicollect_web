@@ -229,10 +229,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
     <>
       <Head>
         <title>Dashboard: Questionaire - Map </title>
-        <link
-          rel="stylesheet"
-          href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
-        />
       </Head>
       <Main open={open}>
         <React.Fragment key={'drawer'}>
@@ -385,7 +381,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                       width: "100vw",
                       height: "90vh",
                     }}
-                    center={{
+                    center={showPopup ? selectedMarker.location:{
                       lat: 0.3438034017562465,
                       lng: 32.59025009716529,
                     }}
@@ -428,11 +424,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                     {showPopup && (
                       <InfoWindow 
                       position={selectedMarker.location}
-                      key={selectedMarker.id}
-                      longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
-                        anchor="top"
-                        onClose={() => setShowPopup(false)}
-                        offset={0}
+                      key={selectedMarker.location.longitude}
                       >
                         <Box>
                           <Typography variant="h6" style={{ fontSize: '14px' }}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
@@ -441,72 +433,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                         </Box>
                       </InfoWindow>)}
                   </GoogleMap> : null}
-                {/* <Box
-                sx={{
-                  backgroundColor: "neatral.100",
-                  px: 0,
-                  py: 0,
-                  width: "100vw",
-                  height: "90vh",
-                }}
-              >
-                <Map
-                  initialViewState={{
-                    longitude: centerLocation ? centerLocation.longitude : 32.513311,
-                    latitude: centerLocation ? centerLocation.latitude : 0.3899683,
-                    zoom: 10,
-                    width: "100%",
-                    
-                    
-                  }}
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_GOOGLE_MAP_TOKEN}
-                  mapStyle="mapbox://styles/mapbox/satellite-v9"
-                  terrain={{
-                    source: "mapbox-raster-dem",
-                    exaggeration: 2
-                  }}
-                  ref={mapRef}
-                  
-                >
-                 <Layer {...parkLayer} />
-                  {
-                    filteredResponses.length > 0 ? filteredResponses.map((response, index) => {
-                      return response.gps ?
-                        response.gps.coords ?
-                          <Marker longitude={response.gps.coords.longitude} latitude={response.gps.coords.latitude}
-                            anchor="bottom" key={index} onClick={() => onMarkerClicked({response: response, location: { longitude: response.gps.coords.longitude, latitude: response.gps.coords.latitude }}) }>
-                            <MdLocationPin style={{
-                              color: '#ff0000',
-                              fontSize: '24px',
-                            }} />
-                          </Marker>
-                          :
-                          <Marker longitude={response.gps.longitude} latitude={response.gps.latitude} anchor="bottom" key={index} onClick={() => { onMarkerClicked(response, { longitude: response.gps.longitude, latitude: response.gps.latitude }) }}>
-                            <MdLocationPin style={{
-                              color: '#ff0000',
-                              fontSize: '24px',
-                            }} />
-                          </Marker> : null
-
-                    }
-                    ) : null
-                  }
-
-                  {showPopup && (
-                    <Popup longitude={selectedMarker.location.longitude} latitude={selectedMarker.location.latitude}
-                      anchor="top"
-                      onClose={() => setShowPopup(false)}
-                      offset={0}
-                      >
-                      <Box>
-                        <Typography variant="h6" style={{fontSize:'14px'}}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
-                        <Typography variant="h6" style={{fontSize:'14px'}}>NAME: {selectedMarker.response.person.toUpperCase()} </Typography>
-                        <Typography variant="h6" style={{fontSize:'14px'}}>REGION: {selectedMarker.response.region.region} </Typography>
-                      </Box>
-                    </Popup>)}
-                </Map>
-                
-              </Box> */}
               </Grid>
             </Grid>
           </Container>
