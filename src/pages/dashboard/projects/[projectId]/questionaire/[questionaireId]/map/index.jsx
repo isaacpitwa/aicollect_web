@@ -164,11 +164,9 @@ const TaskMapArea = ({ questionaireResponses }) => {
   }, []);
 
   const onMarkerClicked = ({ response, location }) => {
-    console.log('On marker clicked', response, location);
     if (response && response.gps) {
       setSelectedMarker({ response: response, location: location });
       setShowPopup(true);
-      console.log(`Marker clicked  Before: ${showPopup}`);
     }
   }
 
@@ -214,7 +212,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
     const region = event.target.value;
     setFilterRegion(region);
     if (region) {
-      console.log("Selected region: ", region);
       const results = responses.filter(response =>
         response.region && Utils.isInRegion(response, region)
       );
@@ -416,7 +413,6 @@ const TaskMapArea = ({ questionaireResponses }) => {
                               longitude={response.gps.longitude} latitude={response.gps.latitude} anchor="bottom" key={index}
                               position={{ lat: response.gps.latitude, lng: response.gps.longitude }}
                               onClick={() => { 
-                                console.log('Marker clicked with response', response);
                                 onMarkerClicked({response:response,location: { lng: response.gps.longitude, lat: response.gps.latitude }}) 
                               }
                             }
