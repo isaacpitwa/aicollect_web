@@ -164,7 +164,8 @@ const TaskMapArea = ({ questionaireResponses }) => {
   }, []);
 
   const onMarkerClicked = ({ response, location }) => {
-    if (response.gps) {
+    console.log('On marker clicked', response, location);
+    if (response && response.gps) {
       setSelectedMarker({ response: response, location: location });
       setShowPopup(true);
       console.log(`Marker clicked  Before: ${showPopup}`);
@@ -194,7 +195,10 @@ const TaskMapArea = ({ questionaireResponses }) => {
   const handleRepondentClick = (response) => {
     // Fly to  location
     if (response.gps) {
-      const center = { lat: response.gps.latitude, lng: response.gps.longitude };
+      const center = {
+        lat: response.gps.coords ? response.gps.coords.latitude : response.gps.latitude,
+        lng: response.gps.coords ? response.gps.coords.longitude : response.gps.longitude
+      };
       map.moveCamera({
         center: center,
         zoom: 20,
@@ -381,7 +385,7 @@ const TaskMapArea = ({ questionaireResponses }) => {
                       width: "100vw",
                       height: "90vh",
                     }}
-                    center={showPopup ? selectedMarker.location:{
+                    center={showPopup ? selectedMarker.location : {
                       lat: 0.3438034017562465,
                       lng: 32.59025009716529,
                     }}
@@ -397,16 +401,25 @@ const TaskMapArea = ({ questionaireResponses }) => {
                               position={{ lat: response.gps.coords.latitude, lng: response.gps.coords.longitude }}
                               key={index}
                               onClick={() => {
-                                onMarkerClicked({ response: response, location: { longitude: response.gps.coords.longitude, latitude: response.gps.coords.latitude } })
+                                onMarkerClicked({ 
+                                  response: response, location: { lng: response.gps.coords.longitude, lat: response.gps.coords.latitude }
+                                 })
                               }}
-                              >
-                             
+                            >
+                              <MdLocationPin style={{
+                                color: '#ff0000',
+                                fontSize: '24px',
+                              }} />
                             </Marker>
                             :
                             <Marker
                               longitude={response.gps.longitude} latitude={response.gps.latitude} anchor="bottom" key={index}
                               position={{ lat: response.gps.latitude, lng: response.gps.longitude }}
-                              onClick={() => { onMarkerClicked(response, { longitude: response.gps.longitude, latitude: response.gps.latitude }) }}
+                              onClick={() => { 
+                                console.log('Marker clicked with response', response);
+                                onMarkerClicked({response:response,location: { lng: response.gps.longitude, lat: response.gps.latitude }}) 
+                              }
+                            }
                             >
                               <MdLocationPin style={{
                                 color: '#ff0000',
@@ -419,9 +432,9 @@ const TaskMapArea = ({ questionaireResponses }) => {
                     }
 
                     {showPopup && (
-                      <InfoWindow 
-                      position={selectedMarker.location}
-                      key={selectedMarker.location.longitude}
+                      <InfoWindow
+                        position={selectedMarker.location}
+                        key={selectedMarker.location.longitude}
                       >
                         <Box>
                           <Typography variant="h6" style={{ fontSize: '14px' }}>ID: {Utils.formatIdPrefix(selectedMarker.response)} </Typography>
