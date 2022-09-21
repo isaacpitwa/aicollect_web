@@ -75,24 +75,35 @@ const Login = () => {
 
       <RootStyle>
         <MHidden width="mdDown">
-          <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              AiCollect
+          <SectionStyle sx={{
+            backgroundColor:'#5048E5',margin:0,
+            maxWidth:'50%',
+            borderRadius:0,display:'flex',flexDirection:'column',
+            alignItems:'center',justifyContent:'center',color:'#282BD3',padding:'0 12%'}}>
+            <Box sx={{display:'flex',justifyContent:'center', width:'100%'}}>
+            <img src="/images/illustration.svg" alt="aicollect-login" style={{width:'21rem'}} />
+            </Box>
+
+            <Typography variant="h5" sx={{color:'white',fontWeight:'600',mt:'32px'}}>
+              Go beyond data collection with built-in integrations
             </Typography>
-            <img src="/login.jpg" alt="aicollect-login" />
+            <Typography variant="p" sx={{color:'#282BD3',fontWeight:'400',color:'white',fontSize:'14px',mt:'4px'}}>
+            Send data to Google Sheets as soon as it comes in, trigger notifications and emails with Zapier or get to insights faster with Google Data Studio or Tableau.
+            </Typography>
           </SectionStyle>
         </MHidden>
 
         <Container maxWidth="sm">
           <ContentStyle>
-            <Stack sx={{ mb: 5 }}>
+            <Stack sx={{ mb: 1,textAlign:'center' }}>
               <Typography variant="h4" gutterBottom>
                 Sign in to AiCollect
               </Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                Enter your details below
+              <Typography sx={{ color: "text.secondary",fontSize:'14px' }}>
+                Welcome back! Please enter your details.
               </Typography>
             </Stack>
+            <Divider sx={{ mb: 5, mt:3 }} />
             <JWTLogin />
             <Divider sx={{ my: 3 }} />
             {/* <Typography color="textSecondary" variant="body2">
