@@ -20,9 +20,9 @@ const background = {
 const divider = '#E6E8F0';
 
 const primary = {
-  main: '#5048E5',
-  light: '#828DF8',
-  dark: '#3832A0',
+  main: '#1971b9',
+  light: '#1971b9',
+  dark: '#1971b9',
   contrastText: '#FFFFFF'
 };
 
