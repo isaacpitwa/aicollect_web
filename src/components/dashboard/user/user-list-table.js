@@ -23,6 +23,7 @@ import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 
+
 export const UserListTable = (props) => {
   const {
     customers,
@@ -63,6 +64,7 @@ export const UserListTable = (props) => {
     && selectedCustomers.length < customers.length;
   const selectedAllCustomers = selectedCustomers.length === customers.length;
 
+  console.log("Client List", customers);
   return (
     <div {...other}>
       <Box
