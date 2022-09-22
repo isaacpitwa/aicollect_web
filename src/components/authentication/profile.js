@@ -15,7 +15,10 @@ import {
   Select,
   MenuItem,
   LinearProgress,
+  Divider,
   FormGroup,
+  Avatar,
+
 } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import BadgeIcon from '@mui/icons-material/Badge';
@@ -26,6 +29,7 @@ import { billingPlanApi } from "../../api/billingplan-api";
 import { fileToBase64 } from "../../utils/file-to-base64";
 import { IndexRedirect } from "./auth-guard";
 import toast from 'react-hot-toast';
+import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 
 
 export const Profile = (props) => {
@@ -39,6 +43,8 @@ export const Profile = (props) => {
     initialValues: {
       userType: props.user.roles,
       user: props.user.email,
+      firstName: props.user.firstName,
+      lastName: props.user.lastName,
       billingPlan: "",
       sector: "",
       companyName: "",
@@ -48,6 +54,8 @@ export const Profile = (props) => {
     validationSchema: Yup.object({
       userType: Yup.string().max(255).required("User Type is required"),
       user: Yup.string(),
+      firstName: Yup.string().max(255).required("First name is required"),
+      lastName: Yup.string().max(255).required("Last name is required"),
       billingPlan: Yup.string().max(255),
       sector: Yup.string().max(255),
       companyName: Yup.string().max(255),
@@ -55,8 +63,8 @@ export const Profile = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const base64Image = profileImage ? await fileToBase64(profileImage): null;
-        const base64CompanyImage =  companyLogo ? await fileToBase64(companyLogo) : null;
+        const base64Image = profileImage ? await fileToBase64(profileImage) : null;
+        const base64CompanyImage = companyLogo ? await fileToBase64(companyLogo) : null;
         const profile = {
           ...values,
           profileImage: base64Image,
@@ -67,13 +75,13 @@ export const Profile = (props) => {
 
         if (isMounted() && data) {
           if (data) {
-            const returnUrl = router.query.returnUrl ||  IndexRedirect[props.user.roles];
+            const returnUrl = router.query.returnUrl || IndexRedirect[props.user.roles];
             router.push(returnUrl, null, { shallow: false });
           }
         }
       } catch (err) {
         console.error(err);
-        toast.error(err.message?? 'Something went wrong');
+        toast.error(err.message ?? 'Something went wrong');
         if (isMounted()) {
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
@@ -100,79 +108,165 @@ export const Profile = (props) => {
     getBillingPlans();
   }, [setBillingPlans]);
 
+  const getURL = () => {
+    if (profileImage) {
+      return URL.createObjectURL(profileImage);
+    }
+    return '';
+  }
   return (
     <form noValidate onSubmit={formik.handleSubmit} {...props}>
-      <TextField
-        error={Boolean(formik.touched.userType && formik.errors.userType)}
-        fullWidth
-        helperText={formik.touched.userType && formik.errors.userType}
-        label="User Type"
-        margin="normal"
-        name="userType"
-        disabled
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        value={formik.values.userType}
-      />
-      <TextField
-        error={Boolean(formik.touched.user && formik.errors.user)}
-        fullWidth
-        helperText={formik.touched.user && formik.errors.user}
-        label="User"
-        margin="normal"
-        name="user"
-        disabled
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        value={formik.values.user}
-      />
-      {props.user.roles === "Owner" && (
-        <FormControl fullWidth sx={{ mb: 3 }}>
-          <InputLabel>Sector</InputLabel>
-          <Select
-            error={Boolean(formik.touched.sector && formik.errors.sector)}
-            fullWidth
-            helperText={formik.touched.sector && formik.errors.sector}
-            label="Sector"
-            margin="normal"
-            name="sector"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.sector}
-          >
-            {
-              sectors.map((sector, idx) => (
-                <MenuItem key={idx} value={sector.id}>{sector.title}</MenuItem>
-              ))
-            }
-          </Select>
-        </FormControl>
-      )}
+      <Typography sx={{ color: "text.secondary", fontSize: '16px' }}>Personal Information</Typography>
+      <Divider sx={{ mb: 3, mt: 1 }} />
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+        <Avatar
+          src={getURL()}
+          sx={{
+            height: 120,
+            mr: 2,
+            width: 120,
+            mt: '14px',
+          }}
+        >
+          <UserCircleIcon fontSize="small" />
+        </Avatar>
+        <FormGroup>
+          <input
+            type="file"
+            name="profileImage"
+            id="profileImage"
+            onChange={(e) => setProfileImage(e.target.files[0])}
+            hidden
+          />
+          <label htmlFor="profileImage">
+            <Button
+              variant="contained"
+              startIcon={<BadgeIcon fontSize="small" />}
+              component="span"
+              sx={{ mt: 3 }}
+            >
+              Profile Image (Optional)
+            </Button>
+          </label>
+          {profileImage && (
+            <Box sx={{ width: "100%" }}>
+              <Typography variant="caption">{profileImage.name}</Typography>
+              <LinearProgress variant="determinate" value={100} />
+            </Box>
+          )}
+        </FormGroup>
+      </Box>
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <TextField
+          error={Boolean(formik.touched.firstName && formik.errors.firstName)}
+          fullWidth
+          helperText={formik.touched.firstName && formik.errors.firstName}
+          label="First name"
+          margin="normal"
+          name="firstName"
+          disabled
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.firstName}
+        />
+        <TextField
+          error={Boolean(formik.touched.lastName && formik.errors.lastName)}
+          fullWidth
+          helperText={formik.touched.lastName && formik.errors.lastName}
+          label="Last name"
+          margin="normal"
+          name="lastName"
+          disabled
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.lastName}
+        />
 
-      {props.user.roles === "Owner" && (
-        <FormControl fullWidth>
-          <InputLabel>Billing Plan</InputLabel>
-          <Select
-            error={Boolean(
-              formik.touched.billingPlan && formik.errors.billingPlan
-            )}
-            fullWidth
-            helperText={formik.touched.billingPlan && formik.errors.billingPlan}
-            label="Billing Plan"
-            margin="normal"
-            name="billingPlan"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.billingPlan}
-          >
-            {
-              billingPlans.map((plan, idx) => (
-                <MenuItem key={idx} value={plan.id}>{[plan.name]}</MenuItem>
-              ))
-            }
-          </Select>
-        </FormControl>
-      )}
+      </Box>
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <TextField
+          error={Boolean(formik.touched.userType && formik.errors.userType)}
+          fullWidth
+          helperText={formik.touched.userType && formik.errors.userType}
+          label="User Type"
+          margin="normal"
+          name="userType"
+          disabled
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.userType}
+        />
+        <TextField
+          error={Boolean(formik.touched.user && formik.errors.user)}
+          fullWidth
+          helperText={formik.touched.user && formik.errors.user}
+          label="User"
+          margin="normal"
+          name="user"
+          disabled
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.user}
+        />
+
+      </Box>
+      {
+        props.user.roles === "Owner" && (<>
+          <Typography sx={{ color: "text.secondary", fontSize: '16px' }}>Organisation Information</Typography>
+          <Divider sx={{ mb: 3, mt: 1 }} />
+        </>)
+      }
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        {props.user.roles === "Owner" && (
+          <FormControl fullWidth sx={{ mb: 3 }}>
+            <InputLabel>Sector</InputLabel>
+            <Select
+              error={Boolean(formik.touched.sector && formik.errors.sector)}
+              fullWidth
+              helperText={formik.touched.sector && formik.errors.sector}
+              label="Sector"
+              margin="normal"
+              name="sector"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.sector}
+            >
+              {
+                sectors.map((sector, idx) => (
+                  <MenuItem key={idx} value={sector.id}>{sector.title}</MenuItem>
+                ))
+              }
+            </Select>
+          </FormControl>
+        )}
+
+        {props.user.roles === "Owner" && (
+          <FormControl fullWidth>
+            <InputLabel>Billing Plan</InputLabel>
+            <Select
+              error={Boolean(
+                formik.touched.billingPlan && formik.errors.billingPlan
+              )}
+              fullWidth
+              helperText={formik.touched.billingPlan && formik.errors.billingPlan}
+              label="Billing Plan"
+              margin="normal"
+              name="billingPlan"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.billingPlan}
+            >
+              {
+                billingPlans.map((plan, idx) => (
+                  <MenuItem key={idx} value={plan.id}>{[plan.name]}</MenuItem>
+                ))
+              }
+            </Select>
+          </FormControl>
+        )}
+
+      </Box>
+
 
       {props.user.roles === "Owner" && (
         <TextField
@@ -218,31 +312,7 @@ export const Profile = (props) => {
         </>
       )}
 
-      <FormGroup>
-        <input
-          type="file"
-          name="profileImage"
-          id="profileImage"
-          onChange={(e) => setProfileImage(e.target.files[0])}
-          hidden
-        />
-        <label htmlFor="profileImage">
-          <Button
-            variant="contained"
-            startIcon={<BadgeIcon fontSize="small" />}
-            component="span"
-            sx={{ mt: 3 }}
-          >
-            Profile Image (Optional). {!profileImage && "No file Chosen"}
-          </Button>
-        </label>
-        {profileImage && (
-          <Box sx={{ width: "100%" }}>
-            <Typography variant="caption">{profileImage.name}</Typography>
-            <LinearProgress variant="determinate" value={100} />
-          </Box>
-        )}
-      </FormGroup>
+
       <Box
         sx={{
           alignItems: "center",
