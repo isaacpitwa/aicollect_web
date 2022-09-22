@@ -43,8 +43,8 @@ export const Profile = (props) => {
     initialValues: {
       userType: props.user.roles,
       user: props.user.email,
-      firstName: props.user.firstName,
-      lastName: props.user.lastName,
+      firstName: props.user.firstname,
+      lastName: props.user.lastname,
       billingPlan: "",
       sector: "",
       companyName: "",
@@ -116,7 +116,7 @@ export const Profile = (props) => {
   }
   return (
     <form noValidate onSubmit={formik.handleSubmit} {...props}>
-      <Typography sx={{ color: "text.secondary", fontSize: '16px' }}>Personal Information</Typography>
+      <Typography sx={{ color: "text.secondary", fontSize: '16px',fontWeight:'600' }}>Personal Information</Typography>
       <Divider sx={{ mb: 3, mt: 1 }} />
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
         <Avatar
@@ -126,6 +126,7 @@ export const Profile = (props) => {
             mr: 2,
             width: 120,
             mt: '14px',
+            backgroundColor: 'text.secondary',
           }}
         >
           <UserCircleIcon fontSize="small" />
@@ -212,10 +213,67 @@ export const Profile = (props) => {
       </Box>
       {
         props.user.roles === "Owner" && (<>
-          <Typography sx={{ color: "text.secondary", fontSize: '16px' }}>Organisation Information</Typography>
+          <Typography sx={{ color: "text.secondary", fontSize: '16px',fontWeight:'600',mt:3 }}>Organisation Information</Typography>
           <Divider sx={{ mb: 3, mt: 1 }} />
         </>)
       }
+      {props.user.roles === "Owner" &&
+       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+       <Avatar
+          src={getURL()}
+          sx={{
+            height: 120,
+            mr: 2,
+            width: 120,
+            mt: '14px',
+            backgroundColor: 'text.secondary',
+          }}
+        >
+          <UserCircleIcon fontSize="small" />
+        </Avatar>
+          <input
+            type="file"
+            name="companyLogo"
+            id="companyLogo"
+            onChange={(e) => setCompanyLogo(e.target.files[0])}
+            hidden
+          />
+          <label htmlFor="companyLogo">
+            <Button
+              variant="contained"
+              startIcon={<AddPhotoAlternateIcon fontSize="small" />}
+              component="span"
+              sx={{ mt: 3 }}
+            >
+              Company Logo (Optional)
+            </Button>
+          </label>
+          {companyLogo && (
+            <Box sx={{ width: "100%" }}>
+              <Typography variant="caption">{companyLogo.name}</Typography>
+              <LinearProgress variant="determinate" value={100} />
+            </Box>
+          )}
+       </Box>
+       }
+      <Box sx={{ display: 'flex', gap: 2 }}>
+      {props.user.roles === "Owner" && (
+        <TextField
+          error={Boolean(
+            formik.touched.companyName && formik.errors.companyName
+          )}
+          fullWidth
+          helperText={formik.touched.companyName && formik.errors.companyName}
+          label="Company Name"
+          margin="normal"
+          name="companyName"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.companyName}
+          hidden={props.user.roles !== "Owner"}
+        />
+      )}
+      </Box>
       <Box sx={{ display: 'flex', gap: 2 }}>
         {props.user.roles === "Owner" && (
           <FormControl fullWidth sx={{ mb: 3 }}>
@@ -266,53 +324,7 @@ export const Profile = (props) => {
         )}
 
       </Box>
-
-
-      {props.user.roles === "Owner" && (
-        <TextField
-          error={Boolean(
-            formik.touched.companyName && formik.errors.companyName
-          )}
-          fullWidth
-          helperText={formik.touched.companyName && formik.errors.companyName}
-          label="Company Name"
-          margin="normal"
-          name="companyName"
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.companyName}
-          hidden={props.user.roles !== "Owner"}
-        />
-      )}
-      {props.user.roles === "Owner" && (
-        <>
-          <input
-            type="file"
-            name="companyLogo"
-            id="companyLogo"
-            onChange={(e) => setCompanyLogo(e.target.files[0])}
-            hidden
-          />
-          <label htmlFor="companyLogo">
-            <Button
-              variant="contained"
-              startIcon={<AddPhotoAlternateIcon fontSize="small" />}
-              component="span"
-              sx={{ mt: 3 }}
-            >
-              Company Logo (Optional). {!companyLogo && "No file Chosen"}
-            </Button>
-          </label>
-          {companyLogo && (
-            <Box sx={{ width: "100%" }}>
-              <Typography variant="caption">{companyLogo.name}</Typography>
-              <LinearProgress variant="determinate" value={100} />
-            </Box>
-          )}
-        </>
-      )}
-
-
+      
       <Box
         sx={{
           alignItems: "center",
@@ -333,6 +345,7 @@ export const Profile = (props) => {
           </Link>
         </Typography>
       </Box>
+      
       {Boolean(formik.touched.policy && formik.errors.policy) && (
         <FormHelperText error>{formik.errors.policy}</FormHelperText>
       )}

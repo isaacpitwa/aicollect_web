@@ -41,7 +41,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
   minHeight: '100vh',
   flexDirection: 'column',
   justifyContent: 'center',
-  padding: theme.spacing(8, 0)
+  padding: theme.spacing(8, 4)
 }));
 
 const CreateProfile = () => {
@@ -53,6 +53,7 @@ const CreateProfile = () => {
     gtm.push({ event: "page_view" });
   }, []);
 
+  console.log("User: ", user);
   return (
     <>
       <Head>
@@ -81,7 +82,7 @@ const CreateProfile = () => {
           </SectionStyle>
         </MHidden>
 
-        <Container maxWidth="sm" >
+        <Container  sx={{overflowY:'scroll'}} >
           <ContentStyle>
             <Stack sx={{ mb: 2 }}>
               <Typography variant="h4" sx={{ color: "text.secondary",fontSize:'14px' }}>
