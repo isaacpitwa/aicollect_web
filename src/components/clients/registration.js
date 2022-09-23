@@ -3,21 +3,21 @@ import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import {
-  Box,
-  Button,
-  Checkbox,
-  FormHelperText,
-  TextField,
-  Typography,
-  Link,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  LinearProgress,
-  Divider,
-  FormGroup,
-  Avatar,
+    Box,
+    Button,
+    Checkbox,
+    FormHelperText,
+    TextField,
+    Typography,
+    Link,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    LinearProgress,
+    Divider,
+    FormGroup,
+    Avatar,
 
 } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
@@ -27,342 +27,341 @@ import { sectorApi } from '../../api/sectors-api';
 import { useMounted } from "../../hooks/use-mounted";
 import { billingPlanApi } from "../../api/billingplan-api";
 import { fileToBase64 } from "../../utils/file-to-base64";
-import { IndexRedirect } from "./auth-guard";
 import toast from 'react-hot-toast';
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 
 
 export const ClientRegistration = (props) => {
-  const [profileImage, setProfileImage] = useState(null);
-  const [companyLogo, setCompanyLogo] = useState(null);
-  const [sectors, setSectors] = useState([]);
-  const [billingPlans, setBillingPlans] = useState([]);
-  const isMounted = useMounted();
-  const router = useRouter();
-  const formik = useFormik({
-    initialValues: {
-      userType: 'client',
-      user: '',
-      firstName: '',
-      lastName: '',
-      billingPlan: "",
-      sector: "",
-      companyName: "",
-      policy: false,
-      submit: null,
-    },
-    validationSchema: Yup.object({
-      userType: Yup.string().max(255).required("User Type is required"),
-      user: Yup.string(),
-      firstName: Yup.string().max(255).required("First name is required"),
-      lastName: Yup.string().max(255).required("Last name is required"),
-      billingPlan: Yup.string().max(255),
-      sector: Yup.string().max(255),
-      companyName: Yup.string().max(255),
-      policy: Yup.boolean().oneOf([true], "This field must be checked"),
-    }),
-    onSubmit: async (values, helpers) => {
-      try {
-        const base64Image = profileImage ? await fileToBase64(profileImage) : null;
-        const base64CompanyImage = companyLogo ? await fileToBase64(companyLogo) : null;
-        const profile = {
-          ...values,
-          profileImage: base64Image,
-          companyLogo: base64CompanyImage,
-          user: props.user.id
+    const [profileImage, setProfileImage] = useState(null);
+    const [companyLogo, setCompanyLogo] = useState(null);
+    const [sectors, setSectors] = useState([]);
+    const [billingPlans, setBillingPlans] = useState([]);
+    const isMounted = useMounted();
+    const router = useRouter();
+    const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cruise Ship", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyz Republic", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Satellite", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "St. Lucia", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
+    const languages = ["English"]
+    const formik = useFormik({
+        initialValues: {
+            userType: 'client',
+            user: '',
+            firstName: '',
+            lastName: '',
+            billingPlan: null,
+            sector: "",
+            companyName: "",
+            policy: false,
+            submit: null,
+            country: '',
+            language: '',
+            phone: '',
+            email: '',
+            description: '',
+        },
+        validationSchema: Yup.object({
+            userType: Yup.string().max(255).required("User Type is required"),
+            user: Yup.string(),
+            firstName: Yup.string().max(255).required("First name is required"),
+            lastName: Yup.string().max(255).required("Last name is required"),
+            billingPlan: Yup.string().max(255),
+            sector: Yup.string().max(255),
+            companyName: Yup.string().max(255),
+            policy: Yup.boolean().oneOf([true], "This field must be checked"),
+            country: Yup.string().max(255).required("Country is required"),
+            language: Yup.string().max(255).required("Language is required"),
+            phone: Yup.string().max(25).required("Phone is required"),
+            email: Yup.string().max(255).required("Email is required"),
+            description: Yup.string().max(500).required("Description is required"),
+        }),
+        onSubmit: async (values, helpers) => {
+            try {
+                const base64Image = profileImage ? await fileToBase64(profileImage) : null;
+                const base64CompanyImage = companyLogo ? await fileToBase64(companyLogo) : null;
+                const profile = {
+                    ...values,
+                    profileImage: base64Image,
+                    companyLogo: base64CompanyImage,
+                    user: props.user.id
+                }
+                const data = await authenticationApi.createUserProfile(profile);
+
+                if (isMounted() && data) {
+                    if (data) {
+                        const returnUrl = router.query.returnUrl || IndexRedirect[props.user.roles];
+                        router.push(returnUrl, null, { shallow: false });
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                toast.error(err.message ?? 'Something went wrong');
+                if (isMounted()) {
+                    helpers.setStatus({ success: false });
+                    helpers.setErrors({ submit: err.message });
+                    helpers.setSubmitting(false);
+                }
+            }
+        },
+    });
+    // console.log(companyLogo);
+
+    useEffect(() => {
+        const getSectors = async () => {
+            const data = await sectorApi.getSectors();
+            setSectors(data ? data : []);
+        };
+        getSectors();
+    }, [setSectors]);
+
+    useEffect(() => {
+        const getBillingPlans = async () => {
+            const data = await billingPlanApi.getBillingPlans();
+            setBillingPlans(data);
+        };
+        getBillingPlans();
+    }, [setBillingPlans]);
+
+    const getURL = () => {
+        if (profileImage) {
+            return URL.createObjectURL(profileImage);
         }
-        const data = await authenticationApi.createUserProfile(profile);
-
-        if (isMounted() && data) {
-          if (data) {
-            const returnUrl = router.query.returnUrl || IndexRedirect[props.user.roles];
-            router.push(returnUrl, null, { shallow: false });
-          }
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error(err.message ?? 'Something went wrong');
-        if (isMounted()) {
-          helpers.setStatus({ success: false });
-          helpers.setErrors({ submit: err.message });
-          helpers.setSubmitting(false);
-        }
-      }
-    },
-  });
-  // console.log(companyLogo);
-
-  useEffect(() => {
-    const getSectors = async () => {
-      const data = await sectorApi.getSectors();
-      setSectors(data ? data : []);
-    };
-    getSectors();
-  }, [setSectors]);
-
-  useEffect(() => {
-    const getBillingPlans = async () => {
-      const data = await billingPlanApi.getBillingPlans();
-      setBillingPlans(data);
-    };
-    getBillingPlans();
-  }, [setBillingPlans]);
-
-  const getURL = () => {
-    if (profileImage) {
-      return URL.createObjectURL(profileImage);
+        return '';
     }
-    return '';
-  }
-  return (
-    <form noValidate onSubmit={formik.handleSubmit} {...props}>
-      <Typography sx={{ color: "text.secondary", fontSize: '16px',fontWeight:'600' }}>Personal Information</Typography>
-      <Divider sx={{ mb: 3, mt: 1 }} />
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
-        <Avatar
-          src={getURL()}
-          sx={{
-            height: 120,
-            mr: 2,
-            width: 120,
-            mt: '14px',
-            backgroundColor: 'text.secondary',
-          }}
-        >
-          <UserCircleIcon fontSize="small" />
-        </Avatar>
-        <FormGroup>
-          <input
-            type="file"
-            name="profileImage"
-            id="profileImage"
-            onChange={(e) => setProfileImage(e.target.files[0])}
-            hidden
-          />
-          <label htmlFor="profileImage">
-            <Button
-              variant="contained"
-              startIcon={<BadgeIcon fontSize="small" />}
-              component="span"
-              sx={{ mt: 3 }}
-            >
-              Profile Image (Optional)
-            </Button>
-          </label>
-          {profileImage && (
-            <Box sx={{ width: "100%" }}>
-              <Typography variant="caption">{profileImage.name}</Typography>
-              <LinearProgress variant="determinate" value={100} />
+    return (
+        <form noValidate onSubmit={formik.handleSubmit} {...props}>
+            <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography>
+            <Divider sx={{ mb: 3, mt: 1 }} />
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+                <Avatar
+                    src={getURL()}
+                    sx={{
+                        height: 120,
+                        mr: 2,
+                        width: 120,
+                        mt: '14px',
+                        backgroundColor: 'text.secondary',
+                    }}
+                >
+                    <UserCircleIcon fontSize="small" />
+                </Avatar>
+                <input
+                    type="file"
+                    name="companyLogo"
+                    id="companyLogo"
+                    onChange={(e) => setCompanyLogo(e.target.files[0])}
+                    hidden
+                />
+                <label htmlFor="companyLogo">
+                    <Button
+                        variant="contained"
+                        startIcon={<AddPhotoAlternateIcon fontSize="small" />}
+                        component="span"
+                        sx={{ mt: 3 }}
+                    >
+                        Company Logo (Optional)
+                    </Button>
+                </label>
+                {companyLogo && (
+                    <Box sx={{ width: "100%" }}>
+                        <Typography variant="caption">{companyLogo.name}</Typography>
+                        <LinearProgress variant="determinate" value={100} />
+                    </Box>
+                )}
             </Box>
-          )}
-        </FormGroup>
-      </Box>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <TextField
-          error={Boolean(formik.touched.firstName && formik.errors.firstName)}
-          fullWidth
-          helperText={formik.touched.firstName && formik.errors.firstName}
-          label="First name"
-          margin="normal"
-          name="firstName"
-          disabled
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.firstName}
-        />
-        <TextField
-          error={Boolean(formik.touched.lastName && formik.errors.lastName)}
-          fullWidth
-          helperText={formik.touched.lastName && formik.errors.lastName}
-          label="Last name"
-          margin="normal"
-          name="lastName"
-          disabled
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.lastName}
-        />
-
-      </Box>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <TextField
-          error={Boolean(formik.touched.userType && formik.errors.userType)}
-          fullWidth
-          helperText={formik.touched.userType && formik.errors.userType}
-          label="User Type"
-          margin="normal"
-          name="userType"
-          disabled
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.userType}
-        />
-        <TextField
-          error={Boolean(formik.touched.user && formik.errors.user)}
-          fullWidth
-          helperText={formik.touched.user && formik.errors.user}
-          label="User"
-          margin="normal"
-          name="user"
-          disabled
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.user}
-        />
-
-      </Box>
-      (<>
-          <Typography sx={{ color: "text.secondary", fontSize: '16px',fontWeight:'600',mt:3 }}>Organisation Information</Typography>
-          <Divider sx={{ mb: 3, mt: 1 }} />
-        </>)
-     
-       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
-       <Avatar
-          src={getURL()}
-          sx={{
-            height: 120,
-            mr: 2,
-            width: 120,
-            mt: '14px',
-            backgroundColor: 'text.secondary',
-          }}
-        >
-          <UserCircleIcon fontSize="small" />
-        </Avatar>
-          <input
-            type="file"
-            name="companyLogo"
-            id="companyLogo"
-            onChange={(e) => setCompanyLogo(e.target.files[0])}
-            hidden
-          />
-          <label htmlFor="companyLogo">
-            <Button
-              variant="contained"
-              startIcon={<AddPhotoAlternateIcon fontSize="small" />}
-              component="span"
-              sx={{ mt: 3 }}
-            >
-              Company Logo (Optional)
-            </Button>
-          </label>
-          {companyLogo && (
-            <Box sx={{ width: "100%" }}>
-              <Typography variant="caption">{companyLogo.name}</Typography>
-              <LinearProgress variant="determinate" value={100} />
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField
+                    error={Boolean(
+                        formik.touched.companyName && formik.errors.companyName
+                    )}
+                    fullWidth
+                    helperText={formik.touched.companyName && formik.errors.companyName}
+                    label="Name"
+                    margin="normal"
+                    name="companyName"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.companyName}
+                />
             </Box>
-          )}
-       </Box>
-       
-      <Box sx={{ display: 'flex', gap: 2 }}>
-     (
-        <TextField
-          error={Boolean(
-            formik.touched.companyName && formik.errors.companyName
-          )}
-          fullWidth
-          helperText={formik.touched.companyName && formik.errors.companyName}
-          label="Company Name"
-          margin="normal"
-          name="companyName"
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.companyName}
-          hidden={props.user.roles !== "Owner"}
-        />
-      )
-      </Box>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        (
-          <FormControl fullWidth sx={{ mb: 3 }}>
-            <InputLabel>Sector</InputLabel>
-            <Select
-              error={Boolean(formik.touched.sector && formik.errors.sector)}
-              fullWidth
-              helperText={formik.touched.sector && formik.errors.sector}
-              label="Sector"
-              margin="normal"
-              name="sector"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.sector}
-            >
-              {
-                sectors.map((sector, idx) => (
-                  <MenuItem key={idx} value={sector.id}>{sector.title}</MenuItem>
-                ))
-              }
-            </Select>
-          </FormControl>
-        )
 
-       (
-          <FormControl fullWidth>
-            <InputLabel>Billing Plan</InputLabel>
-            <Select
-              error={Boolean(
-                formik.touched.billingPlan && formik.errors.billingPlan
-              )}
-              fullWidth
-              helperText={formik.touched.billingPlan && formik.errors.billingPlan}
-              label="Billing Plan"
-              margin="normal"
-              name="billingPlan"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.billingPlan}
-            >
-              {
-                billingPlans.map((plan, idx) => (
-                  <MenuItem key={idx} value={plan.id}>{[plan.name]}</MenuItem>
-                ))
-              }
-            </Select>
-          </FormControl>
-        )
+            <TextField
+                error={Boolean(
+                    formik.touched.description && formik.errors.description
+                )}
+                fullWidth
+                helperText={formik.touched.description && formik.errors.description}
+                label="Description"
+                margin="normal"
+                name="description"
+                multiline
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.description}
+                InputProps={{
+                    style: {
+                        minHeight: '100px',
+                    }
+                }}
+            />
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField
+                    error={Boolean(
+                        formik.touched.email && formik.errors.email
+                    )}
+                    fullWidth
+                    helperText={formik.touched.email && formik.errors.email}
+                    label="Email address"
+                    margin="normal"
+                    name="email"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
+                />
+                <TextField
+                    error={Boolean(
+                        formik.touched.phone && formik.errors.phone
+                    )}
+                    fullWidth
+                    helperText={formik.touched.phone && formik.errors.phone}
+                    label="Phone Contact"
+                    margin="normal"
+                    name="phone"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.phone}
+                />
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Sector</InputLabel>
+                    <Select
+                        error={Boolean(formik.touched.sector && formik.errors.sector)}
+                        fullWidth
+                        helperText={formik.touched.sector && formik.errors.sector}
+                        label="Sector"
+                        margin="normal"
+                        name="sector"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={formik.values.sector}
+                    >
+                        {
+                            sectors.map((sector, idx) => (
+                                <MenuItem key={idx} value={sector.id}>{sector.title}</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
 
-      </Box>
-      
-      <Box
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          ml: -1,
-          mt: 2,
-        }}
-      >
-        <Checkbox
-          checked={formik.values.policy}
-          name="policy"
-          onChange={formik.handleChange}
-        />
-        <Typography color="textSecondary" variant="body2">
-          I have read the{" "}
-          <Link component="a" href="#">
-            Terms and Conditions
-          </Link>
-        </Typography>
-      </Box>
-      
-      {Boolean(formik.touched.policy && formik.errors.policy) && (
-        <FormHelperText error>{formik.errors.policy}</FormHelperText>
-      )}
-      {formik.errors.submit && (
-        <Box sx={{ mt: 3 }}>
-          <FormHelperText error>{formik.errors.submit}</FormHelperText>
-        </Box>
-      )}
-      <Box sx={{ mt: 2 }}>
-        <Button
-          disabled={formik.isSubmitting}
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-        >
-          Register Organisation
-        </Button>
-      </Box>
-    </form>
-  );
+                <FormControl fullWidth>
+                    <InputLabel>Billing Plan</InputLabel>
+                    <Select
+                        error={Boolean(
+                            formik.touched.billingPlan && formik.errors.billingPlan
+                        )}
+                        fullWidth
+                        helperText={formik.touched.billingPlan && formik.errors.billingPlan}
+                        label="Billing Plan"
+                        margin="normal"
+                        name="billingPlan"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={"Basic"}
+                    // disabled
+                    >
+                        {
+                            billingPlans.map((plan, idx) => (
+                                <MenuItem key={idx} value={plan.id}>{[plan.name]}</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Country</InputLabel>
+                    <Select
+                        error={Boolean(formik.touched.country && formik.errors.country)}
+                        fullWidth
+                        helperText={formik.touched.country && formik.errors.country}
+                        label="Country"
+                        margin="normal"
+                        name="country"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={formik.values.country}
+                    >
+                        {
+                            countries.map((country, idx) => (
+                                <MenuItem key={country} value={country}>{country}</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                    <InputLabel>Language</InputLabel>
+                    <Select
+                        error={Boolean(
+                            formik.touched.language && formik.errors.language
+                        )}
+                        fullWidth
+                        helperText={formik.touched.language && formik.errors.language}
+                        label="Language"
+                        margin="normal"
+                        name="language"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={formik.values.language}
+                    >
+                        {
+                            languages.map((language) => (
+                                <MenuItem key={language} value={language}>{language}</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+            </Box>
+
+
+            <Box
+                sx={{
+                    alignItems: "center",
+                    display: "flex",
+                    ml: -1,
+                    mt: 2,
+                }}
+            >
+                <Checkbox
+                    checked={formik.values.policy}
+                    name="policy"
+                    onChange={formik.handleChange}
+                />
+                <Typography color="textSecondary" variant="body2">
+                    I have read the{" "}
+                    <Link component="a" href="#">
+                        Terms and Conditions
+                    </Link>
+                </Typography>
+            </Box>
+
+            {Boolean(formik.touched.policy && formik.errors.policy) && (
+                <FormHelperText error>{formik.errors.policy}</FormHelperText>
+            )}
+            {formik.errors.submit && (
+                <Box sx={{ mt: 3 }}>
+                    <FormHelperText error>{formik.errors.submit}</FormHelperText>
+                </Box>
+            )}
+            <Box sx={{ mt: 2 }}>
+                <Button
+                    disabled={formik.isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                >
+                    Register Organisation
+                </Button>
+            </Box>
+        </form>
+    );
 };

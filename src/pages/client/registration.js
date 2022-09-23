@@ -45,7 +45,7 @@ const RegisterClient = () => {
   return (
     <>
       <Head>
-        <title>User Profile | AiCollect</title>
+        <title>Client Information | AiCollect</title>
       </Head>
 
       <RootStyle sx={{height:'100vh'}}>
@@ -74,11 +74,10 @@ const RegisterClient = () => {
           <ContentStyle>
             <Stack sx={{ mb: 2 }}>
               <Typography variant="h4" sx={{ color: "text.secondary",fontSize:'14px' }}>
-                Welcome back!
+                Welcome aboard!
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Complete your Profile</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Register  Organisation </Typography>
             </Stack>
-            <Profile user={user} />
             <ClientRegistration/>
          
 
