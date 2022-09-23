@@ -29,6 +29,7 @@ import { billingPlanApi } from "../../api/billingplan-api";
 import { fileToBase64 } from "../../utils/file-to-base64";
 import toast from 'react-hot-toast';
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
+import { clientsApi } from "../../api/clients-api";
 
 
 export const ClientRegistration = (props) => {
@@ -38,6 +39,7 @@ export const ClientRegistration = (props) => {
     const [billingPlans, setBillingPlans] = useState([]);
     const isMounted = useMounted();
     const router = useRouter();
+    const { disableGuard, token } = router.query;
     const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cruise Ship", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyz Republic", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Satellite", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "St. Lucia", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
     const languages = ["English"]
     const formik = useFormik({
@@ -54,10 +56,6 @@ export const ClientRegistration = (props) => {
             description: '',
         },
         validationSchema: Yup.object({
-            userType: Yup.string().max(255).required("User Type is required"),
-            user: Yup.string(),
-            firstName: Yup.string().max(255).required("First name is required"),
-            lastName: Yup.string().max(255).required("Last name is required"),
             billingPlan: Yup.string().max(255),
             sector: Yup.string().max(255),
             name: Yup.string().max(255),
@@ -70,20 +68,18 @@ export const ClientRegistration = (props) => {
         }),
         onSubmit: async (values, helpers) => {
             try {
-                const base64Image = profileImage ? await fileToBase64(profileImage) : null;
                 const base64CompanyImage = companyLogo ? await fileToBase64(companyLogo) : null;
                 const profile = {
                     ...values,
-                    profileImage: base64Image,
-                    companyLogo: base64CompanyImage,
-                    user: props.user.id
+                    logo: base64CompanyImage,
+                    token: token,
                 }
-                const data = await authenticationApi.createUserProfile(profile);
-
+                const data = await clientsApi.register(profile);
                 if (isMounted() && data) {
                     if (data) {
-                        const returnUrl = router.query.returnUrl || IndexRedirect[props.user.roles];
-                        router.push(returnUrl, null, { shallow: false });
+                        // const returnUrl = router.query.returnUrl || IndexRedirect[props.user.roles];
+                        // router.push(returnUrl, null, { shallow: false });
+                        toast.success("Registration successful");
                     }
                 }
             } catch (err) {
@@ -116,8 +112,8 @@ export const ClientRegistration = (props) => {
     }, [setBillingPlans]);
 
     const getURL = () => {
-        if (profileImage) {
-            return URL.createObjectURL(profileImage);
+        if (companyLogo) {
+            return URL.createObjectURL(companyLogo);
         }
         return '';
     }
@@ -125,7 +121,7 @@ export const ClientRegistration = (props) => {
         <form noValidate onSubmit={formik.handleSubmit} {...props}>
             {/* <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography> */}
             <Divider sx={{ mb: 3, mt: 1 }} />
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', }}>
                 <Avatar
                     src={getURL()}
                     sx={{
@@ -138,6 +134,7 @@ export const ClientRegistration = (props) => {
                 >
                     <UserCircleIcon fontSize="small" />
                 </Avatar>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', flexDirection:'column' }}>
                 <input
                     type="file"
                     name="companyLogo"
@@ -152,7 +149,7 @@ export const ClientRegistration = (props) => {
                         component="span"
                         sx={{ mt: 3 }}
                     >
-                        Company Logo
+                        Company logo
                     </Button>
                 </label>
                 {companyLogo && (
@@ -161,6 +158,7 @@ export const ClientRegistration = (props) => {
                         <LinearProgress variant="determinate" value={100} />
                     </Box>
                 )}
+                </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 2 }}>
                 <TextField
