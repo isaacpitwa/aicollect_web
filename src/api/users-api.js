@@ -81,7 +81,7 @@ class UserApi {
 
   async inviteUserByEmail(user) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/create_user`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/send_invitation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
