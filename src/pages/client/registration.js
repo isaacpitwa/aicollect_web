@@ -72,11 +72,15 @@ const RegisterClient = () => {
 
         <Container  sx={{overflowY:'scroll'}} >
           <ContentStyle>
-            <Stack sx={{ mb: 2 }}>
-              <Typography variant="h4" sx={{ color: "text.secondary",fontSize:'14px' }}>
+            <Stack sx={{ mb: 2,textAlign:'center' }}>
+              {/* <Typography variant="h4" sx={{ color: "text.secondary",fontSize:'14px' }}>
                 Welcome aboard!
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Register  Organisation </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Register  Organisation </Typography> */}
+              <Typography variant="h4" gutterBottom>
+                <img src="/images/logo.svg" alt="aicollect-login" style={{width:'16rem'}} />
+              </Typography> 
+            <Typography sx={{ color: 'text.secondary' }}>Welcome aboard! Complete   Organisation Registration </Typography>           
             </Stack>
             <ClientRegistration/>
          

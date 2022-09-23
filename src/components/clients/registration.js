@@ -42,13 +42,9 @@ export const ClientRegistration = (props) => {
     const languages = ["English"]
     const formik = useFormik({
         initialValues: {
-            userType: 'client',
-            user: '',
-            firstName: '',
-            lastName: '',
-            billingPlan: null,
+            billingPlan: 1,
             sector: "",
-            companyName: "",
+            name: "",
             policy: false,
             submit: null,
             country: '',
@@ -64,7 +60,7 @@ export const ClientRegistration = (props) => {
             lastName: Yup.string().max(255).required("Last name is required"),
             billingPlan: Yup.string().max(255),
             sector: Yup.string().max(255),
-            companyName: Yup.string().max(255),
+            name: Yup.string().max(255),
             policy: Yup.boolean().oneOf([true], "This field must be checked"),
             country: Yup.string().max(255).required("Country is required"),
             language: Yup.string().max(255).required("Language is required"),
@@ -127,7 +123,7 @@ export const ClientRegistration = (props) => {
     }
     return (
         <form noValidate onSubmit={formik.handleSubmit} {...props}>
-            <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography>
+            {/* <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography> */}
             <Divider sx={{ mb: 3, mt: 1 }} />
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
                 <Avatar
@@ -156,7 +152,7 @@ export const ClientRegistration = (props) => {
                         component="span"
                         sx={{ mt: 3 }}
                     >
-                        Company Logo (Optional)
+                        Company Logo
                     </Button>
                 </label>
                 {companyLogo && (
@@ -169,16 +165,16 @@ export const ClientRegistration = (props) => {
             <Box sx={{ display: 'flex', gap: 2 }}>
                 <TextField
                     error={Boolean(
-                        formik.touched.companyName && formik.errors.companyName
+                        formik.touched.name && formik.errors.name
                     )}
                     fullWidth
-                    helperText={formik.touched.companyName && formik.errors.companyName}
+                    helperText={formik.touched.name && formik.errors.name}
                     label="Name"
                     margin="normal"
-                    name="companyName"
+                    name="name"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.companyName}
+                    value={formik.values.name}
                 />
             </Box>
 
@@ -264,8 +260,8 @@ export const ClientRegistration = (props) => {
                         name="billingPlan"
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
-                        value={"Basic"}
-                    // disabled
+                        value={formik.values.billingPlan }
+                        disabled
                     >
                         {
                             billingPlans.map((plan, idx) => (
