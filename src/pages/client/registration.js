@@ -7,6 +7,8 @@ import { AuthGuard } from '../../components/authentication/auth-guard';
 import { Profile } from "../../components/authentication/profile";
 import { useAuth } from "../../hooks/use-auth";
 import { gtm } from "../../lib/gtm";
+import { GuestGuard } from "../../components/authentication/guest-guard";
+import { ClientRegistration } from "../../components/clients/registration";
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -34,14 +36,12 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 const RegisterClient = () => {
   const router = useRouter();
-  const { user } = useAuth();
-  const { disableGuard } = router.query;
+  const { disableGuard, token } = router.query;
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
   }, []);
 
-  console.log("User: ", user);
   return (
     <>
       <Head>
@@ -79,6 +79,7 @@ const RegisterClient = () => {
               <Typography sx={{ color: 'text.secondary' }}>Complete your Profile</Typography>
             </Stack>
             <Profile user={user} />
+            <ClientRegistration/>
          
 
           </ContentStyle>
@@ -90,6 +91,6 @@ const RegisterClient = () => {
   );
 };
 
-RegisterClient.getLayout = (page) => <AuthGuard>{page}</AuthGuard>;
+RegisterClient.getLayout = (page) => <GuestGuard>{page}</GuestGuard>;
 
 export default RegisterClient;
