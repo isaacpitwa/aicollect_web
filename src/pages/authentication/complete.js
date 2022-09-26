@@ -88,7 +88,6 @@ const CompleteRegistration = ({email}) => {
               
               
             </Box>
-            <Divider sx={{ my: 3 }} />
           </Card>
         </Container>
       </Box>
