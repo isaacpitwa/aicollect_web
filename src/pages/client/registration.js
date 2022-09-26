@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Box, Divider, Typography, Grid, Button, Container, Card, Stack, styled } from "@mui/material";
-import MHidden from '../../components/theme/MHidden';
-import { AuthGuard } from '../../components/authentication/auth-guard';
-import { Profile } from "../../components/authentication/profile";
-import { useAuth } from "../../hooks/use-auth";
+import { Box, Divider, Typography, Container, Stack, styled } from "@mui/material";
 import { gtm } from "../../lib/gtm";
 import { GuestGuard } from "../../components/authentication/guest-guard";
 import { ClientRegistration } from "../../components/clients/registration";
@@ -14,15 +10,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex'
   }
-}));
-
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2)
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -45,7 +32,7 @@ const RegisterClient = () => {
   return (
     <>
       <Head>
-        <title>Client Information | AiCollect</title>
+        <title>Client | AiCollect</title>
       </Head>
       <RootStyle sx={{height:'100vh'}}>
         <Container>
@@ -61,8 +48,6 @@ const RegisterClient = () => {
           </ContentStyle>
         </Container>
       </RootStyle>
-
-
     </>
   );
 };
