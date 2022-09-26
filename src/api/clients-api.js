@@ -8,7 +8,7 @@ class ClientApi {
     async register(details) {
         console.log(details);
       try {
-        const response = await fetch(`http://localhost:5000/clients/register`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/clients/register`, {
           method: 'POST',
           'headers': {
             'Content-Type': 'Application/json',
@@ -30,7 +30,7 @@ class ClientApi {
 
     async getClient(token) {
         try {
-          const response = await fetch(`http://localhost:5000/clients/decodeToken`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/clients/decodeToken`, {
             method: 'POST',
             'headers': {
               'Content-Type': 'Application/json',
