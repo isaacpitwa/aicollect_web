@@ -48,25 +48,34 @@ export const JWTRegister = (props) => {
         .oneOf([true], 'This field must be checked')
     }),
     onSubmit: async (values, helpers) => {
+      const today =new Date();
+      const expiryDate = today.setDate(today.getDate() + 7);
+      const submitValues ={...formik.values}
+      delete submitValues.confirmPassword
+      delete submitValues.policy
+      delete submitValues.submit
       try {
-        const data = await userApi.createUser({
-          ...formik.values,
-          supervisor: null,
-          clientId: null,
+        const data = await userApi.selfRegister({
+          ...submitValues,
+          supervisor: 0,
+          clientId: 0,
           client: clientInfo.id,
-          createdBy: null
+          createdBy: 0,
+          roles:'Owner',
+          status:'Pending',
+          expiryDate:  new Date(expiryDate),
+          emailVerified: false,
+          frontendUrl: window.location.href.split(router.asPath)[0]
         })
         if (data?.status === 201) {
           toast.success("Self Registration successfully");
+          if (isMounted()) {
+            router.push('/authentication/complete');
+          }
         } else if (data?.status === 403) {
           toast.error('You do not have the permissions to create user');
         } else {
-          toast.error('User Fields validations');
-        }
-
-        if (isMounted()) {
-          const returnUrl = router.query.returnUrl || '/dashboard';
-          router.push(returnUrl);
+          toast.error(data.message);
         }
       } catch (err) {
         console.error(err);
