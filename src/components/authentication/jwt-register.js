@@ -1,14 +1,17 @@
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import toast from "react-hot-toast";
 import { Box, Button, Checkbox, FormHelperText, TextField, Typography, Link } from '@mui/material';
 import { useAuth } from '../../hooks/use-auth';
 import { useMounted } from '../../hooks/use-mounted';
+import toast from "react-hot-toast";
+import { userApi } from '../../api/users-api';
 
 export const JWTRegister = (props) => {
   const isMounted = useMounted();
   const router = useRouter();
-  const { register } = useAuth();
+  const { clientInfo } = props;
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -16,6 +19,7 @@ export const JWTRegister = (props) => {
       lastname: '',
       phone: '',
       password: '',
+      confirmPassword: '',
       policy: false,
       submit: null
     },
@@ -39,13 +43,27 @@ export const JWTRegister = (props) => {
         .min(7)
         .max(255)
         .required('Password is required'),
+      confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
       policy: Yup
         .boolean()
         .oneOf([true], 'This field must be checked')
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await register(values.email, values.name, values.password);
+        const data = await userApi.createUser({
+          ...formik.values,
+          supervisor: null,
+          clientId: null,
+          client: clientInfo.id,
+          createdBy: null
+        })
+        if (data?.status === 201) {
+          toast.success("Self Registration successfully");
+        } else if (data?.status === 403) {
+          toast.error('You do not have the permissions to create user');
+        } else {
+          toast.error('User Fields validations');
+        }
 
         if (isMounted()) {
           const returnUrl = router.query.returnUrl || '/dashboard';
@@ -133,16 +151,16 @@ export const JWTRegister = (props) => {
           value={formik.values.password}
         />
         <TextField
-          error={Boolean(formik.touched.password && formik.errors.password)}
+          error={Boolean(formik.touched.confirmPassword && formik.errors.confirmPassword)}
           fullWidth
-          helperText={formik.touched.password && formik.errors.password}
+          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
           label="Confirm password"
           margin="normal"
-          name="password"
+          name="confirmPassword"
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           type="password"
-          value={formik.values.password}
+          value={formik.values.confirmPassword}
         />
       </Box>
 
