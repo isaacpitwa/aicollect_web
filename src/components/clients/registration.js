@@ -75,10 +75,16 @@ export const  ClientRegistration = (props) => {
                 }
                 const data = await clientsApi.register(profile);
                 if (isMounted() && data) {
-                    if (data) {
-                        // const returnUrl = router.query.returnUrl || IndexRedirect[props.user.roles];
-                        // router.push(returnUrl, null, { shallow: false });
-                        toast.success("Registration successful");
+                    if (data.status === 201) {
+                        toast.success("client Registration successful");
+                        router.replace({
+                            pathname:'/authentication/register',
+                            query:{
+                                clientId: data.data,
+                            }
+                        })
+                    } else{
+                        toast.error(data.message);
                     }
                 }
             } catch (err) {
@@ -105,6 +111,8 @@ export const  ClientRegistration = (props) => {
         const getBillingPlans = async () => {
             const data = await billingPlanApi.getBillingPlans();
             setBillingPlans(data);
+            formik.setFieldValue('billingPlan',1)
+
         };
         getBillingPlans();
     }, [setBillingPlans]);

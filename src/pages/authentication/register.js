@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -12,6 +12,7 @@ import { JWTRegister } from '../../components/authentication/jwt-register';
 import { Logo } from '../../components/logo';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
+import { clientsApi } from '../../api/clients-api';
 
 const platformIcons = {
   Amplify: '/static/icons/amplify.svg',
@@ -23,17 +24,29 @@ const platformIcons = {
 const Register = () => {
   const router = useRouter();
   const { platform } = useAuth();
-  const { disableGuard } = router.query;
+  const [clientInfo, setClientInfo] = useState({})
+  const { disableGuard, clientId } = router.query;
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
+  useEffect(() => {
+    const decodeToken = async () => {
+      if (clientId) {
+        const data = await clientsApi.getClient(clientId);
+        console.log('Data Fetched', data);
+        setClientInfo(data ? data : {});
+      }
+    };
+    decodeToken();
+  }, [setClientInfo]);
+
   return (
     <>
       <Head>
         <title>
-          Register | Material Kit Pro
+          Register | AiCollect
         </title>
       </Head>
       <Box
@@ -45,7 +58,7 @@ const Register = () => {
           minHeight: '100vh'
         }}
       >
-        <AuthBanner />
+        <AuthBanner message="Complete Registration by  Create Personal Profile" />
         <Container
           maxWidth="sm"
           sx={{
@@ -55,40 +68,42 @@ const Register = () => {
             }
           }}
         >
-          <Box
-            sx={{
-              alignItems: 'center',
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.900'
-                : 'neutral.100',
-              borderColor: 'divider',
-              borderRadius: 1,
-              borderStyle: 'solid',
-              borderWidth: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              mb: 4,
-              p: 2,
-              '& > img': {
-                height: 32,
-                width: 'auto',
-                flexGrow: 0,
-                flexShrink: 0
-              }
-            }}
-          >
-            <Typography
-              color="textSecondary"
-              variant="caption"
+          {
+            clientId && (<Box
+              sx={{
+                alignItems: 'center',
+                backgroundColor: (theme) => theme.palette.mode === 'dark'
+                  ? 'neutral.900'
+                  : 'neutral.100',
+                borderColor: 'divider',
+                borderRadius: 1,
+                borderStyle: 'solid',
+                borderWidth: 1,
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                mb: 4,
+                p: 2,
+                '& > img': {
+                  height: 32,
+                  width: 'auto',
+                  flexGrow: 0,
+                  flexShrink: 0
+                }
+              }}
             >
-              The app authenticates via {platform}
-            </Typography>
-            <img
-              alt="Auth platform"
-              src={platformIcons[platform]}
-            />
-          </Box>
+              <Typography
+                color="textSecondary"
+                variant="caption"
+              >
+                Create Personal  Profile
+              </Typography>
+              <img
+                alt="Auth platform"
+                src={platformIcons[platform]}
+              />
+            </Box>)
+          }
           <Card
             elevation={16}
             sx={{ p: 4 }}
@@ -131,10 +146,7 @@ const Register = () => {
                 mt: 3
               }}
             >
-              {platform === 'Amplify' && <AmplifyRegister />}
-              {platform === 'Auth0' && <Auth0Register />}
-              {platform === 'Firebase' && <FirebaseRegister />}
-              {platform === 'JWT' && <JWTRegister />}
+            <JWTRegister />
             </Box>
             <Divider sx={{ my: 3 }} />
             <NextLink

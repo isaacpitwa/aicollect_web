@@ -16,9 +16,7 @@ class ClientApi {
           body: JSON.stringify(details)
         });
         const data = await response.json();
-        if (data.status === 201) {
-          return data.data
-        }
+        return data 
       } catch (error) {
         console.log(error);
       }
