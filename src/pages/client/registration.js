@@ -39,7 +39,7 @@ const RegisterClient = () => {
           <ContentStyle sx={{maxWidth:'60%'}}>
             <Stack sx={{ mb: 2,textAlign:'center' }}>
               <Typography variant="h4" gutterBottom>
-                <img src="/images/logo.svg" alt="aicollect-login" style={{width:'16rem'}} />
+                <img src="/images/logo.svg" alt="aicollect-login" style={{width:'10rem'}} />
               </Typography> 
             <Typography sx={{ color: 'text.secondary' }}>Welcome aboard! Complete   Organisation Registration </Typography>           
             </Stack>

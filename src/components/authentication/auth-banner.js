@@ -36,7 +36,7 @@ export const AuthBanner = ({message}) => (
           Welcome to
           {' '}
           <NextLink
-            href="/docs/welcome"
+            href="/"
             passHref
           >
             <Link variant="subtitle2">
