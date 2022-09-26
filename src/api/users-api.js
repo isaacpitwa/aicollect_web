@@ -79,6 +79,24 @@ class UserApi {
     }
   }
 
+
+  async selfRegister(user) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/self_register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify(user)
+      });
+      const data = await response.json();
+      return data;
+
+    } catch (error) {
+      console.error('Issues', error);
+    }
+  }
+
   async inviteUserByEmail(user) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/send_invitation`, {

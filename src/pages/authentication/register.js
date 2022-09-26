@@ -32,6 +32,9 @@ const Register = () => {
         console.log('Data Fetched', data);
         setClientInfo(data ? data : {});
       }
+      else{
+        router.push({pathname:'/'})
+      }
     };
     decodeToken();
   }, [setClientInfo]);

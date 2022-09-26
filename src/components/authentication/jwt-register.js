@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { Box, Button, Checkbox, FormHelperText, TextField, Typography, Link } from '@mui/material';
 import { useAuth } from '../../hooks/use-auth';
 import { useMounted } from '../../hooks/use-mounted';
-import toast from "react-hot-toast";
 import { userApi } from '../../api/users-api';
 
 export const JWTRegister = (props) => {
