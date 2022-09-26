@@ -22,7 +22,6 @@ import {
 } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import BadgeIcon from '@mui/icons-material/Badge';
-import { authenticationApi } from '../../api/auth-api';
 import { sectorApi } from '../../api/sectors-api';
 import { useMounted } from "../../hooks/use-mounted";
 import { billingPlanApi } from "../../api/billingplan-api";
@@ -32,8 +31,7 @@ import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 import { clientsApi } from "../../api/clients-api";
 
 
-export const ClientRegistration = (props) => {
-    const [profileImage, setProfileImage] = useState(null);
+export const  ClientRegistration = (props) => {
     const [companyLogo, setCompanyLogo] = useState(null);
     const [sectors, setSectors] = useState([]);
     const [billingPlans, setBillingPlans] = useState([]);
@@ -118,10 +116,8 @@ export const ClientRegistration = (props) => {
         return '';
     }
     return (
-        <form noValidate onSubmit={formik.handleSubmit} {...props}>
-            {/* <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography> */}
-            <Divider sx={{ mb: 3, mt: 1 }} />
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', }}>
+        <form noValidate onSubmit={formik.handleSubmit} {...props} style={{boxShadow: '0 8px 40px -12px rgba(0,0,0,0.3)', padding:'16px 16px' }}>
+            {/* <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography> */}            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', }}>
                 <Avatar
                     src={getURL()}
                     sx={{

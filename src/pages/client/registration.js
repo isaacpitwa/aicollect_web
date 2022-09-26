@@ -49,7 +49,7 @@ const RegisterClient = () => {
       </Head>
 
       <RootStyle sx={{height:'100vh'}}>
-        <MHidden width="mdDown">
+        {/* <MHidden width="mdDown">
           <SectionStyle sx={{
             backgroundColor: '#1971b9', margin: 0,
             maxWidth: '50%',
@@ -68,23 +68,17 @@ const RegisterClient = () => {
               its 100% customizable to suit your specific needs.
             </Typography>
           </SectionStyle>
-        </MHidden>
-
-        <Container  sx={{overflowY:'scroll'}} >
-          <ContentStyle>
+        </MHidden> */}
+        <Container>
+          <ContentStyle sx={{maxWidth:'60%'}}>
             <Stack sx={{ mb: 2,textAlign:'center' }}>
-              {/* <Typography variant="h4" sx={{ color: "text.secondary",fontSize:'14px' }}>
-                Welcome aboard!
-              </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Register  Organisation </Typography> */}
               <Typography variant="h4" gutterBottom>
                 <img src="/images/logo.svg" alt="aicollect-login" style={{width:'16rem'}} />
               </Typography> 
             <Typography sx={{ color: 'text.secondary' }}>Welcome aboard! Complete   Organisation Registration </Typography>           
             </Stack>
+            <Divider sx={{ mb: 2, mt: 1 }} />
             <ClientRegistration/>
-         
-
           </ContentStyle>
         </Container>
       </RootStyle>
