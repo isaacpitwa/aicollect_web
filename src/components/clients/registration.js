@@ -129,7 +129,7 @@ export const  ClientRegistration = (props) => {
     }
 
     return (
-        <form noValidate onSubmit={formik.handleSubmit} {...props} style={{boxShadow: '0 8px 40px -12px rgba(0,0,0,0.3)', padding:'16px 16px' }}>
+        <form noValidate onSubmit={formik.handleSubmit} {...props} style={{boxShadow: '0 8px 40px -12px rgba(0,0,0,0.3)', padding:'16px 18px' }}>
             {/* <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography> */}            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', }}>
                 <Avatar
                     src={getURL()}
