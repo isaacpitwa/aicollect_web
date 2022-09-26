@@ -34,6 +34,7 @@ import { clientsApi } from "../../api/clients-api";
 export const  ClientRegistration = (props) => {
     const [companyLogo, setCompanyLogo] = useState(null);
     const [sectors, setSectors] = useState([]);
+    const [clientInfo,setClientInfo] = useState({})
     const [billingPlans, setBillingPlans] = useState([]);
     const isMounted = useMounted();
     const router = useRouter();
@@ -91,7 +92,6 @@ export const  ClientRegistration = (props) => {
             }
         },
     });
-    // console.log(companyLogo);
 
     useEffect(() => {
         const getSectors = async () => {
@@ -109,12 +109,25 @@ export const  ClientRegistration = (props) => {
         getBillingPlans();
     }, [setBillingPlans]);
 
+    useEffect(() => {
+        const decodeToken = async () => {
+           if(token){
+            const data = await clientsApi.getClient(token);
+            console.log('Data Fetched',data);
+            setClientInfo(data ? data : {});
+            formik.setFieldValue('email',data.email)
+           }
+        };
+        decodeToken();
+    }, [setClientInfo]);
+
     const getURL = () => {
         if (companyLogo) {
             return URL.createObjectURL(companyLogo);
         }
         return '';
     }
+
     return (
         <form noValidate onSubmit={formik.handleSubmit} {...props} style={{boxShadow: '0 8px 40px -12px rgba(0,0,0,0.3)', padding:'16px 16px' }}>
             {/* <Typography sx={{ color: "text.secondary", fontSize: '16px', fontWeight: '600', mt: 3 }}>Organisation Information</Typography> */}            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', }}>
@@ -204,6 +217,7 @@ export const  ClientRegistration = (props) => {
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.email}
+                    disabled={token && clientInfo.email}
                 />
                 <TextField
                     error={Boolean(

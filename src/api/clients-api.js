@@ -24,6 +24,30 @@ class ClientApi {
       }
     }
   
+        /**
+     * Decodes Token of  Organisation from  Invite
+     * @param {Object} token  
+     * @returns {Object}  Organisation Email/more Details
+     */
+
+    async getClient(token) {
+        try {
+          const response = await fetch(`http://localhost:5000/clients/decodeToken`, {
+            method: 'POST',
+            'headers': {
+              'Content-Type': 'Application/json',
+            },
+            body: JSON.stringify({token})
+          });
+          const data = await response.json();
+          if (data.status === 200) {
+            console.log("Token Decoded",data.data);
+            return data.data
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
   
 
   }
