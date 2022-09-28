@@ -91,7 +91,7 @@ const OrganisationProfile = () => {
 
                         <Box >
                             <Typography variant="body2">
-                                Status:{' '} {user.status}
+                                Status:{' '} {organisation.status}
                             </Typography>
                             <Typography variant="body2">
                                 Subscription plan: { organisation && organisation.BillingPlan ? organisation.BillingPlan.name :  "..."}
@@ -102,7 +102,7 @@ const OrganisationProfile = () => {
                                 Expiry Date: {moment(organisation.subscribedAt).add(organisation.BillingPlan.period,'months').format('DD/MM/YYYY')}
                             </Typography>
                             <Typography variant="body2">
-                                Members: {'N/A'}
+                                Members: {organisation.Users.length}
                             </Typography>
                         </Box>
                     </Box>
@@ -124,7 +124,7 @@ const OrganisationProfile = () => {
                         ))}
                     </Tabs>
                     <Divider sx={{ mb: 3 }} />
-                    <OrganisationGeneralSettings user={user} />
+                    <OrganisationGeneralSettings user={user} organisation={organisation} />
                 </Container>) : (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '50vh' }}>
                         <CircularProgress />

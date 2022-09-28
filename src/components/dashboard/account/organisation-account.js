@@ -21,7 +21,7 @@ import countryList from 'react-select-country-list'
 
 
 export const OrganisationGeneralSettings = (props) => {
-    const { user } = props;
+    const { user,organisation } = props;
     const [expanded, setExpanded] = useState(false);
     const [value, setValue] = useState('')
     const options = useMemo(() => countryList().getData(), [])
@@ -56,7 +56,7 @@ export const OrganisationGeneralSettings = (props) => {
                                 }}
                             >
                                 <TextField
-                                    defaultValue={user.Profile?.companyName}
+                                    defaultValue={organisation.name}
                                     label="Name"
                                     size="small"
                                     sx={{
@@ -73,8 +73,9 @@ export const OrganisationGeneralSettings = (props) => {
                                 }}
                             >
                                 <TextField
-                                    defaultValue={''}
+                                    defaultValue={organisation.description}
                                     label="Description"
+                                    
                                     multiline
                                     rows={4}
                                     size="small"
@@ -116,6 +117,7 @@ export const OrganisationGeneralSettings = (props) => {
                                     label="Age"
                                     onChange={handleChange}
                                     style={{ width: "96%" }}
+                                    defaultValue={organisation.country}
                                 >
                                     {options.map((country) => (<MenuItem value={country.label} key={country.label}>{country.label}</MenuItem>))}
                                 </Select>
@@ -147,7 +149,7 @@ export const OrganisationGeneralSettings = (props) => {
                             <Typography variant="h9" >Organisation Logo</Typography>
                             <Box style={{display:'flex', justifyContent:'center'}}>
                                 <Avatar
-                                    src={user.Profile?.profileImage ? user.Profile.profileImage : "N/A"}
+                                    src={organisation.logo ? organisation.logo : "N/A"}
                                     sx={{
                                         height: 180,
                                         mr: 2,
