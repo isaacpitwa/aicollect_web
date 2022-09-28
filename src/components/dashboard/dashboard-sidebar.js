@@ -352,12 +352,19 @@ export const DashboardSidebar = (props) => {
             <Box sx={{ p: 3 }}>
               <NextLink href="/" passHref>
                 <a>
-                  <Logo
+                 { 
+                user.Client && user.Client.logo ?(
+                <img
+                 src={user.Client.logo}
+                 width="42"
+                 height="42"
+                 />) : (<Logo
                     sx={{
                       height: 42,
                       width: 42,
                     }}
-                  />
+                  />)
+                  }
                 </a>
               </NextLink>
             </Box>
