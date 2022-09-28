@@ -68,12 +68,12 @@ const OrganisationProfile = () => {
                     py: 8
                 }}
             >
-                {organisation && !loading ? (<Container maxWidth="md">
+                {user.Client ? (<Container maxWidth="md">
                     <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                         <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
 
                             <Avatar
-                                src={organisation.logo ? organisation.logo : "N/A"}
+                                src={user.Client.logo ? user.Client.logo : "N/A"}
                                 sx={{
                                     height: 100,
                                     mr: 2,
@@ -83,7 +83,7 @@ const OrganisationProfile = () => {
                                 <UserCircleIcon fontSize="small" />
                             </Avatar>
                             <Typography variant="h6">
-                                {organisation.name ?? "N/A"}
+                                {user.Client.name ?? "N/A"}
                             </Typography>
                         </Box>
 
@@ -91,18 +91,18 @@ const OrganisationProfile = () => {
 
                         <Box >
                             <Typography variant="body2">
-                                Status:{' '} {organisation.status}
+                                Status:{' '} {user.Client.status}
                             </Typography>
                             <Typography variant="body2">
-                                Subscription plan: { organisation && organisation.BillingPlan ? organisation.BillingPlan.name :  "..."}
+                                Subscription plan: { user.Client && user.Client.BillingPlan ? user.Client.BillingPlan.name :  "..."}
                             </Typography>
                         </Box>
                         <Box>
                             <Typography variant="body2">
-                                Expiry Date: {moment(organisation.subscribedAt).add(organisation.BillingPlan.period,'months').format('DD/MM/YYYY')}
+                                Expiry Date: {moment(user.Client.subscribedAt).add(user.Client.BillingPlan.period,'months').format('DD/MM/YYYY')}
                             </Typography>
                             <Typography variant="body2">
-                                Members: {organisation.Users.length}
+                                Members: {user.Client.Users.length}
                             </Typography>
                         </Box>
                     </Box>
@@ -124,10 +124,10 @@ const OrganisationProfile = () => {
                         ))}
                     </Tabs>
                     <Divider sx={{ mb: 3 }} />
-                    <OrganisationGeneralSettings user={user} organisation={organisation} />
+                    <OrganisationGeneralSettings user={user} />
                 </Container>) : (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '50vh' }}>
-                        <CircularProgress />
+                        <Typography variant="h6">You're not registered under any client 🤔</Typography>
                     </Box>)
                 }
             </Box>
