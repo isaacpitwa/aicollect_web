@@ -67,10 +67,7 @@ class ClientApi {
         },
       });
       const data = await response.json();
-      if (data.status === 200) {
-        console.log("Client Response", data.data);
-        return data.data
-      }
+      return data
     } catch (error) {
       console.log(error);
     

@@ -1,6 +1,6 @@
-import { useState, useEffect,useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
-import { Box, Container, Divider, Tab, Tabs, Typography, Avatar } from '@mui/material';
+import { Box, Container, Divider, Tab, Tabs, Typography, Avatar, CircularProgress } from '@mui/material';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
 import { AccountGeneralSettings } from '../../../components/dashboard/account/account-general-settings';
@@ -31,27 +31,28 @@ const OrganisationProfile = () => {
             setLoading(true);
             try {
                 const data = await clientsApi.getClientProfile(user.client);
-                if (data?.status === 200) {
+                console.log("data", data);
+                if (data?.status === 200 ||  data?.status === 304) {
                     toast.success(data.message, { duration: 10000 });
                     setOrganisation(data.data);
                     console.log(data);
                 } else {
-                    toast.error(data.message)
+                    toast.error(data.data.message)
                 }
             } catch (error) {
                 console.log(error);
                 toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
-            } 
+            }
             setLoading(false);
         } else {
-        
             toast.error('You are not attached to any client', { duration: 6000 });
+            setLoading(false);
         }
-    },[setOrganisation, setLoading, user.client]);
+    }, [setOrganisation, setLoading, user.client]);
 
     useEffect(() => {
         getClientProfile();
-    },[])
+    }, [])
 
     return (
         <>
@@ -67,12 +68,12 @@ const OrganisationProfile = () => {
                     py: 8
                 }}
             >
-                <Container maxWidth="md">
+                {organisation && !loading ? (<Container maxWidth="md">
                     <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                         <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
 
                             <Avatar
-                                src={user.Profile?.companyLogo ? user.Profile.companyLogo : "N/A"}
+                                src={organisation.logo ? organisation.logo : "N/A"}
                                 sx={{
                                     height: 100,
                                     mr: 2,
@@ -82,7 +83,7 @@ const OrganisationProfile = () => {
                                 <UserCircleIcon fontSize="small" />
                             </Avatar>
                             <Typography variant="h6">
-                                {user.Profile?.companyName}
+                                {organisation.name ?? "N/A"}
                             </Typography>
                         </Box>
 
@@ -93,12 +94,12 @@ const OrganisationProfile = () => {
                                 Status:{' '} {user.status}
                             </Typography>
                             <Typography variant="body2">
-                                Subscription plan: {'Free Plan'}
+                                Subscription plan: { organisation && organisation.BillingPlan ? organisation.BillingPlan.name :  "..."}
                             </Typography>
                         </Box>
                         <Box>
                             <Typography variant="body2">
-                                Expiry Date: {moment(user.Profile?.createdAt).format('DD/MM/YYYY')}
+                                Expiry Date: {moment(organisation.subscribedAt).add(organisation.BillingPlan.period,'months').format('DD/MM/YYYY')}
                             </Typography>
                             <Typography variant="body2">
                                 Members: {'N/A'}
@@ -124,7 +125,11 @@ const OrganisationProfile = () => {
                     </Tabs>
                     <Divider sx={{ mb: 3 }} />
                     <OrganisationGeneralSettings user={user} />
-                </Container>
+                </Container>) : (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '50vh' }}>
+                        <CircularProgress />
+                    </Box>)
+                }
             </Box>
         </>
     );
