@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useCallback } from 'react';
 import Head from 'next/head';
 import { Box, Container, Divider, Tab, Tabs, Typography, Avatar } from '@mui/material';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
@@ -8,6 +8,8 @@ import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 import { useAuth } from '../../../hooks/use-auth';
 import moment from 'moment';
 import { OrganisationGeneralSettings } from '../../../components/dashboard/account/organisation-account';
+import { clientsApi } from '../../../api/clients-api';
+import toast from 'react-hot-toast';
 
 
 const tabs = [
@@ -17,17 +19,45 @@ const tabs = [
 const OrganisationProfile = () => {
     const { user } = useAuth();
     const [currentTab, setCurrentTab] = useState('general');
-
+    const [organisation, setOrganisation] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleTabsChange = (event, value) => {
         setCurrentTab(value);
     };
 
+    const getClientProfile = useCallback(async () => {
+        if (user.client) {
+            setLoading(true);
+            try {
+                const data = await clientsApi.getClientProfile(user.client);
+                if (data?.status === 200) {
+                    toast.success(data.message, { duration: 10000 });
+                    setOrganisation(data.data);
+                    console.log(data);
+                } else {
+                    toast.error(data.message)
+                }
+            } catch (error) {
+                console.log(error);
+                toast.error('Sorry, can not load project details right now, try again later', { duration: 6000 });
+            } 
+            setLoading(false);
+        } else {
+        
+            toast.error('You are not attached to any client', { duration: 6000 });
+        }
+    },[setOrganisation, setLoading, user.client]);
+
+    useEffect(() => {
+        getClientProfile();
+    },[])
+
     return (
         <>
             <Head>
                 <title>
-                    Dashboard: Account | AiCollect
+                    Dashboard: Client Account | AiCollect
                 </title>
             </Head>
             <Box
@@ -63,12 +93,12 @@ const OrganisationProfile = () => {
                                 Status:{' '} {user.status}
                             </Typography>
                             <Typography variant="body2">
-                                Subscription plan: { 'Free Plan'}
+                                Subscription plan: {'Free Plan'}
                             </Typography>
                         </Box>
                         <Box>
                             <Typography variant="body2">
-                                Expiry Date: { moment(user.Profile?.createdAt).format('DD/MM/YYYY')}
+                                Expiry Date: {moment(user.Profile?.createdAt).format('DD/MM/YYYY')}
                             </Typography>
                             <Typography variant="body2">
                                 Members: {'N/A'}

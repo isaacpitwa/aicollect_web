@@ -56,23 +56,23 @@ const isstandardRoute = new RegExp(/^\/dashboard\/tasks\.*/g);
 const isExternalRoute = new RegExp(/^\/dashboard\/collections\.*/g);
 
 export const roleRoutes = {
-  'system_Billing Manager': new RegExp(sharedRoutes.source + '|' + isBillingRoute.source),
-  'system_Standard User' : new RegExp(sharedRoutes.source + '|' + isstandardRoute.source),
-  'system_Data Manager' : new RegExp(sharedRoutes.source + '|' + isDataRoute.source),
-  'system_Supervisor' :  new RegExp(sharedRoutes.source + '|' + isDataRoute.source),
-  'system_Owner' : allRoutes,
-  'system_Admin' :allRoutes,
-  'system_External user':isExternalRoute,
+  'Billing Manager': new RegExp(sharedRoutes.source + '|' + isBillingRoute.source),
+  'Standard User' : new RegExp(sharedRoutes.source + '|' + isstandardRoute.source),
+  'Data Manager' : new RegExp(sharedRoutes.source + '|' + isDataRoute.source),
+  'Supervisor' :  new RegExp(sharedRoutes.source + '|' + isDataRoute.source),
+  'Owner' : allRoutes,
+  'Admin' :allRoutes,
+  'External user':isExternalRoute,
 }
 
 export const IndexRedirect = {
-  'system_Billing Manager': '/dashboard/finance/billing',
-  'system_Standard User' : '/dashboard/tasks',
-  'system_Data Manager' : '/dashboard/projects',
-  'system_Supervisor' : '/dashboard/projects',
-  'system_Owner' : '/dashboard',
-  'system_Admin' :'/dashboard',
-  'system_External user': '/collections/timeout',
+  'Billing Manager': '/dashboard/finance/billing',
+  'Standard User' : '/dashboard/tasks',
+  'Data Manager' : '/dashboard/projects',
+  'Supervisor' : '/dashboard/projects',
+  'Owner' : '/dashboard',
+  'Admin' :'/dashboard',
+  'External user': '/collections/timeout',
 }
 
 AuthGuard.propTypes = {
