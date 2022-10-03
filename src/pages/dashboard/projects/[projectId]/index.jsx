@@ -195,11 +195,10 @@ const ProjectDetails = () => {
   const getSectorModules = useCallback(async () => {
     try {
       // TODO: Find sectorID
-      const { Profile: { sector } } = user;
+      const { Client: { sector } } = user;
       console.log('sector', sector);
-      const data = await sectorApi.getSectorModules(sector??2);
+      const data = await sectorApi.getSectorModules(sector);
       if (data) {
-        console.log(data);
         setModules(data);
       }
     } catch (error) {
@@ -232,7 +231,7 @@ const ProjectDetails = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Project: {project?.projectname}</Typography>
+                <Typography variant="h6" sx={{color:'text.secondary'}}>Projects / {project?.name.toLowerCase()}</Typography>
               </Grid>
               <Grid item>
                 <Button

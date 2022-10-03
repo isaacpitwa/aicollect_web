@@ -81,7 +81,6 @@ export const ProjectListTable = (props) => {
   const formattedProjects = projects.map((project) => ({ ...formatProject(project) }));
 
   return (
-    
       <div style={{ height: "60vh", width: "100%" }}>
         <DataGridPremium
          checkboxSelection = {true}
