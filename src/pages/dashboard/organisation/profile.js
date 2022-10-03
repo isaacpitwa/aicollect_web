@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { Box, Container, Divider, Tab, Tabs, Typography, Avatar, CircularProgress } from '@mui/material';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { AccountGeneralSettings } from '../../../components/dashboard/account/account-general-settings';
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
 import { useAuth } from '../../../hooks/use-auth';
 import moment from 'moment';
