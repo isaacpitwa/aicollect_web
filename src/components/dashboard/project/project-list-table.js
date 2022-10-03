@@ -18,6 +18,7 @@ import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { Scrollbar } from '../../scrollbar';
 import moment from 'moment';
+import { Utils } from '../../../utils/main';
 
 export const ProjectListTable = (props) => {
   const {
@@ -105,10 +106,7 @@ export const ProjectListTable = (props) => {
                 Members
               </TableCell>
               <TableCell>
-                Manager
-              </TableCell>
-              <TableCell>
-                Forms
+                Questionaires
               </TableCell>
               <TableCell>
                 Date Created
@@ -142,14 +140,11 @@ export const ProjectListTable = (props) => {
                   </TableCell>
                   <TableCell sx={{ cursor: 'pointer' }}>
                     <NextLink href={`/dashboard/projects/${project._id}`}>
-                      <Typography>{project.projectname}</Typography>
+                      <Typography>{ Utils.capitalizeFirstLetter(project.name)}</Typography>
                     </NextLink>
                   </TableCell>
                   <TableCell>
-                    {project.projectTeam.length}
-                  </TableCell>
-                  <TableCell>
-                    {project.createdBy.name}
+                    {project.team.length}
                   </TableCell>
                   <TableCell>
                     {0}
@@ -158,10 +153,10 @@ export const ProjectListTable = (props) => {
                    {moment(project.createdAt).format('MM/DD/YYYY')}
                   </TableCell>
                   <TableCell>
-                    {project.createdBy.name}
+                    { Utils.capitalizeFirstLetter(project.createdBy.name)}
                   </TableCell>
                   <TableCell>
-                    {"In Progress"}
+                    {Utils.capitalizeFirstLetter(project.status)}
                   </TableCell>
                   
                   <TableCell align="right">

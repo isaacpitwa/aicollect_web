@@ -145,6 +145,7 @@ const ProjectList = (props) => {
         setProjects(data.data);
       } else if (data?.status === 401) {
         toast.error('Your session is expired, please login again');
+        router.push('/');
       }
     } catch (error) {
       console.log(error);
