@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Card, Container, Divider, Link, Typography } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 import { AuthBanner } from '../../components/authentication/auth-banner';
-import { AmplifyRegister } from '../../components/authentication/amplify-register';
-import { Auth0Register } from '../../components/authentication/auth0-register';
-import { FirebaseRegister } from '../../components/authentication/firebase-register';
 import { JWTRegister } from '../../components/authentication/jwt-register';
-import { Logo } from '../../components/logo';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
 import { clientsApi } from '../../api/clients-api';
