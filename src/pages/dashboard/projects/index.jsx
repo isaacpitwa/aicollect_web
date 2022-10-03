@@ -234,7 +234,7 @@ const ProjectList = (props) => {
                 getProjects={getUserProjects}
               />
             </Grid>
-            <Box
+            {/* <Box
               sx={{
                 m: -1,
                 mt: 3
@@ -252,60 +252,9 @@ const ProjectList = (props) => {
               >
                 Export
               </Button>
-            </Box>
+            </Box> */}
           </Box>
-          <Card>
-            <Divider />
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexWrap: 'wrap',
-                m: -1.5,
-                p: 3
-              }}
-            >
-              <Box
-                component="form"
-                onSubmit={handleQueryChange}
-                sx={{
-                  flexGrow: 1,
-                  m: 1.5
-                }}
-              >
-                <TextField
-                  defaultValue=""
-                  fullWidth
-                  inputProps={{ ref: queryRef }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    )
-                  }}
-                  placeholder="Search projects"
-                />
-              </Box>
-              <TextField
-                label="Sort By"
-                name="sort"
-                onChange={handleSortChange}
-                select
-                SelectProps={{ native: true }}
-                sx={{ m: 1.5 }}
-                value={sort}
-              >
-                {sortOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Box>
+          <Card sx={{p:4}}>
             {
               !loading ? (
                 <ProjectListTable
