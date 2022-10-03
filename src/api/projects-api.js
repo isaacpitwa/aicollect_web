@@ -18,7 +18,7 @@ class ProjectsApi {
   }
   async fetchProjects(clientId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/userProjects`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/user/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',

@@ -4,7 +4,7 @@
   "author": "StuartDambi && Isaac Pitwa",
   "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next dev -p 8080",
     "build": "next build",
     "start": "next start",
     "export": "next export",
