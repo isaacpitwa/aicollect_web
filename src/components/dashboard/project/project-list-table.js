@@ -94,6 +94,7 @@ export const ProjectListTable = (props) => {
             // Hide columns Id
             Id: false,
           }}
+          pagination
         />
 
       </div>
