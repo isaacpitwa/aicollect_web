@@ -127,7 +127,7 @@ const OrganisationProfile = () => {
                     <OrganisationGeneralSettings user={user} />
                 </Container>) : (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '50vh' }}>
-                        <Typography variant="h6">You're not registered under any client 🤔</Typography>
+                        <Typography variant="h6">You're not registered under any client </Typography>
                     </Box>)
                 }
             </Box>
