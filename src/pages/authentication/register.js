@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Box, Card, Container, Divider, Link, Typography } from '@mui/material';
+import { Box, Card, Container, Divider, Typography } from '@mui/material';
 import { GuestGuard } from '../../components/authentication/guest-guard';
 import { AuthBanner } from '../../components/authentication/auth-banner';
 import { JWTRegister } from '../../components/authentication/jwt-register';
-import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
 import { clientsApi } from '../../api/clients-api';
 
