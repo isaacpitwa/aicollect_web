@@ -138,8 +138,7 @@ const ProjectList = (props) => {
   const getUserProjects = useCallback(async () => {
     setLoading(true);
     try {
-      const clientId = user.roles == 'Supervisor'? user.id: user.client;
-      const data = await projectsApi.fetchProjects(clientId);
+     const data = await projectsApi.fetchProjects(user.client);
       console.log('Projects ', data);
       if (data?.status === 200) {
         console.log(data.status);
