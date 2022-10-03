@@ -2,35 +2,15 @@ import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import {
-  Box,
-  Button,
-  Checkbox,
   IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
-import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
-import { Scrollbar } from '../../scrollbar';
 import moment from 'moment';
 import { Utils } from '../../../utils/main';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import {DataGridToolbar} from '../data-grid-toolbar'
 export const ProjectListTable = (props) => {
-  const {
-    projects,
-    projectsCount,
-    onPageChange,
-    onRowsPerPageChange,
-    page,
-    rowsPerPage,
-    ...other
-  } = props;
+  const {projects} = props;
   const [selectedProjects, setSelectedProjects] = useState([]);
 
   // Reset selected customers when customers change
@@ -42,24 +22,7 @@ export const ProjectListTable = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [projects]);
 
-  const handleSelectAllProjects = (event) => {
-    setSelectedProjects(event.target.checked
-      ? projects.map((project) => project._id)
-      : []);
-  };
 
-  const handleSelectOneProject = (event, projectId) => {
-    if (!selectedProjects.includes(projectId)) {
-      setSelectedProjects((prevSelected) => [...prevSelected, projectId]);
-    } else {
-      setSelectedProjects((prevSelected) => prevSelected.filter((id) => id !== projectId));
-    }
-  };
-
-  const enableBulkActions = selectedProjects.length > 0;
-  const selectedSomeProjects = selectedProjects.length > 0
-    && selectedProjects.length < projects.length;
-  const selectedAllProjects = selectedProjects.length === projects.length;
   const columns = [
     { field: "Id", headName: "id", width: 150 },
     { field: "Project Name", headName: "Project Name", width: 150 },
@@ -121,6 +84,7 @@ export const ProjectListTable = (props) => {
     
       <div style={{ height: "60vh", width: "100%" }}>
         <DataGridPremium
+         checkboxSelection = {true}
           columns={columns}
           rows={formattedProjects}
           components={{
@@ -133,7 +97,6 @@ export const ProjectListTable = (props) => {
         />
 
       </div>
-    // </div>
   );
 };
 

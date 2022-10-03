@@ -258,12 +258,7 @@ const ProjectList = (props) => {
             {
               !loading ? (
                 <ProjectListTable
-                  projects={paginatedProjects}
-                  projectsCount={filteredProjects.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleRowsPerPageChange}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
+                  projects={projects}
                 />
               ) : (
                 <LoadingSkeleton />
