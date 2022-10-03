@@ -56,7 +56,7 @@ class SectorsApi {
   async getSectorModules(sectorId) {
     console.log("Sector ID : ", sectorId);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/modules/sectorModules`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/client/modules`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
