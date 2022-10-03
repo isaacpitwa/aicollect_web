@@ -19,6 +19,7 @@ import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { Scrollbar } from '../../scrollbar';
 import moment from 'moment';
 import { Utils } from '../../../utils/main';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 export const ProjectListTable = (props) => {
   const {
@@ -34,10 +35,10 @@ export const ProjectListTable = (props) => {
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedProjects.length) {
-        setSelectedProjects([]);
-      }
-    },
+    if (selectedProjects.length) {
+      setSelectedProjects([]);
+    }
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [projects]);
 
@@ -59,7 +60,49 @@ export const ProjectListTable = (props) => {
   const selectedSomeProjects = selectedProjects.length > 0
     && selectedProjects.length < projects.length;
   const selectedAllProjects = selectedProjects.length === projects.length;
+  const columns = [
+    { field: "Id", headName: "id", width: 150 },
+    { field: "Project Name", headName: "ProjectName", width: 150 },
+    { field: "Members", headName: "Members", width: 150 },
+    { field: "Questionaires", headName: "Questionaires", width: 150 },
+    { field: "Created By", headName: "CreatedBy", width: 150 },
+    { field: "Date Created", headName: "DateCreated", width: 150 },
+    { field: "status", headName: "status", width: 150 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 80,
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
 
+          const api = params.api;
+          const thisRow = {};
+
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+
+          return alert(JSON.stringify(thisRow, null, 4));
+        };
+
+        return (
+          <NextLink
+            href={`/dashboard/projects/${params.id}`}
+            passHref
+          >
+            <IconButton component="a">
+              <ArrowRightIcon fontSize="small" />
+            </IconButton>
+          </NextLink>
+        );
+      }
+    },
+  ]
   return (
     <div {...other}>
       <Box
@@ -140,7 +183,7 @@ export const ProjectListTable = (props) => {
                   </TableCell>
                   <TableCell sx={{ cursor: 'pointer' }}>
                     <NextLink href={`/dashboard/projects/${project._id}`}>
-                      <Typography>{ Utils.capitalizeFirstLetter(project.name)}</Typography>
+                      <Typography>{Utils.capitalizeFirstLetter(project.name)}</Typography>
                     </NextLink>
                   </TableCell>
                   <TableCell>
@@ -150,15 +193,15 @@ export const ProjectListTable = (props) => {
                     {0}
                   </TableCell>
                   <TableCell>
-                   {moment(project.createdAt).format('MM/DD/YYYY')}
+                    {moment(project.createdAt).format('MM/DD/YYYY')}
                   </TableCell>
                   <TableCell>
-                    { Utils.capitalizeFirstLetter(project.createdBy.name)}
+                    {Utils.capitalizeFirstLetter(project.createdBy.name)}
                   </TableCell>
                   <TableCell>
                     {Utils.capitalizeFirstLetter(project.status)}
                   </TableCell>
-                  
+
                   <TableCell align="right">
                     <NextLink
                       href={`/dashboard/projects/${project._id}`}
@@ -192,6 +235,12 @@ export const ProjectListTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+      <div style={{ height: "60vh", width: "100%" }}>
+        <DataGridPremium
+
+        />
+
+      </div>
     </div>
   );
 };
