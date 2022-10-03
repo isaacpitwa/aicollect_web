@@ -30,7 +30,7 @@ const Register = () => {
       }
     };
     decodeToken();
-  }, [setClientInfo,clientId,router]);
+  }, [setClientInfo]);
 
   return (
     <>
