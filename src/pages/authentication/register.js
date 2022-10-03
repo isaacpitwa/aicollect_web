@@ -12,9 +12,8 @@ import { clientsApi } from '../../api/clients-api';
 
 const Register = () => {
   const router = useRouter();
-  const { platform } = useAuth();
   const [clientInfo, setClientInfo] = useState({})
-  const { disableGuard, clientId } = router.query;
+  const { clientId } = router.query;
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
