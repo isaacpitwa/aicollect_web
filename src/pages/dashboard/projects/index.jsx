@@ -215,7 +215,7 @@ const ProjectList = (props) => {
               spacing={3}
             >
               <Grid item>
-                <Typography variant="h4">
+                <Typography variant="h5" >
                   Projects
                 </Typography>
               </Grid>
