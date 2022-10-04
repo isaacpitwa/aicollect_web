@@ -22,6 +22,9 @@ import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridToolbar } from '../data-grid-toolbar'
+import { Utils } from '../../../utils/main';
 
 
 export const UserListTable = (props) => {
@@ -38,10 +41,10 @@ export const UserListTable = (props) => {
 
   // Reset selected customers when customers change
   useEffect(() => {
-      if (selectedCustomers.length) {
-        setSelectedCustomers([]);
-      }
-    },
+    if (selectedCustomers.length) {
+      setSelectedCustomers([]);
+    }
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customers]);
 
@@ -65,6 +68,114 @@ export const UserListTable = (props) => {
   const selectedAllCustomers = selectedCustomers.length === customers.length;
 
   console.log("Client List", customers);
+
+  const columns = [
+    { field: "Id", headName: "id", width: 150 },
+    {
+      field: "Name", headName: "Name",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex'
+            }}
+          >
+            <Avatar
+              src={params.avatar}
+              sx={{
+                height: 42,
+                width: 42
+              }}
+            >
+              {getInitials(params.ame)}
+            </Avatar>
+            <Box sx={{ ml: 1 }}>
+              <NextLink
+                href={`/dashboard/users/${params.id}`}
+                passHref
+              >
+                <Link
+                  color="inherit"
+                  variant="subtitle2"
+                >
+                  {params.Name}
+                </Link>
+              </NextLink>
+              <Typography
+                color="textSecondary"
+                variant="body2"
+              >
+                {params.roles}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+    },
+    { field: "Email", headName: "Email", width: 150 },
+    { field: "roles", headName: "roles", width: 150 },
+    { field: "avatar", headName: "avatar", width: 150 },
+    { field: "name", headName: "name", width: 150 },
+    { field: "Mobile", headName: "Mobile", width: 150 },
+    { field: "Created By", headName: "Created By", width: 150 },
+    { field: "Date of Joining", headName: "Date of Joining", width: 150 },
+    { field: "Last Accessed", headName: "Last Accessed", width: 150 },
+    { field: "Status", headName: "Status", width: 150 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 80,
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
+
+          const api = params.api;
+          const thisRow = {};
+
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+
+          return alert(JSON.stringify(thisRow, null, 4));
+        };
+
+        return (
+          <NextLink
+            href={`/dashboard/projects/${params.id}`}
+            passHref
+          >
+            <IconButton component="a">
+              <ArrowRightIcon fontSize="small" />
+            </IconButton>
+          </NextLink>
+        );
+      }
+    },
+  ];
+
+  const formatUser = (user) => {
+    return {
+      id: user.id,
+      avatar: user.avatar,
+      name: Utils.capitalizeFirstLetter(`${user.firstname} ${user.lastname}`),
+      Name: Utils.capitalizeFirstLetter(`${user.firstname} ${user.lastname}`),
+      roles: user.roles,
+      Email: user.email || "N/A",
+      Mobile: user.phone || 'N/A',
+      "Created By": Utils.capitalizeFirstLetter("User"),
+      "Date of Joining": moment(user.createdAt).format('DD/MM/YYYY'),
+      "Last Accessed": moment(user.updatedAt).format('DD/MM/YYYY'),
+      Status: Utils.capitalizeFirstLetter(user.status),
+      Verified: user.emailVerified ? "Verified" : "Not Verified",
+    }
+  }
+  const formattedUsers = customers.map((customer) => ({ ...formatUser(customer) }));
   return (
     <div {...other}>
       <Box
@@ -205,7 +316,7 @@ export const UserListTable = (props) => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    {customer.addedBy || 'N/A'}
+                    {customer.createdBy.name || 'N/A'}
                   </TableCell>
                   <TableCell>
                     {moment(customer.createdAt).format('DD/MM/YYYY')}
@@ -248,6 +359,22 @@ export const UserListTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+      <div style={{ height: "60vh", width: "100%" }}>
+        <DataGridPremium
+          checkboxSelection={true}
+          columns={columns}
+          rows={formattedUsers}
+          components={{
+            Toolbar: DataGridToolbar,
+          }}
+          columnVisibilityModel={{
+            // Hide columns Id
+            Id: false,
+          }}
+          pagination
+        />
+
+      </div>
     </div>
   );
 };
