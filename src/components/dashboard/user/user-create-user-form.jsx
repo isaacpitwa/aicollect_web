@@ -15,7 +15,7 @@ import {
 import { useRouter } from 'next/router';
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-// import MuiPhoneNumber from 'material-ui-phone-number';
+import MuiPhoneNumber from 'material-ui-phone-number';
 import * as Yup from "yup";
 import { userApi } from '../../../api/users-api';
 import { useAuth } from '../../../hooks/use-auth';
@@ -151,8 +151,8 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
           </Grid>
           <Grid item md={6} sm={12} marginLeft={3} >
             <FormControl fullWidth>
-              <FormLabel> </FormLabel>
-              <TextField
+              <FormLabel></FormLabel>
+              {/* <TextField
                 error={formik.touched.phone && formik.errors.phone}
                 helperText={formik.touched.phone && formik.errors.phone}
                 placeholder="Phone *"
@@ -162,16 +162,16 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
                 onChange={formik.handleChange}
                 value={formik.values.phone}
                 fullWidth
-              />
-              {/* <MuiPhoneNumber
-                defaultCountry="us"
+              /> */}
+              <MuiPhoneNumber
+                defaultCountry="ug"
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
+                onChange={(value) => formik.setFieldValue("phone", value)}
                 name="phone"
                 value={formik.values.phone}
                 error={Boolean(formik.touched.phone && formik.errors.phone)}
                 helperText={formik.touched.phone && formik.errors.phone}
-              /> */}
+              />
               {formik.errors.submit && (
                 <Box sx={{ mt: 3 }}>
                   <FormHelperText error>
@@ -210,18 +210,11 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
             <FormControl fullWidth>
               <InputLabel>Role Type *</InputLabel>
               <Select type="text" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange}>
-              {/* <MenuItem value="Owner">Owner</MenuItem>
-              <MenuItem value="Admin">Administrator</MenuItem>
-              <MenuItem value="Billing Manager">Billing Manager</MenuItem>
-              <MenuItem value="Data Manager">Data Manager</MenuItem>
-              <MenuItem value="Supervisor">Supervisor</MenuItem>
-              <MenuItem value="Standard User">Standard User</MenuItem> */}
               {
                 availableRoles.slice(availableRoles.indexOf(user.roles)).map((role) => (
                   <MenuItem value={role}>{role}</MenuItem>
                 ))
               }
-                {/* <MenuItem value="External user">External User</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
