@@ -67,13 +67,13 @@ export const UserListTable = (props) => {
     && selectedCustomers.length < customers.length;
   const selectedAllCustomers = selectedCustomers.length === customers.length;
 
-  console.log("Client List", customers);
+  console.log("Users List", customers);
 
   const columns = [
     { field: "Id", headName: "id", width: 150 },
     {
       field: "Name", headName: "Name",
-      width: 150,
+      width: 200,
       renderCell: (params) => {
         return (
           <Box
@@ -83,282 +83,98 @@ export const UserListTable = (props) => {
             }}
           >
             <Avatar
-              src={params.avatar}
+              src={params.row.avatar}
               sx={{
                 height: 42,
                 width: 42
               }}
             >
-              {getInitials(params.ame)}
+              {getInitials(params.row.name)}
             </Avatar>
             <Box sx={{ ml: 1 }}>
               <NextLink
-                href={`/dashboard/users/${params.id}`}
+                href={`/dashboard/users/${params.row.id}`}
                 passHref
               >
                 <Link
                   color="inherit"
                   variant="subtitle2"
                 >
-                  {params.Name}
+                  {params.row.name}
                 </Link>
               </NextLink>
               <Typography
                 color="textSecondary"
                 variant="body2"
               >
-                {params.roles}
+                {params.row.roles}
               </Typography>
             </Box>
           </Box>
         );
       }
     },
-    { field: "Email", headName: "Email", width: 150 },
-    { field: "roles", headName: "roles", width: 150 },
-    { field: "avatar", headName: "avatar", width: 150 },
     { field: "name", headName: "name", width: 150 },
-    { field: "Mobile", headName: "Mobile", width: 150 },
+    { field: "roles", headName: "roles", width: 150 },
+    { field: "name", headName: "name", width: 150 },
+    { field: "Email", headName: "Email", width: 180 },
+    { field: "avatar", headName: "avatar", width: 150 },
+    { field: "Mobile", headName: "Mobile", width: 140 },
     { field: "Created By", headName: "Created By", width: 150 },
-    { field: "Date of Joining", headName: "Date of Joining", width: 150 },
-    { field: "Last Accessed", headName: "Last Accessed", width: 150 },
-    { field: "Status", headName: "Status", width: 150 },
+    { field: "Verified", headName: "Verified", width: 120 },
+    { field: "Status", headName: "Status", width: 120 },
+    { field: "Date of Joining", headName: "Date of Joining", width: 120 },
+    { field: "Last Accessed", headName: "Last Accessed", width: 120 },
     {
       field: "action",
       headerName: "Action",
       width: 80,
       sortable: false,
       renderCell: (params) => {
-        const onClick = (e) => {
-          e.stopPropagation(); // don't select this row after clicking
-
-          const api = params.api;
-          const thisRow = {};
-
-          api
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-
-          return alert(JSON.stringify(thisRow, null, 4));
-        };
-
         return (
-          <NextLink
-            href={`/dashboard/projects/${params.id}`}
-            passHref
-          >
-            <IconButton component="a">
-              <ArrowRightIcon fontSize="small" />
-            </IconButton>
-          </NextLink>
-        );
+          <>
+              <NextLink
+                href={`/dashboard/users/${params.id}/edit`}
+                passHref
+              >
+                <IconButton component="a">
+                  <PencilAltIcon fontSize="small" />
+                </IconButton>
+              </NextLink>
+            <NextLink
+              href={`/dashboard/users/${params.id}`}
+              passHref
+            >
+              <IconButton component="a">
+                <ArrowRightIcon fontSize="small" />
+              </IconButton>
+            </NextLink>
+            </>
+         );
       }
     },
   ];
 
   const formatUser = (user) => {
+    console.log("User name:",`${user.firstname} ${user.lastname}`);
     return {
       id: user.id,
-      avatar: user.avatar,
-      name: Utils.capitalizeFirstLetter(`${user.firstname} ${user.lastname}`),
-      Name: Utils.capitalizeFirstLetter(`${user.firstname} ${user.lastname}`),
+      avatar: user.avatar ?? 'N/A',
+      name: `${user.firstname} ${user.lastname}`,
+      // Name: Utils.capitalizeFirstLetter(`${user.firstname} ${user.lastname}`),
       roles: user.roles,
       Email: user.email || "N/A",
       Mobile: user.phone || 'N/A',
+      Status: Utils.capitalizeFirstLetter(user.status),
+      Verified: user.emailVerified ? "Verified" : "Not Verified",
       "Created By": Utils.capitalizeFirstLetter("User"),
       "Date of Joining": moment(user.createdAt).format('DD/MM/YYYY'),
       "Last Accessed": moment(user.updatedAt).format('DD/MM/YYYY'),
-      Status: Utils.capitalizeFirstLetter(user.status),
-      Verified: user.emailVerified ? "Verified" : "Not Verified",
     }
   }
   const formattedUsers = customers.map((customer) => ({ ...formatUser(customer) }));
   return (
     <div {...other}>
-      <Box
-        sx={{
-          backgroundColor: 'neutral.100',
-          display: !enableBulkActions && 'none',
-          px: 2,
-          py: 0.5
-        }}
-      >
-        <Checkbox
-          checked={selectedAllCustomers}
-          indeterminate={selectedSomeCustomers}
-          onChange={handleSelectAllCustomers}
-        />
-        <Button
-          size="small"
-          sx={{ ml: 2 }}
-        >
-          Delete
-        </Button>
-        {/* <Button
-          size="small"
-          sx={{ ml: 2 }}
-        >
-          Deactivate
-        </Button> */}
-      </Box>
-      <Scrollbar>
-        <Table sx={{ minWidth: 700 }}>
-          <TableHead sx={{ visibility: enableBulkActions ? 'collapse' : 'visible' }}>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAllCustomers}
-                  indeterminate={selectedSomeCustomers}
-                  onChange={handleSelectAllCustomers}
-                />
-              </TableCell>
-              <TableCell>
-                Name
-              </TableCell>
-              <TableCell>
-                Email
-              </TableCell>
-              <TableCell>
-                Mobile
-              </TableCell>
-              <TableCell>
-                Status
-              </TableCell>
-              <TableCell>
-                Verified
-              </TableCell>
-              <TableCell>
-                Created By
-              </TableCell>
-              <TableCell>
-                Date of Joining
-              </TableCell>
-              <TableCell>
-                Last Accessed
-              </TableCell>
-              <TableCell align="right">
-                Actions
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {customers.map((customer) => {
-              const isCustomerSelected = selectedCustomers.includes(customer.id);
-
-              return (
-                <TableRow
-                  hover
-                  key={customer.id}
-                  selected={isCustomerSelected}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isCustomerSelected}
-                      onChange={(event) => handleSelectOneCustomer(event, customer.id)}
-                      value={isCustomerSelected}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex'
-                      }}
-                    >
-                      <Avatar
-                        src={customer.avatar}
-                        sx={{
-                          height: 42,
-                          width: 42
-                        }}
-                      >
-                        {getInitials(`${customer.firsname} ${customer.lastname}`)}
-                      </Avatar>
-                      <Box sx={{ ml: 1 }}>
-                        <NextLink
-                          href={`/dashboard/users/${customer.id}`}
-                          passHref
-                        >
-                          <Link
-                            color="inherit"
-                            variant="subtitle2"
-                          >
-                            {`${customer.firstname} ${customer.lastname}`}
-                          </Link>
-                        </NextLink>
-                        <Typography
-                          color="textSecondary"
-                          variant="body2"
-                        >
-                          {customer.roles}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {customer.email}
-                  </TableCell>
-                  <TableCell>
-                    {customer.phone || 'N/A'}
-                  </TableCell>
-                  <TableCell>
-                    {customer.status}
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      color="success.main"
-                      variant="subtitle2"
-                    >
-                      {customer.emailVerified ? "Verified" : "Not Verified"}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {customer.createdBy.name || 'N/A'}
-                  </TableCell>
-                  <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                  <TableCell>
-                    {moment(customer.updatedAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="View">
-                      <NextLink
-                        href={`/dashboard/users/${customer.id}/edit`}
-                        passHref
-                      >
-                        <IconButton component="a">
-                          <PencilAltIcon fontSize="small" />
-                        </IconButton>
-                      </NextLink>
-                    </Tooltip>
-                    <NextLink
-                      href={`/dashboard/users/${customer.id}`}
-                      passHref
-                    >
-                      <IconButton component="a">
-                        <ArrowRightIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Scrollbar>
-      <TablePagination
-        component="div"
-        count={customersCount}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
       <div style={{ height: "60vh", width: "100%" }}>
         <DataGridPremium
           checkboxSelection={true}
@@ -370,6 +186,9 @@ export const UserListTable = (props) => {
           columnVisibilityModel={{
             // Hide columns Id
             Id: false,
+            roles: false,
+            name: false,
+            avatar: false,
           }}
           pagination
         />
