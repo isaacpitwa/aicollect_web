@@ -218,12 +218,12 @@ const UserList = (props) => {
               <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
                 Import
               </Button>
-              <Button
+              {/* <Button
                 startIcon={<DownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
               >
                 Export
-              </Button>
+              </Button> */}
             </Box>
           </Box>
           <Card>

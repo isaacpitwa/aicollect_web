@@ -28,11 +28,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useRouter } from 'next/router'
+import { useAuth } from '../../../hooks/use-auth';
+
 
 
 export const UserEditForm = (props) => {
   const { customer, updateUser, ...other } = props;
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -40,13 +43,13 @@ export const UserEditForm = (props) => {
       lastname: customer.lastname || '',
       firstTimeProcessor: customer.firstTimeProcessor || '',
       email: customer.email || '',
-      isActive: customer.isActive || false,
-      isVerified: customer.isVerified || false,
+      status: customer.status == 'Active' || false,
+      emailVerified: customer.emailVerified || false,
       roles: customer.roles || '',
       phone: customer.phone || '',
       processor: customer.processor || '',
       isDeleted: customer.isDeleted || false,
-      addedBy: "Stuar Dambi",
+      addedBy:  customer.creator ?`${customer.creator.firstname} ${customer.creator.lastname}` : 'N/A',
       submit: null
     },
     validationSchema: Yup.object({
@@ -58,8 +61,8 @@ export const UserEditForm = (props) => {
         .email('Must be a valid email')
         .max(255)
         .required('Email is required'),
-      isActive: Yup.bool(),
-      isVerified: Yup.bool(),
+      status: Yup.bool(),
+      emailVerified: Yup.bool(),
       roles: Yup
         .string()
         .max(255)
@@ -71,13 +74,12 @@ export const UserEditForm = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        // NOTE: Make API request
-        // await wait(500);
-        const data = await userApi.updateUserDetails(customer.id, {...formik.values, addedBy: 1});
+        const data = await userApi.updateUserDetails(customer.id, {...formik.values, status: formik.values.status ? 'Active' : 'Disabled'});
         if (Array.isArray(data)) {
           helpers.setStatus({ success: true });
           helpers.setSubmitting(false);
           toast.success('User Details have been updated!');
+          router.push('/dashboard/users');
         }
         
       } catch (err) {
@@ -107,13 +109,14 @@ export const UserEditForm = (props) => {
       setOpen(false)
     }
   }
+  const availableRoles = ["Owner","Admin","Billing Manager","Data Manager","Supervisor", "Standard User",];
 
   return (
     <form
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title="Edit customer" />
+        <CardHeader title="Edit User" />
         <Divider />
         <CardContent>
           <Grid
@@ -129,7 +132,7 @@ export const UserEditForm = (props) => {
                 error={Boolean(formik.touched.firstname && formik.errors.firstname)}
                 fullWidth
                 helperText={formik.touched.firstname && formik.errors.firstname}
-                label="Full name"
+                label="First name"
                 name="firstname"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -146,7 +149,7 @@ export const UserEditForm = (props) => {
                 error={Boolean(formik.touched.lastname && formik.errors.lastname)}
                 fullWidth
                 helperText={formik.touched.lastname && formik.errors.lastname}
-                label="Full name"
+                label="Last name"
                 name="lastname"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -189,13 +192,11 @@ export const UserEditForm = (props) => {
                   onChange={formik.handleChange}
                   value={formik.values.roles}
                 >
-                  <MenuItem value="Owner">Owner</MenuItem>
-                  <MenuItem value="Data Manager">Data Manager</MenuItem>
-                  <MenuItem value="Supervisor">Supervisor</MenuItem>
-                  <MenuItem value="Standard user">Standard user</MenuItem>
-                  <MenuItem value="External user">External user</MenuItem>
-                  <MenuItem value="Billing Manager">Billing Manager</MenuItem>
-                  <MenuItem value="Admin">Admin</MenuItem>
+                 {
+                availableRoles.slice(availableRoles.indexOf(user.roles)).map((role) => (
+                  <MenuItem value={role}>{role}</MenuItem>
+                ))
+              }
                 </Select>
               </FormControl>
             </Grid>
@@ -266,38 +267,6 @@ export const UserEditForm = (props) => {
               />
             </Grid>
           </Grid>
-          <Box
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'space-between',
-              mt: 3
-            }}
-          >
-            <div>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-              >
-                Is Verified
-              </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                sx={{ mt: 1 }}
-              >
-                Means that user has verified his/her email address
-              </Typography>
-            </div>
-            <Switch
-              checked={formik.values.isVerified}
-              color="primary"
-              edge="start"
-              name="isVerified"
-              onChange={formik.handleChange}
-              value={formik.values.isVerified}
-            />
-          </Box>
           <Divider sx={{ my: 3 }} />
           <Box
             sx={{
@@ -322,12 +291,12 @@ export const UserEditForm = (props) => {
               </Typography>
             </div>
             <Switch
-              checked={formik.values.isActive}
+              checked={formik.values.status}
               color="primary"
               edge="start"
-              name="isActive"
+              name="status"
               onChange={formik.handleChange}
-              value={formik.values.isActive}
+              value={formik.values.status}
             />
           </Box>
         </CardContent>
