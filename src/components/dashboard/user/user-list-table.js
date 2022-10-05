@@ -167,7 +167,7 @@ export const UserListTable = (props) => {
       Mobile: user.phone || 'N/A',
       Status: Utils.capitalizeFirstLetter(user.status),
       Verified: user.emailVerified ? "Verified" : "Not Verified",
-      "Created By": Utils.capitalizeFirstLetter("User"),
+      "Created By": user.creator ? Utils.capitalizeFirstLetter( `${user.creator.firstname} ${user.creator.lastname}`): 'N/A',
       "Date of Joining": moment(user.createdAt).format('DD/MM/YYYY'),
       "Last Accessed": moment(user.updatedAt).format('DD/MM/YYYY'),
     }

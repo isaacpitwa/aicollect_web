@@ -33,12 +33,11 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
   const handleCreateUser = async () => {
     setLoading(true);
     try {
-      const clientId = user.roles === 'Owner' ? user.id : user.clientId;
       const data = await userApi.createUser({
         ...formik.values,
         supervisor: formik.values.supervisor === "" ? null : formik.values.supervisor,
-        clientId,
-        createdBy: user.id
+        createdBy: user.id,
+        client:user.client,
       })
       if (data?.status === 201) {
         toast.success("User created successfully");
