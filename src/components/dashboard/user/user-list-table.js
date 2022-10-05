@@ -70,7 +70,6 @@ export const UserListTable = (props) => {
   console.log("Users List", customers);
 
   const columns = [
-    { field: "Id", headName: "id", width: 150 },
     {
       field: "Name", headName: "Name",
       width: 200,
@@ -114,13 +113,27 @@ export const UserListTable = (props) => {
         );
       }
     },
-    { field: "name", headName: "name", width: 150 },
-    { field: "roles", headName: "roles", width: 150 },
-    { field: "name", headName: "name", width: 150 },
     { field: "Email", headName: "Email", width: 180 },
-    { field: "avatar", headName: "avatar", width: 150 },
     { field: "Mobile", headName: "Mobile", width: 140 },
-    { field: "Created By", headName: "Created By", width: 150 },
+    {
+      field: "Created By", headName: "Created By", width: 150,
+      renderCell: (params) => {
+        return params.row.creator ? (
+          <NextLink
+            href={`/dashboard/users/${params.row.creator.id}`}
+            passHref
+          >
+            <Typography
+              color="success.main"
+              variant="subtitle2"
+              sx={{textDecoration: 'none'}}
+            >
+              {Utils.capitalizeFirstLetter(`${params.row.creator.firstname} ${params.row.creator.lastname}`)}</Typography>
+          </NextLink>
+        ) : 'N/A'
+      }
+
+    },
     { field: "Verified", headName: "Verified", width: 120 },
     { field: "Status", headName: "Status", width: 120 },
     { field: "Date of Joining", headName: "Date of Joining", width: 120 },
@@ -133,14 +146,14 @@ export const UserListTable = (props) => {
       renderCell: (params) => {
         return (
           <>
-              <NextLink
-                href={`/dashboard/users/${params.id}/edit`}
-                passHref
-              >
-                <IconButton component="a">
-                  <PencilAltIcon fontSize="small" />
-                </IconButton>
-              </NextLink>
+            <NextLink
+              href={`/dashboard/users/${params.id}/edit`}
+              passHref
+            >
+              <IconButton component="a">
+                <PencilAltIcon fontSize="small" />
+              </IconButton>
+            </NextLink>
             <NextLink
               href={`/dashboard/users/${params.id}`}
               passHref
@@ -149,14 +162,14 @@ export const UserListTable = (props) => {
                 <ArrowRightIcon fontSize="small" />
               </IconButton>
             </NextLink>
-            </>
-         );
+          </>
+        );
       }
     },
   ];
 
   const formatUser = (user) => {
-    console.log("User name:",`${user.firstname} ${user.lastname}`);
+    console.log("User name:", `${user.firstname} ${user.lastname}`);
     return {
       id: user.id,
       avatar: user.avatar ?? 'N/A',
@@ -165,9 +178,10 @@ export const UserListTable = (props) => {
       roles: user.roles,
       Email: user.email || "N/A",
       Mobile: user.phone || 'N/A',
+      creator: user.creator,
       Status: Utils.capitalizeFirstLetter(user.status),
       Verified: user.emailVerified ? "Verified" : "Not Verified",
-      "Created By": user.creator ? Utils.capitalizeFirstLetter( `${user.creator.firstname} ${user.creator.lastname}`): 'N/A',
+      "Created By": user.creator ? Utils.capitalizeFirstLetter(`${user.creator.firstname} ${user.creator.lastname}`) : 'N/A',
       "Date of Joining": moment(user.createdAt).format('DD/MM/YYYY'),
       "Last Accessed": moment(user.updatedAt).format('DD/MM/YYYY'),
     }

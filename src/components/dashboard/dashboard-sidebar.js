@@ -353,9 +353,9 @@ export const DashboardSidebar = (props) => {
               <NextLink href="/" passHref>
                 <a>
                  { 
-                user.Client && user.Client.logo ?(
+                user?.Client && user?.Client.logo ?(
                 <img
-                 src={user.Client.logo}
+                 src={user.Client?.logo}
                  width="42"
                  height="42"
                  />) : (<Logo

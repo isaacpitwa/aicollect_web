@@ -85,7 +85,9 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
       handleCreateUser();
     },
   });
-
+  
+  const availableRoles = ["Owner","Admin","Billing Manager","Data Manager","Supervisor", "Standard User",];
+    availableRoles.slice(availableRoles.indexOf(user.roles));
   return (
     <form noValidate onSubmit={formik.handleSubmit}>
       <Grid container spacing={3}>
@@ -209,11 +211,17 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
             <FormControl fullWidth>
               <InputLabel>Role Type *</InputLabel>
               <Select type="text" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange}>
+              {/* <MenuItem value="Owner">Owner</MenuItem>
               <MenuItem value="Admin">Administrator</MenuItem>
               <MenuItem value="Billing Manager">Billing Manager</MenuItem>
               <MenuItem value="Data Manager">Data Manager</MenuItem>
               <MenuItem value="Supervisor">Supervisor</MenuItem>
-              <MenuItem value="Standard User">Standard User</MenuItem>
+              <MenuItem value="Standard User">Standard User</MenuItem> */}
+              {
+                availableRoles.map((role) => (
+                  <MenuItem value={role}>{role}</MenuItem>
+                ))
+              }
                 {/* <MenuItem value="External user">External User</MenuItem> */}
               </Select>
             </FormControl>
