@@ -53,16 +53,13 @@ class SectorsApi {
     }
   }
 
-  async getSectorModules(sectorId) {
-    console.log("Sector ID : ", sectorId);
+  async getClientModules() {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/client/modules`, {
-        method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
-        body: JSON.stringify({ sectorId })
       });
       const data = await response.json();
       if (data && data.status === 200) {
