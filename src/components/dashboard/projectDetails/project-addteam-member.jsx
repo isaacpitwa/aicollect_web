@@ -64,7 +64,7 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
     }
     try {
       const teamMemberObject = {
-        userId: member.userObj.id,
+        id: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
         supervisor:  member.supervisor ? member.supervisor.id:null,

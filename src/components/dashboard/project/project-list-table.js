@@ -1,17 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import {
-  IconButton,
+  IconButton,Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+  Button,
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import moment from 'moment';
 import { Utils } from '../../../utils/main';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
-import {DataGridToolbar} from '../data-grid-toolbar'
+import { DataGridToolbar } from '../data-grid-toolbar'
+import { userApi } from '../../../api/users-api';
+
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export const ProjectListTable = (props) => {
-  const {projects} = props;
+  const { projects } = props;
   const [selectedProjects, setSelectedProjects] = useState([]);
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   // Reset selected customers when customers change
   useEffect(() => {
@@ -28,7 +44,43 @@ export const ProjectListTable = (props) => {
     { field: "Project Name", headName: "Project Name", width: 150 },
     { field: "Members", headName: "Members", width: 150 },
     { field: "Questionaires", headName: "Questionaires", width: 150 },
-    { field: "Created By", headName: "CreatedBy", width: 150 },
+    {
+      field: "Created By", headName: "CreatedBy", width: 150,
+      renderCell: (params) => {
+
+      
+        const onClick = () => {
+          try {
+
+            userApi.getUserDetails(params.row.creator.id).then((data) => {
+              if(!data){
+                setOpen(true);
+              }else{
+                  router.push(`/dashboard/users/${params.row.creator.id}`);
+              }
+            }).catch((error) => {
+              console.log(error);
+            });
+            
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+        return params.row.creator ? (
+          <Button variant="text"
+            onClick={onClick}
+          >
+            <Typography
+              color="success.main"
+              variant="subtitle2"
+              sx={{ textDecoration: 'none' }}
+            >
+              {Utils.capitalizeFirstLetter(`${params.row.creator.name}`)}</Typography>
+          </Button>
+        ) : 'N/A'
+      }
+    },
     { field: "Date Created", headName: "DateCreated", width: 150 },
     { field: "status", headName: "status", width: 150 },
     {
@@ -37,22 +89,6 @@ export const ProjectListTable = (props) => {
       width: 80,
       sortable: false,
       renderCell: (params) => {
-        const onClick = (e) => {
-          e.stopPropagation(); // don't select this row after clicking
-
-          const api = params.api;
-          const thisRow = {};
-
-          api
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-
-          return alert(JSON.stringify(thisRow, null, 4));
-        };
-
         return (
           <NextLink
             href={`/dashboard/projects/${params.id}`}
@@ -67,9 +103,14 @@ export const ProjectListTable = (props) => {
     },
   ];
 
-  const formatProject  = (project) =>{
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const formatProject = (project) => {
     return {
       id: project._id,
+      creator: project.createdBy,
       "Project Name": Utils.capitalizeFirstLetter(project.name),
       Members: project.team.length,
       Questionaires: 0,
@@ -81,22 +122,40 @@ export const ProjectListTable = (props) => {
   const formattedProjects = projects.map((project) => ({ ...formatProject(project) }));
 
   return (
-      <div style={{ height: "60vh", width: "100%" }}>
-        <DataGridPremium
-         checkboxSelection = {true}
-          columns={columns}
-          rows={formattedProjects}
-          components={{
-            Toolbar: DataGridToolbar,
-          }}
-          columnVisibilityModel={{
-            // Hide columns Id
-            Id: false,
-          }}
-          pagination
-        />
-
-      </div>
+    <div style={{ height: "60vh", width: "100%" }}>
+      <DataGridPremium
+        checkboxSelection={true}
+        columns={columns}
+        rows={formattedProjects}
+        components={{
+          Toolbar: DataGridToolbar,
+        }}
+        columnVisibilityModel={{
+          // Hide columns Id
+          Id: false,
+        }}
+        pagination
+      />
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"404: User not found"}</DialogTitle>
+          <DialogContent>
+           <DialogContentText id="alert-dialog-slide-description">
+              This User was Permanently Deleted. This means sending anonymous
+              user data to Aicolect, even when none of his tasks are running.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+            {/* <Button onClick={handleClose}>Agree</Button> */}
+          </DialogActions>
+        </Dialog>
+    </div>
   );
 };
 

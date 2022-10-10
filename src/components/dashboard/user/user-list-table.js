@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,forwardRef } from 'react';
 import NextLink from 'next/link';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
+
 import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   IconButton,
   Link,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Tooltip,
-  Typography
+
+  Typography,
+    Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
@@ -26,7 +27,12 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { DataGridToolbar } from '../data-grid-toolbar'
 import { Utils } from '../../../utils/main';
 
+import { userApi } from '../../../api/users-api';
 
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export const UserListTable = (props) => {
   const {
     customers,
@@ -37,38 +43,8 @@ export const UserListTable = (props) => {
     rowsPerPage,
     ...other
   } = props;
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
-
-  // Reset selected customers when customers change
-  useEffect(() => {
-    if (selectedCustomers.length) {
-      setSelectedCustomers([]);
-    }
-  },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customers]);
-
-  const handleSelectAllCustomers = (event) => {
-    setSelectedCustomers(event.target.checked
-      ? customers.map((customer) => customer.id)
-      : []);
-  };
-
-  const handleSelectOneCustomer = (event, customerId) => {
-    if (!selectedCustomers.includes(customerId)) {
-      setSelectedCustomers((prevSelected) => [...prevSelected, customerId]);
-    } else {
-      setSelectedCustomers((prevSelected) => prevSelected.filter((id) => id !== customerId));
-    }
-  };
-
-  const enableBulkActions = selectedCustomers.length > 0;
-  const selectedSomeCustomers = selectedCustomers.length > 0
-    && selectedCustomers.length < customers.length;
-  const selectedAllCustomers = selectedCustomers.length === customers.length;
-
-  console.log("Users List", customers);
-
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const columns = [
     {
       field: "Name", headName: "Name",
@@ -118,8 +94,28 @@ export const UserListTable = (props) => {
     {
       field: "Created By", headName: "Created By", width: 150,
       renderCell: (params) => {
+
+              
+        const onClick = () => {
+          try {
+
+            userApi.getUserDetails(params.row.creator.id).then((data) => {
+              if(!data){
+                setOpen(true);
+              }else{
+                  router.push(`/dashboard/users/${params.row.creator.id}`);
+              }
+            }).catch((error) => {
+              console.log(error);
+            });
+            
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
         return params.row.creator ? (
-          <NextLink
+          <Button
             href={`/dashboard/users/${params.row.creator.id}`}
             passHref
           >
@@ -129,7 +125,7 @@ export const UserListTable = (props) => {
               sx={{textDecoration: 'none'}}
             >
               {Utils.capitalizeFirstLetter(`${params.row.creator.firstname} ${params.row.creator.lastname}`)}</Typography>
-          </NextLink>
+          </Button>
         ) : 'N/A'
       }
 
@@ -167,7 +163,9 @@ export const UserListTable = (props) => {
       }
     },
   ];
-
+  const handleClose = () => {
+    setOpen(false);
+  };
   const formatUser = (user) => {
     console.log("User name:", `${user.firstname} ${user.lastname}`);
     return {
@@ -206,7 +204,25 @@ export const UserListTable = (props) => {
           }}
           pagination
         />
-
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"404: User not found"}</DialogTitle>
+          <DialogContent>
+           <DialogContentText id="alert-dialog-slide-description">
+              This User was Permanently Deleted. This means sending anonymous
+              user data to Aicolect, even when none of his tasks are running.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+            {/* <Button onClick={handleClose}>Agree</Button> */}
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );

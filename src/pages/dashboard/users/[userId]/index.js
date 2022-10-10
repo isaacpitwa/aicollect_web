@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, forwardRef } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -13,7 +13,8 @@ import {
   Link,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  Slide
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { userApi } from '../../../../api/users-api';
@@ -30,6 +31,7 @@ import { ChevronDown as ChevronDownIcon } from '../../../../icons/chevron-down';
 import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
+import { useTheme } from '@mui/material/styles';
 
 const tabs = [
   { label: 'Details', value: 'details' },
@@ -37,14 +39,16 @@ const tabs = [
   { label: 'Recent Activity', value: 'logs' }
 ];
 
+
+
 const UserDetails = () => {
   const isMounted = useMounted();
   const [customer, setCustomer] = useState(null);
   const [currentTab, setCurrentTab] = useState('details');
   const router = useRouter();
   const { userId } = router.query;
-  // Log
-  // console.log(customerId);
+  const theme = useTheme();
+
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -54,7 +58,6 @@ const UserDetails = () => {
     try {
 
       const data = await userApi.getUserDetails(userId);
-
       if (isMounted()) {
         setCustomer(data);
       }
@@ -64,8 +67,8 @@ const UserDetails = () => {
   }, [isMounted, userId]);
 
   useEffect(() => {
-      getCustomer();
-    },
+    getCustomer();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -73,9 +76,6 @@ const UserDetails = () => {
     setCurrentTab(value);
   };
 
-  if (!customer) {
-    return null;
-  }
 
   return (
     <>
@@ -91,7 +91,7 @@ const UserDetails = () => {
           py: 8
         }}
       >
-        <Container maxWidth="md">
+        { customer ? <Container maxWidth="md">
           <div>
             <Box sx={{ mb: 4 }}>
               <NextLink
@@ -255,7 +255,64 @@ const UserDetails = () => {
             {/* {currentTab === 'invoices' && <CustomerInvoices />} */}
             {currentTab === 'logs' && <UserLogs />}
           </Box>
+        </Container>:
+        <Container maxWidth="md">
+                    <Typography
+            align="center"
+            variant={'h4' }
+          >
+            User Not Found
+          </Typography>
+          <Typography
+            align="center"
+            color="textSecondary"
+            sx={{ mt: 0.5 }}
+            variant="subtitle2"
+          >
+            You either tried some shady route or you
+            came here by mistake. Whichever it is, try using the
+            navigation.
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 6
+            }}
+          >
+            <Box
+              alt="Under development"
+              component="img"
+              src={`/static/error/error404_${theme.palette.mode}.svg`}
+              sx={{
+                height: 'auto',
+                maxWidth: '100%',
+                width: 400
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 6
+            }}
+          >
+            <NextLink
+              href="/dashboard/users"
+              passHref
+            >
+              <Button
+                component="a"
+                variant="outlined"
+              >
+                Back to Users
+              </Button>
+            </NextLink>
+          </Box>
+
         </Container>
+        }
       </Box>
     </>
   );

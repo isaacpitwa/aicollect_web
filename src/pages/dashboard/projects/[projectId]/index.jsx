@@ -166,7 +166,7 @@ const ProjectDetails = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredTeamMembers = applyFilters(project?.projectTeam || [], filters);
+  const filteredTeamMembers = applyFilters(project?.team || [], filters);
   const sortedTeamMembers = applySort(filteredTeamMembers, sort);
   const paginatedTeamMembers = applyPagination(
     sortedTeamMembers,

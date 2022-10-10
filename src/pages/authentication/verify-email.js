@@ -41,6 +41,9 @@ const VerifyCode = () => {
           localStorage.setItem('accessToken', data.data.token);
           await authenticateAfterEmailVerify();
           if (isMounted()) {
+            if(user.role === 'Owner') {
+              router.push('/dashboard');
+            }
             router.push('/createPassword');
           }
         }
