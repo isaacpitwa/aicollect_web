@@ -247,7 +247,7 @@ const ProjectDetails = () => {
                 handleClose={handleCloseProjectDialog}
                 projectId={projectId}
                 getProjects={getProjectDetails}
-                alreadyAssigned={project?.team}
+                alreadyAssigned={ project ? project?.team : []}
               />
             </Grid>
           </Box>
