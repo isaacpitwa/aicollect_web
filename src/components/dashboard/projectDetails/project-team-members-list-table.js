@@ -6,7 +6,6 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   IconButton,
   Link,
   Table,
@@ -24,6 +23,7 @@ import {
   DialogTitle,
   Slide,
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
@@ -35,6 +35,8 @@ import { DataGridToolbar } from '../data-grid-toolbar'
 import { Utils } from '../../../utils/main';
 
 import { userApi } from '../../../api/users-api';
+import { projectsApi } from '../../../api/projects-api';
+import toast from 'react-hot-toast';
 
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -48,10 +50,16 @@ export const ProjectTeamMembersTable = (props) => {
     onRowsPerPageChange,
     page,
     rowsPerPage,
+    onUpdate,
     ...other
   } = props;
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+
+
 
 
   // Reset selected customers when customers change
@@ -160,7 +168,10 @@ export const ProjectTeamMembersTable = (props) => {
         return (
           <>
             <Tooltip title="Remove User From Team">
-                <IconButton>
+                <IconButton onClick={()=>{
+                  setSelectedMember(params.row);
+                  setOpenDelete(true);
+                }}>
                   <Trash fontSize='small' />
                 </IconButton>
               </Tooltip>
@@ -188,6 +199,10 @@ export const ProjectTeamMembersTable = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleDeleteClose = () => {
+    setSelectedMember(null);
+    setOpenDelete(false);
+  };
   const formatUser = (user) => {
     console.log("User name:", `${user.firstname} ${user.lastname}`);
     return {
@@ -202,6 +217,30 @@ export const ProjectTeamMembersTable = (props) => {
   }
   const formattedUsers = projectMembers.map((member) => ({ ...formatUser(member) }));
  
+  const handleDeleteUser = () => {
+    setLoading(true);
+    try {
+      const response = projectsApi.removeUser(selectedMember);
+      if (response.status === 200) {
+        onUpdate();
+        toast.success('User removed from team');
+      }
+      else {
+        toast.error(response.message ??'Something went wrong, please try again');
+      }
+      setLoading(false);
+      setOpenDelete(false);
+      setSelectedMember(null);
+    }
+    catch (err) {
+      setLoading(false);
+      setOpenDelete(false);
+      setSelectedMember(null);
+      console.error(err);
+      toast.error('Something went wrong, please try again');
+    }
+  };
+
   return (
     <div {...other}>
       <div style={{ height: "60vh", width: "100%" }}>
@@ -237,8 +276,28 @@ export const ProjectTeamMembersTable = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Close</Button>
-            {/* <Button onClick={handleClose}>Agree</Button> */}
           </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openDelete}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove User From Project"}</DialogTitle>
+          <DialogContent>
+           <DialogContentText id="alert-dialog-slide-description">
+              This User will be  Permanently removed from this project. This means sending anonymous
+              user data to Aicolect, even when none of his tasks are running.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <LoadingButton onClick={handleDeleteUser} color="error" loading={loading}>Confirm</LoadingButton>
+            <Button onClick={handleDeleteClose} disabled={loading}>Cancel</Button>
+          </DialogActions>
+
         </Dialog>
       </div>
     </div>

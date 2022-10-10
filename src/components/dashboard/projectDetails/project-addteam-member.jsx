@@ -94,6 +94,9 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects,alreadyAss
         getProjects();
         handleClose();
       }
+      else {
+        toast.error(data.message ??'Something went wrong, please try again');
+      }
     } catch (error) {
       toast.error('User could not be added, try again later.');
       console.log(error);

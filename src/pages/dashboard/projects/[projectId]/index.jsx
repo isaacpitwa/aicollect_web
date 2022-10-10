@@ -239,7 +239,7 @@ const ProjectDetails = () => {
                   variant="contained"
 
                 >
-                  Delete Project
+                  Archive Project
                 </Button>
               </Grid>
               <AddTeamMember
@@ -320,6 +320,7 @@ const ProjectDetails = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
               page={page}
+              onUpdate={getProjectDetails}
             />
           </Card>
         </Container>
