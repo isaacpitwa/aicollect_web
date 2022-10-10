@@ -191,7 +191,7 @@ export const ProjectTeamMembersTable = (props) => {
   const formatUser = (user) => {
     console.log("User name:", `${user.firstname} ${user.lastname}`);
     return {
-      id: user.id ?? user.userId,
+      id: user.id ?? 10,
       name:user.name,
       Name: Utils.capitalizeFirstLetter(user.name),
       Role: user.role,
