@@ -46,9 +46,12 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects,alreadyAss
     const fetchUserList = async () => {
       try {
         const users = await userApi.getUsers()
-        if (users) {
+        if (users && alreadyAssigned) {
           alreadyAssigned = alreadyAssigned.map((member) => member.userId);
           const availableUsers = users.filter(user => !alreadyAssigned.includes(user.id))
+          console.log('Available Users', availableUsers)
+          console.log('Already Assigned Users', alreadyAssigned);
+          console.log('All Users', users);
           setUsers(availableUsers);
         }
         handleClose();
@@ -65,8 +68,9 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects,alreadyAss
       setMember((prevState) => ({ ...prevState, supervisor: user.id }));
     }
     try {
+      console.log('Created User Object', member.userObj)
       const teamMemberObject = {
-        id: member.userObj.userId,
+        id: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
         supervisor:  member.supervisor ? member.supervisor.id:null,
