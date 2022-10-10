@@ -23,9 +23,7 @@ import {
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import BadgeIcon from '@mui/icons-material/Badge';
 import { authenticationApi } from '../../api/auth-api';
-import { sectorApi } from '../../api/sectors-api';
 import { useMounted } from "../../hooks/use-mounted";
-import { billingPlanApi } from "../../api/billingplan-api";
 import { fileToBase64 } from "../../utils/file-to-base64";
 import { IndexRedirect } from "./auth-guard";
 import toast from 'react-hot-toast';
@@ -34,9 +32,6 @@ import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 
 export const Profile = (props) => {
   const [profileImage, setProfileImage] = useState(null);
-  const [companyLogo, setCompanyLogo] = useState(null);
-  const [sectors, setSectors] = useState([]);
-  const [billingPlans, setBillingPlans] = useState([]);
   const isMounted = useMounted();
   const router = useRouter();
   const formik = useFormik({
@@ -45,9 +40,6 @@ export const Profile = (props) => {
       user: props.user.email,
       firstName: props.user.firstname,
       lastName: props.user.lastname,
-      billingPlan: "",
-      sector: "",
-      companyName: "",
       policy: false,
       submit: null,
     },
@@ -56,19 +48,14 @@ export const Profile = (props) => {
       user: Yup.string(),
       firstName: Yup.string().max(255).required("First name is required"),
       lastName: Yup.string().max(255).required("Last name is required"),
-      billingPlan: Yup.string().max(255),
-      sector: Yup.string().max(255),
-      companyName: Yup.string().max(255),
       policy: Yup.boolean().oneOf([true], "This field must be checked"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         const base64Image = profileImage ? await fileToBase64(profileImage) : null;
-        const base64CompanyImage = companyLogo ? await fileToBase64(companyLogo) : null;
         const profile = {
           ...values,
           profileImage: base64Image,
-          companyLogo: base64CompanyImage,
           user: props.user.id
         }
         const data = await authenticationApi.createUserProfile(profile);
@@ -90,23 +77,6 @@ export const Profile = (props) => {
       }
     },
   });
-  // console.log(companyLogo);
-
-  useEffect(() => {
-    const getSectors = async () => {
-      const data = await sectorApi.getSectors();
-      setSectors(data ? data : []);
-    };
-    getSectors();
-  }, [setSectors]);
-
-  useEffect(() => {
-    const getBillingPlans = async () => {
-      const data = await billingPlanApi.getBillingPlans();
-      setBillingPlans(data);
-    };
-    getBillingPlans();
-  }, [setBillingPlans]);
 
   const getURL = () => {
     if (profileImage) {
