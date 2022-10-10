@@ -265,38 +265,16 @@ const ProjectDetails = () => {
             </Grid>
           </Stack>
           <Card>
-            <Divider />
             <Box
               sx={{
                 alignItems: "center",
                 display: "flex",
                 flexWrap: "wrap",
+                justifyContent: "flex-end",
                 m: -1.5,
                 p: 3,
               }}
             >
-              <Box
-                component="form"
-                onSubmit={handleQueryChange}
-                sx={{
-                  flexGrow: 1,
-                  m: 1.5,
-                }}
-              >
-                <TextField
-                  defaultValue=""
-                  fullWidth
-                  inputProps={{ ref: queryRef }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Search Team Members"
-                />
-              </Box>
               <Button
                 variant="contained"
                 startIcon={<UserAddIcon fontSize="small" />}
