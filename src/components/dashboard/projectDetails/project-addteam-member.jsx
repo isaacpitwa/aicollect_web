@@ -49,9 +49,6 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects,alreadyAss
         if (users) {
           alreadyAssigned = alreadyAssigned.map((member) => member.userId);
           const availableUsers = users.filter(user => !alreadyAssigned.includes(user.id))
-          console.log('Available Users', availableUsers)
-          console.log('Already Assigned Users', alreadyAssigned);
-          console.log('All Users', users);
           setUsers(availableUsers);
         }
         handleClose();
