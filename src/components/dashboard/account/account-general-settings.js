@@ -180,7 +180,7 @@ export const AccountGeneralSettings = (props) => {
             }}
           >
             <Typography variant="subtitle1" style={{ color: '#707070', fontSize: '18px', fontWeight: '400' }}>Organisation</Typography>
-            <Typography variant="body1" style={{ color: '#707070', fontSize: '18px', fontWeight: '300' }}>{Utils.capitalizeFirstLetter(user.Profile?.companyName)}</Typography>
+            <Typography variant="body1" style={{ color: '#707070', fontSize: '18px', fontWeight: '300' }}>{Utils.capitalizeFirstLetter(user.Client?.name)}</Typography>
           </Box>
           <Divider sx={{ my: 1 }} />
           <Box

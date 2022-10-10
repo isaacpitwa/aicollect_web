@@ -25,7 +25,7 @@ import { userApi } from '../../../api/users-api';
 import { useAuth } from '../../../hooks/use-auth';
 
 
-const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
+const AddNewTeamMember = ({ open, handleClose, projectId, getProjects,alreadyAssigned }) => {
   const [member, setMember] = useState({
     userObj: {},
     role: '',
@@ -47,7 +47,8 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
       try {
         const users = await userApi.getUsers()
         if (users) {
-          setUsers(users);
+          const availableUsers = users.filter(user => !alreadyAssigned.includes(user.id))
+          setUsers(availableUsers);
         }
         handleClose();
       } catch (error) {

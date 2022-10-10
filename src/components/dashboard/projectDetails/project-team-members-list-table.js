@@ -63,24 +63,7 @@ export const ProjectTeamMembersTable = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [projectMembers]);
 
-  const handleSelectAllMembers = (event) => {
-    setSelectedMembers(event.target.checked
-      ? projectMembers.map((customer) => customer.userId)
-      : []);
-  };
 
-  const handleSelectOneMember = (event, memberId) => {
-    if (!selectedMembers.includes(memberId)) {
-      setSelectedMembers((prevSelected) => [...prevSelected, memberId]);
-    } else {
-      setSelectedMembers((prevSelected) => prevSelected.filter((id) => id !== memberId));
-    }
-  };
-
-  const enableBulkActions = selectedMembers.length > 0;
-  const selectedSomeMembers = selectedMembers.length > 0
-    && selectedMembers.length < projectMembers.length;
-  const selectedAllMembers = selectedMembers.length === projectMembers.length;
 
   const columns = [
     {
@@ -208,7 +191,7 @@ export const ProjectTeamMembersTable = (props) => {
   const formatUser = (user) => {
     console.log("User name:", `${user.firstname} ${user.lastname}`);
     return {
-      id: user.id ??user.userId,
+      id: user.id ?? user.userId,
       name:user.name,
       Name: Utils.capitalizeFirstLetter(user.name),
       Role: user.role,
