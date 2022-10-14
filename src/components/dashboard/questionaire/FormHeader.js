@@ -31,6 +31,7 @@ const FormHeader = () => {
         formData,
         setFormData,
         updateFormData,
+        publishFormData,
         formPreview,
         handleFormPreview,
         updateRegionFormData
@@ -56,6 +57,13 @@ const FormHeader = () => {
         newForm.name = formName
         setFormData(newForm)
         updateFormData()
+    }
+
+    const publishForm = () => {
+        let newForm = formData
+        newForm.name = formName
+        setFormData(newForm)
+        publishFormData()
     }
 
     const FormHeaderLoad = () => {
@@ -185,7 +193,7 @@ const FormHeader = () => {
                         xl={4}
                     >
                         <>
-                            <Button
+                            {/* <Button
                                 disabled={!isLoaded || formData.name === formName || formPreview}
                                 variant="contained"
                                 color="success"
@@ -195,7 +203,7 @@ const FormHeader = () => {
                             >
                                 <SaveAsOutlinedIcon className={classes.formButtonIcon} />
                                 Save Change
-                            </Button>
+                            </Button> */}
                             <Button
                                 disabled={!isLoaded}
                                 variant="contained"
@@ -240,7 +248,17 @@ const FormHeader = () => {
                                 variant="contained"
                                 size='small'
                                 color="primary"
-                            >Save Form</Button>
+                            >
+                                Save Form
+                             </Button>
+                             <Button
+                                onClick={publishForm}
+                                variant="contained"
+                                size='small'
+                                color="success"
+                            >
+                                Publish 
+                             </Button>
                         </Stack>
                     </Grid>
                 </Grid>

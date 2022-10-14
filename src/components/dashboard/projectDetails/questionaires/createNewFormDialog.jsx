@@ -17,19 +17,19 @@ import { DeleteOutline } from '@mui/icons-material';
 
 export const CreateNewFormDialog = ({ open, handleClose, user }) => {
   const router = useRouter();
-  const { module } = router.params;
+  const { module } = router.query;
   const [metaData, setMetaData] = React.useState({
     name: '',
     createdBy: {
       name: `${user?.firstname} ${user?.lastname}`,
       roles: user.roles,
-      userId: user.id,
+      id: user.id,
     },
     client: user.client,
     project: router.query.projectId,
     formFields: [],
-    version: 1,
-    module: module.toLowerCase() 
+    version: 0,
+    module: module,
   });
   const [checked, setChecked] = React.useState(false);
   const [regionValues, setRegionValues] = React.useState([

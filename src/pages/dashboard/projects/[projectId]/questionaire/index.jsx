@@ -268,14 +268,7 @@ const QuestionaireList = () => {
 
   const getQuestionaires = useCallback(async () => {
     try {
-      let clientId;
-      if (user.roles === 'Owner') {
-        clientId = user.id;
-      } else {
-        clientId = user.clientId;
-      }
-      const currentModule = router.query.module;
-      const data = await FormsApi.getModuleForms(projectId, clientId, currentModule);
+      const data = await FormsApi.getModuleForms(projectId, user.client, module);
       if (isMounted() && data) {
         if (data.status === 200) {
           toast.success('Questionaires have been retrieved', { duration: 5000 });
@@ -339,25 +332,25 @@ const QuestionaireList = () => {
   },
   []);
 
-  const getSectorModules = useCallback(async () => {
-    try {
-      // TODO: Find sectorID
-      const { Profile: { sector } } = user;
-      console.log('sector', 2);
-      const data = await sectorApi.getSectorModules(sector??2);
-      if (data) {
-        console.log(data);
-        setModules(data);
-      }
-    } catch (error) {
-      toast.error('Could not load modules', { duration: 6000 });
-      console.log(error);
-    }
-  }, [setModules, user]);
+  // const getSectorModules = useCallback(async () => {
+  //   try {
+  //     // TODO: Find sectorID
+  //     const { Profile: { sector } } = user;
+  //     console.log('sector', 2);
+  //     const data = await sectorApi.getSectorModules(sector??2);
+  //     if (data) {
+  //       console.log(data);
+  //       setModules(data);
+  //     }
+  //   } catch (error) {
+  //     toast.error('Could not load modules', { duration: 6000 });
+  //     console.log(error);
+  //   }
+  // }, [setModules, user]);
 
-  useEffect(() => {
-    getSectorModules()
-  }, []);
+  // useEffect(() => {
+  //   getSectorModules()
+  // }, []);
 
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
