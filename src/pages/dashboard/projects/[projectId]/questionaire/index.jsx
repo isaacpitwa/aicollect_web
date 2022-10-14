@@ -487,39 +487,20 @@ const QuestionaireList = () => {
                 display: 'flex',
                 flexWrap: 'wrap',
                 m: -1.5,
-                p: 3
+                p: 3,
+                justifyContent: 'flex-end'
               }}
             >
-              <Box
-                component="form"
-                onSubmit={handleQueryChange}
-                sx={{
-                  flexGrow: 1,
-                  m: 1.5
-                }}
-              >
-                <TextField
-                  defaultValue=""
-                  fullWidth
-                  inputProps={{ ref: queryRef }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    )
-                  }}
-                  placeholder="Search"
-                />
-              </Box>
-              <Button
+              {/* TODO: Implement During Importation */}
+              {/* <Button
                 startIcon={<CloudDownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
                 onClick={handleOpenImportData}
               >
                 Import
-              </Button>
+              </Button> */}
+
               <ExcelDataImport
                 open={openImportData}
                 handleClose={handleCloseImportData}
@@ -529,13 +510,16 @@ const QuestionaireList = () => {
                 getInputProps={getInputProps}
                 handleCreateUploadFormToDatabase={handleCreateUploadFormToDatabase}
                 isDragActive={isDragActive} />
-              <Button
+
+              
+              {/* TODO: implemented on Templates */}
+              {/* <Button
                 startIcon={<AddTaskRounded fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
               >
                 Create From Template
-              </Button>
+              </Button> */}
               <Button
                 startIcon={<AddCircleOutlineIcon fontSize="small" />}
                 sx={{ m: 1 }}
@@ -549,24 +533,6 @@ const QuestionaireList = () => {
                 handleClose={handleCloseCreateFormDialog}
                 user={user}
               />
-              <TextField
-                label="Sort By"
-                name="sort"
-                onChange={handleSortChange}
-                select
-                SelectProps={{ native: true }}
-                sx={{ m: 1.5 }}
-                value={sort}
-              >
-                {sortOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
             </Box>
             <QuestionaireListTable
               questionaires={paginatedCustomers}
@@ -583,11 +549,11 @@ const QuestionaireList = () => {
                 alignItems: 'center',
                 display: 'flex',
                 flexWrap: 'wrap',
-                m: -1.5,
-                px: 3
+                px: 3,
+                justifyContent: 'flex-end'
               }}
             >
-              <Box
+              {/* <Box
                 component="form"
                 onSubmit={handleQueryChange}
                 sx={{
@@ -608,15 +574,15 @@ const QuestionaireList = () => {
                   }}
                   placeholder="Search"
                 />
-              </Box>
-              <Button
+              </Box> */}
+              {/* <Button
                 startIcon={<CloudDownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
                 onClick={handleOpenImportData}
               >
                 Import
-              </Button>
+              </Button> */}
               <ExcelDataImport
                 open={openImportData}
                 handleClose={handleCloseImportData}
@@ -626,13 +592,13 @@ const QuestionaireList = () => {
                 getInputProps={getInputProps}
                 handleCreateUploadFormToDatabase={handleCreateUploadFormToDatabase}
                 isDragActive={isDragActive} />
-              <Button
+              {/* <Button
                 startIcon={<AddTaskRounded fontSize="small" />}
                 sx={{ m: 1 }}
                 variant="contained"
               >
                 Create From Template
-              </Button>
+              </Button> */}
               <Button
                 startIcon={<AddCircleOutlineIcon fontSize="small" />}
                 sx={{ m: 1 }}
@@ -646,24 +612,6 @@ const QuestionaireList = () => {
                 handleClose={handleCloseCreateFieldFormDialog}
                 user={user}
               />
-              <TextField
-                label="Sort By"
-                name="sortField"
-                onChange={handleSortChangeField}
-                select
-                SelectProps={{ native: true }}
-                sx={{ m: 1.5 }}
-                value={sort}
-              >
-                {sortOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
             </Box>
            <FieldFormListTable
             questionaires={paginatedFieldForms}

@@ -304,6 +304,7 @@ const FormProvider = (props) => {
                 updateFieldInSection,
                 addDependency,
                 updateFormData,
+                publishFormData,
                 formPreview,
                 editStatus,
                 handleFormPreview,
