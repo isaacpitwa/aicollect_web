@@ -53,6 +53,23 @@ class SectorsApi {
     }
   }
 
+
+  async getModuleDetails(id) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/modules/${id}`, {
+        headers: {
+          'Content-Type': 'Application/json'
+        }
+      });
+      const data = await response.json();
+      if (data && data.status === 200) {
+        return data.data;
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  }
+
   async getClientModules() {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/client/modules`, {

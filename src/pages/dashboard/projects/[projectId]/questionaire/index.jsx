@@ -342,12 +342,15 @@ const QuestionaireList = () => {
   const getSectorModules = useCallback(async () => {
     try {
       // TODO: Find sectorID
-      const { Profile: { sector } } = user;
-      console.log('sector', 2);
-      const data = await sectorApi.getSectorModules(sector??2);
+      const { client: { sector } } = user;
+      console.log('sector',sector );
+      const data = await sectorApi.getClientModules(sector);
       if (data) {
         console.log(data);
-        setModules(data);
+        const { module } = router.query
+       const  Moduledata = data.filter((selectedModule) => module == selectedModule.id);
+        console.log(Moduledata);
+        setModules(Moduledata);
       }
     } catch (error) {
       toast.error('Could not load modules', { duration: 6000 });
