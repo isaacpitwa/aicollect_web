@@ -166,7 +166,7 @@ const ProjectDetails = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredTeamMembers = applyFilters(project?.team || [], filters);
+  const filteredTeamMembers = applyFilters( project && project.team ? project?.team : project?.projectTeam || [], filters);
   const sortedTeamMembers = applySort(filteredTeamMembers, sort);
   const paginatedTeamMembers = applyPagination(
     sortedTeamMembers,
@@ -194,8 +194,12 @@ const ProjectDetails = () => {
   
   const getSectorModules = useCallback(async () => {
     try {
-      const data = await sectorApi.getClientModules();
+      // TODO: Find sectorID
+      const { Profile: { sector } } = user;
+      console.log('sector', sector);
+      const data = await sectorApi.getSectorModules(sector??2);
       if (data) {
+        console.log(data);
         setModules(data);
       }
     } catch (error) {
@@ -228,7 +232,7 @@ const ProjectDetails = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h6" sx={{color:'text.secondary'}}>Projects / {project?.name.toLowerCase()}</Typography>
+                <Typography variant="h4">Project: { project?.projectname ? project?.projectname : project?.name}</Typography>
               </Grid>
               <Grid item>
                 <Button
@@ -236,7 +240,7 @@ const ProjectDetails = () => {
                   variant="contained"
 
                 >
-                  Archive Project
+                  Delete Project
                 </Button>
               </Grid>
               <AddTeamMember
@@ -244,7 +248,6 @@ const ProjectDetails = () => {
                 handleClose={handleCloseProjectDialog}
                 projectId={projectId}
                 getProjects={getProjectDetails}
-                alreadyAssigned={ project ? project?.team : []}
               />
             </Grid>
           </Box>
@@ -262,16 +265,38 @@ const ProjectDetails = () => {
             </Grid>
           </Stack>
           <Card>
+            <Divider />
             <Box
               sx={{
                 alignItems: "center",
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "flex-end",
                 m: -1.5,
                 p: 3,
               }}
             >
+              <Box
+                component="form"
+                onSubmit={handleQueryChange}
+                sx={{
+                  flexGrow: 1,
+                  m: 1.5,
+                }}
+              >
+                <TextField
+                  defaultValue=""
+                  fullWidth
+                  inputProps={{ ref: queryRef }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="Search Team Members"
+                />
+              </Box>
               <Button
                 variant="contained"
                 startIcon={<UserAddIcon fontSize="small" />}
@@ -295,7 +320,6 @@ const ProjectDetails = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
               page={page}
-              onUpdate={getProjectDetails}
             />
           </Card>
         </Container>
