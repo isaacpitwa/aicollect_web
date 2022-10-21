@@ -212,7 +212,7 @@ const CreateUserForm = ({ supervisors, handleClose, getClientUsers }) => {
               <Select type="text" variant="standard" name="roles" value={formik.values.roles} onChange={formik.handleChange}>
               {
                 availableRoles.slice(availableRoles.indexOf(user.roles)).map((role) => (
-                  <MenuItem value={role}>{role}</MenuItem>
+                  <MenuItem value={role} key={role}>{role}</MenuItem>
                 ))
               }
               </Select>

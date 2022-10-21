@@ -194,7 +194,7 @@ export const UserEditForm = (props) => {
                 >
                  {
                 availableRoles.slice(availableRoles.indexOf(user.roles)).map((role) => (
-                  <MenuItem value={role}>{role}</MenuItem>
+                  <MenuItem value={role}  key={role}>{role}</MenuItem>
                 ))
               }
                 </Select>
