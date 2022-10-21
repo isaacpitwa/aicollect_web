@@ -197,7 +197,7 @@ const UserList = (props) => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h5">Users</Typography>
+                <Typography variant="h4">Users</Typography>
               </Grid>
               <Grid item>
                 <Button
@@ -218,15 +218,63 @@ const UserList = (props) => {
               <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
                 Import
               </Button>
-              {/* <Button
+              <Button
                 startIcon={<DownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
               >
                 Export
-              </Button> */}
+              </Button>
             </Box>
           </Box>
           <Card>
+            <Divider />
+            <Box
+              sx={{
+                alignItems: "center",
+                display: "flex",
+                flexWrap: "wrap",
+                m: -1.5,
+                p: 3,
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleQueryChange}
+                sx={{
+                  flexGrow: 1,
+                  m: 1.5,
+                }}
+              >
+                <TextField
+                  defaultValue=""
+                  fullWidth
+                  inputProps={{ ref: queryRef }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="Search users"
+                />
+              </Box>
+              <TextField
+                label="Sort By"
+                name="sort"
+                onChange={handleSortChange}
+                select
+                SelectProps={{ native: true }}
+                sx={{ m: 1.5 }}
+                value={sort}
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Box>
             {!loading ? (
               <UserListTable
                 customers={paginatedUsers}
