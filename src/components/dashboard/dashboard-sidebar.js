@@ -385,10 +385,10 @@ export const DashboardSidebar = (props) => {
               >
                 <div>
                   <Typography color="inherit" variant="subtitle1">
-                    AI Collect
+                   { user?.Client? user?.Client.name : ' AI Collect'}
                   </Typography>
                   <Typography color="neutral.400" variant="body2">
-                    {t("Your tier")} : Premium
+                    {t("Your tier")} : Free
                   </Typography>
                 </div>
                 <SelectorIcon
@@ -434,7 +434,7 @@ export const DashboardSidebar = (props) => {
             <Typography color="neutral.500" variant="body2">
               {t("Contact Support")}
             </Typography>
-            <NextLink href="/docs/welcome" passHref>
+            <NextLink href="/dashboard" passHref>
               <Button
                 color="secondary"
                 component="a"

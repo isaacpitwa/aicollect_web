@@ -1,8 +1,8 @@
 import { MenuItem, Popover } from '@mui/material';
 
 const organizations = [
-  'Acme Inc',
-  'Division Inc'
+  // 'Acme Inc',
+  // 'Division Inc'
 ];
 
 export const OrganizationPopover = (props) => {
