@@ -15,7 +15,7 @@ class AuthApi {
     });
     const data = await response.json();
     if (data && data.status !== 200) {
-      throw new Error("Please check your email or password");
+      throw new Error(data.message || "Please check your email or password");
     }
     return data.data;
   }

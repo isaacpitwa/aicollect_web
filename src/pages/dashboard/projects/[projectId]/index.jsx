@@ -166,7 +166,7 @@ const ProjectDetails = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredTeamMembers = applyFilters(project?.projectTeam || [], filters);
+  const filteredTeamMembers = applyFilters( project && project.team ? project?.team : project?.projectTeam || [], filters);
   const sortedTeamMembers = applySort(filteredTeamMembers, sort);
   const paginatedTeamMembers = applyPagination(
     sortedTeamMembers,
@@ -195,9 +195,9 @@ const ProjectDetails = () => {
   const getSectorModules = useCallback(async () => {
     try {
       // TODO: Find sectorID
-      const { Profile: { sector } } = user;
+      const { Client: { sector } } = user;
       console.log('sector', sector);
-      const data = await sectorApi.getSectorModules(sector??2);
+      const data = await sectorApi.getClientModules(sector);
       if (data) {
         console.log(data);
         setModules(data);
@@ -232,7 +232,7 @@ const ProjectDetails = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Project: {project?.projectname}</Typography>
+                <Typography variant="h4">Project: { project?.projectname ? project?.projectname : project?.name}</Typography>
               </Grid>
               <Grid item>
                 <Button

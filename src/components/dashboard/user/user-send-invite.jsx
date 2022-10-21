@@ -45,7 +45,7 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
     }
     setLoading(false);
   };
-
+  const availableRoles = ["Owner","Admin","Billing Manager","Data Manager","Supervisor", "Standard User",];
   return (
     <Grid container spacing={3}>
       <Grid item md={12} sm={12}>
@@ -60,12 +60,11 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
         <FormControl fullWidth>
           <InputLabel>Role Type *</InputLabel>
           <Select type="date" variant="standard" name="roles" value={state.roles} onChange={handleChange} required fullWidth>
-            <MenuItem value="Admin">Administrator</MenuItem>
-            <MenuItem value="Billing Manager">Billing Manager</MenuItem>
-            <MenuItem value="Data Manager">Data Manager</MenuItem>
-            <MenuItem value="Supervisor">Supervisor</MenuItem>
-            <MenuItem value="Standard User">Standard User</MenuItem>
-            {/* <MenuItem value="External user">External user</MenuItem> */}
+          {
+                availableRoles.slice(availableRoles.indexOf(user.roles)).map((role) => (
+                  <MenuItem value={role}  key={role}>{role}</MenuItem>
+                ))
+              }
           </Select>
         </FormControl>
       </Grid>

@@ -142,11 +142,11 @@ export const ProjectListTable = (props) => {
                   </TableCell>
                   <TableCell sx={{ cursor: 'pointer' }}>
                     <NextLink href={`/dashboard/projects/${project._id}`}>
-                      <Typography>{project.projectname}</Typography>
+                      <Typography>{project.projectname ?? project.name }</Typography>
                     </NextLink>
                   </TableCell>
                   <TableCell>
-                    {project.projectTeam.length}
+                    {project.projectTeam ?project.projectTeam.length : project.team.length }
                   </TableCell>
                   <TableCell>
                     {project.createdBy.name}

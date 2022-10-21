@@ -18,7 +18,7 @@ class ProjectsApi {
   }
   async fetchProjects(clientId) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/userProjects`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/user/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Application/json',
@@ -81,6 +81,25 @@ class ProjectsApi {
       const data = await response.json();
       if (data?.status === 200) {
         return data.data
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async removeUser(user) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/projects/deleteUser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(user)
+      });
+      const data = await response.json();
+      if (data?.status) {
+        return data
       }
     } catch (error) {
       console.log(error);

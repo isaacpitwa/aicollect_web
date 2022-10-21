@@ -11,6 +11,7 @@ import { UserEditForm } from '../../../../components/dashboard/user/user-edit-fo
 import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
+import { Utils as Utility} from '../../../../utils/main'
 
 const UserEdit = () => {
   const isMounted = useMounted();
@@ -104,9 +105,9 @@ const UserEdit = () => {
             <div>
               <Typography
                 noWrap
-                variant="h4"
+                variant="h6"
               >
-                {user.email}
+                {Utility.capitalizeFirstLetter(`${user.firstname} ${user.lastname}`)}
               </Typography>
               <Box
                 sx={{
@@ -118,10 +119,10 @@ const UserEdit = () => {
                 }}
               >
                 <Typography variant="subtitle2">
-                  user_id:
+                  Email id:
                 </Typography>
                 <Chip
-                  label={user.id}
+                  label={user.email}
                   size="small"
                   sx={{ ml: 1 }}
                 />

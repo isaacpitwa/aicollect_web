@@ -22,7 +22,7 @@ import { projectsApi } from '../../../api/projects-api';
 const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
   const { user } = useAuth();
   const [project, setProject] = useState({
-    projectname: '',
+    name: '',
     description: '',
   });
   const [loading, setLoading] = useState(false)
@@ -37,8 +37,9 @@ const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
     try {
       const data = await projectsApi.createProject({
         ...project,
+        client:user.client,
         userId: user.id,
-        name: `${user.firstname} ${user.lastname}`,
+        userName: `${user.firstname} ${user.lastname}`,
         roles: user.roles
       });
       if (data?.status === 201) {
@@ -47,7 +48,7 @@ const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
         handleClose();
       } else {
         console.log(data);
-        toast.error("Something went wrong, project was not created")
+        toast.error( data.message ? data.message :"Something went wrong, project was not created")
       }
     } catch (error) {
       console.log(error);
@@ -67,8 +68,8 @@ const CreateNewProjectDialog = ({ open, handleClose, getProjects }) => {
                   <FormControl fullWidth>
                     <TextField
                       placeholder="Project Name *"
-                      name="projectname"
-                      value={project.projectname}
+                      name="name"
+                      value={project.name}
                       onChange={handleChange}
                       required
                       fullWidth

@@ -83,15 +83,15 @@ const getSections = (t,user) => user ? [
         icon: <UsersIcon fontSize="small" />
       },
       {
-        title: t("Projects"),
-        path: "/dashboard/projects",
-        icon: <AppsIcon fontSize="small" />
-      },
-      {
         title: t("Tasks"),
         path: "/dashboard/tasks",
         icon: <AssignmentIcon fontSize="small" />,
 
+      },
+      {
+        title: t("Projects"),
+        path: "/dashboard/projects",
+        icon: <AppsIcon fontSize="small" />
       },
       // {
       //   title: t('Products'),
@@ -352,12 +352,19 @@ export const DashboardSidebar = (props) => {
             <Box sx={{ p: 3 }}>
               <NextLink href="/" passHref>
                 <a>
-                  <Logo
+                 { 
+                user?.Client && user?.Client.logo ?(
+                <img
+                 src={user.Client?.logo}
+                 width="42"
+                 height="42"
+                 />) : (<Logo
                     sx={{
                       height: 42,
                       width: 42,
                     }}
-                  />
+                  />)
+                  }
                 </a>
               </NextLink>
             </Box>
@@ -378,10 +385,10 @@ export const DashboardSidebar = (props) => {
               >
                 <div>
                   <Typography color="inherit" variant="subtitle1">
-                    AI Collect
+                   { user?.Client? user?.Client.name : ' AI Collect'}
                   </Typography>
                   <Typography color="neutral.400" variant="body2">
-                    {t("Your tier")} : Premium
+                    {t("Your tier")} : Free
                   </Typography>
                 </div>
                 <SelectorIcon
@@ -427,7 +434,7 @@ export const DashboardSidebar = (props) => {
             <Typography color="neutral.500" variant="body2">
               {t("Contact Support")}
             </Typography>
-            <NextLink href="/docs/welcome" passHref>
+            <NextLink href="/dashboard" passHref>
               <Button
                 color="secondary"
                 component="a"

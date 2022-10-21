@@ -75,26 +75,38 @@ const Login = () => {
 
       <RootStyle>
         <MHidden width="mdDown">
-          <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              AiCollect
+          <SectionStyle sx={{
+            backgroundColor:'#1971b9',margin:0,
+            maxWidth:'50%',
+            borderRadius:0,display:'flex',flexDirection:'column',
+            alignItems:'center',justifyContent:'center',color:'#282BD3',padding:'0 12%'}}>
+            <Box sx={{display:'flex',justifyContent:'center', width:'100%'}}>
+            <img src="/images/illustration.svg" alt="aicollect-login" style={{width:'21rem'}} />
+            </Box>
+
+            <Typography variant="h5" sx={{color:'white',fontWeight:'600',mt:'32px'}}>
+              Go beyond data collection achieve amazing things with your data
             </Typography>
-            <img src="/login.jpg" alt="aicollect-login" />
+            <Typography variant="p" sx={{color:'#282BD3',fontWeight:'400',color:'white',fontSize:'14px',mt:'4px'}}>
+            Deploy custom forms to field teams to conduct assessments for your business. Transform your data in powerful insights.
+            its 100% customizable to suit your specific needs.
+            </Typography>
           </SectionStyle>
         </MHidden>
 
         <Container maxWidth="sm">
           <ContentStyle>
-            <Stack sx={{ mb: 5 }}>
+            <Stack sx={{ mb: 0,textAlign:'center' }}>
               <Typography variant="h4" gutterBottom>
-                Sign in to AiCollect
+                <img src="/images/logo.svg" alt="aicollect-login" style={{width:'16rem'}} />
               </Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                Enter your details below
+              <Typography sx={{ color: "text.secondary",fontSize:'14px' }}>
+                Welcome back! Please enter your details.
               </Typography>
             </Stack>
+            <Divider sx={{ mb: 5, mt:2 }} />
             <JWTLogin />
-            <Divider sx={{ my: 3 }} />
+            {/* <Divider sx={{ my: 3 }} /> */}
             {/* <Typography color="textSecondary" variant="body2">
               Or sign in with
             </Typography> */}

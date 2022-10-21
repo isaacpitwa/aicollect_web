@@ -1,19 +1,24 @@
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import toast from "react-hot-toast";
 import { Box, Button, Checkbox, FormHelperText, TextField, Typography, Link } from '@mui/material';
 import { useAuth } from '../../hooks/use-auth';
 import { useMounted } from '../../hooks/use-mounted';
+import { userApi } from '../../api/users-api';
 
 export const JWTRegister = (props) => {
   const isMounted = useMounted();
   const router = useRouter();
-  const { register } = useAuth();
+  const { clientInfo } = props;
   const formik = useFormik({
     initialValues: {
       email: '',
-      name: '',
+      firstname: '',
+      lastname: '',
+      phone: '',
       password: '',
+      confirmPassword: '',
       policy: false,
       submit: null
     },
@@ -23,26 +28,54 @@ export const JWTRegister = (props) => {
         .email('Must be a valid email')
         .max(255)
         .required('Email is required'),
-      name: Yup
+      firstname: Yup
         .string()
         .max(255)
-        .required('Name is required'),
+        .required('First Name is required'),
+      lastname: Yup
+        .string()
+        .max(255)
+        .required('Last Name is required'),
+      phone: Yup.string().max(25).required("Phone is required"),
       password: Yup
         .string()
         .min(7)
         .max(255)
         .required('Password is required'),
+      confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
       policy: Yup
         .boolean()
         .oneOf([true], 'This field must be checked')
     }),
     onSubmit: async (values, helpers) => {
+      const today =new Date();
+      const expiryDate = today.setDate(today.getDate() + 7);
+      const submitValues ={...formik.values}
+      delete submitValues.confirmPassword
+      delete submitValues.policy
+      delete submitValues.submit
       try {
-        await register(values.email, values.name, values.password);
-
-        if (isMounted()) {
-          const returnUrl = router.query.returnUrl || '/dashboard';
-          router.push(returnUrl);
+        const data = await userApi.selfRegister({
+          ...submitValues,
+          supervisor: 0,
+          clientId: 0,
+          client: clientInfo.id,
+          createdBy: 0,
+          roles:'Owner',
+          status:'Pending',
+          expiryDate:  new Date(expiryDate),
+          emailVerified: false,
+          frontendUrl: window.location.href.split(router.asPath)[0]
+        })
+        if (data?.status === 201) {
+          toast.success("Self Registration successfully");
+          if (isMounted()) {
+            router.push('/authentication/complete');
+          }
+        } else if (data?.status === 403) {
+          toast.error('You do not have the permissions to create user');
+        } else {
+          toast.error(data.message);
         }
       } catch (err) {
         console.error(err);
@@ -61,41 +94,84 @@ export const JWTRegister = (props) => {
       noValidate
       onSubmit={formik.handleSubmit}
       {...props}>
-      <TextField
-        error={Boolean(formik.touched.name && formik.errors.name)}
-        fullWidth
-        helperText={formik.touched.name && formik.errors.name}
-        label="Name"
-        margin="normal"
-        name="name"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        value={formik.values.name}
-      />
-      <TextField
-        error={Boolean(formik.touched.email && formik.errors.email)}
-        fullWidth
-        helperText={formik.touched.email && formik.errors.email}
-        label="Email Address"
-        margin="normal"
-        name="email"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="email"
-        value={formik.values.email}
-      />
-      <TextField
-        error={Boolean(formik.touched.password && formik.errors.password)}
-        fullWidth
-        helperText={formik.touched.password && formik.errors.password}
-        label="Password"
-        margin="normal"
-        name="password"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="password"
-        value={formik.values.password}
-      />
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <TextField
+          error={Boolean(formik.touched.firstname && formik.errors.firstname)}
+          fullWidth
+          helperText={formik.touched.firstname && formik.errors.firstname}
+          label="First Name"
+          margin="normal"
+          name="firstname"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.firstname}
+        />
+        <TextField
+          error={Boolean(formik.touched.lastname && formik.errors.lastname)}
+          fullWidth
+          helperText={formik.touched.lastname && formik.errors.lastname}
+          label="Last Name"
+          margin="normal"
+          name="lastname"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.lastname}
+        />
+      </Box>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <TextField
+          error={Boolean(formik.touched.email && formik.errors.email)}
+          fullWidth
+          helperText={formik.touched.email && formik.errors.email}
+          label="Email Address"
+          margin="normal"
+          name="email"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          type="email"
+          value={formik.values.email}
+        />
+        <TextField
+          error={Boolean(
+            formik.touched.phone && formik.errors.phone
+          )}
+          fullWidth
+          helperText={formik.touched.phone && formik.errors.phone}
+          label="Phone Number"
+          margin="normal"
+          name="phone"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          value={formik.values.phone}
+        />
+      </Box>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <TextField
+          error={Boolean(formik.touched.password && formik.errors.password)}
+          fullWidth
+          helperText={formik.touched.password && formik.errors.password}
+          label="Password"
+          margin="normal"
+          name="password"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          type="password"
+          value={formik.values.password}
+        />
+        <TextField
+          error={Boolean(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+          fullWidth
+          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+          label="Confirm password"
+          margin="normal"
+          name="confirmPassword"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          type="password"
+          value={formik.values.confirmPassword}
+        />
+      </Box>
+
       <Box
         sx={{
           alignItems: 'center',

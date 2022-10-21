@@ -15,43 +15,14 @@ import { useMounted } from '../../hooks/use-mounted';
 import { useState } from 'react';
 
 
-const VerifyCode = () => {
+const CompleteRegistration = ({email}) => {
   const router = useRouter();
-  const { authenticateAfterEmailVerify, user } = useAuth();
-  const { disableGuard, token } = router.query;
-  const [loading, setLoading] = useState(false);
   const isMounted = useMounted();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const handleVerifyEmail = async () => {
-    setLoading(true);
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/verifyEmail?token=${token}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'Application/json'
-          }
-        });
-        const data = await response.json();
-        console.log(data);
-        if (data.status === 201) {
-          localStorage.setItem('accessToken', data.data.token);
-          await authenticateAfterEmailVerify();
-          if (isMounted()) {
-            if(user.role === 'Owner') {
-              router.push('/dashboard');
-            }
-            router.push('/createPassword');
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
-  }
 
   return (
     <>
@@ -104,27 +75,19 @@ const VerifyCode = () => {
                   />
                 </a>
               </NextLink>
-              <Typography variant="h4">
-                Verify Email
+              <Typography variant="h5">
+                Confirm Email Address
               </Typography>
               <Typography
                 color="textSecondary"
-                sx={{ mt: 2, mb: 4 }}
+                sx={{ mt: 1, mb: 4 }}
                 variant="body2"
               >
-                Click button below to verify your email
+               An Email  has been sent to your email Address.
               </Typography>
-              <Button
-                variant="contained"
-                type="submit"
-                disabled={loading}
-                onClick={handleVerifyEmail}
-                >
-                  Verify Account
-              </Button>
+              
               
             </Box>
-            <Divider sx={{ my: 3 }} />
           </Card>
         </Container>
       </Box>
@@ -132,10 +95,10 @@ const VerifyCode = () => {
   );
 };
 
-VerifyCode.getLayout = (page) => (
+CompleteRegistration.getLayout = (page) => (
   <GuestGuard>
     {page}
   </GuestGuard>
 );
 
-export default VerifyCode;
+export default CompleteRegistration;

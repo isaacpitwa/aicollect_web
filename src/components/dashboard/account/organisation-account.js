@@ -56,7 +56,7 @@ export const OrganisationGeneralSettings = (props) => {
                                 }}
                             >
                                 <TextField
-                                    defaultValue={user.Profile?.companyName}
+                                    defaultValue={user.Client?.name}
                                     label="Name"
                                     size="small"
                                     sx={{
@@ -73,7 +73,7 @@ export const OrganisationGeneralSettings = (props) => {
                                 }}
                             >
                                 <TextField
-                                    defaultValue={''}
+                                    defaultValue={user.Client?.description}
                                     label="Description"
                                     multiline
                                     rows={4}
@@ -146,17 +146,17 @@ export const OrganisationGeneralSettings = (props) => {
                         <Grid item md={4} xs={12}>
                             <Typography variant="h9" >Organisation Logo</Typography>
                             <Box style={{display:'flex', justifyContent:'center'}}>
-                            <Avatar
-                                src={user.Profile?.profileImage ? user.Profile.profileImage : "N/A"}
-                                sx={{
-                                    height: 180,
-                                    mr: 2,
-                                    width: 180,
-                                    mt: '20px',
-                                }}
-                            >
-                                <UserCircleIcon fontSize="small" />
-                            </Avatar>
+                                <Avatar
+                                    src={user.Client?.logo ? user.Client?.logo : "N/A"}
+                                    sx={{
+                                        height: 180,
+                                        mr: 2,
+                                        width: 180,
+                                        mt: '20px',
+                                    }}
+                                >
+                                    <UserCircleIcon fontSize="small" />
+                                </Avatar>
                             </Box>
                             <Button variant="contained" style={styles.uploadBtn}>Change Logo</Button>
                         </Grid>

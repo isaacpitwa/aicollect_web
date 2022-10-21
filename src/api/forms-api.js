@@ -18,7 +18,7 @@ class Forms {
       console.error(err);
     }
   }
-  async getModuleForms(projectId, clientId, module) {
+  async getModuleForms(project, client, module) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/getModuleForms`, {
         method: 'POST',
@@ -26,7 +26,7 @@ class Forms {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
-        body: JSON.stringify({ projectId, clientId, module })
+        body: JSON.stringify({ project, client, module })
       });
 
       const data = await response.json();
@@ -41,6 +41,7 @@ class Forms {
   }
 
   async createNewForm(formMeta) {
+  console.log('Form Meta Data', formMeta);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_PROJECTS_SERVICE_URL}/forms/create/newForm`, {
         method: 'POST',

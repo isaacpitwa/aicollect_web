@@ -53,16 +53,30 @@ class SectorsApi {
     }
   }
 
-  async getSectorModules(sectorId) {
-    console.log("Sector ID : ", sectorId);
+
+  async getModuleDetails(id) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/modules/sectorModules`, {
-        method: 'POST',
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/modules/${id}`, {
+        headers: {
+          'Content-Type': 'Application/json'
+        }
+      });
+      const data = await response.json();
+      if (data && data.status === 200) {
+        return data.data;
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  }
+
+  async getClientModules() {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/client/modules`, {
         headers: {
           'Content-Type': 'Application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
-        body: JSON.stringify({ sectorId })
       });
       const data = await response.json();
       if (data && data.status === 200) {

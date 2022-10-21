@@ -5,7 +5,7 @@ import { GroupAddRounded, FactCheck } from '@mui/icons-material';
 export const ModuleCard = ({ projectId, module }) => {
   return (
     <Grid item md={3} sm={6} xs={12} style={{ cursor: 'pointer' }}>
-      <NextLink href={`/dashboard/projects/${projectId}/questionaire/?module=${module.name}`} passHref>
+      <NextLink href={`/dashboard/projects/${projectId}/questionaire/?module=${module.id}`} passHref>
         <Card elevation={8}>
           <Box
             sx={{

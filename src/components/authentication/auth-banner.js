@@ -8,7 +8,7 @@ const platformIcons = {
   JWT: '/static/icons/jwt.svg'
 };
 
-export const AuthBanner = () => (
+export const AuthBanner = ({message}) => (
   <Box
     sx={{
       backgroundColor: 'background.paper',
@@ -36,7 +36,7 @@ export const AuthBanner = () => (
           Welcome to
           {' '}
           <NextLink
-            href="/docs/welcome"
+            href="/"
             passHref
           >
             <Link variant="subtitle2">
@@ -44,7 +44,7 @@ export const AuthBanner = () => (
             </Link>
           </NextLink>
           {' '}
-          Verify email and continue to use Platform
+         { message ? message:'Verify email and continue to use Platform'}
         </Typography>
         
       </Box>

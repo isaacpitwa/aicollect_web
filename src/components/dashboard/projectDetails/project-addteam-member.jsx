@@ -25,7 +25,7 @@ import { userApi } from '../../../api/users-api';
 import { useAuth } from '../../../hooks/use-auth';
 
 
-const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
+const AddNewTeamMember = ({ open, handleClose, projectId, getProjects,alreadyAssigned }) => {
   const [member, setMember] = useState({
     userObj: {},
     role: '',
@@ -47,7 +47,12 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
       try {
         const users = await userApi.getUsers()
         if (users) {
-          setUsers(users);
+          alreadyAssigned = alreadyAssigned.map((member) => member.id?member.id:member.userId);
+          const availableUsers = users.filter(user => !alreadyAssigned.includes(user.id))
+          console.log('Available Users', availableUsers)
+          console.log('Already Assigned Users', alreadyAssigned);
+          console.log('All Users', users);
+          setUsers(availableUsers);
         }
         handleClose();
       } catch (error) {
@@ -63,11 +68,12 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
       setMember((prevState) => ({ ...prevState, supervisor: user.id }));
     }
     try {
+      console.log('Created User Object', member.userObj.id)
       const teamMemberObject = {
-        userId: member.userObj.id,
+        id: member.userObj.id,
         name: `${member.userObj.firstname} ${member.userObj.lastname}`,
         role: member.role,
-        supervisor:  member.supervisor ? member.supervisor.id:null,
+        supervisor:  member.supervisor ? member.supervisor.id: null,
         createdBy: {
           id: user.id,
           name: `${user.firstname} ${user.lastname}`,
@@ -87,6 +93,9 @@ const AddNewTeamMember = ({ open, handleClose, projectId, getProjects }) => {
         toast.success('User has been added to project');
         getProjects();
         handleClose();
+      }
+      else {
+        toast.error(data.message ??'Something went wrong, please try again');
       }
     } catch (error) {
       toast.error('User could not be added, try again later.');

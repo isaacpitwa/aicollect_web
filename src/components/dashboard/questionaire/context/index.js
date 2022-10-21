@@ -51,8 +51,8 @@ const FormProvider = (props) => {
     const getFormData = async () => {
         setIsLoaded(false)
         try {
-            console.log(`Is form Field Form: ${isFormField} \n field Form ID : ${questionaireId} `, );
-            let data = isFormField ? await FieldFormsApi.getFieldFormDetails(questionaireId):  await FormsApi.getFormDetails(questionaireId);
+            console.log(`Is form Field Form: ${isFormField} \n field Form ID : ${questionaireId} `,);
+            let data = isFormField ? await FieldFormsApi.getFieldFormDetails(questionaireId) : await FormsApi.getFormDetails(questionaireId);
             if (data) {
                 getFormDetails(data);
             }
@@ -77,9 +77,9 @@ const FormProvider = (props) => {
     const getFormDetails = (data) => {
         setComponentsData(data.formFields);
         setFormData(data);
-        setSectionCreated(data.formFields[0]&&data.formFields[0].type === 'section' ? true : false);
+        setSectionCreated(data.formFields[0] && data.formFields[0].type === 'section' ? true : false);
         setFormFieldValues(getFieldsValues(data.formFields));
-        setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value }}));
+        setFieldResponses(allFormFields(data.formFields).map(item => { return { id: item.id, value: item.value } }));
     }
 
     /**
@@ -92,17 +92,17 @@ const FormProvider = (props) => {
      */
     const addDependency = (fieldData) => {
         let newComponentsData = componentsData;
-        let dependantField = getSectionsSubSections(fieldData, componentsData).find(field=>field.id===fieldData.dependency);
+        let dependantField = getSectionsSubSections(fieldData, componentsData).find(field => field.id === fieldData.dependency);
         let dependantFieldIndex = "";
         dependantField.display = "hidden";
         dependantField.dependency = fieldData.id
-        if(dependantField.type==="section") {
-            dependantFieldIndex = newComponentsData.findIndex(section=>section.id===fieldData.dependency);
+        if (dependantField.type === "section") {
+            dependantFieldIndex = newComponentsData.findIndex(section => section.id === fieldData.dependency);
             newComponentsData[dependantFieldIndex] = dependantField;
         } else {
-            let section = newComponentsData.find(section=>section.id===fieldData.parentId);
-            let sectionIndex = newComponentsData.findIndex(section=>section.id===fieldData.parentId);
-            dependantFieldIndex = section.components.findIndex(field=>field.id===dependantField.id)
+            let section = newComponentsData.find(section => section.id === fieldData.parentId);
+            let sectionIndex = newComponentsData.findIndex(section => section.id === fieldData.parentId);
+            dependantFieldIndex = section.components.findIndex(field => field.id === dependantField.id)
             section.components[dependantFieldIndex] = dependantField
             newComponentsData[sectionIndex] = section;
         }
@@ -118,14 +118,14 @@ const FormProvider = (props) => {
      * @version 1.0.0
      */
     const conditionalDisplay = (fieldData) => {
-        let dependee = fieldData.conditional?formFieldValues.find(field=>field.id===fieldData.conditional.when):null;
-        if(dependee) {
-            if(dependee.type==='select-box') {
+        let dependee = fieldData.conditional ? formFieldValues.find(field => field.id === fieldData.conditional.when) : null;
+        if (dependee) {
+            if (dependee.type === 'select-box') {
                 let values = []
-                dependee.values.map(item=>{ if(item.checked) values.push(item.label.toLowerCase()) })
+                dependee.values.map(item => { if (item.checked) values.push(item.label.toLowerCase()) })
                 return values.includes(fieldData.conditional.value);
             } else {
-                return fieldData.conditional.when===dependee.id&&fieldData.conditional.value===dependee.value&&!editStatus?true:false;
+                return fieldData.conditional.when === dependee.id && fieldData.conditional.value === dependee.value && !editStatus ? true : false;
             }
         } else {
             return false;
@@ -141,14 +141,14 @@ const FormProvider = (props) => {
      * @version 1.0.0
      */
     const addComponentToSection = (field) => {
-        
-        let newComponentsData = componentsData;
-        let newSection = newComponentsData.find(section=>section.id===field.parentId);
-        let sectionIndex = newComponentsData.findIndex(section => section.id === field.parentId);
-        let newSubSection = field.subParentId?newSection.components.find(subSec => subSec.id === field.subParentId):null;
-        let subSectionIndex = field.subParentId?newSection.components.findIndex(subSec => subSec.id === field.subParentId):null;
 
-        if(field.subParentId&&field.subParentId!==null) {
+        let newComponentsData = componentsData;
+        let newSection = newComponentsData.find(section => section.id === field.parentId);
+        let sectionIndex = newComponentsData.findIndex(section => section.id === field.parentId);
+        let newSubSection = field.subParentId ? newSection.components.find(subSec => subSec.id === field.subParentId) : null;
+        let subSectionIndex = field.subParentId ? newSection.components.findIndex(subSec => subSec.id === field.subParentId) : null;
+
+        if (field.subParentId && field.subParentId !== null) {
             newSubSection.components.push(field);
             newSection.components[subSectionIndex] = newSubSection;
             newComponentsData[sectionIndex] = newSection;
@@ -178,7 +178,7 @@ const FormProvider = (props) => {
         let section = componentsData.find(section => section.id === fieldData.parentId);
         let sectionIndex = componentsData.findIndex(section => section.id === fieldData.parentId);
 
-        if(fieldData.subParentId) {
+        if (fieldData.subParentId) {
             let subSection = section.components.find(subSection => subSection.id === fieldData.subParentId);
             let subSectionIndex = section.components.findIndex(subSection => subSection.id === fieldData.subParentId);
             let fieldIndex = subSection.components.findIndex(field => field.id === fieldData.id);
@@ -190,7 +190,7 @@ const FormProvider = (props) => {
 
         newFormFields[sectionIndex] = section;
         setComponentsData(newFormFields);
-        if(fieldData.type==="number"&&fieldData.dependency) addDependency(fieldData);
+        if (fieldData.type === "number" && fieldData.dependency) addDependency(fieldData);
         updateFormData()
     };
 
@@ -210,16 +210,31 @@ const FormProvider = (props) => {
     }
 
 
-        /**
-     * @function updateRegionsData
-     * @desc This method updates a particular form's Region  data using the Context.
-     * @returns {Void} Nothing is returned.
-     * @author Isaac Pitwa <isaacpitwa256@gmail.com>
-     * @version 1.0.0
-     */
-         const updateRegionFormData = async (regions) => {
-            formData.regions = regions
-        }
+    /**
+       * @function publishFormData
+       * @desc This method published  form's data using the form API.
+       * @returns {Void} Nothing is returned.
+       * @author Isaac Pitwa <isaacpitwa256@gmail.com>
+       * @version 1.0.0
+       */
+    const publishFormData = async () => {
+        let newForm = formData
+        newForm.formFields = componentsData
+        setFormData(newForm)
+        const updatedForm = await FieldFormsApi.publishForm(newForm._id);
+        getFormData(updatedForm.formId);
+    }
+
+    /**
+ * @function updateRegionsData
+ * @desc This method updates a particular form's Region  data using the Context.
+ * @returns {Void} Nothing is returned.
+ * @author Isaac Pitwa <isaacpitwa256@gmail.com>
+ * @version 1.0.0
+ */
+    const updateRegionFormData = async (regions) => {
+        formData.regions = regions
+    }
 
     /**
      * @function deleteFieldData
@@ -231,17 +246,17 @@ const FormProvider = (props) => {
      */
     const deleteFieldData = (fieldData) => {
         let newFields = componentsData;
-        let section = newFields.find(field=>field.id===fieldData.parentId);
-        let sectionIndex = newFields.findIndex(field=>field.id===fieldData.parentId);
-        
-        if(fieldData.subParentId&&fieldData.subParentId!==null) {
-            let subSection = section.components.find(field=>field.id===fieldData.subParentId);
-            let subSectionIndex = section.components.findIndex(field=>field.id===fieldData.subParentId);
-            subSection.components = subSection.components.filter(field=>field.id!==fieldData.id);
+        let section = newFields.find(field => field.id === fieldData.parentId);
+        let sectionIndex = newFields.findIndex(field => field.id === fieldData.parentId);
+
+        if (fieldData.subParentId && fieldData.subParentId !== null) {
+            let subSection = section.components.find(field => field.id === fieldData.subParentId);
+            let subSectionIndex = section.components.findIndex(field => field.id === fieldData.subParentId);
+            subSection.components = subSection.components.filter(field => field.id !== fieldData.id);
             section.components[subSectionIndex] = subSection;
             newFields[sectionIndex] = section;
         } else {
-            section.components = section.components.filter(field=>field.id!==fieldData.id);
+            section.components = section.components.filter(field => field.id !== fieldData.id);
             newFields[sectionIndex] = section;
         }
         setComponentsData(newFields);
@@ -289,6 +304,7 @@ const FormProvider = (props) => {
                 updateFieldInSection,
                 addDependency,
                 updateFormData,
+                publishFormData,
                 formPreview,
                 editStatus,
                 handleFormPreview,
