@@ -138,14 +138,17 @@ const ProjectList = (props) => {
   const getUserProjects = useCallback(async () => {
     setLoading(true);
     try {
-     const data = await projectsApi.fetchProjects(user.client);
+      console.log("Client Id: ", user.clientId);
+      let clientId;
+        clientId =  user.roles === 'Owner' ? user.id: user.clientId;
+      
+      const data = await projectsApi.fetchProjects(clientId);
       console.log('Projects ', data);
       if (data?.status === 200) {
         console.log(data.status);
         setProjects(data.data);
       } else if (data?.status === 401) {
         toast.error('Your session is expired, please login again');
-        router.push('/');
       }
     } catch (error) {
       console.log(error);
@@ -215,7 +218,7 @@ const ProjectList = (props) => {
               spacing={3}
             >
               <Grid item>
-                <Typography variant="h5" >
+                <Typography variant="h4">
                   Projects
                 </Typography>
               </Grid>
@@ -234,7 +237,7 @@ const ProjectList = (props) => {
                 getProjects={getUserProjects}
               />
             </Grid>
-            {/* <Box
+            <Box
               sx={{
                 m: -1,
                 mt: 3
@@ -252,13 +255,69 @@ const ProjectList = (props) => {
               >
                 Export
               </Button>
-            </Box> */}
+            </Box>
           </Box>
-          <Card sx={{p:4}}>
+          <Card>
+            <Divider />
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexWrap: 'wrap',
+                m: -1.5,
+                p: 3
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleQueryChange}
+                sx={{
+                  flexGrow: 1,
+                  m: 1.5
+                }}
+              >
+                <TextField
+                  defaultValue=""
+                  fullWidth
+                  inputProps={{ ref: queryRef }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  placeholder="Search projects"
+                />
+              </Box>
+              <TextField
+                label="Sort By"
+                name="sort"
+                onChange={handleSortChange}
+                select
+                SelectProps={{ native: true }}
+                sx={{ m: 1.5 }}
+                value={sort}
+              >
+                {sortOptions.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Box>
             {
               !loading ? (
                 <ProjectListTable
-                  projects={projects}
+                  projects={paginatedProjects}
+                  projectsCount={filteredProjects.length}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
                 />
               ) : (
                 <LoadingSkeleton />
