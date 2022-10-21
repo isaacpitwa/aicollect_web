@@ -195,9 +195,9 @@ const ProjectDetails = () => {
   const getSectorModules = useCallback(async () => {
     try {
       // TODO: Find sectorID
-      const { Profile: { sector } } = user;
+      const { Client: { sector } } = user;
       console.log('sector', sector);
-      const data = await sectorApi.getSectorModules(sector??2);
+      const data = await sectorApi.getClientModules(sector);
       if (data) {
         console.log(data);
         setModules(data);
