@@ -62,7 +62,7 @@ const SendCustomerInvite = ({getClientUsers, handleClose}) => {
           <Select type="date" variant="standard" name="roles" value={state.roles} onChange={handleChange} required fullWidth>
           {
                 availableRoles.slice(availableRoles.indexOf(user.roles)).map((role) => (
-                  <MenuItem value={role}>{role}</MenuItem>
+                  <MenuItem value={role}  key={role}>{role}</MenuItem>
                 ))
               }
           </Select>
